@@ -1,0 +1,1627 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://guides.pandorafms.example/latest/es/discovery/nginx/">
+      
+      
+        <link rel="prev" href="../../integrations/telegram/">
+      
+      
+        <link rel="next" href="../playwright/">
+      
+      
+        
+          <link rel="alternate" href="../../../discovery/nginx/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>NGINX Discovery - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#nginx-discovery" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              NGINX Discovery
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../discovery/nginx/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducción
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerrequisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerrequisitos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parametros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-de-nginx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración de NGINX
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración de NGINX">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-minima-sin-autenticacion-sin-ssl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración mínima (sin autenticación, sin SSL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-con-autenticacion-basica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración con autenticación básica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-con-ssltls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración con SSL/TLS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-completa-ssl-autenticacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración completa (SSL + autenticación)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejecucion-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución manual
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agentes-y-modulos-generados-por-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes y módulos generados por el plugin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agentes y módulos generados por el plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapeo-de-tipos-de-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mapeo de tipos de módulo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#marcadores-extra_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Marcadores extra_data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/logparser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logparser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducción
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerrequisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerrequisitos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parametros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-de-nginx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración de NGINX
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración de NGINX">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-minima-sin-autenticacion-sin-ssl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración mínima (sin autenticación, sin SSL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-con-autenticacion-basica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración con autenticación básica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-con-ssltls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración con SSL/TLS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-completa-ssl-autenticacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración completa (SSL + autenticación)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejecucion-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución manual
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agentes-y-modulos-generados-por-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes y módulos generados por el plugin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agentes y módulos generados por el plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapeo-de-tipos-de-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mapeo de tipos de módulo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#marcadores-extra_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Marcadores extra_data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="nginx-discovery">NGINX Discovery<a class="headerlink" href="#nginx-discovery" title="Permanent link">¶</a></h1>
+<h2 id="introduccion">Introducción<a class="headerlink" href="#introduccion" title="Permanent link">¶</a></h2>
+<p>Este plugin de discovery de NGINX para Pandora FMS está diseñado para automatizar la monitorización de tus servidores NGINX, aprovechando la información que proporciona el módulo <code>ngx_http_stub_status_module</code> (stub_status). Al interactuar con dicho endpoint, el plugin puede recopilar métricas en tiempo real que son cruciales para entender el rendimiento y la salud de tu entorno NGINX, incluyendo conexiones activas, conexiones aceptadas y gestionadas, peticiones procesadas, y el estado de las conexiones en lectura, escritura y espera. Por cada URL de NGINX se creará un agente en Pandora FMS, con un módulo por cada métrica disponible.</p>
+<h2 id="prerrequisitos">Prerrequisitos<a class="headerlink" href="#prerrequisitos" title="Permanent link">¶</a></h2>
+<ul>
+<li>El plugin se distribuye como un binario compilado que ya contiene todas las dependencias necesarias para su uso, por lo que no requiere instalar Python ni librerías adicionales.</li>
+<li>Es necesario que el módulo <code>stub_status</code> de NGINX esté habilitado y accesible. Consulta la sección <a href="#configuracion-de-nginx">Configuración de NGINX</a> para ver los pasos.</li>
+</ul>
+<h2 id="parametros">Parámetros<a class="headerlink" href="#parametros" title="Permanent link">¶</a></h2>
+<p><strong>Modo simple</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--urls</code></td>
+<td>URLs del endpoint stub_status de NGINX, separadas por comas. Cada URL generará un agente.</td>
+</tr>
+<tr>
+<td><code>--user</code></td>
+<td>nombre del usuario si el endpoint de NGINX requiere autenticación básica HTTP, opcional</td>
+</tr>
+<tr>
+<td><code>--password</code></td>
+<td>contraseña si el endpoint de NGINX requiere autenticación básica HTTP, opcional</td>
+</tr>
+<tr>
+<td><code>--ssl</code></td>
+<td>para verificar si la URL tiene certificado HTTPS o no, opcional (por defecto true)</td>
+</tr>
+<tr>
+<td><code>--prefix</code></td>
+<td>prefijo para los nombres de los módulos, opcional</td>
+</tr>
+<tr>
+<td><code>--transfer_mode</code></td>
+<td>modo de transferencia de datos (native o tentacle), opcional</td>
+</tr>
+<tr>
+<td><code>--tentacle_ip</code></td>
+<td>ip del tentacle, opcional</td>
+</tr>
+<tr>
+<td><code>--tentacle_port</code></td>
+<td>puerto del tentacle, opcional</td>
+</tr>
+<tr>
+<td><code>--interval</code></td>
+<td>intervalo de monitorización en segundos, opcional</td>
+</tr>
+<tr>
+<td><code>--allow_list</code></td>
+<td>expresión regular para incluir únicamente los módulos cuyo nombre coincida, opcional</td>
+</tr>
+<tr>
+<td><code>--deny_list</code></td>
+<td>expresión regular para excluir módulos cuyo nombre coincida, opcional</td>
+</tr>
+<tr>
+<td><code>--timeout</code></td>
+<td>tiempo máximo de espera para la petición HTTP en segundos, opcional (por defecto 10)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Modo avanzado</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--conf</code></td>
+<td>ruta del archivo de configuración</td>
+</tr>
+<tr>
+<td><code>--targets_file</code></td>
+<td>ruta del archivo con las URLs de NGINX (obligatorio al usar --conf)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Archivo de configuración (--conf)</strong></p>
+<div class="highlight"><pre><span></span><code>username= nombre del usuario si el endpoint de NGINX requiere autenticación básica HTTP, opcional
+password= contraseña si el endpoint de NGINX requiere autenticación básica HTTP, opcional
+verify_ssl= para verificar si la URL tiene certificado HTTPS o no, opcional
+prefix= prefijo para los nombres de los módulos, opcional
+transfer_mode= modo de transferencia de datos (native o tentacle), opcional
+tentacle_ip= ip del tentacle, opcional
+tentacle_port= puerto del tentacle, opcional
+agents_group= nombre del grupo de agentes al que se asignarán los agentes creados, opcional
+agents_group_id= id del grupo de agentes al que se asignarán los agentes creados, opcional
+interval= intervalo de monitorización en segundos, opcional
+allow_list= expresión regular para incluir únicamente los módulos cuyo nombre coincida, opcional
+deny_list= expresión regular para excluir módulos cuyo nombre coincida, opcional
+timeout= tiempo máximo de espera para la petición HTTP en segundos, opcional
+</code></pre></div>
+<p><strong>Ejemplo</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">[CONF]</span>
+<span class="na">username</span><span class="o">=</span><span class="s">pandora</span>
+<span class="na">password</span><span class="o">=</span><span class="s">pandora</span>
+<span class="na">verify_ssl</span><span class="o">=</span><span class="s">false</span>
+<span class="na">prefix</span><span class="o">=</span><span class="s">nginx_</span>
+<span class="na">transfer_mode</span><span class="o">=</span><span class="s">native</span>
+<span class="na">tentacle_ip</span><span class="o">=</span><span class="s">127.0.0.1</span>
+<span class="na">tentacle_port</span><span class="o">=</span><span class="s">41121</span>
+<span class="na">interval</span><span class="o">=</span><span class="s">300</span>
+<span class="na">allow_list</span><span class="o">=</span>
+<span class="na">deny_list</span><span class="o">=</span>
+<span class="na">timeout</span><span class="o">=</span><span class="s">10</span>
+</code></pre></div>
+<p>Archivo de targets (<code>--targets_file</code>):</p>
+<div class="highlight"><pre><span></span><code>http://192.168.0.10/nginx_status
+http://192.168.0.11/nginx_status
+</code></pre></div>
+<h2 id="configuracion-de-nginx">Configuración de NGINX<a class="headerlink" href="#configuracion-de-nginx" title="Permanent link">¶</a></h2>
+<p>Para que el plugin pueda obtener las estadísticas, NGINX debe exponer el endpoint <code>stub_status</code>. La habilitación se realiza editando el fichero de configuración de NGINX (por defecto en <code>/etc/nginx/nginx.conf</code> o <code>/etc/nginx/sites-available/default</code>).</p>
+<blockquote>
+<p>El módulo <code>ngx_http_stub_status_module</code> no se incluye en todas las compilaciones de NGINX. Para verificar si está disponible, ejecuta <code>nginx -V 2&gt;&amp;1 | grep stub_status</code>. La mayoría de las distribuciones Linux lo incluyen por defecto.</p>
+</blockquote>
+<h3 id="configuracion-minima-sin-autenticacion-sin-ssl">Configuración mínima (sin autenticación, sin SSL)<a class="headerlink" href="#configuracion-minima-sin-autenticacion-sin-ssl" title="Permanent link">¶</a></h3>
+<p>Añade una <code>location</code> dedicada al estado dentro de tu <code>server</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/nginx_status</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">stub_status</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">access_log</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">allow</span><span class="w"> </span><span class="mi">192</span><span class="s">.168.1.50</span><span class="p">;</span><span class="w">   </span><span class="c1"># IP del servidor de Pandora FMS</span>
+<span class="w">        </span><span class="kn">deny</span><span class="w"> </span><span class="s">all</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Con esta configuración el plugin consumirá la URL:</p>
+<div class="highlight"><pre><span></span><code>http://&lt;IP_SERVIDOR&gt;/nginx_status
+</code></pre></div>
+<h3 id="configuracion-con-autenticacion-basica">Configuración con autenticación básica<a class="headerlink" href="#configuracion-con-autenticacion-basica" title="Permanent link">¶</a></h3>
+<p>Para proteger el endpoint con usuario y contraseña, define <code>auth_basic</code> y <code>auth_basic_user_file</code> en la location de status:</p>
+<div class="highlight"><pre><span></span><code><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/nginx_status</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">stub_status</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">access_log</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">auth_basic</span><span class="w"> </span><span class="s">"NGINX</span><span class="w"> </span><span class="s">Status"</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">auth_basic_user_file</span><span class="w"> </span><span class="s">/etc/nginx/.htpasswd</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Genera el fichero <code>.htpasswd</code> con <code>htpasswd</code> o <code>openssl</code>:</p>
+<div class="highlight"><pre><span></span><code>htpasswd<span class="w"> </span>-c<span class="w"> </span>/etc/nginx/.htpasswd<span class="w"> </span>admin
+<span class="c1"># o bien</span>
+openssl<span class="w"> </span>passwd<span class="w"> </span>-apr1<span class="w"> </span>mypassword<span class="w"> </span>&gt;<span class="w"> </span>/etc/nginx/.htpasswd
+</code></pre></div>
+<p>En el plugin se deberá facilitar ese mismo <code>username</code> y <code>password</code> mediante <code>--user</code> / <code>--password</code> (o los campos <code>username</code> / <code>password</code> del archivo de configuración).</p>
+<h3 id="configuracion-con-ssltls">Configuración con SSL/TLS<a class="headerlink" href="#configuracion-con-ssltls" title="Permanent link">¶</a></h3>
+<p>Para servir las estadísticas sobre HTTPS configura el certificado en el <code>server</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">ssl_certificate</span><span class="w">     </span><span class="s">/etc/nginx/certs/status.pem</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/nginx/certs/status.key</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/nginx_status</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">stub_status</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">access_log</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">allow</span><span class="w"> </span><span class="mi">192</span><span class="s">.168.1.50</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">deny</span><span class="w"> </span><span class="s">all</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Genera un certificado autofirmado de pruebas con:</p>
+<div class="highlight"><pre><span></span><code>openssl<span class="w"> </span>req<span class="w"> </span>-x509<span class="w"> </span>-nodes<span class="w"> </span>-days<span class="w"> </span><span class="m">365</span><span class="w"> </span>-newkey<span class="w"> </span>rsa:2048<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-keyout<span class="w"> </span>/etc/nginx/certs/status.key<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-out<span class="w"> </span>/etc/nginx/certs/status.crt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-subj<span class="w"> </span><span class="s2">"/CN=localhost"</span>
+cat<span class="w"> </span>/etc/nginx/certs/status.crt<span class="w"> </span>/etc/nginx/certs/status.key<span class="w"> </span>&gt;<span class="w"> </span>/etc/nginx/certs/status.pem
+</code></pre></div>
+<p>En el plugin se indicará la URL con esquema <code>https://</code> y el parámetro <code>--ssl</code> (o <code>verify_ssl</code>) según se quiera validar el certificado:</p>
+<ul>
+<li><code>verify_ssl = true</code> → para certificados válidos en producción.</li>
+<li><code>verify_ssl = false</code> → para certificados autofirmados o entornos de prueba.</li>
+</ul>
+<h3 id="configuracion-completa-ssl-autenticacion">Configuración completa (SSL + autenticación)<a class="headerlink" href="#configuracion-completa-ssl-autenticacion" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">ssl_certificate</span><span class="w">     </span><span class="s">/etc/nginx/certs/status.pem</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/nginx/certs/status.key</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/nginx_status</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">stub_status</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">access_log</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">auth_basic</span><span class="w"> </span><span class="s">"NGINX</span><span class="w"> </span><span class="s">Status"</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">auth_basic_user_file</span><span class="w"> </span><span class="s">/etc/nginx/.htpasswd</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">_</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">return</span><span class="w"> </span><span class="mi">301</span><span class="w"> </span><span class="s">https://</span><span class="nv">$host$request_uri</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Tras modificar la configuración de NGINX recarga el servicio para aplicar los cambios:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
+</code></pre></div>
+<h3 id="verificacion">Verificación<a class="headerlink" href="#verificacion" title="Permanent link">¶</a></h3>
+<p>Para comprobar que el endpoint responde correctamente, puedes hacer una petición manual a la página de estado:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-u<span class="w"> </span>admin:mypassword<span class="w"> </span>http://192.168.0.10/nginx_status
+</code></pre></div>
+<p>La salida debe ser texto plano con el siguiente formato:</p>
+<div class="highlight"><pre><span></span><code>Active connections: 291
+server accepts handled requests
+ 16630948 16630948 31070465
+Reading: 6 Writing: 179 Waiting: 106
+</code></pre></div>
+<ul>
+<li><strong>Active connections</strong>: número total de conexiones activas (incluye las en espera).</li>
+<li><strong>accepts</strong>: conexiones aceptadas totales desde que se inició NGINX.</li>
+<li><strong>handled</strong>: conexiones gestionadas totales desde que se inició NGINX.</li>
+<li><strong>requests</strong>: peticiones de cliente procesadas totales desde que se inició NGINX.</li>
+<li><strong>Reading</strong>: conexiones leyendo cabeceras de petición del cliente.</li>
+<li><strong>Writing</strong>: conexiones escribiendo respuesta al cliente o procesando petición.</li>
+<li><strong>Waiting</strong>: conexiones keep-alive inactivas esperando la siguiente petición.</li>
+</ul>
+<h2 id="ejecucion-manual">Ejecución manual<a class="headerlink" href="#ejecucion-manual" title="Permanent link">¶</a></h2>
+<p>El formato de la ejecución del plugin es el siguiente:</p>
+<div class="highlight"><pre><span></span><code>./pandora_nginx<span class="w"> </span>--urls<span class="w"> </span>&lt;urls<span class="w"> </span>del<span class="w"> </span>endpoint<span class="w"> </span>de<span class="w"> </span>NGINX<span class="w"> </span>separadas<span class="w"> </span>por<span class="w"> </span>comas&gt;<span class="w"> </span>--user<span class="w"> </span>&lt;usuario&gt;<span class="w"> </span>--password<span class="w"> </span>&lt;contraseña&gt;<span class="w"> </span>--ssl<span class="w"> </span>&lt;true<span class="p">|</span>false&gt;<span class="w"> </span>--prefix<span class="w"> </span>&lt;prefijo&gt;<span class="w"> </span>--transfer_mode<span class="w"> </span>&lt;native<span class="p">|</span>tentacle&gt;<span class="w"> </span>--tentacle_ip<span class="w"> </span>&lt;ip<span class="w"> </span>del<span class="w"> </span>tentacle&gt;<span class="w"> </span>--tentacle_port<span class="w"> </span>&lt;puerto<span class="w"> </span>del<span class="w"> </span>tentacle&gt;<span class="w"> </span>--interval<span class="w"> </span>&lt;intervalo&gt;<span class="w"> </span>--allow_list<span class="w"> </span>&lt;regex&gt;<span class="w"> </span>--deny_list<span class="w"> </span>&lt;regex&gt;<span class="w"> </span>--timeout<span class="w"> </span>&lt;segundos&gt;<span class="w"> </span>--conf<span class="w"> </span>&lt;ruta<span class="w"> </span>al<span class="w"> </span>fichero<span class="w"> </span>de<span class="w"> </span>configuración&gt;<span class="w"> </span>--targets_file<span class="w"> </span>&lt;ruta<span class="w"> </span>al<span class="w"> </span>fichero<span class="w"> </span>de<span class="w"> </span>URLs&gt;
+</code></pre></div>
+<p>Ejemplos:</p>
+<p>para ejecutar el modo simple</p>
+<div class="highlight"><pre><span></span><code>./pandora_nginx<span class="w"> </span>--urls<span class="w"> </span>http://192.168.0.10/nginx_status,http://192.168.0.11/nginx_status<span class="w"> </span>--user<span class="w"> </span>admin<span class="w"> </span>--password<span class="w"> </span><span class="m">12345</span><span class="w"> </span>--ssl<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--transfer_mode<span class="w"> </span>native<span class="w"> </span>--tentacle_ip<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--tentacle_port<span class="w"> </span><span class="m">41121</span>
+</code></pre></div>
+<p>para ejecutar el modo avanzado</p>
+<div class="highlight"><pre><span></span><code>./pandora_nginx<span class="w"> </span>--conf<span class="w"> </span>/etc/pandora/nginx.conf<span class="w"> </span>--targets_file<span class="w"> </span>/etc/pandora/nginx_targets.conf
+</code></pre></div>
+<p>La ejecución devolverá una salida en formato JSON con información sobre la ejecución, y generará un fichero XML por cada agente monitorizado (en modo tentacle) que enviará al servidor de Pandora FMS por el método de transferencia indicado en la configuración. En modo <code>native</code> los datos se exponen en el campo <code>monitoring_data</code> del JSON de salida para que los consuma el servidor de Discovery.</p>
+<h2 id="discovery">Discovery<a class="headerlink" href="#discovery" title="Permanent link">¶</a></h2>
+<p>Este plugin puede integrarse con el <em>Discovery</em> de Pandora FMS.</p>
+<p>Para ello se debe cargar el paquete ".disco" que puede descargar desde la librería de Pandora FMS:</p>
+<p><a href="https://pandorafms.com/library/">https://pandorafms.com/library/</a></p>
+<p>Una vez cargado, se podrán monitorizar las instancias de NGINX creando tareas de <em>Discovery</em> desde la sección <em>Management &gt; Discovery &gt; Application &gt; NGINX</em></p>
+<p>Para cada tarea se solicitarán los siguientes datos mínimos en el paso <strong>NGINX Basic</strong>:</p>
+<ul>
+<li><strong>NGINX Status URLs:</strong> URLs del endpoint stub_status de NGINX, separadas por comas o una por línea. Cada URL generará un agente.</li>
+<li><strong>Username:</strong> usuario del endpoint de NGINX si requiere autenticación básica HTTP, opcional</li>
+<li><strong>Password:</strong> contraseña del endpoint de NGINX si requiere autenticación básica HTTP, opcional</li>
+<li><strong>Verify SSL:</strong> activo si es necesario verificar que la URL tenga certificado SSL, por defecto inactivo</li>
+<li><strong>Transfer mode:</strong> modo de transferencia (native o tentacle), opcional</li>
+<li><strong>Tentacle IP:</strong> ip del tentacle, opcional</li>
+<li><strong>Tentacle port:</strong> Puerto del tentacle, opcional</li>
+</ul>
+<p>En el paso <strong>NGINX Advanced</strong> se podrán configurar opciones adicionales:</p>
+<ul>
+<li><strong>Module prefix:</strong> prefijo para añadir a todos los nombres de módulos creados, opcional</li>
+<li><strong>Request timeout:</strong> tiempo máximo de espera para la petición HTTP en segundos, opcional (por defecto 10)</li>
+<li><strong>Allow list:</strong> expresión regular para incluir únicamente los módulos cuyo nombre coincida, opcional</li>
+<li><strong>Deny list:</strong> expresión regular para excluir módulos cuyo nombre coincida, opcional</li>
+</ul>
+<p>Las tareas completadas con éxito tendrán un resumen de ejecución con la siguiente información:</p>
+<ul>
+<li><strong>Total agents</strong> : Número total de agentes generados por la tarea.</li>
+<li><strong>Total modules:</strong> Número total de módulos generados por la tarea.</li>
+</ul>
+<h2 id="agentes-y-modulos-generados-por-el-plugin">Agentes y módulos generados por el plugin<a class="headerlink" href="#agentes-y-modulos-generados-por-el-plugin" title="Permanent link">¶</a></h2>
+<p>El plugin creará un agente por cada URL de NGINX indicada. El nombre del agente se calcula aplicando un hash MD5 sobre el <code>netloc</code> de la URL (host:port), y el alias se corresponde con dicho <code>netloc</code> (por ejemplo, <code>192.168.0.10</code>). En cada agente se incluirán los módulos obtenidos al parsear el texto plano del endpoint stub_status de NGINX.</p>
+<p>El módulo <code>Status</code> se crea <strong>siempre</strong> para cada agente, con valor <code>1</code> si el endpoint es alcanzable, indicando que NGINX está funcionando. Si el endpoint no es alcanzable, el plugin reporta el error en la información de ejecución. El resto de campos numéricos se incluyen como módulos <code>generic_data</code> (valores instantáneos) o <code>generic_data_inc</code> (contadores incrementales con cálculo de tasa por segundo), siguiendo el formato <code>&lt;prefix&gt;&lt;MetricName&gt;</code>.</p>
+<p>Los campos disponibles en el stub_status de NGINX, y que dan lugar a módulos, son:</p>
+<div class="highlight"><pre><span></span><code>Status:<span class="w"> </span>Estado<span class="w"> </span>del<span class="w"> </span>endpoint<span class="w"> </span>stub_status<span class="w"> </span><span class="o">(</span><span class="nv">1</span><span class="o">=</span>UP,<span class="w"> </span><span class="nv">0</span><span class="o">=</span>DOWN<span class="o">)</span><span class="w"> </span>—<span class="w"> </span>siempre<span class="w"> </span>se<span class="w"> </span>monitoriza<span class="w"> </span><span class="o">(</span>generic_proc<span class="o">)</span>.
+Active_connections:<span class="w"> </span>Conexiones<span class="w"> </span>activas<span class="w"> </span>totales,<span class="w"> </span>incluyendo<span class="w"> </span>las<span class="w"> </span>en<span class="w"> </span>espera<span class="w"> </span><span class="o">(</span>generic_data<span class="o">)</span>.
+Accepts:<span class="w"> </span>Conexiones<span class="w"> </span>aceptadas<span class="w"> </span>acumuladas<span class="w"> </span>desde<span class="w"> </span>el<span class="w"> </span>inicio<span class="w"> </span>de<span class="w"> </span>NGINX<span class="w"> </span><span class="o">(</span>generic_data_inc,<span class="w"> </span>tasa<span class="w"> </span>por<span class="w"> </span>segundo<span class="o">)</span>.
+Handled:<span class="w"> </span>Conexiones<span class="w"> </span>gestionadas<span class="w"> </span>acumuladas<span class="w"> </span>desde<span class="w"> </span>el<span class="w"> </span>inicio<span class="w"> </span>de<span class="w"> </span>NGINX<span class="w"> </span><span class="o">(</span>generic_data_inc,<span class="w"> </span>tasa<span class="w"> </span>por<span class="w"> </span>segundo<span class="o">)</span>.
+<span class="w">          </span>Si<span class="w"> </span>el<span class="w"> </span>valor<span class="w"> </span>es<span class="w"> </span>menor<span class="w"> </span>que<span class="w"> </span>Accepts,<span class="w"> </span>NGINX<span class="w"> </span>está<span class="w"> </span>descartando<span class="w"> </span>tráfico.
+Requests:<span class="w"> </span>Peticiones<span class="w"> </span>de<span class="w"> </span>cliente<span class="w"> </span>procesadas<span class="w"> </span>acumuladas<span class="w"> </span>desde<span class="w"> </span>el<span class="w"> </span>inicio<span class="w"> </span>de<span class="w"> </span>NGINX<span class="w"> </span><span class="o">(</span>generic_data_inc,<span class="w"> </span>tasa<span class="w"> </span>por<span class="w"> </span>segundo<span class="o">)</span>.
+Reading:<span class="w"> </span>Conexiones<span class="w"> </span>leyendo<span class="w"> </span>cabeceras<span class="w"> </span>de<span class="w"> </span>petición<span class="w"> </span>del<span class="w"> </span>cliente<span class="w"> </span><span class="o">(</span>generic_data<span class="o">)</span>.
+Writing:<span class="w"> </span>Conexiones<span class="w"> </span>escribiendo<span class="w"> </span>respuesta<span class="w"> </span>al<span class="w"> </span>cliente<span class="w"> </span>o<span class="w"> </span>procesando<span class="w"> </span>petición<span class="w"> </span><span class="o">(</span>generic_data<span class="o">)</span>.
+Waiting:<span class="w"> </span>Conexiones<span class="w"> </span>keep-alive<span class="w"> </span>inactivas<span class="w"> </span>esperando<span class="w"> </span>la<span class="w"> </span>siguiente<span class="w"> </span>petición<span class="w"> </span><span class="o">(</span>generic_data<span class="o">)</span>.
+</code></pre></div>
+<h3 id="mapeo-de-tipos-de-modulo">Mapeo de tipos de módulo<a class="headerlink" href="#mapeo-de-tipos-de-modulo" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th>Tipo de módulo Pandora FMS</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Status</td>
+<td><code>generic_proc</code></td>
+<td>Estado del endpoint (1=reachable, 0=DOWN). Permite configurar alertas críticas cuando el valor es 0.</td>
+</tr>
+<tr>
+<td>Active_connections</td>
+<td><code>generic_data</code></td>
+<td>Conexiones activas actuales (gauge). Incluye conexiones en lectura, escritura y espera.</td>
+</tr>
+<tr>
+<td>Accepts</td>
+<td><code>generic_data_inc</code></td>
+<td>Conexiones aceptadas acumuladas. Pandora FMS calcula la tasa por segundo automáticamente.</td>
+</tr>
+<tr>
+<td>Handled</td>
+<td><code>generic_data_inc</code></td>
+<td>Conexiones gestionadas acumuladas. Pandora FMS calcula la tasa por segundo automáticamente. Si la tasa es menor que la de Accepts, NGINX está descartando conexiones.</td>
+</tr>
+<tr>
+<td>Requests</td>
+<td><code>generic_data_inc</code></td>
+<td>Peticiones procesadas acumuladas. Pandora FMS calcula la tasa por segundo automáticamente (peticiones/s).</td>
+</tr>
+<tr>
+<td>Reading</td>
+<td><code>generic_data</code></td>
+<td>Conexiones en estado de lectura de cabeceras (gauge).</td>
+</tr>
+<tr>
+<td>Writing</td>
+<td><code>generic_data</code></td>
+<td>Conexiones en estado de escritura de respuesta (gauge).</td>
+</tr>
+<tr>
+<td>Waiting</td>
+<td><code>generic_data</code></td>
+<td>Conexiones keep-alive inactivas (gauge). Un valor alto es normal con keep-alive habilitado.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="marcadores-extra_data">Marcadores extra_data<a class="headerlink" href="#marcadores-extra_data" title="Permanent link">¶</a></h3>
+<p>El plugin asigna identificadores estables en el campo <code>extra_data</code> de cada agente y módulo, siguiendo el formato <code>nginx:&lt;kind&gt;:&lt;identifier&gt;</code>, para permitir su identificación posterior desde la consola, dashboards, extensiones o consultas SQL:</p>
+<ul>
+<li><strong>Agente</strong>: <code>nginx:target:&lt;url_saneada&gt;</code> — identifica el target NGINX monitorizado.</li>
+<li><strong>Módulo Status</strong>: <code>nginx:metric_status:&lt;url_saneada&gt;</code></li>
+<li><strong>Módulos de métricas</strong>: <code>nginx:metric_&lt;metric_name&gt;:&lt;url_saneada&gt;</code> — por ejemplo <code>nginx:metric_active_connections:...</code>, <code>nginx:metric_accepts:...</code>, etc.</li>
+</ul>
+<p>Estos marcadores no contienen ni el nombre del agente ni el del módulo, sino el identificador externo (la URL del target), que es estable y significativo a nivel de dominio.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
