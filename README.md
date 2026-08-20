@@ -43,11 +43,9 @@ one click away for anyone writing docs.
 
 ## Deployment
 
-The site is versioned with [mike](https://github.com/jimporter/mike), same
-setup as the sibling project
-[`pandorafms-mkdocs`](https://github.com/pandorafms/pandorafms-mkdocs), but
-always published as `latest` — there's no parallel numbered versions here.
-This repo only generates the static site into the `gh-pages` branch; serving
+The site is versioned with [mike](https://github.com/jimporter/mike), always
+published as `latest` — there's no parallel numbered versions here. This
+repo only generates the static site into the `gh-pages` branch; serving
 it in production is the responsibility of a separate prod repo/server that
 consumes that branch.
 
