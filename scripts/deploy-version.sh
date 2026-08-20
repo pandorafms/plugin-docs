@@ -9,6 +9,9 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_DIR"
 export PATH="$REPO_DIR/.venv/bin:$PATH"
 
+ORIGINAL_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+trap 'git checkout --quiet "$ORIGINAL_BRANCH"' EXIT
+
 args=(deploy "$VERSION" --title "$TITLE" --branch gh-pages)
 if (( ${#ALIASES[@]} > 0 )); then
   args+=("${ALIASES[@]}" --update-aliases)
