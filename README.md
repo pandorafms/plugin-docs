@@ -43,17 +43,13 @@ one click away for anyone writing docs.
 
 ## Deployment
 
-A server keeps a checkout of the repo and rebuilds the static site:
-
-```bash
-scripts/deploy.sh main /var/www/docs          # Python/venv
-scripts/deploy-docker.sh main /var/www/docs   # Docker, no Python needed
-```
-
 The site is versioned with [mike](https://github.com/jimporter/mike), same
 setup as the sibling project
 [`pandorafms-mkdocs`](https://github.com/pandorafms/pandorafms-mkdocs), but
-always published as `latest` — there's no parallel numbered versions here:
+always published as `latest` — there's no parallel numbered versions here.
+This repo only generates the static site into the `gh-pages` branch; serving
+it in production is the responsibility of a separate prod repo/server that
+consumes that branch.
 
 ```bash
 scripts/deploy-version.sh latest "Pandora FMS Guides"
@@ -61,4 +57,6 @@ git push origin gh-pages   # only from the authorized pipeline/checkout
 ```
 
 Redeploying with the same command overwrites `/latest/`, nothing to clean up
-by hand between deployments.
+by hand between deployments. To export `gh-pages` as static files locally:
+`scripts/build-versioned-site.sh site` (the `site/` directory is ignored by
+Git).
