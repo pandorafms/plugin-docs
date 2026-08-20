@@ -58,3 +58,19 @@ Redeploying with the same command overwrites `/latest/`, nothing to clean up
 by hand between deployments. To export `gh-pages` as static files locally:
 `scripts/build-versioned-site.sh site` (the `site/` directory is ignored by
 Git).
+
+### Testing the served output
+
+To check the site behaves the way a prod server would serve it — correct
+`/latest/` redirect, language paths, no broken relative links — before
+pushing `gh-pages`, serve the local export through an Apache container:
+
+```bash
+scripts/preview-gh-pages.sh          # serves at http://localhost:8080
+scripts/preview-gh-pages.sh 9000     # or any other port
+```
+
+It exports the current local `gh-pages` branch (same as
+`build-versioned-site.sh`) and runs it in `httpd:2.4-alpine`. `Ctrl+C` stops
+and removes the container. Testing only — this isn't part of the production
+setup.
