@@ -1,18 +1,17 @@
-# Pandora FMS Guides — Pilot
+# Welcome
 
-This is a pilot migration from BookStack to **MkDocs + Material**, with:
+Welcome to the Pandora FMS plugin documentation — guides, integrations, and
+Discovery modules for the Pandora FMS monitoring platform.
 
-- Multilanguage support (`mkdocs-static-i18n`, folder-based: `docs/en/`, `docs/es/`)
-- Image handling via Git commits + lightbox zoom (`mkdocs-glightbox`)
-- Staging deploys per branch through GitLab CI/Pages
+## Where to find things
 
-## Example image
+- **Plugins** — standalone/manual plugins, run by hand or as a regular
+  server plugin.
+- **Integrations** — connectors to external tools (Telegram, Microsoft
+  Teams, Google Chat...), mainly used for alerting.
+- **Discovery** — plugins driven by the Discovery task wizard, which
+  auto-generates agents and modules from their output.
+- **[Extras](extras/how-to-document.md)** — meta content about the site
+  itself, including how to contribute new documentation.
 
-Images live as plain files under `docs/<lang>/assets/images/` and are referenced
-from markdown like any static site. If a language folder doesn't have a
-localized copy of an asset, it automatically falls back to the default
-language's file (`fallback_to_default: true`).
-
-![Pilot screenshot](assets/images/screenshot.png)
-
-Next: [How to document](extras/how-to-document.md)
+Use the sidebar to browse each section.
