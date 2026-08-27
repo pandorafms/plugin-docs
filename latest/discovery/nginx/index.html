@@ -454,6 +454,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#compatibility-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -556,13 +567,58 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Manual execution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execution-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution format
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Execution format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verbose-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verbose mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#discovery" class="md-nav__link">
+  <a href="#configuration-in-pandorafms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Discovery
+        Configuration in PandoraFMS
       
     </span>
   </a>
@@ -1038,6 +1094,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#compatibility-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1140,13 +1207,58 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Manual execution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execution-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution format
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Execution format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verbose-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verbose mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#discovery" class="md-nav__link">
+  <a href="#configuration-in-pandorafms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Discovery
+        Configuration in PandoraFMS
       
     </span>
   </a>
@@ -1215,6 +1327,21 @@
 <h1 id="nginx-discovery">NGINX Discovery<a class="headerlink" href="#nginx-discovery" title="Permanent link">¶</a></h1>
 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">¶</a></h2>
 <p>This NGINX discovery plugin for Pandora FMS is designed to automate the monitoring of your NGINX servers by leveraging the information provided by the <code>ngx_http_stub_status_module</code> (stub_status). By interacting with that endpoint, the plugin collects real-time metrics that are crucial to understanding the performance and health of your NGINX environment, including active connections, accepted and handled connections, processed requests, and the state of connections in reading, writing, and waiting states. One agent will be created in Pandora FMS for each NGINX URL, with one module per available metric.</p>
+<h2 id="compatibility-matrix">Compatibility matrix<a class="headerlink" href="#compatibility-matrix" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Systems where tested</strong></th>
+<th>NGINX <code>nginx:alpine</code> containers exposed over plain HTTP and over HTTPS with basic authentication (the plugin's own test environment)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Systems where it works</strong></td>
+<td>Any Linux system supported by Pandora FMS. The plugin ships as a compiled binary that bundles its dependencies, so it needs no Python installation on the host. The host operating systems it has been run on are not recorded.</td>
+</tr>
+</tbody>
+</table>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">¶</a></h2>
 <ul>
 <li>The plugin is distributed as a compiled binary that already contains all the dependencies needed for its use, so it does not require installing Python or additional libraries.</li>
@@ -1393,6 +1520,10 @@ Reading: 6 Writing: 179 Waiting: 106
 <td><code>--timeout</code></td>
 <td>maximum wait time for the HTTP request in seconds, optional (default 10)</td>
 </tr>
+<tr>
+<td><code>--as_server_plugin</code></td>
+<td>return a single <code>1</code> (agents were created without errors) or <code>0</code> instead of the JSON summary, so the plugin can be used as a server plugin, optional (default false)</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Advanced mode</strong></p>
@@ -1448,18 +1579,21 @@ timeout= maximum wait time for the HTTP request in seconds, optional
 http://192.168.0.11/nginx_status
 </code></pre></div>
 <h2 id="manual-execution">Manual execution<a class="headerlink" href="#manual-execution" title="Permanent link">¶</a></h2>
+<p>The execution will return a JSON output with information about the run, and will generate one XML file per monitored agent (in tentacle mode) which will be sent to the Pandora FMS server using the transfer method indicated in the configuration. In <code>native</code> mode the data is exposed in the <code>monitoring_data</code> field of the JSON output so that it is consumed by the Discovery server.</p>
+<h3 id="execution-format">Execution format<a class="headerlink" href="#execution-format" title="Permanent link">¶</a></h3>
 <p>The plugin execution format is as follows:</p>
 <div class="highlight"><pre><span></span><code>./pandora_nginx<span class="w"> </span>--urls<span class="w"> </span>&lt;NGINX<span class="w"> </span>endpoint<span class="w"> </span>URLs<span class="w"> </span>separated<span class="w"> </span>by<span class="w"> </span>commas&gt;<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--password<span class="w"> </span>&lt;password&gt;<span class="w"> </span>--ssl<span class="w"> </span>&lt;true<span class="p">|</span>false&gt;<span class="w"> </span>--prefix<span class="w"> </span>&lt;prefix&gt;<span class="w"> </span>--transfer_mode<span class="w"> </span>&lt;native<span class="p">|</span>tentacle&gt;<span class="w"> </span>--tentacle_ip<span class="w"> </span>&lt;tentacle<span class="w"> </span>IP&gt;<span class="w"> </span>--tentacle_port<span class="w"> </span>&lt;tentacle<span class="w"> </span>port&gt;<span class="w"> </span>--interval<span class="w"> </span>&lt;interval&gt;<span class="w"> </span>--allow_list<span class="w"> </span>&lt;regex&gt;<span class="w"> </span>--deny_list<span class="w"> </span>&lt;regex&gt;<span class="w"> </span>--timeout<span class="w"> </span>&lt;seconds&gt;<span class="w"> </span>--conf<span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>configuration<span class="w"> </span>file&gt;<span class="w"> </span>--targets_file<span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>URLs<span class="w"> </span>file&gt;
 </code></pre></div>
-<p>Examples:</p>
+<h4 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">¶</a></h4>
 <p>to run in simple mode</p>
 <div class="highlight"><pre><span></span><code>./pandora_nginx<span class="w"> </span>--urls<span class="w"> </span>http://192.168.0.10/nginx_status,http://192.168.0.11/nginx_status<span class="w"> </span>--user<span class="w"> </span>admin<span class="w"> </span>--password<span class="w"> </span><span class="m">12345</span><span class="w"> </span>--ssl<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--transfer_mode<span class="w"> </span>native<span class="w"> </span>--tentacle_ip<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--tentacle_port<span class="w"> </span><span class="m">41121</span>
 </code></pre></div>
 <p>to run in advanced mode</p>
 <div class="highlight"><pre><span></span><code>./pandora_nginx<span class="w"> </span>--conf<span class="w"> </span>/etc/pandora/nginx.conf<span class="w"> </span>--targets_file<span class="w"> </span>/etc/pandora/nginx_targets.conf
 </code></pre></div>
-<p>The execution will return a JSON output with information about the run, and will generate one XML file per monitored agent (in tentacle mode) which will be sent to the Pandora FMS server using the transfer method indicated in the configuration. In <code>native</code> mode the data is exposed in the <code>monitoring_data</code> field of the JSON output so that it is consumed by the Discovery server.</p>
-<h2 id="discovery">Discovery<a class="headerlink" href="#discovery" title="Permanent link">¶</a></h2>
+<h4 id="verbose-mode">Verbose mode<a class="headerlink" href="#verbose-mode" title="Permanent link">¶</a></h4>
+<p>The plugin has no verbose or debug flag. Its only diagnostic channel is the JSON execution summary printed to standard output, which reports the failing endpoint when a request to <code>stub_status</code> cannot be completed.</p>
+<h2 id="configuration-in-pandorafms">Configuration in PandoraFMS<a class="headerlink" href="#configuration-in-pandorafms" title="Permanent link">¶</a></h2>
 <p>This plugin can be integrated with Pandora FMS <em>Discovery</em>.</p>
 <p>To do so, load the ".disco" package that you can download from the Pandora FMS library:</p>
 <p><a href="https://pandorafms.com/library/">https://pandorafms.com/library/</a></p>
