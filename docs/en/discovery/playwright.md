@@ -16,7 +16,7 @@ It is the Playwright counterpart of `pandorafms.selenium.4`, but built around Pl
 | --- | --- |
 | **Systems where it works** | Any system that can run Docker as the local server, or reach a remote host over SSH that can run Docker |
 
-## Pre requisites
+## Prerequisites
 
 **1. Docker**The machine that executes the test must have Docker available: the Discovery/Pandora server itself for `worker_mode = local`, or the SSH target for `worker_mode = remote`.
 
