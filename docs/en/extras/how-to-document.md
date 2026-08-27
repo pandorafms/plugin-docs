@@ -191,3 +191,21 @@ UID=$(id -u) GID=$(id -g) docker compose up
 
 Both open `http://localhost:8000` with live reload — edits to any `.md` or
 image refresh the browser automatically.
+
+## How to contribute
+
+All the documentation lives in the
+[plugin-docs repository](https://github.com/pandorafms/plugin-docs). To
+contribute:
+
+1. Make your changes in a branch (or fork) and open a pull request (PR)
+   against the repository. The PR form is pre-filled from the repository's
+   PR template (`.github/PULL_REQUEST_TEMPLATE.md`): type of change,
+   affected section, language coverage, and local build verification.
+2. An administrator verifies the PR and, once everything checks out,
+   approves and merges it.
+
+The official documentation is published at
+<https://docs.pandorafms.com/integrations/> and is synchronized
+periodically with the `main` branch of the repository, so merged changes
+reach the live site automatically.
