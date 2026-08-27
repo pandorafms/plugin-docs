@@ -365,3 +365,23 @@ El plugin asigna identificadores estables en el campo `extra_data` de cada agent
 - **Módulos de métricas**: `nginx:metric_<metric_name>:<url_saneada>` — por ejemplo `nginx:metric_active_connections:...`, `nginx:metric_accepts:...`, etc.
 
 Estos marcadores no contienen ni el nombre del agente ni el del módulo, sino el identificador externo (la URL del target), que es estable y significativo a nivel de dominio.
+
+
+## Extensión de consola
+
+El plugin se acompaña de una extensión de consola, `nginx_view`, que muestra un cuadro de mando con todos
+los nodos NGINX monitorizados por el plugin. No se instala con el paquete `.disco`: la extensión forma
+parte de la consola, en `pandora_console_extensions/nginx_view/`.
+
+Una vez disponible, aparece en la consola dentro de **Operation**, como **NGINX Monitoring**. Para verla
+hacen falta permisos de lectura (`AR`) sobre los agentes.
+
+A la extensión no hay que indicarle qué agentes debe leer. Los descubre consultando los marcadores
+`extra_data` que escribe el plugin: selecciona todos los módulos cuyo `extra_data` empieza por
+`nginx:metric_` y resuelve los agentes a los que pertenecen. Por tanto, cualquier agente creado por el
+plugin aparece automáticamente, sin configurar nada en la extensión.
+
+Muestra tarjetas de resumen con el número de nodos NGINX, cuántos están activos y caídos, el total de
+conexiones activas y el contador agregado de peticiones, seguidas de una tabla por nodo.
+
+<!-- SCREENSHOT NEEDED: el cuadro de mando de la extensión NGINX Monitoring, con las tarjetas de resumen y la tabla de nodos, con al menos dos nodos monitorizados -->

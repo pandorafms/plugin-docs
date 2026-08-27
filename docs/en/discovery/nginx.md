@@ -365,3 +365,23 @@ The plugin assigns stable identifiers in the `extra_data` field of each agent an
 - **Metric modules**: `nginx:metric_<metric_name>:<sanitized_url>` — for example `nginx:metric_active_connections:...`, `nginx:metric_accepts:...`, etc.
 
 These markers do not contain the agent or module name, but the external identifier (the target URL), which is stable and meaningful at the domain level.
+
+
+## Console extension
+
+The plugin ships with a companion console extension, `nginx_view`, which renders a dashboard of every
+NGINX node the plugin monitors. It is not installed by the `.disco` package: the extension is part of the
+console, under `pandora_console_extensions/nginx_view/`.
+
+Once available, it appears in the console under **Operation**, as **NGINX Monitoring**. Viewing it
+requires read permission (`AR`) over the agents.
+
+The extension does not need to be told which agents to read. It discovers them by querying the
+`extra_data` markers the plugin writes, selecting every module whose `extra_data` starts with
+`nginx:metric_` and resolving the agents that own them. Any agent created by the plugin therefore shows
+up automatically, with no configuration on the extension side.
+
+It displays summary cards for the number of NGINX nodes, how many are up and down, total active
+connections and the aggregated request counter, followed by a per-node table.
+
+<!-- SCREENSHOT NEEDED: the NGINX Monitoring extension dashboard, showing the summary cards and the node table, with at least two monitored nodes -->
