@@ -1,0 +1,1692 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://guides.pandorafms.example/latest/es/discovery/apache-discovery/">
+      
+      
+        <link rel="prev" href="../../integrations/telegram/">
+      
+      
+        <link rel="next" href="../nginx/">
+      
+      
+        
+          <link rel="alternate" href="../../../discovery/apache-discovery/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Apache Discovery - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#apache-discovery" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Apache Discovery
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../discovery/apache-discovery/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducción
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#matriz-de-compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matriz de compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerrequisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerrequisitos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-de-apache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración de Apache
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración de Apache">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parametros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejecucion-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución manual
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ejecución manual">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formato-de-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formato de ejecución
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Formato de ejecución">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejemplos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modo-verbose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modo verbose
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-en-pandorafms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración en PandoraFMS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agentes-y-modulos-generados-por-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes y módulos generados por el plugin
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducción
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#matriz-de-compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matriz de compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerrequisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerrequisitos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-de-apache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración de Apache
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración de Apache">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parametros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejecucion-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución manual
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ejecución manual">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formato-de-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formato de ejecución
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Formato de ejecución">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejemplos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modo-verbose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modo verbose
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-en-pandorafms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración en PandoraFMS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agentes-y-modulos-generados-por-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes y módulos generados por el plugin
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="apache-discovery">Apache Discovery<a class="headerlink" href="#apache-discovery" title="Permanent link">¶</a></h1>
+<h2 id="introduccion">Introducción<a class="headerlink" href="#introduccion" title="Permanent link">¶</a></h2>
+<p>Este plugin de discovery de Apache (versión 1.5) para Pandora FMS está diseñado para automatizar la monitorización de instancias de Apache HTTP Server, aprovechando la información que proporciona <code>mod_status</code>. Al interactuar con la página de estado del servidor (<code>server-status</code>), el plugin recopila métricas en tiempo real que son cruciales para entender el rendimiento y la salud de tu entorno Apache. El plugin crea un agente por instancia de Apache configurada, con un módulo por cada métrica disponible más un módulo fijo de conexión/disponibilidad.</p>
+<h2 id="matriz-de-compatibilidad">Matriz de compatibilidad<a class="headerlink" href="#matriz-de-compatibilidad" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Sistemas donde se ha probado</strong></th>
+<th>Un contenedor <code>httpd:alpine</code> que expone <code>server-status</code> por HTTP simple (el propio entorno de pruebas del plugin)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sistemas donde funciona</strong></td>
+<td>Cualquier sistema Linux compatible con Pandora FMS. El plugin se distribuye como binario compilado que incluye sus dependencias, por lo que no requiere Python instalado en el host. No hay registro de los sistemas operativos concretos en los que se ha ejecutado.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="prerrequisitos">Prerrequisitos<a class="headerlink" href="#prerrequisitos" title="Permanent link">¶</a></h2>
+<ul>
+<li>El plugin es un compilado que contiene todas las dependencias necesarias para su uso, por lo que no requiere instalar Python ni librerías adicionales.</li>
+<li>El módulo <code>mod_status</code> de Apache debe estar habilitado y la ruta <code>server-status</code> accesible. Consulta la sección <a href="#configuracion-de-apache">Configuración de Apache</a> para los pasos.</li>
+</ul>
+<h2 id="configuracion-de-apache">Configuración de Apache<a class="headerlink" href="#configuracion-de-apache" title="Permanent link">¶</a></h2>
+<p>Para que el plugin pueda obtener las estadísticas, Apache debe exponer el endpoint <code>server-status</code> a través de <code>mod_status</code>. Actívalo editando la configuración de Apache (por ejemplo, en un archivo incluido desde <code>httpd.conf</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="nb">LogFormat</span><span class="w"> </span><span class="s2">"%h %l %u %t \"%r\" %&gt;s %b \"%{Referer}i\" \"%{User-agent}i\""</span><span class="w"> </span>combined-status
+
+<span class="nt">&lt;Location</span><span class="w"> </span><span class="s">"/server-status"</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nb">SetHandler</span><span class="w"> </span>server-status
+<span class="w">    </span><span class="nb">Require</span><span class="w"> </span><span class="k">all</span><span class="w"> </span>granted
+<span class="nt">&lt;/Location&gt;</span>
+
+<span class="nb">SetEnvIf</span><span class="w"> </span>Request_URI<span class="w"> </span><span class="s2">"^/server-status"</span><span class="w"> </span>log_combined_status
+<span class="nb">CustomLog</span><span class="w"> </span><span class="sx">/proc/self/fd/1</span><span class="w"> </span>combined-status<span class="w"> </span>env=log_combined_status
+</code></pre></div>
+<p>En producción, restringe el acceso al host de confianza que ejecuta el plugin en lugar de <code>Require all granted</code>, por ejemplo <code>Require ip 192.168.1.50</code>.</p>
+<p>Tras modificar la configuración de Apache, recarga el servicio para aplicar los cambios:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>apache2
+</code></pre></div>
+<h3 id="verificacion">Verificación<a class="headerlink" href="#verificacion" title="Permanent link">¶</a></h3>
+<p>Para verificar que el endpoint responde correctamente, haz una petición manual a la página de estado con la cadena de consulta <code>?auto</code>, que devuelve el formato <code>clave: valor</code> que interpreta el plugin:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://192.168.0.1/server-status?auto
+</code></pre></div>
+<p>La salida debe ser texto plano con formato <code>Clave: valor</code> por línea, por ejemplo:</p>
+<div class="highlight"><pre><span></span><code>Total Accesses: 14733
+Total kBytes: 2461799
+CPULoad: .0828951
+Uptime: 11979
+ReqPerSec: 1.2299
+BytesPerSec: 210442
+BytesPerReq: 171104
+BusyWorkers: 6
+IdleWorkers: 35
+</code></pre></div>
+<p>El conjunto exacto de campos presentes depende de la versión de Apache, el MPM activo y qué módulos opcionales (como <code>mod_cache</code>) estén compilados.</p>
+<h2 id="parametros">Parámetros<a class="headerlink" href="#parametros" title="Permanent link">¶</a></h2>
+<p><strong>Modo simple</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--urls</code></td>
+<td>URL(s) del endpoint <code>server-status</code> de Apache, separadas por comas o saltos de línea. Cada URL genera un agente, salvo que se indique <code>agent_name</code>.</td>
+</tr>
+<tr>
+<td><code>--user</code></td>
+<td>nombre de usuario, si el servidor de Apache lo requiere, opcional</td>
+</tr>
+<tr>
+<td><code>--password</code></td>
+<td>contraseña, si el servidor de Apache lo requiere, opcional</td>
+</tr>
+<tr>
+<td><code>--ssl</code></td>
+<td>si se debe exigir y verificar el certificado HTTPS de la URL, opcional</td>
+</tr>
+<tr>
+<td><code>--transfer_mode</code></td>
+<td>modo de transferencia de datos, opcional</td>
+</tr>
+<tr>
+<td><code>--tentacle_ip</code></td>
+<td>IP del tentacle, opcional</td>
+</tr>
+<tr>
+<td><code>--tentacle_port</code></td>
+<td>puerto del tentacle, opcional</td>
+</tr>
+<tr>
+<td><code>--user_agent</code></td>
+<td>encabezado User-Agent personalizado que se envía a Apache, opcional</td>
+</tr>
+<tr>
+<td><code>-in</code> / <code>--interval</code></td>
+<td>intervalo de monitorización en segundos, opcional</td>
+</tr>
+<tr>
+<td><code>--as_server_plugin</code></td>
+<td>cuando es <code>true</code>, imprime un único <code>1</code> (los agentes se crearon sin errores) o <code>0</code> en lugar del resumen JSON de Discovery, para poder usar el plugin como plugin de servidor normal, opcional (por defecto <code>false</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Modo avanzado</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--conf</code></td>
+<td>ruta a un archivo de configuración con un único bloque <code>[CONF]</code>, equivalente al modo simple</td>
+</tr>
+<tr>
+<td><code>--string_conf</code></td>
+<td>ruta a un archivo de configuración con uno o varios bloques con nombre (<code>[nombre_bloque]</code>), cada uno describiendo un objetivo Apache distinto</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Archivo de configuración (bloque <code>--conf</code> / <code>--string_conf</code>)</strong></p>
+<div class="highlight"><pre><span></span><code>urls= URL(s) de server-status de Apache
+agent_name= nombre específico del agente, opcional
+module_prefix= prefijo añadido a cada nombre de módulo, opcional
+username= nombre de usuario, si el servidor de Apache lo requiere, opcional
+password= contraseña, si el servidor de Apache lo requiere, opcional
+verify_ssl= si se debe exigir y verificar el certificado HTTPS, opcional
+transfer_mode= modo de transferencia de datos, opcional
+tentacle_ip= IP del tentacle, opcional
+tentacle_port= puerto del tentacle, opcional
+interval= intervalo de monitorización en segundos, opcional
+user_agent= encabezado User-Agent personalizado que se envía a Apache, opcional
+module_group= grupo de módulos para los módulos creados, opcional
+</code></pre></div>
+<p><strong>Ejemplo</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nv">urls</span><span class="o">=</span>https://192.168.0.1/example
+<span class="nv">agent_name</span><span class="o">=</span>example
+<span class="nv">module_prefix</span><span class="o">=</span>apache
+<span class="nv">username</span><span class="o">=</span>admin
+<span class="nv">password</span><span class="o">=</span><span class="m">12345</span>
+<span class="nv">verify_ssl</span><span class="o">=</span><span class="nb">true</span>
+<span class="nv">transfer_mode</span><span class="o">=</span>tentacle
+<span class="nv">tentacle_ip</span><span class="o">=</span><span class="m">127</span>.0.0.1
+<span class="nv">tentacle_port</span><span class="o">=</span><span class="m">41121</span>
+<span class="nv">user_agent</span><span class="o">=</span>Mozilla/5.0<span class="w"> </span><span class="o">(</span>Windows<span class="w"> </span>NT<span class="w"> </span><span class="m">10</span>.0<span class="p">;</span><span class="w"> </span>Win64<span class="p">;</span><span class="w"> </span>x64<span class="o">)</span><span class="w"> </span>AppleWebKit/537.36<span class="w"> </span><span class="o">(</span>KHTML,<span class="w"> </span>like<span class="w"> </span>Gecko<span class="o">)</span><span class="w"> </span>Chrome/125.0.0.0<span class="w"> </span>Safari/537.36
+</code></pre></div>
+<p>Los archivos <code>--string_conf</code> pueden contener varios bloques con nombre, cada uno convertido en un objetivo Apache independiente con su propio agente:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[conf1]</span>
+<span class="na">urls</span><span class="o">=</span><span class="s">http://192.168.0.1/example</span>
+<span class="na">agent_name</span><span class="o">=</span><span class="s">local</span>
+<span class="na">module_prefix</span><span class="o">=</span><span class="s">apache</span>
+<span class="na">username</span><span class="o">=</span><span class="s">admin</span>
+<span class="na">password</span><span class="o">=</span><span class="s">12345</span>
+<span class="na">verify_ssl</span><span class="o">=</span><span class="s">true</span>
+<span class="na">tentacle_ip</span><span class="o">=</span><span class="s">127.0.0.1</span>
+<span class="na">tentacle_port</span><span class="o">=</span><span class="s">41121</span>
+</code></pre></div>
+<h2 id="ejecucion-manual">Ejecución manual<a class="headerlink" href="#ejecucion-manual" title="Permanent link">¶</a></h2>
+<p>La ejecución devuelve una salida en formato JSON con información sobre la ejecución, y genera un fichero XML por cada agente monitorizado, que se envía al servidor de Pandora FMS por el método de transferencia indicado en la configuración.</p>
+<h3 id="formato-de-ejecucion">Formato de ejecución<a class="headerlink" href="#formato-de-ejecucion" title="Permanent link">¶</a></h3>
+<p>El formato de ejecución del plugin es el siguiente:</p>
+<div class="highlight"><pre><span></span><code>./pandora_apache<span class="w"> </span>--urls<span class="w"> </span>&lt;URL<span class="o">(</span>s<span class="o">)</span><span class="w"> </span>de<span class="w"> </span>server-status<span class="w"> </span>de<span class="w"> </span>Apache&gt;<span class="w"> </span>--user<span class="w"> </span>&lt;nombre<span class="w"> </span>de<span class="w"> </span>usuario&gt;<span class="w"> </span>--password<span class="w"> </span>&lt;contraseña&gt;<span class="w"> </span>--ssl<span class="w"> </span>&lt;true<span class="p">|</span>false&gt;<span class="w"> </span>--transfer_mode<span class="w"> </span>&lt;modo<span class="w"> </span>de<span class="w"> </span>transferencia&gt;<span class="w"> </span>--tentacle_ip<span class="w"> </span>&lt;IP<span class="w"> </span>del<span class="w"> </span>tentacle&gt;<span class="w"> </span>--tentacle_port<span class="w"> </span>&lt;puerto<span class="w"> </span>del<span class="w"> </span>tentacle&gt;<span class="w"> </span>--user_agent<span class="w"> </span>&lt;User-Agent&gt;<span class="w"> </span>--interval<span class="w"> </span>&lt;segundos&gt;<span class="w"> </span>--conf<span class="w"> </span>&lt;ruta<span class="w"> </span>al<span class="w"> </span>fichero<span class="w"> </span>de<span class="w"> </span>configuración&gt;<span class="w"> </span>--string_conf<span class="w"> </span>&lt;ruta<span class="w"> </span>al<span class="w"> </span>fichero<span class="w"> </span>de<span class="w"> </span>configuración<span class="w"> </span>con<span class="w"> </span>bloques<span class="w"> </span>con<span class="w"> </span>nombre&gt;<span class="w"> </span>--as_server_plugin<span class="w"> </span>&lt;true<span class="p">|</span>false&gt;
+</code></pre></div>
+<h4 id="ejemplos">Ejemplos<a class="headerlink" href="#ejemplos" title="Permanent link">¶</a></h4>
+<p>para ejecutar en modo simple</p>
+<div class="highlight"><pre><span></span><code>./pandora_apache<span class="w"> </span>--urls<span class="w"> </span>http://192.168.0.1/server<span class="w"> </span>--ssl<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--transfer_mode<span class="w"> </span>tentacle<span class="w"> </span>--tentacle_ip<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--tentacle_port<span class="w"> </span><span class="m">41121</span>
+</code></pre></div>
+<p>para ejecutar en modo avanzado</p>
+<div class="highlight"><pre><span></span><code>./pandora_apache<span class="w"> </span>--urls<span class="w"> </span>http://192.168.0.1/server<span class="w"> </span>--ssl<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--transfer_mode<span class="w"> </span>tentacle<span class="w"> </span>--tentacle_ip<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--tentacle_port<span class="w"> </span><span class="m">41121</span><span class="w"> </span>--conf<span class="w"> </span>/file/file.conf
+</code></pre></div>
+<h4 id="modo-verbose">Modo verbose<a class="headerlink" href="#modo-verbose" title="Permanent link">¶</a></h4>
+<p>El plugin no dispone de opción de verbose o depuración. Su único canal de diagnóstico es el texto informativo incluido en la salida JSON/Discovery, que reporta errores de petición y, cuando se encuentran menos métricas de las esperadas para un objetivo, cuáles faltan.</p>
+<h2 id="configuracion-en-pandorafms">Configuración en PandoraFMS<a class="headerlink" href="#configuracion-en-pandorafms" title="Permanent link">¶</a></h2>
+<p>Este plugin puede integrarse con el <em>Discovery</em> de Pandora FMS.</p>
+<p>Para ello se debe cargar el paquete ".disco" que puede descargarse desde la librería de Pandora FMS:</p>
+<p><a href="https://pandorafms.com/library/">https://pandorafms.com/library/</a></p>
+<p>Una vez cargado, se pueden monitorizar instancias de Apache creando tareas de <em>Discovery</em> desde la sección <em>Management &gt; Discovery &gt; Application &gt; Apache</em>.</p>
+<p>Para cada tarea se solicitan los siguientes datos mínimos en el paso <strong>Apache Basic</strong>:</p>
+<ul>
+<li><strong>Apache urls:</strong> URL(s) del server-status de Apache</li>
+<li><strong>User:</strong> usuario del servidor, si es requerido, opcional</li>
+<li><strong>Password:</strong> contraseña del servidor, si es requerida, opcional</li>
+<li><strong>Verify SSL:</strong> activo si es necesario verificar el certificado SSL de la URL, activo por defecto</li>
+<li><strong>Tentacle Mode:</strong> modo de transferencia, opcional</li>
+<li><strong>Tentacle IP:</strong> IP del tentacle, opcional</li>
+<li><strong>Tentacle port:</strong> puerto del tentacle, opcional</li>
+<li><strong>Module group:</strong> selector con los grupos de módulos disponibles</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/apache-discovery/wizard-basic.png" data-desc-position="bottom"><img alt="Paso Apache Basic de la tarea de Discovery" src="../../../assets/images/discovery/apache-discovery/wizard-basic.png"></a></p>
+<p>En el paso <strong>Apache Detailed</strong> se ofrece un área de texto para añadir la configuración de cada bloque de Apache que se quiera monitorizar:</p>
+<ul>
+<li><strong>Block:</strong> nombre del bloque, por ejemplo <code>[conf]</code>, requerido.</li>
+<li><strong>Apache urls:</strong> URL del server-status de Apache.</li>
+<li><strong>Agent name:</strong> nombre específico para el agente, opcional.</li>
+<li><strong>Module prefix:</strong> prefijo para cada módulo, opcional.</li>
+<li><strong>User:</strong> usuario del servidor, si es requerido, opcional.</li>
+<li><strong>Password:</strong> contraseña del servidor, si es requerida, opcional.</li>
+<li><strong>Verify SSL:</strong> activo si es necesario verificar el certificado SSL de la URL, activo por defecto.</li>
+<li><strong>User_agent:</strong> encabezado User-Agent personalizado que se envía a Apache, opcional.</li>
+<li><strong>Tentacle Mode:</strong> modo de transferencia, opcional.</li>
+<li><strong>Tentacle IP:</strong> IP del tentacle, opcional.</li>
+<li><strong>Tentacle port:</strong> puerto del tentacle, opcional.</li>
+</ul>
+<p>También hay un campo a nivel de tarea para establecer un User-Agent personalizado.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/apache-discovery/wizard-advanced.png" data-desc-position="bottom"><img alt="Paso Apache Detailed de la tarea de Discovery" src="../../../assets/images/discovery/apache-discovery/wizard-advanced.png"></a></p>
+<p>Las tareas completadas con éxito muestran un resumen de ejecución con la siguiente información:</p>
+<ul>
+<li><strong>Total agents:</strong> número total de agentes generados por la tarea.</li>
+<li><strong>Total modules:</strong> número total de módulos generados por la tarea.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/apache-discovery/task-summary.png" data-desc-position="bottom"><img alt="Resumen de ejecución de la tarea de Discovery" src="../../../assets/images/discovery/apache-discovery/task-summary.png"></a></p>
+<h2 id="agentes-y-modulos-generados-por-el-plugin">Agentes y módulos generados por el plugin<a class="headerlink" href="#agentes-y-modulos-generados-por-el-plugin" title="Permanent link">¶</a></h2>
+<p>El plugin crea un agente por instancia. En modo simple, el nombre del agente se toma de la URL. En modo avanzado, se crea un agente por cada bloque enviado, nombrado según el campo <strong>agent name</strong>; si no se especifica, el nombre se toma de la URL. Cada agente incluye siempre un módulo <strong>Apache Connection</strong> (<code>generic_proc</code>), que refleja si el endpoint <code>server-status</code> respondió: valor <code>1</code> si respondió, <code>0</code> si no se pudo alcanzar, con el error descrito en la descripción del módulo en caso de fallo. Este módulo de conexión se crea incluso cuando la petición falla, de modo que la disponibilidad se monitoriza independientemente del resto de métricas.</p>
+<p>El resto de módulos depende de la configuración y la versión del servidor Apache: una instalación reciente de Apache con todos los módulos relevantes activos expone todas las métricas. Se crean como <code>generic_data</code> (valores numéricos) o <code>generic_data_string</code> (valores no numéricos) según el tipo del valor interpretado:</p>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ServerVersion</td>
+<td>La versión del servicio Apache (p. ej., Apache/2.4.62)</td>
+</tr>
+<tr>
+<td>ServerMPM</td>
+<td>El módulo de multiprocesamiento (MPM) que Apache utiliza actualmente (p. ej., event, prefork, worker)</td>
+</tr>
+<tr>
+<td>ServerBuilt</td>
+<td>La fecha y hora de compilación del binario del servidor Apache</td>
+</tr>
+<tr>
+<td>ParentServerConfigGeneration</td>
+<td>La generación de la configuración del proceso Apache principal. Se incrementa con cada reinicio elegante</td>
+</tr>
+<tr>
+<td>ParentServerMPMGeneration</td>
+<td>La generación del MPM del proceso Apache principal</td>
+</tr>
+<tr>
+<td>ServerUptimeSeconds</td>
+<td>El tiempo de actividad del servicio expresado en segundos</td>
+</tr>
+<tr>
+<td>Load1</td>
+<td>El promedio de carga del sistema durante el último minuto</td>
+</tr>
+<tr>
+<td>Load5</td>
+<td>El promedio de carga del sistema durante los últimos 5 minutos</td>
+</tr>
+<tr>
+<td>Load15</td>
+<td>El promedio de carga del sistema durante los últimos 15 minutos</td>
+</tr>
+<tr>
+<td>Total Accesses</td>
+<td>El número total de solicitudes de cliente recibidas por el servidor desde su último inicio/reinicio</td>
+</tr>
+<tr>
+<td>Total kBytes</td>
+<td>La cantidad total de kilobytes de datos servidos por el servidor Apache desde su último inicio/reinicio</td>
+</tr>
+<tr>
+<td>Total Duration</td>
+<td>El tiempo acumulado dedicado al procesamiento de todas las solicitudes desde que se inició el servidor (en microsegundos o milisegundos, según la versión y configuración de Apache)</td>
+</tr>
+<tr>
+<td>CPUUser</td>
+<td>Tiempo de CPU utilizado por los procesos Apache en modo de usuario desde el inicio del servidor, expresado como porcentaje</td>
+</tr>
+<tr>
+<td>CPUSystem</td>
+<td>Tiempo de CPU utilizado por los procesos Apache en modo de sistema (kernel) desde el inicio del servidor, expresado como porcentaje</td>
+</tr>
+<tr>
+<td>CPUChildrenUser</td>
+<td>Tiempo de CPU utilizado por los procesos secundarios de Apache en modo de usuario</td>
+</tr>
+<tr>
+<td>CPUChildrenSystem</td>
+<td>Tiempo de CPU utilizado por los procesos secundarios de Apache en modo de sistema (kernel)</td>
+</tr>
+<tr>
+<td>CPULoad</td>
+<td>Porcentaje de carga de CPU total consumida por todos los procesos Apache combinados desde el inicio del servidor</td>
+</tr>
+<tr>
+<td>Uptime</td>
+<td>Representación legible del tiempo de actividad del servidor (p. ej., "2 días, 4 horas y 40 minutos"), derivada de ServerUptimeSeconds</td>
+</tr>
+<tr>
+<td>ReqPerSec</td>
+<td>Número promedio de solicitudes atendidas por segundo desde el inicio/reinicio del servidor. El plugin no lo utiliza, ya que cuenta el promedio desde el último inicio de Apache</td>
+</tr>
+<tr>
+<td>BytesPerSec</td>
+<td>Promedio de bytes servidos por segundo desde el inicio/reinicio del servidor. El plugin no lo utiliza, ya que cuenta el promedio desde el último inicio de Apache</td>
+</tr>
+<tr>
+<td>BytesPerReq</td>
+<td>Promedio de bytes servidos por solicitud desde el inicio/reinicio del servidor</td>
+</tr>
+<tr>
+<td>DurationPerReq</td>
+<td>Tiempo promedio de procesamiento de cada solicitud desde el inicio/reinicio del servidor (en milisegundos o microsegundos)</td>
+</tr>
+<tr>
+<td>BusyWorkers</td>
+<td>Número total de subprocesos/procesos de trabajo actualmente ocupados gestionando solicitudes</td>
+</tr>
+<tr>
+<td>GracefulWorkers</td>
+<td>Número de procesos de trabajo en estado de apagado elegante</td>
+</tr>
+<tr>
+<td>IdleWorkers</td>
+<td>Número total de subprocesos/procesos de trabajo actualmente inactivos y listos para gestionar nuevas solicitudes</td>
+</tr>
+<tr>
+<td>Processes</td>
+<td>Número de procesos Apache activos (no subprocesos) ejecutándose actualmente</td>
+</tr>
+<tr>
+<td>Stopping</td>
+<td>Número de procesos de trabajo en estado de detención</td>
+</tr>
+<tr>
+<td>ConnsTotal</td>
+<td>Número total de conexiones al servidor Apache</td>
+</tr>
+<tr>
+<td>ConnsAsyncWriting</td>
+<td>Número de conexiones asíncronas en estado de escritura (aplicable solo al MPM event)</td>
+</tr>
+<tr>
+<td>ConnsAsyncKeepAlive</td>
+<td>Número de conexiones asíncronas en estado de mantenimiento activo (aplicable solo al MPM event)</td>
+</tr>
+<tr>
+<td>ConnsAsyncClosing</td>
+<td>Número de conexiones asíncronas en estado de cierre (aplicable solo al MPM event)</td>
+</tr>
+<tr>
+<td>CacheType</td>
+<td>Tipo de mecanismo de caché utilizado por Apache (p. ej., SHMCB para memoria compartida)</td>
+</tr>
+<tr>
+<td>CacheSharedMemory</td>
+<td>Cantidad total de memoria compartida asignada a la caché</td>
+</tr>
+<tr>
+<td>CacheCurrentEntries</td>
+<td>Número actual de entradas almacenadas en la caché</td>
+</tr>
+<tr>
+<td>CacheSubcaches</td>
+<td>Número de subcachés dentro de la caché principal</td>
+</tr>
+<tr>
+<td>CacheIndexesPerSubcaches</td>
+<td>Número de entradas de índice por subcaché</td>
+</tr>
+<tr>
+<td>CacheIndexUsage</td>
+<td>Porcentaje del espacio de índice de la caché actualmente en uso</td>
+</tr>
+<tr>
+<td>CacheUsage</td>
+<td>Porcentaje total de la memoria de caché actualmente en uso</td>
+</tr>
+<tr>
+<td>CacheStoreCount</td>
+<td>Número total de veces que un elemento se ha almacenado correctamente en la caché</td>
+</tr>
+<tr>
+<td>CacheReplaceCount</td>
+<td>Número total de veces que se ha reemplazado una entrada de caché existente</td>
+</tr>
+<tr>
+<td>CacheExpireCount</td>
+<td>Número total de veces que una entrada de caché ha expirado</td>
+</tr>
+<tr>
+<td>CacheDiscardCount</td>
+<td>Número total de veces que una entrada de caché ha sido descartada</td>
+</tr>
+<tr>
+<td>CacheRetrieveHitCount</td>
+<td>Número total de veces que un elemento solicitado se encontró en la caché (acierto)</td>
+</tr>
+<tr>
+<td>CacheRetrieveMissCount</td>
+<td>Número total de veces que un elemento solicitado no se encontró en la caché (fallo)</td>
+</tr>
+<tr>
+<td>CacheRemoveHitCount</td>
+<td>Número total de veces que un elemento se eliminó correctamente de la caché al encontrarlo</td>
+</tr>
+<tr>
+<td>CacheRemoveMissCount</td>
+<td>Número total de veces que se intentó eliminar un elemento de la caché pero no se encontró</td>
+</tr>
+</tbody>
+</table>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/apache-discovery/module-list.png" data-desc-position="bottom"><img alt="Módulos generados para un agente Apache" src="../../../assets/images/discovery/apache-discovery/module-list.png"></a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
