@@ -14,7 +14,7 @@ Este documento describe la funcionalidad del plugin de Oculix y su integración 
 | --- | --- |
 | **Sistemas donde funciona** | Cualquier sistema linux y windows |
 
-## Pre requisitos
+## Prerrequisitos
 
 **1. Java Runtime Environment**  
 El plugin ejecuta un archivo JAR de Oculix, por lo que es necesario tener Java instalado y accesible en el PATH del sistema. Se recomienda Java 17 o superior.
