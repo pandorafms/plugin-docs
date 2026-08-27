@@ -1,5 +1,11 @@
 # Google Chat integration
 
+## Introduction
+
+This integration publishes Pandora FMS alerts into a Google Chat room through an incoming webhook. The
+room exposes a webhook URL, and a Pandora FMS alert command posts the alert text to it, so alerts appear
+as messages in the room alongside the team's conversation.
+
 ## Google Chat settings: chat room
 
 Once you have [logged in](https://mail.google.com/chat/u/0/#chat/welcome) and have been identified with your user credentials, go to the chat room (or add a new one) where the Pandora FMS alert messages will be published. Click on **Manage webhooks**:

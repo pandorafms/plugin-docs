@@ -10,9 +10,9 @@ This document describes the functionality of the Oculix plugin and its integrati
 
 ## Compatibility matrix
 
-| **Systems where tested** | Rocky linux, WIndows2022 |
+| **Systems where tested** | Rocky Linux, Windows Server 2022 |
 | --- | --- |
-| **Systems where it works** | Any linux and windows system |
+| **Systems where it works** | Any Linux or Windows system |
 
 ## Prerequisites
 
