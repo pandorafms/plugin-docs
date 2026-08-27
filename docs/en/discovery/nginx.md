@@ -4,6 +4,12 @@
 
 This NGINX discovery plugin for Pandora FMS is designed to automate the monitoring of your NGINX servers by leveraging the information provided by the `ngx_http_stub_status_module` (stub_status). By interacting with that endpoint, the plugin collects real-time metrics that are crucial to understanding the performance and health of your NGINX environment, including active connections, accepted and handled connections, processed requests, and the state of connections in reading, writing, and waiting states. One agent will be created in Pandora FMS for each NGINX URL, with one module per available metric.
 
+## Compatibility matrix
+
+| **Systems where tested** | NGINX `nginx:alpine` containers exposed over plain HTTP and over HTTPS with basic authentication (the plugin's own test environment) |
+| --- | --- |
+| **Systems where it works** | Any Linux system supported by Pandora FMS. The plugin ships as a compiled binary that bundles its dependencies, so it needs no Python installation on the host. The host operating systems it has been run on are not recorded. |
+
 ## Prerequisites
 
 - The plugin is distributed as a compiled binary that already contains all the dependencies needed for its use, so it does not require installing Python or additional libraries.
@@ -190,6 +196,7 @@ Reading: 6 Writing: 179 Waiting: 106
 | `--allow_list` | regular expression to include only modules whose name matches, optional |
 | `--deny_list` | regular expression to exclude modules whose name matches, optional |
 | `--timeout` | maximum wait time for the HTTP request in seconds, optional (default 10) |
+| `--as_server_plugin` | return a single `1` (agents were created without errors) or `0` instead of the JSON summary, so the plugin can be used as a server plugin, optional (default false) |
 
 **Advanced mode**
 
@@ -248,6 +255,10 @@ http://192.168.0.11/nginx_status
 
 ## Manual execution
 
+The execution will return a JSON output with information about the run, and will generate one XML file per monitored agent (in tentacle mode) which will be sent to the Pandora FMS server using the transfer method indicated in the configuration. In `native` mode the data is exposed in the `monitoring_data` field of the JSON output so that it is consumed by the Discovery server.
+
+### Execution format
+
 The plugin execution format is as follows:
 
 ```bash
@@ -256,7 +267,7 @@ The plugin execution format is as follows:
 
 ```
 
-Examples:
+#### Examples
 
 to run in simple mode
 
@@ -274,9 +285,11 @@ to run in advanced mode
 
 ```
 
-The execution will return a JSON output with information about the run, and will generate one XML file per monitored agent (in tentacle mode) which will be sent to the Pandora FMS server using the transfer method indicated in the configuration. In `native` mode the data is exposed in the `monitoring_data` field of the JSON output so that it is consumed by the Discovery server.
+#### Verbose mode
 
-## Discovery
+The plugin has no verbose or debug flag. Its only diagnostic channel is the JSON execution summary printed to standard output, which reports the failing endpoint when a request to `stub_status` cannot be completed.
+
+## Configuration in PandoraFMS
 
 This plugin can be integrated with Pandora FMS *Discovery*.
 
