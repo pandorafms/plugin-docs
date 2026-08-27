@@ -163,7 +163,7 @@ El plugin se distribuye como un paquete de Discovery `.disco`. Para configurarlo
 
 **5. Abre el/los agente(s) resultante(s)** en la consola. La **vista transaccional WUX** muestra las fases derivadas de `test.step(...)`; las vistas de módulo estándar muestran estado, tiempo, captura de pantalla del error, métricas y (si está activado) los módulos de histórico de errores.
 
-## Agente y módulos generados por el plugin
+## Agentes y módulos generados por el plugin
 
 **Un agente por cada `test(...)` de Playwright.**
 

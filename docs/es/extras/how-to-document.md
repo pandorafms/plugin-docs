@@ -162,6 +162,14 @@ docs/es/plugins/
 Sin límite de profundidad — carpetas dentro de carpetas se convierten en
 secciones anidadas del menú.
 
+## Traducciones del menú
+
+No hace falta traducir nada aparte del contenido: el título que se muestra en
+el menú es el `# H1` de cada página, así que basta con que
+`docs/es/<sección>/<página>.md` tenga su propio título en español. Los ficheros
+`.pages` de sección (`title:`) se traducen igual, duplicando el fichero bajo
+`docs/es/` con el texto correspondiente.
+
 ## Añadir una imagen
 
 Las imágenes viven en `docs/<idioma>/assets/images/<sección>/<slug-del-plugin>/`,
