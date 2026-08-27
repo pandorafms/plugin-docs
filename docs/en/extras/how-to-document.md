@@ -199,7 +199,9 @@ All the documentation lives in the
 contribute:
 
 1. Make your changes in a branch (or fork) and open a pull request (PR)
-   against the repository.
+   against the repository. The PR form is pre-filled from the repository's
+   PR template (`.github/PULL_REQUEST_TEMPLATE.md`): type of change,
+   affected section, language coverage, and local build verification.
 2. An administrator verifies the PR and, once everything checks out,
    approves and merges it.
 

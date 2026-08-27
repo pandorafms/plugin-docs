@@ -210,7 +210,10 @@ Toda la documentación vive en el
 colaborar:
 
 1. Realiza tus cambios en una rama (o fork) y abre un pull request (PR)
-   contra el repositorio.
+   contra el repositorio. El formulario del PR se rellena automáticamente
+   con la plantilla del repositorio (`.github/PULL_REQUEST_TEMPLATE.md`):
+   tipo de cambio, sección afectada, cobertura de idiomas y verificación
+   del build local.
 2. Un administrador verifica el PR y, una vez que todo está correcto, lo
    aprueba y lo mergea.
 
