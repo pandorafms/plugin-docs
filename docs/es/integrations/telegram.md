@@ -1,5 +1,12 @@
 # Integración con Telegram
 
+## Introducción
+
+Esta integración envía las alertas de Pandora FMS a un grupo de Telegram mediante un bot de Telegram. La
+consola incorpora soporte nativo para Telegram, por lo que no interviene ningún CLI externo: se registra
+un bot, se añade al grupo que recibirá las alertas, se guarda su token de API en la consola y se crea una
+acción de alerta que publica en el identificador de chat del grupo.
+
 ## Configuración en Telegram: creación de bot
 
 Primero debe [crear un *bot* en Telegram](https://core.telegram.org/bots/faq)®:
@@ -20,7 +27,7 @@ Una vez realizados los pasos, se nos proporcionara una clave API del bot que hem
 
 ![image.png](../assets/images/integrations/telegram/Milimage.png)
 
-## Configuración en Telegram: crear grupo y añadir bots.
+## Configuración en Telegram: crear grupo y añadir bots
 
 - El siguiente paso es crear un grupo
 
@@ -42,7 +49,7 @@ Una vez realizados los pasos, se nos proporcionara una clave API del bot que hem
 
 ![image.png](../assets/images/integrations/telegram/ryLimage.png)
 
-## Configuración en Pandora FMS: Integración del bot con las alertas
+## Configuración en Pandora FMS: integración del bot con las alertas
 
 Para configurar las alertas primero introduciremos el Token API en el apartado:
 

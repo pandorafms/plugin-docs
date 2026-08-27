@@ -1,6 +1,13 @@
 # Microsoft Teams integration (Workflows)
 
-## MS Teams Configuration: Creating a Channel
+## Introduction
+
+This integration sends Pandora FMS alerts to a Microsoft Teams channel as Adaptive Cards. A Power
+Automate workflow exposes a webhook for the channel, and the `pandora-msteams-workflow` CLI, launched
+from a Pandora FMS alert command, posts the alert data to it. Use it when you want alerts to reach a
+Teams channel with the agent, module and status rendered as readable fields rather than plain text.
+
+## MS Teams settings: creating a channel
 
 To integrate MS Teams with Pandora FMS, first go to the group where the alert messages will be sent. Once there, select the **Add channel** option:
 
@@ -10,9 +17,7 @@ Enter a name, an optional description, and the permissions so that each team mem
 
 ![PFMS_MS_Teams_integration_030.png](../assets/images/integrations/teams/pfms-ms-teams-integration-030.png)
 
-[&lt; PREVIOUS](https://pandorafms.com/guides/public/books/integracion-con-microsoft-teams) [NEXT &gt;](https://pandorafms.com/guides/public/books/integracion-con-microsoft-teams/page/configuracion-en-ms-teams-creacion-de-un-enlace-de-autorizacion)
-
-## MS Teams Configuration: Creating an Authorization URL
+## MS Teams settings: creating an authorization URL
 
 Microsoft Teams has replaced the classic "Incoming Webhooks" with **Workflows** (based on Power Automate). Follow these steps to get your URL directly from a channel:
 
@@ -41,9 +46,33 @@ Microsoft Teams has replaced the classic "Incoming Webhooks" with **Workflows** 
 
 > **Note:** If you need to retrieve the URL later, you can go to the **Workflows** app in the Teams sidebar, enter **Manage workflows**, and edit the corresponding flow.
 
-[&lt; PREVIOUS](https://pandorafms.com/guides/public/books/integracion-con-microsoft-teams/page/configuracion-en-ms-teams-creacion-de-un-canal) [NEXT &gt;](https://pandorafms.com/guides/public/books/integracion-con-microsoft-teams/page/configuracion-en-pandora-fms-creacion-de-un-comando-de-alerta)
+## Pandora FMS configuration: creation of an alert command
 
-## Plugin parameters and manual execution
+The zip package where the binary comes also contains a file called `test-exec.txt` which contains information about additional parameters that will enrich the sent message (subtitle, color, web link button, etc.).
+
+To create an [alert command](https://prewebs.pandorafms.com/docs/index.php?title=Pandora:Documentation_en:Alerts#Introduction_to_the_alert_system), go to the [Pandora FMS Web Console](https://prewebs.pandorafms.com/docs/index.php?title=Pandora:Documentation_en:Interface) and click on **Alerts** -&gt; **Commands** -&gt; **Create**.
+
+![image.png](../assets/images/integrations/teams/aj8image.png)
+
+Next, define the eight necessary fields plus the last two parameters which are constants. Make sure that field number two has the **Hide** box checked and enter the authorization link obtained on the previous page there.
+
+![image.png](../assets/images/integrations/teams/hQaimage.png)
+
+The `test-exec` file that accompanies the *Slack connector CLI* contains information that you can use to fill in these fields. Click the **Create** button to save the alert command.
+
+## Pandora FMS configuration: creating an alert action
+
+[Alert actions](https://prewebs.pandorafms.com/docs/index.php?title=Pandora:Documentation_en:Alerts#Action) allow you to define *how* to launch the command. Go to the **Alerts** -&gt; **Actions** -&gt; **Create** menu.
+
+![image.png](../assets/images/integrations/teams/0X5image.png)
+
+Select the alert command created on the previous page in **Command**; the fields will be filled automatically. However, you can always customize the icons or messages for **Triggering** and **Recovery** events, for example.
+
+![image.png](../assets/images/integrations/teams/KCOimage.png)
+
+To save, click **Create**. To apply this action, whether to a [Module or Policy](https://pandorafms.com/docs/index.php?title=Pandora:Documentation_en:Policies#Modules), set an [alert template](https://pandorafms.com/docs/index.php?title=Pandora:Documentation_en:Alerts#Alert_template) for that purpose.
+
+## Parameters and manual execution
 
 Download the *CLI* from the Pandora FMS marketplace and unzip it on the Pandora FMS server (the recommended location is `/usr/share/pandora_server/util/pandora-msteams-workflow` or any other where the Pandora FMS server has read and execute permissions).
 
@@ -75,7 +104,6 @@ Sending a simple alert with the minimum required data:
   --url "https://your-webhook-url" \
   --data "Agent=Server_Web_01,Module=CPU_Load,Status=Critical"
 
-
 ```
 
 ![image.png](../assets/images/integrations/teams/gwsimage.png)
@@ -95,7 +123,6 @@ Customizing the title, description, button, and image size:
   --button "https://your-pandora-console.com/index.php?sec=estado&sec2=lista_agentes" \
   --button_desc "Open PandoraFMS Console"
 
-
 ```
 
 ![image.png](../assets/images/integrations/teams/1cPimage.png)
@@ -108,31 +135,3 @@ The `--data` parameter processes a text string and converts it into a list of "F
 
 - **Correct format:** `Name=Value,OtherName=OtherValue`
 - **Note:** Avoid using commas (`,`) or equals signs (`=`) within values, as the script uses them as delimiters.
-
-[&lt; PREVIOUS](https://pandorafms.com/guides/public/books/integracion-con-microsoft-teams/page/configuracion-en-ms-teams-creacion-de-un-enlace-de-autorizacion) [NEXT &gt;](https://pandorafms.com/guides/public/books/integracion-con-microsoft-teams/page/configuracion-en-pandora-fms-creacion-de-una-accion-de-alerta)
-
-## Pandora FMS Configuration: Creating an Alert Action
-
-The zip package where the binary comes also contains a file called `test-exec.txt` which contains information about additional parameters that will enrich the sent message (subtitle, color, web link button, etc.).
-
-To create an [alert command](https://prewebs.pandorafms.com/docs/index.php?title=Pandora:Documentation_en:Alerts#Introduction_to_the_alert_system), go to the [Pandora FMS Web Console](https://prewebs.pandorafms.com/docs/index.php?title=Pandora:Documentation_en:Interface) and click on **Alerts** -&gt; **Commands** -&gt; **Create**.
-
-![image.png](../assets/images/integrations/teams/aj8image.png)
-
-Next, define the eight necessary fields plus the last two parameters which are constants. Make sure that field number two has the **Hide** box checked and enter the authorization link obtained on the previous page there.
-
-![image.png](../assets/images/integrations/teams/hQaimage.png)
-
-The `test-exec` file that accompanies the *Slack connector CLI* contains information that you can use to fill in these fields. Click the **Create** button to save the alert command.
-
-[Alert actions](https://prewebs.pandorafms.com/docs/index.php?title=Pandora:Documentation_en:Alerts#Action) allow you to define *how* to launch the command. Go to the **Alerts** -&gt; **Actions** -&gt; **Create** menu.
-
-![image.png](../assets/images/integrations/teams/0X5image.png)
-
-Select the alert command created on the previous page in **Command**; the fields will be filled automatically. However, you can always customize the icons or messages for **Triggering** and **Recovery** events, for example.
-
-![image.png](../assets/images/integrations/teams/KCOimage.png)
-
-To save, click **Create**. To apply this action, whether to a [Module or Policy](https://pandorafms.com/docs/index.php?title=Pandora:Documentation_en:Policies#Modules), set an [alert template](https://pandorafms.com/docs/index.php?title=Pandora:Documentation_en:Alerts#Alert_template) for that purpose.
-
-[&lt; PREVIOUS](https://pandorafms.com/guides/public/books/integracion-con-microsoft-teams/page/configuracion-en-pandora-fms-creacion-de-un-comando-de-alerta)

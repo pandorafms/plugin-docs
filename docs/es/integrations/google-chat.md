@@ -1,5 +1,12 @@
 # Integración con Google Chat
 
+## Introducción
+
+Esta integración publica las alertas de Pandora FMS en una sala de Google Chat mediante un webhook
+entrante. La sala expone una URL de webhook y un comando de alerta de Pandora FMS envía a ella el texto
+de la alerta, de modo que las alertas aparecen como mensajes en la sala junto a la conversación del
+equipo.
+
 ## Configuración en Google Chat: sala de conversación
 
 Una vez [usted haya accedido](https://chat.google.com/) y haya sido identificado con su credencial de usuario vaya a la sala de conversación o *chat room* (o agregue una nueva) donde serán publicados los mensajes de alertas de Pandora FMS. Haga clic en **Manage webhooks**:
@@ -13,8 +20,6 @@ En el cuadro de diálogo emergente coloque un nombre al *webhook* y, si desea, c
 Pulse el botón **Save** para guardar. A continuación mostrará un resumen con un [enlace para la documentación](https://developers.google.com/hangouts/chat/how-tos/webhooks) sobre esta tecnología y un botón azul invitando a crear otro *webhook*; ***copie el enlace identificador del webhook*** ya que será usado para configurar Pandora FMS en la siguiente página.
 
 ![PFMS_Google_Chat_integration_040.png](../assets/images/integrations/google-chat/pfms-google-chat-integration-040.png)
-
-[&lt; ANTERIOR](https://pandorafms.com/guides/public/books/integracion-con-google-chat) [SIGUIENTE &gt;](https://pandorafms.com/guides/public/books/integracion-con-google-chat/page/configuracion-en-pandora-fms-creacion-de-un-comando-de-alerta)
 
 ## Configuración en Pandora FMS: creación de un comando de alerta
 
@@ -44,8 +49,6 @@ Con ayuda del texto que está en el fichero `test-exec.txt` complete los siguien
 
 Haga clic en el botón **Create** para guardar el comando de alerta.
 
-[&lt; ANTERIOR](https://pandorafms.com/guides/public/books/integracion-con-google-chat/page/configuracion-en-google-chat-sala-de-conversacion) [SIGUIENTE &gt;](https://pandorafms.com/guides/public/books/integracion-con-google-chat/page/configuracion-en-pandora-fms-creacion-de-una-accion-de-alerta)
-
 ## Configuración en Pandora FMS: creación de una acción de alerta
 
 Las [acciones de alerta](https://pandorafms.com/manual/es/documentation/04_using/01_alerts) permiten definir *el cómo* lanzar el comando. Vaya al menú **Alerts** -&gt; **Actions** -&gt; **Create**.
@@ -59,5 +62,3 @@ Seleccione en **Command** el comando de alerta creado en la página anterior, lo
 Para guardar haga clic en **Create**. Para aplicar esta acción bien sea a un [Módulo o Política](https://pandorafms.com/manual/es/documentation/05_big_environments/02_policy), establezca una [plantilla de alerta](https://pandorafms.com/manual/es/documentation/04_using/01_alerts#plantilla_de_alerta) para tal fin.
 
 Puede obtener más información en el vídeo tutorial «[Crea alertas en Google Chat con Pandora FMS](https://www.youtube.com/watch?v=99g4_aGSwTQ)».
-
-[&lt; ANTERIOR](https://pandorafms.com/guides/public/books/integracion-con-google-chat/page/configuracion-en-pandora-fms-creacion-de-un-comando-de-alerta)
