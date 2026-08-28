@@ -19,7 +19,7 @@ colaborar:
    aprueba y lo mergea.
 
 La documentación oficial se publica en
-<https://docs.pandorafms.com/integrations/> y se sincroniza periódicamente
+<https://pandorafms.com/docs/integrations/> y se sincroniza periódicamente
 con la rama `main` del repositorio, así que los cambios mergeados llegan al
 sitio en vivo de forma automática.
 
