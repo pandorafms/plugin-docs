@@ -169,7 +169,7 @@ This plugin can be integrated with Pandora FMS *Discovery*.
 
 To do so, load the ".disco" package that you can download from the Pandora FMS library:
 
-[https://pandorafms.com/library/](https://pandorafms.com/library/)
+[https://marketplace.pandorafms.com/](https://marketplace.pandorafms.com/)
 
 Once loaded, Apache instances can be monitored by creating *Discovery* tasks from the *Management &gt; Discovery &gt; Application &gt; Apache* section.
 
