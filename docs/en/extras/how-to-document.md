@@ -18,7 +18,7 @@ contribute:
    approves and merges it.
 
 The official documentation is published at
-<https://docs.pandorafms.com/integrations/> and is synchronized
+<https://pandorafms.com/docs/integrations/> and is synchronized
 periodically with the `main` branch of the repository, so merged changes
 reach the live site automatically.
 
