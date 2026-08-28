@@ -4,6 +4,13 @@ Bienvenido a la documentación de plugins de Pandora FMS — guías,
 integraciones y módulos de Discovery para la plataforma de monitorización
 Pandora FMS.
 
+Para consultar información sobre el producto Pandora FMS, accede a la
+[documentación del producto Pandora FMS](https://pandorafms.com/manual/welcome).
+
+Esta documentación reúne guías para plugins e integraciones disponibles en el
+Marketplace de Pandora FMS. Puedes explorar y descargar estos recursos desde el
+[Marketplace oficial de Pandora FMS](https://marketplace.pandorafms.com/).
+
 ## Dónde encontrar cada cosa
 
 - **Plugins** — plugins independientes/manuales, que se ejecutan a mano o
