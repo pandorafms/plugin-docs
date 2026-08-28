@@ -23,7 +23,7 @@ Pulse el botón **Save** para guardar. A continuación mostrará un resumen con 
 
 ## Configuración en Pandora FMS: creación de un comando de alerta
 
-Abra una ventana terminal y acceda al servidor Pandora FMS. Descargue (y descomprima) desde la [librería de Pandora FMS](https://pandorafms.com/library/google-chat-connector-cli/) el *Google Chat connector CLI* en la siguiente ruta:
+Abra una ventana terminal y acceda al servidor Pandora FMS. Descargue (y descomprima) desde la [librería de Pandora FMS](https://marketplace.pandorafms.com/) el *Google Chat connector CLI* en la siguiente ruta:
 
 `/usr/share/pandora_server/util/pandora-gchat`
 

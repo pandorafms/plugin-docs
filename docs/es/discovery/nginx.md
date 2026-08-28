@@ -295,7 +295,7 @@ Este plugin puede integrarse con el *Discovery* de Pandora FMS.
 
 Para ello se debe cargar el paquete ".disco" que puede descargar desde la librería de Pandora FMS:
 
-[https://pandorafms.com/library/](https://pandorafms.com/library/)
+[https://marketplace.pandorafms.com/](https://marketplace.pandorafms.com/)
 
 Una vez cargado, se podrán monitorizar las instancias de NGINX creando tareas de *Discovery* desde la sección *Management &gt; Discovery &gt; Application &gt; NGINX*
 

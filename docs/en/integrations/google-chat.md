@@ -22,7 +22,7 @@ Click the **Save** button. Then it will show a summary with a [link to the docum
 
 ## Pandora FMS configuration: creation of an alert command
 
-Open a terminal window and access the Pandora FMS server. Download (and unzip) from the [Pandora FMS library](https://pandorafms.com/library/google-chat-connector-cli/) the *Google Chat connector CLI* in the following path:
+Open a terminal window and access the Pandora FMS server. Download (and unzip) from the [Pandora FMS library](https://marketplace.pandorafms.com/) the *Google Chat connector CLI* in the following path:
 
 `/usr/share/pandora_server/util/pandora-gchat`
 
