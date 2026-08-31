@@ -19,28 +19,25 @@ Es el equivalente en Playwright de `pandorafms.selenium.4`, pero **sin librería
 
 ## Matriz de compatibilidad
 
-| **Sistemas donde se ha probado** | Runtime de Playwright **1.62.0** en Node 24; imagen Docker `pandorafms/pandora_playwright:noble` (basada en `mcr.microsoft.com/playwright:v1.62.0-noble`, Ubuntu 24.04, navegadores preinstalados); navegadores Chromium, Mozilla Firefox y WebKit (opción `_browser_` del plugin); modo de worker `local`; modo de worker `remote` (host SSH); vista transaccional WUX de la consola de PandoraFMS (ejecución de QA de extremo a extremo contra el Tentacle de un servidor Pandora real) |
+| **Sistemas donde se ha probado** | <ul><li>Runtime de Playwright **1.62.0** en Node 24</li><li>Imagen Docker `pandorafms/pandora_playwright:noble` (basada en `mcr.microsoft.com/playwright:v1.62.0-noble`, Ubuntu 24.04, navegadores preinstalados)</li><li>Navegadores: Chromium, Mozilla Firefox y WebKit (opción `_browser_` del plugin)</li><li>Modo de worker `local`</li><li>Modo de worker `remote` (host SSH)</li><li>Vista transaccional WUX de la consola de PandoraFMS (ejecución de QA de extremo a extremo contra el Tentacle de un servidor Pandora real)</li><li>Servidor/consola PandoraFMS **800.5 LTS** y **804 FR**</li></ul> |
 | --- | --- |
-| **Sistemas donde funciona** | Cualquier sistema que pueda ejecutar Docker como worker **local**, o alcanzar por SSH un host que pueda ejecutar Docker como worker **remoto**. **No establecido**: una matriz de compatibilidad por versión de servidor PandoraFMS (no existen registros por versión) y el sistema operativo del host Docker (la imagen está basada en Ubuntu 24.04 y el SO del host usado en las pruebas fue Linux) |
+| **Sistemas donde funciona** | <ul><li>Cualquier sistema que pueda ejecutar Docker como worker **local**, o alcanzar por SSH un host que pueda ejecutar Docker como worker **remoto**</li><li>**No establecido**: una matriz de compatibilidad completa por versión de servidor PandoraFMS más allá de las versiones anteriores</li><li>**No establecido**: el sistema operativo del host Docker (la imagen está basada en Ubuntu 24.04 y el SO del host usado en las pruebas fue Linux)</li></ul> |
 
 ## Prerrequisitos
 
 1. **Docker** en la máquina que ejecuta el test: el propio servidor de Discovery para `worker_mode = local`, o el destino SSH para `worker_mode = remote`.
 2. **La imagen Docker de Playwright** `pandorafms/pandora_playwright:noble` disponible en esa máquina (con los navegadores preinstalados), descargada desde el registro:
 
-   ```bash
-   docker pull pandorafms/pandora_playwright:noble
-   ```
+    ```bash
+    docker pull pandorafms/pandora_playwright:noble
+    ```
 
-   Esta es la forma recomendada de obtenerla. Qué contiene la imagen y cómo construirla o personalizarla tú mismo está en [La imagen Docker](#la-imagen-docker).
+    Esta es la forma recomendada de obtenerla. Qué contiene la imagen y cómo construirla o personalizarla tú mismo está en [La imagen Docker](#la-imagen-docker).
+
 3. **PandoraFMS**: un servidor de Discovery habilitado (`discoveryserver 1` en `pandora_server.conf`) para ejecutar tareas, y la consola para definirlas.
 4. **Solo worker remoto** (`worker_mode = remote`): una cuenta SSH que pueda ejecutar Docker en el host remoto (dirección, puerto, usuario y contraseña o contraseña cifrada).
-5. **Solo ejecuciones manuales por CLI** (fuera de una instalación empaquetada): Python 3 con las dependencias del runner:
 
-   ```bash
-   python3 -m venv venv
-   ./venv/bin/pip install "chardet<6" paramiko scp pycryptodome pandoraPlugintools-basic
-   ```
+El plugin se distribuye como un binario compilado y autocontenido (no hay Python ni ninguna dependencia de pip que instalar): la aplicación de Discovery empaquetada ya incluye `bin/pandora_playwright`, así que tampoco hace falta preparar ningún entorno para una ejecución manual por CLI.
 
 ## Parámetros
 
@@ -113,16 +110,16 @@ Estos se corresponden con el formulario de la tarea de Discovery (consola) y con
 }
 ```
 
-La plantilla vive en la sección `[tempfile_confs]` de `discovery_definition.ini`; cada macro con la forma `_xxx_` se sustituye con los valores almacenados de la tarea. La contraseña SSH se puede almacenar cifrada: la consola llama a `password_encrypter.py` (AES-256-CBC) cuando `_sshPasswordEncrypt_` está activado. Desde la CLI, `password_encrypter.py -e -p <password>` cifra una contraseña y `password_encrypter.py -d -p <password>` la descifra.
+La plantilla vive en la sección `[tempfile_confs]` de `discovery_definition.ini`; cada macro con la forma `_xxx_` se sustituye con los valores almacenados de la tarea. La contraseña SSH se puede almacenar cifrada: la consola llama al binario `password_encrypter` (AES-256-CBC) cuando `_sshPasswordEncrypt_` está activado. Desde la CLI, `password_encrypter -e -p <password>` cifra una contraseña y `password_encrypter -d -p <password>` la descifra.
 
 ## Ejecución manual
 
-El entrypoint del runner es `pandora_playwright.py`. Una ejecución manual reproduce lo que hace el servidor de Discovery en cada ejecución de tarea, pero sin `id_rt`: deriva el nombre del contenedor Docker a partir del nombre de tarea `-t` (haciéndole un hash cuando no es ya un md5) en lugar de usar `md5(id_rt)`.
+El entrypoint del runner es el binario compilado `pandora_playwright`. Una ejecución manual reproduce lo que hace el servidor de Discovery en cada ejecución de tarea, pero sin `id_rt`: deriva el nombre del contenedor Docker a partir del nombre de tarea `-t` (haciéndole un hash cuando no es ya un md5) en lugar de usar `md5(id_rt)`.
 
 ### Formato de ejecución
 
 ```
-pandora_playwright.py -c <conf.json> -s <test.ts> -t <task_name> [options]
+pandora_playwright -c <conf.json> -s <test.ts> -t <task_name> [options]
 ```
 
 | Opción | Larga | Obligatorio | Por defecto | Descripción |
@@ -137,33 +134,35 @@ pandora_playwright.py -c <conf.json> -s <test.ts> -t <task_name> [options]
 | `-T` | `--temp` | no | `/tmp` | Carpeta temporal para el XML (con `-x`) |
 | `-v` | `--verbose` | no | off | Traza paso a paso por STDERR |
 
-`password_encrypter.py` admite `-e/--encrypt`, `-d/--decrypt` y `-p/--password <password>` (`-e` y `-d` son mutuamente excluyentes).
+`password_encrypter` admite `-e/--encrypt`, `-d/--decrypt` y `-p/--password <password>` (`-e` y `-d` son mutuamente excluyentes).
 
 #### Ejemplos
 
 Ejecución local con un test y una configuración adecuada:
 
 ```bash
-./venv/bin/python pandora_playwright.py -c conf.json -s sample.spec.ts -t qa-test -g 0
+./pandora_playwright -c conf.json -s sample.spec.ts -t qa-test -g 0
 ```
 
 Ejecución remota por SSH (la configuración apunta `worker_mode` a `remote`):
 
 ```bash
-./venv/bin/python pandora_playwright.py -c conf_remote.json -s sample.spec.ts -t qa-remote -g 0
+./pandora_playwright -c conf_remote.json -s sample.spec.ts -t qa-remote -g 0
 ```
 
 De extremo a extremo contra el Tentacle de un servidor Pandora (crea agentes/módulos reales):
 
 ```bash
-./venv/bin/python pandora_playwright.py -x -S 127.0.0.1:41121 \
-    -c conf.json -s sample.spec.ts -t qa-console -g 13 -T /tmp
+./pandora_playwright -x -S 127.0.0.1:41121 \
+    -c conf.json -s sample.spec.ts -t qa-console -g 0 -T /tmp
 ```
+
+`-g` es siempre un id numérico, pero con `-x` el XML de agente generado mete ese número en el campo del **nombre** del grupo, no en el id — ver [Los agentes caen en el grupo equivocado (xml_mode)](#solucion-de-problemas). `0` es el único valor que garantiza aterrizar donde esperas; cualquier otro necesita un grupo realmente llamado como ese número.
 
 Cifrar una contraseña para la configuración del worker remoto:
 
 ```bash
-./venv/bin/python password_encrypter.py -e -p <password>
+./password_encrypter -e -p <password>
 ```
 
 #### Modo verbose
@@ -197,11 +196,25 @@ Actualizar solo la primera copia deja silenciosamente el binario antiguo en ejec
 
 Una tarea se crea en la consola como tarea de Discovery de la aplicación **Playwright** (`pandorafms.playwright.1`, `id_app = 10`):
 
-1. Ve a **Discovery → Tasks → New task**, elige la aplicación Playwright y configura el nombre de la tarea, grupo, servidor e intervalo.
+1. Ve a **Discovery → Tasks → New task**, elige la aplicación Playwright y configura el nombre de la tarea, grupo, servidor e intervalo — el propio paso genérico **Task definition** del asistente.
+
+    ![Paso Task definition del asistente de la tarea de Discovery de Playwright](../assets/images/discovery/playwright/task-wizard-1.png)
+
 2. Recorre los pasos del asistente: **Basic setup** (worker mode, browser), **Worker setup** (solo para `remote`), **Test setup** (imagen, viewport, timeout, informe completo, prefijo de agentes, el propio test de Playwright, módulo de histórico de errores) y **Advanced setup** (debug mode, debug directory, advanced timeouts, eliminar contenedor existente).
+
+    ![Paso Basic setup: worker mode y browser](../assets/images/discovery/playwright/task-wizard-2.png)
+
+    ![Paso Worker setup: campos de conexión SSH, solo visible cuando el worker mode es remote](../assets/images/discovery/playwright/task-wizard-3.png)
+
+    ![Paso Test setup: imagen Docker, viewport, test timeout, informe completo, prefijo de agentes y el campo del test de Playwright](../assets/images/discovery/playwright/task-wizard-4.png)
+
+    ![Paso Advanced setup: debug mode, debug directory, eliminar contenedor existente y advanced timeouts](../assets/images/discovery/playwright/task-wizard-5.png)
+
 3. Pega el `.ts` completo en el campo **Playwright test (.ts)**, elige el navegador y el modo de worker, y guarda.
 
-<!-- SCREENSHOT NEEDED: PandoraFMS Discovery task wizard for the Playwright app (pandorafms.playwright.1): the four steps of the task form — Basic setup (Worker mode, Browser), Worker setup (SSH fields), Test setup (Docker image, viewport, Test timeout, full report, agent prefix, Playwright test .ts, error history module) and Advanced setup (Debug mode, Debug directory, Advanced timeouts, Remove existing container). Image goes at ../assets/images/discovery/playwright/task-wizard.png -->
+Una vez que la tarea se ejecuta — o se fuerza desde **Discovery → Task list → Application tasks** —, la consola muestra un resumen de ejecución con el recuento global de éxitos/fallos:
+
+![Resumen de ejecución de la tarea con el progreso global y el recuento de éxitos/fallos](../assets/images/discovery/playwright/task_summary.png)
 
 En el momento de la ejecución, el servidor de Discovery invoca el plugin con el comando definido en `exec[]` de `discovery_definition.ini`, sustituyendo las macros de la tarea:
 
@@ -231,6 +244,131 @@ Esa independencia de la tarea tiene otra cara: **dos tareas que ejecutan un test
 
 Los módulos `wux:*` se muestran en la vista transaccional WUX de la consola. Los módulos `pw:*` son módulos de agente normales (métricas e informe completo).
 
+## Grabar una transacción
+
+Una "transacción" es simplemente un test de Playwright estándar. Escribes Playwright puro — sin importar nada de PandoraFMS — y el plugin hace corresponder tres construcciones nativas:
+
+| Tú escribes | Se convierte en |
+|-------------|-----------------|
+| `test.step('name', ...)` | una **fase** monitorizada (estado + tiempo) |
+| `test.info().annotations.push({ type: 'pandora.metric', description: 'name=value' })` | un módulo de **métrica** personalizado |
+| una aserción fallida | el test falla; se captura automáticamente una **captura de pantalla** |
+
+Para obtener el código inicial del flujo, grábalo con cualquiera de estas herramientas.
+
+### 1. Grabar con Playwright codegen
+
+En cualquier máquina con Playwright instalado, lanza el grabador contra tu sitio (ver el [generador de tests de Playwright](https://playwright.dev/docs/codegen-intro)):
+
+```bash
+npx playwright codegen https://your-app.example.com
+```
+
+Recorre tu flujo en el navegador; Playwright escribe el código equivalente. Copia ese código como punto de partida.
+
+### 2. Grabar con la extensión de Playwright para VS Code
+
+Instala la extensión **Playwright Test for VS Code** de Microsoft ([Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright); requiere Playwright v1.38+ en tu proyecto). Abre el panel **Test Explorer** y usa las herramientas del grabador:
+
+- **Record new**: abre una ventana de navegador donde navegas e interactúas con el sitio; el test generado se escribe en un fichero `.spec.ts` nuevo en tiempo real.
+- **Record at cursor**: inserta las acciones recién grabadas en la posición actual del cursor dentro de un test existente.
+- **Pick locator**: pasa el ratón sobre un elemento del navegador y haz clic para copiar su mejor localizador al portapapeles.
+
+La extensión trabaja sobre un proyecto de Playwright, así que graba en cualquier proyecto desechable y copia el `.ts` resultante como punto de partida.
+
+### 3. Grabar con la extensión de navegador de Playwright
+
+Instala **Playwright CRX** desde el [Chrome Web Store](https://chromewebstore.google.com/detail/playwright-crx/jambeljnbnfbkcpnoiaedcabbgmnnlcd) (extensión comunitaria de ruifigueira). Incluye el mismo grabador que `playwright codegen` como extensión de navegador, así que puedes grabar directamente en tu propio Chrome/Chromium/Edge:
+
+- Fija la pestaña actual con el botón de la extensión (o el menú contextual), o usa el panel lateral; `Alt + Shift + R` empieza a grabar y `Alt + Shift + C` empieza a inspeccionar.
+- Realiza el flujo en la página; el grabador genera el código de Playwright, en el lenguaje seleccionado.
+- Copia o exporta el script generado y úsalo como punto de partida.
+
+### Estructurarlo en fases y añadir métricas
+
+Sea cual sea la forma en que hayas grabado el flujo, envuelve cada parte significativa en `test.step(...)` para que se convierta en fase, y añade aserciones para validar de verdad el resultado:
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test('checkout flow', async ({ page }) => {
+  await test.step('open home', async () => {
+    await page.goto('https://your-app.example.com');
+    await expect(page).toHaveTitle(/Shop/);
+  });
+
+  await test.step('login', async () => {
+    await page.fill('#user', 'demo');
+    await page.fill('#password', 'demo');
+    await page.click('#submit');
+    await expect(page.locator('.dashboard')).toBeVisible();
+  });
+
+  await test.step('add to cart', async () => {
+    await page.click('text=Add to cart');
+    const count = await page.locator('.cart-count').innerText();
+    // publish a custom metric module:
+    test.info().annotations.push({ type: 'pandora.metric', description: `cart_items=${count}` });
+  });
+});
+```
+
+Solo las llamadas `test.step` de **primer nivel** del test se convierten en fases — el plugin lee el array `steps` de primer nivel del reporter JSON de Playwright, así que un paso anidado dentro de otro paso no se informa como fase independiente. Mantén los pasos planos (un nivel) para todo lo que quieras ver como fase independiente en la consola.
+
+Las métricas se parsean de la anotación con estas reglas exactas (tomadas del runner):
+
+- `type` debe ser exactamente el string literal `pandora.metric`; cualquier otro valor se ignora.
+- `description` debe ser `name=value`, dividido solo por el **primer** `=` — así un valor que contenga `=` (por ejemplo, una query string de una URL) no se trunca.
+- `name` y `value` se recortan de espacios en blanco alrededor. Si `description` no tiene `=`, o `name` queda vacío tras recortar, esa anotación se descarta silenciosamente.
+- El tipo de módulo se infiere a partir del valor: si se puede parsear como número → `generic_data`; en cualquier otro caso → `generic_data_string`. El módulo se nombra exactamente como `name` y se etiqueta con `extra_data = pw:metric:<name>`.
+
+### Pégalo en la tarea
+
+Pega el `.ts` completo en el campo **Playwright test (.ts)** de la tarea de Discovery, elige el navegador y el modo de worker, y guarda.
+
+### Consejos
+
+- **Nombrado**: los nombres de módulo salen de los títulos de `test.step`, así que mantenlos descriptivos (`'login'`, `'add to cart'`). Renombrar un test crea un agente nuevo.
+- **Continuar tras un fallo**: con un `expect` normal, una fase fallida aborta el test y las fases posteriores no se ejecutan. Si quieres que se mida cada fase aunque una falle, usa aserciones suaves: `await expect.soft(locator).toHaveText('x')`.
+- **Varias transacciones**: varios bloques `test(...)` en un mismo `.ts` generan varios agentes.
+- **El código grabado es un punto de partida, no el entregable**: un grabador escribe acciones literales pero no tiene forma de saber qué agrupación de elementos es única, si un texto de badge/estado se repite en otro lugar de la página, o si el texto real del DOM coincide con lo que el CSS hace que *parezca* (p. ej. `text-transform: uppercase`). Revisa los localizadores grabados contra la página en vivo antes de conectarlo a una tarea de Discovery.
+
+## Generar una transacción con un agente de IA
+
+En lugar de escribir a mano la transacción `.ts` (o grabarla una vez y confiar en que los selectores aguanten), puedes hacer que un agente de código local — Claude Code, opencode, `pi` o similar — conduzca un navegador real a través del flujo y escriba la transacción por ti, validando cada localizador contra el objetivo real antes de entregarla.
+
+Esto funciona porque estos agentes pueden usar una **skill de CLI/automatización de navegador de Playwright** (una herramienta que abre un navegador real, hace clic, rellena y lee el DOM bajo control del agente) para ejecutar realmente el flujo paso a paso, no solo adivinar selectores a partir de una captura. Un grabador registra acciones literales pero no tiene forma de saber qué agrupación de elementos es única, si un texto de badge/estado se repite en otro lugar, o si el texto real del DOM coincide con lo que el CSS hace que *parezca*; un agente que pueda re-ejecutar cada localizador contra la página en vivo, ver una violación de modo estricto y corregir el alcance antes de entregar el fichero detecta exactamente la clase de fallo que vuelve inestable una transacción en producción.
+
+### Plantilla de prompt
+
+```
+Validate [FLOW NAME] on [URL] and write it as a Playwright transaction for the
+pandorafms.playwright.1 plugin.
+
+What the transaction should check:
+- [step 1, e.g. "open the page and confirm the title"]
+- [step 2, e.g. "log in and confirm the dashboard loads"]
+- [step 3, e.g. "read a value and publish it as a pandora.metric"]
+
+Deliverable:
+- Plain Playwright: wrap each meaningful step in `test.step('name', ...)` so it
+  becomes a WUX phase, and use
+  `test.info().annotations.push({ type: 'pandora.metric', description: 'name=value' })`
+  for anything that should become a custom metric module.
+- No PandoraFMS import, no DSL — this plugin harvests everything from
+  Playwright's own JSON reporter.
+- Validate every locator against the real target yourself (drive the browser,
+  don't just infer from a snapshot) before handing me the file — fix anything
+  ambiguous or strict-mode-violating first.
+- If a later step depends on a hard assertion in an earlier step, tell me
+  whether to keep it that way or switch to `expect.soft()` so every phase gets
+  measured even when one fails.
+```
+
+### Después de recibir el fichero
+
+Ejecútalo con el flujo local del propio plugin antes de conectarlo a una tarea de Discovery — ver [Pruebas / QA — paso a paso](#pruebas-qa-paso-a-paso) más abajo — para ver la salida real de agente/módulo, no solo "el test ha pasado".
+
 ## Extensión de consola
 
 El plugin incluye una extensión de consola compañera, **WUX Transactions** (`wux_transactions_ext`), que registra una opción **"WUX Transactions"** en el menú de operación (en la sección que aloja las vistas de monitorización/estado) y renderiza la vista identificada por la cabecera "Monitoring → Views → WUX Transactions". Para abrirla el usuario necesita al menos uno de los ACL **AR** o **RR**; la extensión también aplica el ACL de grupo (AR sobre el grupo del módulo) a todo lo que lista.
@@ -238,113 +376,22 @@ El plugin incluye una extensión de consola compañera, **WUX Transactions** (`w
 La vista proporciona la capa de monitorización transaccional para los datos WUX:
 
 - **Las transacciones se descubren desde el `extra_data` de los módulos.** La extensión lista todos los módulos cuyo `extra_data` empieza por `wux:global_status:` (el `extra_data` del propio agente WUX está vacío, así que los marcadores de módulo son la fuente de las transacciones). Un filtro de selección múltiple ("Select transactions") permite elegir una o más transacciones para comparar sus últimos datos de ejecución.
+
+    ![Panel de filtro de WUX Transactions con la lista de selección múltiple "Select transactions"](../assets/images/discovery/playwright/wux-transactions-view-filter.png)
+
 - **Tarjetas de resumen** que agregan las transacciones seleccionadas: contadores Selected / Passing / Failing / Unknown y el Average global time. Cuando varias tareas de Discovery informan a la misma transacción, se muestra un aviso de "Shared transactions" (solo para tareas con debug mode activado, que es lo único que la extensión puede detectar); la corrección recomendada es un `_prefixAgents_` distinto por tarea.
+
+    ![Tarjetas de resumen y gráfica de comparación de tiempo de respuesta global para varias transacciones seleccionadas](../assets/images/discovery/playwright/wux-transactions-view-compare.png)
+
 - **Paneles por transacción** con el estado/tiempo global, la tabla de fases (Phase, Status, Time, Updated, más acciones de gráfica/detalle de módulo), las métricas de tiempos WUX, las métricas personalizadas (valores `pw:metric` emitidos por el test) y el bloque de evidencia: **Last error screenshot** (cuando el módulo contiene un valor `data:image/...` válido) y el **Full WUX report** cuando `_fullReport_` está activo.
+
+    ![Panel por transacción con las métricas de tiempos WUX, la gráfica de tiempo de respuesta por fase y la tabla de fases](../assets/images/discovery/playwright/wux-transactions-view-single.png)
+
 - **Evidencia de depuración de Playwright**: para las tareas de la aplicación `pandorafms.playwright.1` con Debug mode activado, la extensión lee el campo **Debug directory** de la tarea desde `tdiscovery_apps_tasks_macros` (macro `_debugDirectory_`), sustituye el placeholder `_taskid_` por `md5(id_rt)` exactamente igual que el runner, lee el `manifest.json` dejado por la última ejecución y lo indexa por nombre de agente. Un botón "Playwright debug" en el panel de la transacción abre un modal con un bloque por ejecución de tarea: etiqueta Passed/Failed, marca de tiempo de captura, **vídeo del fallo** (webm), **captura de pantalla del fallo** (png), **contexto de error** (markdown con la foto de la página en el fallo), el informe completo de la ejecución y el log de transacciones de la API de Playwright (`pw:api`). Los artefactos se sirven a través de un endpoint que solo sirve los tipos permitidos (screenshot/video/error-context), aplica el ACL de grupo y nunca se cachea.
+
+    ![Modal de evidencia de depuración de Playwright con el vídeo del fallo, la captura de pantalla del fallo y el contexto de error](../assets/images/discovery/playwright/wux-transactions-view-debug.png)
+
 - **Informe de ausencia de evidencia**: las tareas cuya evidencia no se puede leer se listan al principio de la vista con la tarea, su debug directory y el motivo — ver la tabla de cuatro motivos en [Si la consola no muestra evidencia](#si-la-consola-no-muestra-evidencia).
-
-<!-- SCREENSHOT NEEDED: Console view Monitoring → Views → WUX Transactions: the transaction selector filter, the overview cards (Selected, Passing, Failing, Unknown, Average global time) and a transaction panel with the phases table, custom metrics and the Playwright debug evidence modal open. Image goes at ../assets/images/discovery/playwright/wux-transactions-view.png -->
-
-## La imagen Docker
-
-Cada tarea se ejecuta dentro de `pandorafms/pandora_playwright:noble`, el valor por defecto del campo **Docker image** (`_dockerImage_`). La forma recomendada de obtenerla es descargarla:
-
-```bash
-docker pull pandorafms/pandora_playwright:noble
-```
-
-Es una capa fina sobre la imagen oficial de Playwright de Microsoft, que ya incluye Chromium, Firefox y WebKit con todas sus librerías de sistema — la parte lenta y frágil de montar a mano.
-
-### El contrato de la imagen
-
-El runner genera la configuración completa de Playwright en cada ejecución y la escribe dentro del contenedor en marcha (ver [Depurar un test](#depurar-un-test)), así que la imagen depende de **una sola** cosa:
-
-> `@playwright/test` instalado en `/pandora/node_modules`, en la misma versión que los navegadores de la imagen.
-
-Todo lo demás es comodidad. Cualquier imagen que cumpla esa línea sirve como valor de `docker_image`.
-
-### El Dockerfile
-
-No lo necesitas para usar el plugin — descarga la imagen y listo. Está aquí para que puedas reconstruir la imagen tú mismo, auditar su contenido o usarla como punto de partida para una personalizada. Este es el `docker/Dockerfile` que se distribuye con el plugin:
-
-```dockerfile
-# Base image ships the browsers preinstalled (Chromium, Firefox, WebKit).
-# Pin the Playwright version to the same tag the runner was validated against.
-FROM mcr.microsoft.com/playwright:v1.62.0-noble
-
-# @playwright/test must match the base image Playwright version.
-ARG PLAYWRIGHT_VERSION=1.62.0
-
-WORKDIR /pandora
-
-RUN apt update && apt install -y vim
-
-# Minimal project so `npx playwright test` resolves the runner locally.
-RUN npm init -y >/dev/null 2>&1 \
-    && npm install -D @playwright/test@${PLAYWRIGHT_VERSION}
-```
-
-```bash
-docker build --pull -t pandorafms/pandora_playwright:noble -f Dockerfile .
-```
-
-| Paso | Por qué está ahí |
-|------|------------------|
-| `FROM mcr.microsoft.com/playwright:v1.62.0-noble` | Ubuntu 24.04 con los tres navegadores ya instalados. Fijada, nunca `:latest`: unos navegadores que se mueven bajo tus pies convierten una actualización sin relación en un incidente de monitorización |
-| `ARG PLAYWRIGHT_VERSION=1.62.0` | Versión del **runner de tests** instalado abajo. Debe coincidir con la etiqueta de la imagen base — ver [Dos versiones que deben coincidir](#dos-versiones-que-deben-coincidir) |
-| `WORKDIR /pandora` | Todas las rutas que usa el runner están bajo `/pandora`: el test, la configuración generada, `node_modules` |
-| `apt install vim` | Solo por comodidad, para la [depuración interactiva manual](#depuracion-interactiva-manual). Nada del plugin lo necesita |
-| `npm init -y` + `npm install -D @playwright/test` | El único paso que importa. Crea `/pandora/node_modules` para que `npx playwright test` resuelva el runner **localmente**, desde dentro del proyecto |
-
-Dos cosas que el Dockerfile deliberadamente **no** hace:
-
-- **No hay `COPY` de ninguna configuración de Playwright.** El runner escribe la suya en cada ejecución, así que una configuración horneada en la imagen nunca se leería.
-- **No hay `ENTRYPOINT` ni `CMD`.** El contenedor no tiene lógica propia: el runner lo inicia con `docker run -d <image> sleep <ttl>` y lo controla todo desde fuera con `docker cp` y `docker exec`. Un entrypoint personalizado se saltaría en el mejor caso y rompería la ejecución en el peor.
-
-### Construir tu propia imagen
-
-Si tus tests necesitan algo extra, añade una capa **encima** de la imagen publicada en lugar de reescribir el Dockerfile — mantienes la fijación de versión y heredas las correcciones futuras:
-
-```dockerfile
-FROM pandorafms/pandora_playwright:noble
-
-# Extra system packages your tests need (a font pack, a VPN client, a CA bundle...).
-USER root
-RUN apt-get update && apt-get install -y fonts-noto-cjk && rm -rf /var/lib/apt/lists/*
-
-# Extra npm libraries your tests import, installed into the same project so
-# `npx playwright test` resolves them: /pandora/node_modules.
-WORKDIR /pandora
-RUN npm install -D otplib          # e.g. tests that need a TOTP second factor
-```
-
-Constrúyela, hazla disponible en la máquina que ejecuta los tests — el servidor de Discovery para `worker_mode = local`, el destino SSH para `remote` — y apunta el campo **Docker image** de la tarea a ella:
-
-```json
-"docker_image": "mycompany/pandora_playwright:noble-corp"
-```
-
-Dos reglas para una imagen personalizada:
-
-- **No muevas `WORKDIR` fuera de `/pandora`.** El runner escribe `task.spec.ts` y `playwright.config.task.ts` ahí por ruta absoluta y ejecuta `cd /pandora` antes de `npx playwright test`.
-- **Instala los paquetes npm dentro de `/pandora`**, no globalmente. Node resuelve los imports de un test desde su propio árbol de proyecto.
-
-### Dos versiones que deben coincidir
-
-La etiqueta de la imagen base y `PLAYWRIGHT_VERSION` son el mismo número dos veces, y tienen que seguir siéndolo: los navegadores están horneados en la imagen base, y `@playwright/test` solo maneja la compilación del navegador con la que fue publicado. Cámbialo en **ambos** sitios a la vez:
-
-```dockerfile
-FROM mcr.microsoft.com/playwright:v1.63.0-noble
-ARG PLAYWRIGHT_VERSION=1.63.0
-```
-
-Un desajuste no falla en el momento de construir. Falla en tiempo de ejecución, normalmente como un navegador que se niega a arrancar o un ejecutable que Playwright dice no encontrar:
-
-```
-browserType.launch: Executable doesn't exist at /ms-playwright/chromium-1234/chrome-linux/chrome
-```
-
-Subir la versión mueve el runtime con el que se validó todo el plugin, así que repite el flujo de [Pruebas / QA — paso a paso](#pruebas-qa-paso-a-paso) y actualiza la [Matriz de compatibilidad](#matriz-de-compatibilidad) con la versión que hayas probado.
 
 ## Tiempos de espera (timeouts)
 
@@ -477,95 +524,6 @@ Advertencias:
 - Cada test en paralelo ejecuta su propia instancia de navegador dentro del contenedor, así que la concurrencia sube el uso de CPU y memoria — dimensiona el contenedor y la carga sobre el sitio objetivo en consecuencia.
 - Los tests en paralelo no deben compartir estado ni depender del orden de ejecución. Si alguno necesita ejecutarse estrictamente después de otro, mantenlo fuera del bloque paralelo o usa `test.describe.configure({ mode: 'serial' })` para ese grupo.
 
-## Grabar una transacción
-
-Una "transacción" es simplemente un test de Playwright estándar. Escribes Playwright puro — sin importar nada de PandoraFMS — y el plugin hace corresponder tres construcciones nativas:
-
-| Tú escribes | Se convierte en |
-|-------------|-----------------|
-| `test.step('name', ...)` | una **fase** monitorizada (estado + tiempo) |
-| `test.info().annotations.push({ type: 'pandora.metric', description: 'name=value' })` | un módulo de **métrica** personalizado |
-| una aserción fallida | el test falla; se captura automáticamente una **captura de pantalla** |
-
-Para obtener el código inicial del flujo, grábalo con cualquiera de estas herramientas.
-
-### 1. Grabar con Playwright codegen
-
-En cualquier máquina con Playwright instalado, lanza el grabador contra tu sitio (ver el [generador de tests de Playwright](https://playwright.dev/docs/codegen-intro)):
-
-```bash
-npx playwright codegen https://your-app.example.com
-```
-
-Recorre tu flujo en el navegador; Playwright escribe el código equivalente. Copia ese código como punto de partida.
-
-### 2. Grabar con la extensión de Playwright para VS Code
-
-Instala la extensión **Playwright Test for VS Code** de Microsoft ([Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright); requiere Playwright v1.38+ en tu proyecto). Abre el panel **Test Explorer** y usa las herramientas del grabador:
-
-- **Record new**: abre una ventana de navegador donde navegas e interactúas con el sitio; el test generado se escribe en un fichero `.spec.ts` nuevo en tiempo real.
-- **Record at cursor**: inserta las acciones recién grabadas en la posición actual del cursor dentro de un test existente.
-- **Pick locator**: pasa el ratón sobre un elemento del navegador y haz clic para copiar su mejor localizador al portapapeles.
-
-La extensión trabaja sobre un proyecto de Playwright, así que graba en cualquier proyecto desechable y copia el `.ts` resultante como punto de partida.
-
-### 3. Grabar con la extensión de navegador de Playwright
-
-Instala **Playwright CRX** desde el [Chrome Web Store](https://chromewebstore.google.com/detail/playwright-crx/jambeljnbnfbkcpnoiaedcabbgmnnlcd) (extensión comunitaria de ruifigueira). Incluye el mismo grabador que `playwright codegen` como extensión de navegador, así que puedes grabar directamente en tu propio Chrome/Chromium/Edge:
-
-- Fija la pestaña actual con el botón de la extensión (o el menú contextual), o usa el panel lateral; `Alt + Shift + R` empieza a grabar y `Alt + Shift + C` empieza a inspeccionar.
-- Realiza el flujo en la página; el grabador genera el código de Playwright, en el lenguaje seleccionado.
-- Copia o exporta el script generado y úsalo como punto de partida.
-
-### Estructurarlo en fases y añadir métricas
-
-Sea cual sea la forma en que hayas grabado el flujo, envuelve cada parte significativa en `test.step(...)` para que se convierta en fase, y añade aserciones para validar de verdad el resultado:
-
-```typescript
-import { test, expect } from '@playwright/test';
-
-test('checkout flow', async ({ page }) => {
-  await test.step('open home', async () => {
-    await page.goto('https://your-app.example.com');
-    await expect(page).toHaveTitle(/Shop/);
-  });
-
-  await test.step('login', async () => {
-    await page.fill('#user', 'demo');
-    await page.fill('#password', 'demo');
-    await page.click('#submit');
-    await expect(page.locator('.dashboard')).toBeVisible();
-  });
-
-  await test.step('add to cart', async () => {
-    await page.click('text=Add to cart');
-    const count = await page.locator('.cart-count').innerText();
-    // publish a custom metric module:
-    test.info().annotations.push({ type: 'pandora.metric', description: `cart_items=${count}` });
-  });
-});
-```
-
-Solo las llamadas `test.step` de **primer nivel** del test se convierten en fases — el plugin lee el array `steps` de primer nivel del reporter JSON de Playwright, así que un paso anidado dentro de otro paso no se informa como fase independiente. Mantén los pasos planos (un nivel) para todo lo que quieras ver como fase independiente en la consola.
-
-Las métricas se parsean de la anotación con estas reglas exactas (tomadas del runner):
-
-- `type` debe ser exactamente el string literal `pandora.metric`; cualquier otro valor se ignora.
-- `description` debe ser `name=value`, dividido solo por el **primer** `=` — así un valor que contenga `=` (por ejemplo, una query string de una URL) no se trunca.
-- `name` y `value` se recortan de espacios en blanco alrededor. Si `description` no tiene `=`, o `name` queda vacío tras recortar, esa anotación se descarta silenciosamente.
-- El tipo de módulo se infiere a partir del valor: si se puede parsear como número → `generic_data`; en cualquier otro caso → `generic_data_string`. El módulo se nombra exactamente como `name` y se etiqueta con `extra_data = pw:metric:<name>`.
-
-### Pégalo en la tarea
-
-Pega el `.ts` completo en el campo **Playwright test (.ts)** de la tarea de Discovery, elige el navegador y el modo de worker, y guarda.
-
-### Consejos
-
-- **Nombrado**: los nombres de módulo salen de los títulos de `test.step`, así que mantenlos descriptivos (`'login'`, `'add to cart'`). Renombrar un test crea un agente nuevo.
-- **Continuar tras un fallo**: con un `expect` normal, una fase fallida aborta el test y las fases posteriores no se ejecutan. Si quieres que se mida cada fase aunque una falle, usa aserciones suaves: `await expect.soft(locator).toHaveText('x')`.
-- **Varias transacciones**: varios bloques `test(...)` en un mismo `.ts` generan varios agentes.
-- **El código grabado es un punto de partida, no el entregable**: un grabador escribe acciones literales pero no tiene forma de saber qué agrupación de elementos es única, si un texto de badge/estado se repite en otro lugar de la página, o si el texto real del DOM coincide con lo que el CSS hace que *parezca* (p. ej. `text-transform: uppercase`). Revisa los localizadores grabados contra la página en vivo antes de conectarlo a una tarea de Discovery.
-
 ## Certificados autofirmados
 
 Por defecto Playwright valida los certificados TLS como lo haría un navegador real, así que un destino con un certificado autofirmado o emitido internamente hace que cualquier `page.goto(...)` falle con `net::ERR_CERT_AUTHORITY_INVALID` antes incluso de que se ejecute la lógica del test.
@@ -587,41 +545,106 @@ test('checkout flow', async ({ page }) => {
 - Para limitarlo a solo algunos tests del mismo fichero, agrúpalos en su propio bloque `test.describe(...)` y llama a `test.use({ ignoreHTTPSErrors: true })` como primera línea dentro de ese bloque, en lugar de en el nivel superior.
 - Esto solo desactiva la **validación del certificado**, no el TLS en sí — la conexión sigue cifrada, simplemente ya no exige una cadena de confianza CA válida.
 
-## Generar una transacción con un agente de IA
+## La imagen Docker
 
-En lugar de escribir a mano la transacción `.ts` (o grabarla una vez y confiar en que los selectores aguanten), puedes hacer que un agente de código local — Claude Code, opencode, `pi` o similar — conduzca un navegador real a través del flujo y escriba la transacción por ti, validando cada localizador contra el objetivo real antes de entregarla.
+Cada tarea se ejecuta dentro de `pandorafms/pandora_playwright:noble`, el valor por defecto del campo **Docker image** (`_dockerImage_`). La forma recomendada de obtenerla es descargarla:
 
-Esto funciona porque estos agentes pueden usar una **skill de CLI/automatización de navegador de Playwright** (una herramienta que abre un navegador real, hace clic, rellena y lee el DOM bajo control del agente) para ejecutar realmente el flujo paso a paso, no solo adivinar selectores a partir de una captura. Un grabador registra acciones literales pero no tiene forma de saber qué agrupación de elementos es única, si un texto de badge/estado se repite en otro lugar, o si el texto real del DOM coincide con lo que el CSS hace que *parezca*; un agente que pueda re-ejecutar cada localizador contra la página en vivo, ver una violación de modo estricto y corregir el alcance antes de entregar el fichero detecta exactamente la clase de fallo que vuelve inestable una transacción en producción.
-
-### Plantilla de prompt
-
-```
-Validate [FLOW NAME] on [URL] and write it as a Playwright transaction for the
-pandorafms.playwright.1 plugin.
-
-What the transaction should check:
-- [step 1, e.g. "open the page and confirm the title"]
-- [step 2, e.g. "log in and confirm the dashboard loads"]
-- [step 3, e.g. "read a value and publish it as a pandora.metric"]
-
-Deliverable:
-- Plain Playwright: wrap each meaningful step in `test.step('name', ...)` so it
-  becomes a WUX phase, and use
-  `test.info().annotations.push({ type: 'pandora.metric', description: 'name=value' })`
-  for anything that should become a custom metric module.
-- No PandoraFMS import, no DSL — this plugin harvests everything from
-  Playwright's own JSON reporter.
-- Validate every locator against the real target yourself (drive the browser,
-  don't just infer from a snapshot) before handing me the file — fix anything
-  ambiguous or strict-mode-violating first.
-- If a later step depends on a hard assertion in an earlier step, tell me
-  whether to keep it that way or switch to `expect.soft()` so every phase gets
-  measured even when one fails.
+```bash
+docker pull pandorafms/pandora_playwright:noble
 ```
 
-### Después de recibir el fichero
+Es una capa fina sobre la imagen oficial de Playwright de Microsoft, que ya incluye Chromium, Firefox y WebKit con todas sus librerías de sistema — la parte lenta y frágil de montar a mano.
 
-Ejecútalo con el flujo local del propio plugin antes de conectarlo a una tarea de Discovery — ver [Pruebas / QA — paso a paso](#pruebas-qa-paso-a-paso) más abajo — para ver la salida real de agente/módulo, no solo "el test ha pasado".
+### El contrato de la imagen
+
+El runner genera la configuración completa de Playwright en cada ejecución y la escribe dentro del contenedor en marcha (ver [Depurar un test](#depurar-un-test)), así que la imagen depende de **una sola** cosa:
+
+> `@playwright/test` instalado en `/pandora/node_modules`, en la misma versión que los navegadores de la imagen.
+
+Todo lo demás es comodidad. Cualquier imagen que cumpla esa línea sirve como valor de `docker_image`.
+
+### El Dockerfile
+
+No lo necesitas para usar el plugin — descarga la imagen y listo. Está aquí para que puedas reconstruir la imagen tú mismo, auditar su contenido o usarla como punto de partida para una personalizada. Este es el `docker/Dockerfile` que se distribuye con el plugin:
+
+```dockerfile
+# Base image ships the browsers preinstalled (Chromium, Firefox, WebKit).
+# Pin the Playwright version to the same tag the runner was validated against.
+FROM mcr.microsoft.com/playwright:v1.62.0-noble
+
+# @playwright/test must match the base image Playwright version.
+ARG PLAYWRIGHT_VERSION=1.62.0
+
+WORKDIR /pandora
+
+RUN apt update && apt install -y vim
+
+# Minimal project so `npx playwright test` resolves the runner locally.
+RUN npm init -y >/dev/null 2>&1 \
+    && npm install -D @playwright/test@${PLAYWRIGHT_VERSION}
+```
+
+```bash
+docker build --pull -t pandorafms/pandora_playwright:noble -f Dockerfile .
+```
+
+| Paso | Por qué está ahí |
+|------|------------------|
+| `FROM mcr.microsoft.com/playwright:v1.62.0-noble` | Ubuntu 24.04 con los tres navegadores ya instalados. Fijada, nunca `:latest`: unos navegadores que se mueven bajo tus pies convierten una actualización sin relación en un incidente de monitorización |
+| `ARG PLAYWRIGHT_VERSION=1.62.0` | Versión del **runner de tests** instalado abajo. Debe coincidir con la etiqueta de la imagen base — ver [Dos versiones que deben coincidir](#dos-versiones-que-deben-coincidir) |
+| `WORKDIR /pandora` | Todas las rutas que usa el runner están bajo `/pandora`: el test, la configuración generada, `node_modules` |
+| `apt install vim` | Solo por comodidad, para la [depuración interactiva manual](#depuracion-interactiva-manual). Nada del plugin lo necesita |
+| `npm init -y` + `npm install -D @playwright/test` | El único paso que importa. Crea `/pandora/node_modules` para que `npx playwright test` resuelva el runner **localmente**, desde dentro del proyecto |
+
+Dos cosas que el Dockerfile deliberadamente **no** hace:
+
+- **No hay `COPY` de ninguna configuración de Playwright.** El runner escribe la suya en cada ejecución, así que una configuración horneada en la imagen nunca se leería.
+- **No hay `ENTRYPOINT` ni `CMD`.** El contenedor no tiene lógica propia: el runner lo inicia con `docker run -d <image> sleep <ttl>` y lo controla todo desde fuera con `docker cp` y `docker exec`. Un entrypoint personalizado se saltaría en el mejor caso y rompería la ejecución en el peor.
+
+### Construir tu propia imagen
+
+Si tus tests necesitan algo extra, añade una capa **encima** de la imagen publicada en lugar de reescribir el Dockerfile — mantienes la fijación de versión y heredas las correcciones futuras:
+
+```dockerfile
+FROM pandorafms/pandora_playwright:noble
+
+# Extra system packages your tests need (a font pack, a VPN client, a CA bundle...).
+USER root
+RUN apt-get update && apt-get install -y fonts-noto-cjk && rm -rf /var/lib/apt/lists/*
+
+# Extra npm libraries your tests import, installed into the same project so
+# `npx playwright test` resolves them: /pandora/node_modules.
+WORKDIR /pandora
+RUN npm install -D otplib          # e.g. tests that need a TOTP second factor
+```
+
+Constrúyela, hazla disponible en la máquina que ejecuta los tests — el servidor de Discovery para `worker_mode = local`, el destino SSH para `remote` — y apunta el campo **Docker image** de la tarea a ella:
+
+```json
+"docker_image": "mycompany/pandora_playwright:noble-corp"
+```
+
+Dos reglas para una imagen personalizada:
+
+- **No muevas `WORKDIR` fuera de `/pandora`.** El runner escribe `task.spec.ts` y `playwright.config.task.ts` ahí por ruta absoluta y ejecuta `cd /pandora` antes de `npx playwright test`.
+- **Instala los paquetes npm dentro de `/pandora`**, no globalmente. Node resuelve los imports de un test desde su propio árbol de proyecto.
+
+### Dos versiones que deben coincidir
+
+La etiqueta de la imagen base y `PLAYWRIGHT_VERSION` son el mismo número dos veces, y tienen que seguir siéndolo: los navegadores están horneados en la imagen base, y `@playwright/test` solo maneja la compilación del navegador con la que fue publicado. Cámbialo en **ambos** sitios a la vez:
+
+```dockerfile
+FROM mcr.microsoft.com/playwright:v1.63.0-noble
+ARG PLAYWRIGHT_VERSION=1.63.0
+```
+
+Un desajuste no falla en el momento de construir. Falla en tiempo de ejecución, normalmente como un navegador que se niega a arrancar o un ejecutable que Playwright dice no encontrar:
+
+```
+browserType.launch: Executable doesn't exist at /ms-playwright/chromium-1234/chrome-linux/chrome
+```
+
+Subir la versión mueve el runtime con el que se validó todo el plugin, así que repite el flujo de [Pruebas / QA — paso a paso](#pruebas-qa-paso-a-paso) y actualiza la [Matriz de compatibilidad](#matriz-de-compatibilidad) con la versión que hayas probado.
 
 ## Pruebas / QA — paso a paso
 
@@ -657,7 +680,7 @@ test('failing check', async ({ page }) => {
 ### 2. Ejecución local (inspecciona los datos de monitorización)
 
 ```bash
-./venv/bin/python pandora_playwright.py -c conf.json -s sample.spec.ts -t qa-test -g 0 -v
+./pandora_playwright -c conf.json -s sample.spec.ts -t qa-test -g 0 -v
 ```
 
 El STDERR muestra la traza paso a paso; el STDOUT es el JSON de Discovery. Espera dos agentes (`Playwright - passing check`, `Playwright - failing check`), cada uno con `Global status/time`, módulos por fase, una captura de pantalla de error (un valor `data:image/png;base64,...` en el que falla, `None` en el que pasa), la métrica `items` y un módulo `Full report`. Checklist: test que pasa → `Global status = 1`; test que falla → `Global status = 0`; cada `test.step` produce `Phase <name> status/time`; el `Last error screenshot` del test que falla empieza por `data:image/png;base64,`; sin contenedores sobrantes (`docker ps -a` limpio).
@@ -675,7 +698,7 @@ Apunta la configuración a un host SSH que tenga Docker y la imagen:
 ```
 
 ```bash
-./venv/bin/python pandora_playwright.py -c conf_remote.json -s sample.spec.ts -t qa-remote -g 0 -v
+./pandora_playwright -c conf_remote.json -s sample.spec.ts -t qa-remote -g 0 -v
 ```
 
 La salida verbose es idéntica a la local pero con el prefijo `ssh$` y las líneas extra `Connecting SSH` / `SSH authenticated` / `SCP` / limpieza del temporal remoto.
@@ -685,9 +708,11 @@ La salida verbose es idéntica a la local pero con el prefijo `ssh$` y las líne
 Ejecuta contra el Tentacle de un servidor Pandora para crear agentes/módulos reales:
 
 ```bash
-./venv/bin/python pandora_playwright.py -x -S 127.0.0.1:41121 \
-    -c conf.json -s sample.spec.ts -t qa-console -g 13 -T /tmp
+./pandora_playwright -x -S 127.0.0.1:41121 \
+    -c conf.json -s sample.spec.ts -t qa-console -g 0 -T /tmp
 ```
+
+`-g 0` evita el desajuste id/nombre de grupo de `-x` descrito en [Solución de problemas](#solucion-de-problemas); úsalo en este flujo de QA salvo que tengas un grupo realmente llamado como el id que pases.
 
 Después verifícalo en la base de datos (la vista WUX de la consola se basa en `extra_data`):
 
@@ -768,7 +793,7 @@ La extensión lee el campo **Debug directory** de cada tarea — no hay ninguna 
 
 ### El placeholder `_taskid_`
 
-Es una convención específica del plugin, no una característica de Discovery. Las macros propias de Discovery (`__taskMD5__`, `__taskGroupID__`, ...) solo se sustituyen en el lado del servidor, en Perl, en el momento de la ejecución, así que el valor por defecto de un campo llega al plugin literalmente; es el propio plugin, en Python, el que sustituye `_taskid_` por `md5(id_rt)` — el mismo valor que Discovery calcula como `__taskMD5__` — después de que el valor ya haya llegado dentro del JSON de configuración de la tarea. Cualquier otra cosa con acceso al `id_rt` de la tarea puede recalcular el mismo valor y aterrizar en el mismo nombre de directorio. La única excepción es una ejecución manual por CLI (`-t <task_name>` con un nombre legible): el plugin hace hash de ese nombre, ya que `-t` se convierte en el nombre del contenedor Docker.
+Es una convención específica del plugin, no una característica de Discovery. Las macros propias de Discovery (`__taskMD5__`, `__taskGroupID__`, ...) solo se sustituyen en el lado del servidor, en Perl, en el momento de la ejecución, así que el valor por defecto de un campo llega al plugin literalmente; es el propio plugin el que sustituye `_taskid_` por `md5(id_rt)` — el mismo valor que Discovery calcula como `__taskMD5__` — después de que el valor ya haya llegado dentro del JSON de configuración de la tarea. Cualquier otra cosa con acceso al `id_rt` de la tarea puede recalcular el mismo valor y aterrizar en el mismo nombre de directorio. La única excepción es una ejecución manual por CLI (`-t <task_name>` con un nombre legible): el plugin hace hash de ese nombre, ya que `-t` se convierte en el nombre del contenedor Docker.
 
 ### Depuración interactiva manual
 
