@@ -1003,6 +1003,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1166,6 +1177,17 @@
     <span class="md-ellipsis">
       
         Local preview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation
       
     </span>
   </a>
@@ -1392,6 +1414,20 @@ docs/es/assets/images/integrations/telegram/
 </code></pre></div>
 <p>Both open <code>http://localhost:8000</code> with live reload — edits to any <code>.md</code> or
 image refresh the browser automatically.</p>
+<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">¶</a></h2>
+<p>Run the automated checks before opening a pull request:</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>unittest<span class="w"> </span>discover<span class="w"> </span>-s<span class="w"> </span>tests<span class="w"> </span>-p<span class="w"> </span><span class="s1">'test_validate_docs.py'</span>
+python3<span class="w"> </span>scripts/validate_docs.py<span class="w"> </span>--fail-on<span class="w"> </span>blocking
+.venv/bin/mkdocs<span class="w"> </span>build<span class="w"> </span>--strict
+</code></pre></div>
+<p>Blocking gates cover language path parity, one real H1 per page, existing local
+images with Spanish-to-English fallback, and high-confidence secret signatures.
+The validator also reports local link and anchor problems, cross-language links,
+legacy URLs, pending markers, rendered <code>PandoraFMS</code> usage, and known content
+contamination signatures. Report-only findings remain visible but do not fail the
+default command. Use <code>--fail-on all</code> to treat every finding as a local failure.</p>
+<p>A browser preview is useful for visual review, but it does not replace these
+checks.</p>
 
 
 

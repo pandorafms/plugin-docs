@@ -1003,6 +1003,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#validacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validación
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1166,6 +1177,17 @@
     <span class="md-ellipsis">
       
         Vista previa local
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validación
       
     </span>
   </a>
@@ -1412,6 +1434,23 @@ docs/es/assets/images/integrations/telegram/
 </code></pre></div>
 <p>Ambas abren <code>http://localhost:8000</code> con live reload — los cambios en
 cualquier <code>.md</code> o imagen refrescan el navegador solos.</p>
+<h2 id="validacion">Validación<a class="headerlink" href="#validacion" title="Permanent link">¶</a></h2>
+<p>Ejecuta las comprobaciones automatizadas antes de abrir un pull request:</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>unittest<span class="w"> </span>discover<span class="w"> </span>-s<span class="w"> </span>tests<span class="w"> </span>-p<span class="w"> </span><span class="s1">'test_validate_docs.py'</span>
+python3<span class="w"> </span>scripts/validate_docs.py<span class="w"> </span>--fail-on<span class="w"> </span>blocking
+.venv/bin/mkdocs<span class="w"> </span>build<span class="w"> </span>--strict
+</code></pre></div>
+<p>Los controles bloqueantes comprueban la paridad de rutas entre idiomas, que
+cada página tenga un único H1 real, que existan las imágenes locales aplicando
+el fallback de español a inglés y que no haya firmas de secretos de alta
+confianza. El validador también informa de problemas en enlaces y anchors
+locales, cruces entre idiomas, URLs legacy, marcadores pendientes, usos de
+<code>PandoraFMS</code> en texto renderizado y firmas conocidas de contaminación de
+contenido. Estas incidencias informativas permanecen visibles, pero no hacen
+fallar el comando predeterminado. Usa <code>--fail-on all</code> para tratarlas como fallos
+durante una comprobación local.</p>
+<p>La vista previa en el navegador es útil para la revisión visual, pero no
+sustituye estas comprobaciones.</p>
 
 
 
