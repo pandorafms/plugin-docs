@@ -12,12 +12,15 @@ El plugin puede procesar URL introducidas en la tarea de Discovery, un archivo d
 
 ### Compatibilidad y disponibilidad
 
-| Ámbito | Evidencia |
-| --- | --- |
-| Versión del plugin | El paquete distribuido y su entrada de Marketplace identifican la versión `1.5`. |
-| Compatibilidad publicada con Pandora FMS | Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Se trata de compatibilidad publicada, no de un registro de pruebas de este plugin. |
-| Entornos probados | Ningún registro de pruebas publicado demuestra una compatibilidad amplia con sistemas operativos o versiones de Apache para este plugin. |
-| Disponibilidad del paquete | El paquete está disponible para usuarios con licencia de Pandora FMS ONE en [Pandora FMS Marketplace](https://marketplace.pandorafms.com/entries/pandorafms.apache). La distribución se rige por el modelo de licencia de Pandora FMS ONE; la entrada de Marketplace indica las condiciones aplicables. |
+| Ámbito | Estado | Evidencia |
+| --- | --- | --- |
+| Versión del plugin `1.5` | Objetivo documentado | La versión que describe esta página, según la identifican el paquete distribuido y su entrada de Marketplace. |
+| Pandora FMS NG 784 y versiones posteriores | `Soportado` | Marketplace indica que sus integraciones son compatibles con esas versiones. Es una declaración de compatibilidad publicada que cubre el plugin, no un registro de pruebas del mismo. |
+| Cualquier sistema operativo que ejecute el plugin | `Sin validar` | Ningún registro de pruebas publicado demuestra compatibilidad con sistemas operativos para este plugin. |
+| Cualquier versión o MPM concretos de Apache HTTP Server | `Sin validar` | Ningún registro de pruebas publicado demuestra compatibilidad con versiones de Apache. Las métricas disponibles varían según la versión, el MPM y los módulos habilitados. |
+| Una respuesta de `mod_status` legible por máquinas | `Requerido` | Prerrequisito, no una declaración de compatibilidad. Consulte [Requisitos](#requisitos). |
+
+El paquete está disponible para usuarios con licencia de Pandora FMS ONE en [Pandora FMS Marketplace](https://marketplace.pandorafms.com/entries/pandorafms.apache). La distribución se rige por el modelo de licencia de Pandora FMS ONE; la entrada de Marketplace indica las condiciones aplicables.
 
 ### Requisitos
 
