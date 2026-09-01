@@ -1,8 +1,8 @@
 # Apache Discovery
 
-## Overview
-
 *Article last updated: 2026-09-01.*
+
+## What it monitors
 
 Apache Discovery queries the machine-readable Apache HTTP Server `mod_status` endpoint. A Discovery task creates one Pandora FMS agent per unique URL network location (or per unique configured `agent_name`) and adds an availability module plus one module for every parsed, non-filtered `key: value` line returned by Apache.
 
@@ -12,12 +12,15 @@ The plugin can process URLs entered in the Discovery task, a key/value configura
 
 ### Compatibility and availability
 
-| Scope | Evidence |
-| --- | --- |
-| Plugin version | The distributed package and its Marketplace entry identify version `1.5`. |
-| Published Pandora FMS compatibility | The Marketplace states that its integrations are compatible with Pandora FMS NG 784 and later. This is published compatibility, not a test record for this plugin. |
-| Tested environments | No published test record establishes broad operating-system or Apache-version compatibility for this plugin. |
-| Package availability | The package is available to licensed Pandora FMS ONE users from the [Pandora FMS Marketplace](https://marketplace.pandorafms.com/entries/pandorafms.apache). Distribution follows the Pandora FMS ONE licensing model; the Marketplace entry states the applicable terms. |
+| Scope | State | Evidence |
+| --- | --- | --- |
+| Plugin version `1.5` | Documented target | The version this page describes, as identified by the distributed package and its Marketplace entry. |
+| Pandora FMS NG 784 and later | `Supported` | The Marketplace states that its integrations are compatible with these versions. This is a published compatibility statement covering the plugin, not a test record for it. |
+| Any operating system running the plugin | `Not validated` | No published test record establishes operating-system compatibility for this plugin. |
+| Any specific Apache HTTP Server version or MPM | `Not validated` | No published test record establishes Apache-version compatibility. Available metrics vary by version, MPM and enabled modules. |
+| A machine-readable `mod_status` response | `Required` | Prerequisite, not a compatibility statement. See [Requirements](#requirements). |
+
+The package is available to licensed Pandora FMS ONE users from the [Pandora FMS Marketplace](https://marketplace.pandorafms.com/entries/pandorafms.apache). Distribution follows the Pandora FMS ONE licensing model; the Marketplace entry states the applicable terms.
 
 ### Requirements
 
