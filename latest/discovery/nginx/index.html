@@ -719,40 +719,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#operate-and-troubleshoot" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Operate and troubleshoot
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Operate and troubleshoot">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#run-the-plugin-outside-discovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run the plugin outside Discovery
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#diagnostics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Diagnostics
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#troubleshoot" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -760,11 +726,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -820,10 +781,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#command-line-parameters" class="md-nav__link">
+  <a href="#command-line-execution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Command-line parameters
+        Command-line execution
       
     </span>
   </a>
@@ -1492,40 +1453,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#operate-and-troubleshoot" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Operate and troubleshoot
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Operate and troubleshoot">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#run-the-plugin-outside-discovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run the plugin outside Discovery
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#diagnostics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Diagnostics
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#troubleshoot" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1533,11 +1460,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1593,10 +1515,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#command-line-parameters" class="md-nav__link">
+  <a href="#command-line-execution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Command-line parameters
+        Command-line execution
       
     </span>
   </a>
@@ -1980,27 +1902,8 @@ Reading: 6 Writing: 179 Waiting: 106
 <p>It displays summary cards for the number of NGINX nodes, how many are up and down, total active connections, the aggregated request counter, and idle connections, followed by a per-node table.</p>
 <!-- SCREENSHOT NEEDED: NGINX Monitoring extension view showing the summary cards and the per-node table, with lab hostnames only. -->
 
-<h2 id="operate-and-troubleshoot">Operate and troubleshoot<a class="headerlink" href="#operate-and-troubleshoot" title="Permanent link">¶</a></h2>
-<h3 id="run-the-plugin-outside-discovery">Run the plugin outside Discovery<a class="headerlink" href="#run-the-plugin-outside-discovery" title="Permanent link">¶</a></h3>
-<p>The plugin can also be executed by hand, which is the fastest way to confirm an endpoint and its credentials before wiring them into a task, and is also how it is used as a server plugin.</p>
-<p>It has two input modes:</p>
-<ul>
-<li><strong>Simple mode</strong> passes the endpoints on the command line with <code>--urls</code>.</li>
-<li><strong>Advanced mode</strong> passes a configuration file with <code>--conf</code> plus a targets file with <code>--targets_file</code>. This is the mode the Discovery task itself uses.</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="c1"># Simple mode</span>
-./pandora_nginx<span class="w"> </span>--urls<span class="w"> </span>http://&lt;TARGET_HOST_1&gt;/nginx_status,http://&lt;TARGET_HOST_2&gt;/nginx_status<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--user<span class="w"> </span>&lt;USERNAME&gt;<span class="w"> </span>--password<span class="w"> </span>&lt;PASSWORD&gt;<span class="w"> </span>--ssl<span class="w"> </span><span class="nb">false</span>
-
-<span class="c1"># Advanced mode</span>
-./pandora_nginx<span class="w"> </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span>--targets_file<span class="w"> </span>&lt;PATH_TO_TARGETS&gt;
-</code></pre></div>
-<p>Passing a password on the command line exposes it in the shell history and in the operating system process list. Prefer the configuration file for anything but a one-off check.</p>
-<p>The run returns a JSON summary of the execution. In <code>native</code> mode the collected data is exposed in the summary's <code>monitoring_data</code> field, for the Discovery server to consume; in <code>tentacle</code> mode the plugin generates one XML file per agent and sends it to the Pandora FMS server.</p>
-<p><code>--as_server_plugin</code> replaces the JSON summary with a single <code>1</code> (agents created without errors) or <code>0</code>, so the plugin can be wired as a server plugin.</p>
-<h3 id="diagnostics">Diagnostics<a class="headerlink" href="#diagnostics" title="Permanent link">¶</a></h3>
+<h2 id="troubleshoot">Troubleshoot<a class="headerlink" href="#troubleshoot" title="Permanent link">¶</a></h2>
 <p>The plugin has no verbose or debug flag. Its only diagnostic channel is the JSON execution summary printed to standard output, which names the failing endpoint when a request to <code>stub_status</code> cannot be completed.</p>
-<h3 id="troubleshoot">Troubleshoot<a class="headerlink" href="#troubleshoot" title="Permanent link">¶</a></h3>
 <ul>
 <li><strong>The task creates no agents</strong> — every URL failed. Reproduce the request with <code>curl</code> as in <a href="#confirm-the-endpoint-responds">Confirm the endpoint responds</a>; the JSON summary of a manual run names the endpoint that failed.</li>
 <li><strong><code>stub_status</code> is not available</strong> — the module is not in this NGINX build. Check with <code>nginx -V 2&gt;&amp;1 | grep stub_status</code> and use a build that includes it.</li>
@@ -2119,7 +2022,23 @@ Reading: 6 Writing: 179 Waiting: 106
 </tbody>
 </table>
 <p>The task's group and interval are taken from the generic task-definition step and reach the plugin as <code>agents_group</code>, <code>agents_group_id</code> and <code>interval</code>.</p>
-<h3 id="command-line-parameters">Command-line parameters<a class="headerlink" href="#command-line-parameters" title="Permanent link">¶</a></h3>
+<h3 id="command-line-execution">Command-line execution<a class="headerlink" href="#command-line-execution" title="Permanent link">¶</a></h3>
+<p>The plugin can also be executed by hand, which is the fastest way to confirm an endpoint and its credentials before wiring them into a task, and is also how it is used as a server plugin.</p>
+<p>It has two input modes:</p>
+<ul>
+<li><strong>Simple mode</strong> passes the endpoints on the command line with <code>--urls</code>.</li>
+<li><strong>Advanced mode</strong> passes a configuration file with <code>--conf</code> plus a targets file with <code>--targets_file</code>. This is the mode the Discovery task itself uses.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Simple mode</span>
+./pandora_nginx<span class="w"> </span>--urls<span class="w"> </span>http://&lt;TARGET_HOST_1&gt;/nginx_status,http://&lt;TARGET_HOST_2&gt;/nginx_status<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--user<span class="w"> </span>&lt;USERNAME&gt;<span class="w"> </span>--password<span class="w"> </span>&lt;PASSWORD&gt;<span class="w"> </span>--ssl<span class="w"> </span><span class="nb">false</span>
+
+<span class="c1"># Advanced mode</span>
+./pandora_nginx<span class="w"> </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span>--targets_file<span class="w"> </span>&lt;PATH_TO_TARGETS&gt;
+</code></pre></div>
+<p>Passing a password on the command line exposes it in the shell history and in the operating system process list. Prefer the configuration file for anything but a one-off check.</p>
+<p>The run returns a JSON summary of the execution. In <code>native</code> mode the collected data is exposed in the summary's <code>monitoring_data</code> field, for the Discovery server to consume; in <code>tentacle</code> mode the plugin generates one XML file per agent and sends it to the Pandora FMS server.</p>
+<p><code>--as_server_plugin</code> replaces the JSON summary with a single <code>1</code> (agents created without errors) or <code>0</code>, so the plugin can be wired as a server plugin.</p>
 <div class="highlight"><pre><span></span><code>./pandora_nginx<span class="w"> </span>--urls<span class="w"> </span>&lt;URLs&gt;<span class="w"> </span><span class="o">[</span>options<span class="o">]</span>
 ./pandora_nginx<span class="w"> </span>--conf<span class="w"> </span>&lt;path&gt;<span class="w"> </span>--targets_file<span class="w"> </span>&lt;path&gt;
 </code></pre></div>
