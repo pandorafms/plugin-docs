@@ -78,8 +78,6 @@ En `Apache Detailed`, utiliza `Advance Apache` para una o varias secciones de co
 | `Advance Apache` | No | Plantilla de ejemplo comentada | Contenido INI con una sección de nombre único por objetivo. Cada sección requiere `urls` para recopilar datos. |
 | `User-Agent` | No | Vacío | Cabecera HTTP `User-Agent` personalizada que se aplica únicamente a los objetivos de `Apache Urls`. Se escribe en la configuración temporal de pares clave/valor que consume el plugin, por lo que nunca llega a las secciones de `Advance Apache`; cada una de esas secciones aplica únicamente su propia clave `user_agent`. |
 
-<!-- SCREENSHOT NEEDED: Capture the Apache Detailed Discovery task step in the locked Pandora FMS console version with a safe placeholder-only section and no credentials; save as apache-detailed.png -->
-
 Las credenciales introducidas en la tarea se escriben en una configuración temporal de pares clave/valor que consume el plugin. Restringe el acceso a Pandora FMS y a sus archivos de configuración y temporales según la política de seguridad del despliegue.
 
 ## Verificación

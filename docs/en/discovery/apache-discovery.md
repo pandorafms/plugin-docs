@@ -78,8 +78,6 @@ In `Apache Detailed`, use `Advance Apache` for one or more named configuration s
 | `Advance Apache` | No | Commented example template | INI content with one uniquely named section per target. Each section requires `urls` for collection. |
 | `User-Agent` | No | Empty | Custom HTTP `User-Agent` header applied only to the `Apache Urls` targets. It is written to the temporary key/value configuration consumed by the plugin, so `Advance Apache` sections never receive it; each of those sections applies only its own `user_agent` key. |
 
-<!-- SCREENSHOT NEEDED: Capture the Apache Detailed Discovery task step in the locked Pandora FMS console version with a safe placeholder-only section and no credentials; save as apache-detailed.png -->
-
 Credentials entered in the task are written to a temporary key/value configuration consumed by the plugin. Restrict access to Pandora FMS and its configuration and temporary files according to the deployment's security policy.
 
 ## Verify
