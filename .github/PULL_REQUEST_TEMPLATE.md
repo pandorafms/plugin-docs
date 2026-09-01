@@ -24,6 +24,8 @@
 
 ## Verification
 
-- [ ] `mkdocs build` passes locally (or `docker compose up` preview)
+- [ ] Strict build completed successfully (check one command):
+  - [ ] `.venv/bin/mkdocs build --strict`
+  - [ ] `UID=$(id -u) GID=$(id -g) docker compose run --rm docs build --strict`
 - [ ] Images referenced with correct relative path and per-language fallback
-- [ ] Preview checked at http://localhost:8000
+- [ ] Optional: preview checked at http://localhost:8000
