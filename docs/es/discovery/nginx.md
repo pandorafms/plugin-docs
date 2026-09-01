@@ -1,5 +1,7 @@
 # NGINX Discovery
 
+*Última actualización del artículo: 2026-09-01.*
+
 ## Introducción
 
 Este plugin de discovery de NGINX para Pandora FMS está diseñado para automatizar la monitorización de tus servidores NGINX, aprovechando la información que proporciona el módulo `ngx_http_stub_status_module` (stub_status). Al interactuar con dicho endpoint, el plugin puede recopilar métricas en tiempo real que son cruciales para entender el rendimiento y la salud de tu entorno NGINX, incluyendo conexiones activas, conexiones aceptadas y gestionadas, peticiones procesadas, y el estado de las conexiones en lectura, escritura y espera. Por cada URL de NGINX se creará un agente en Pandora FMS, con un módulo por cada métrica disponible.
@@ -8,7 +10,7 @@ Este plugin de discovery de NGINX para Pandora FMS está diseñado para automati
 
 | **Sistemas donde se ha probado** | Contenedores NGINX `nginx:alpine` expuestos por HTTP plano y por HTTPS con autenticación básica (el entorno de pruebas del propio plugin) |
 | --- | --- |
-| **Sistemas donde funciona** | Cualquier sistema Linux soportado por Pandora FMS. El plugin se distribuye como binario compilado que incluye sus dependencias, por lo que no necesita instalar Python en el equipo. No hay constancia de los sistemas operativos anfitriones en los que se ha ejecutado. |
+| **Sistemas donde funciona** | Sin validar. El plugin se distribuye como binario compilado que incluye sus dependencias, por lo que no necesita instalar Python en el equipo. No hay constancia de los sistemas operativos anfitriones en los que se ha ejecutado. |
 
 ## Prerrequisitos
 
@@ -33,7 +35,7 @@ server {
     location /nginx_status {
         stub_status on;
         access_log off;
-        allow 192.168.1.50;   # IP del servidor de Pandora FMS
+        allow <PANDORA_FMS_SERVER_IP>;   # IP del servidor de Pandora FMS
         deny all;
     }
 }
@@ -69,9 +71,9 @@ server {
 Genera el fichero `.htpasswd` con `htpasswd` o `openssl`:
 
 ```bash
-htpasswd -c /etc/nginx/.htpasswd admin
+htpasswd -c /etc/nginx/.htpasswd <USERNAME>
 # o bien
-openssl passwd -apr1 mypassword > /etc/nginx/.htpasswd
+echo "<USERNAME>:$(openssl passwd -apr1 <PASSWORD>)" > /etc/nginx/.htpasswd
 
 ```
 
@@ -92,7 +94,7 @@ server {
     location /nginx_status {
         stub_status on;
         access_log off;
-        allow 192.168.1.50;
+        allow <PANDORA_FMS_SERVER_IP>;
         deny all;
     }
 }
@@ -155,7 +157,7 @@ sudo systemctl reload nginx
 Para comprobar que el endpoint responde correctamente, puedes hacer una petición manual a la página de estado:
 
 ```bash
-curl -u admin:mypassword http://192.168.0.10/nginx_status
+curl -u <USERNAME>:<PASSWORD> http://<SERVER_IP>/nginx_status
 
 
 ```
@@ -177,117 +179,6 @@ Reading: 6 Writing: 179 Waiting: 106
 - **Reading**: conexiones leyendo cabeceras de petición del cliente.
 - **Writing**: conexiones escribiendo respuesta al cliente o procesando petición.
 - **Waiting**: conexiones keep-alive inactivas esperando la siguiente petición.
-
-## Parámetros
-
-**Modo simple**
-
-| Parámetro | Descripción |
-| --- | --- |
-| `--urls` | URLs del endpoint stub_status de NGINX, separadas por comas. Cada URL generará un agente. |
-| `--user` | nombre del usuario si el endpoint de NGINX requiere autenticación básica HTTP, opcional |
-| `--password` | contraseña si el endpoint de NGINX requiere autenticación básica HTTP, opcional |
-| `--ssl` | para verificar si la URL tiene certificado HTTPS o no, opcional (por defecto true) |
-| `--prefix` | prefijo para los nombres de los módulos, opcional |
-| `--transfer_mode` | modo de transferencia de datos (native o tentacle), opcional |
-| `--tentacle_ip` | ip del tentacle, opcional |
-| `--tentacle_port` | puerto del tentacle, opcional |
-| `--interval` | intervalo de monitorización en segundos, opcional |
-| `--allow_list` | expresión regular para incluir únicamente los módulos cuyo nombre coincida, opcional |
-| `--deny_list` | expresión regular para excluir módulos cuyo nombre coincida, opcional |
-| `--timeout` | tiempo máximo de espera para la petición HTTP en segundos, opcional (por defecto 10) |
-| `--as_server_plugin` | devuelve un único `1` (se han creado agentes sin errores) o `0` en lugar del resumen JSON, para poder usar el plugin como plugin de servidor, opcional (por defecto false) |
-
-**Modo avanzado**
-
-| Parámetro | Descripción |
-| --- | --- |
-| `--conf` | ruta del archivo de configuración |
-| `--targets_file` | ruta del archivo con las URLs de NGINX (obligatorio al usar --conf) |
-
-**Archivo de configuración (--conf)**
-
-```
-username= nombre del usuario si el endpoint de NGINX requiere autenticación básica HTTP, opcional
-password= contraseña si el endpoint de NGINX requiere autenticación básica HTTP, opcional
-verify_ssl= para verificar si la URL tiene certificado HTTPS o no, opcional
-prefix= prefijo para los nombres de los módulos, opcional
-transfer_mode= modo de transferencia de datos (native o tentacle), opcional
-tentacle_ip= ip del tentacle, opcional
-tentacle_port= puerto del tentacle, opcional
-agents_group= nombre del grupo de agentes al que se asignarán los agentes creados, opcional
-agents_group_id= id del grupo de agentes al que se asignarán los agentes creados, opcional
-interval= intervalo de monitorización en segundos, opcional
-allow_list= expresión regular para incluir únicamente los módulos cuyo nombre coincida, opcional
-deny_list= expresión regular para excluir módulos cuyo nombre coincida, opcional
-timeout= tiempo máximo de espera para la petición HTTP en segundos, opcional
-
-
-```
-
-**Ejemplo**
-
-```ini
-[CONF]
-username=pandora
-password=pandora
-verify_ssl=false
-prefix=nginx_
-transfer_mode=native
-tentacle_ip=127.0.0.1
-tentacle_port=41121
-interval=300
-allow_list=
-deny_list=
-timeout=10
-
-
-```
-
-Archivo de targets (`--targets_file`):
-
-```
-http://192.168.0.10/nginx_status
-http://192.168.0.11/nginx_status
-
-
-```
-
-## Ejecución manual
-
-La ejecución devolverá una salida en formato JSON con información sobre la ejecución, y generará un fichero XML por cada agente monitorizado (en modo tentacle) que enviará al servidor de Pandora FMS por el método de transferencia indicado en la configuración. En modo `native` los datos se exponen en el campo `monitoring_data` del JSON de salida para que los consuma el servidor de Discovery.
-
-### Formato de ejecución
-
-El formato de la ejecución del plugin es el siguiente:
-
-```bash
-./pandora_nginx --urls <urls del endpoint de NGINX separadas por comas> --user <usuario> --password <contraseña> --ssl <true|false> --prefix <prefijo> --transfer_mode <native|tentacle> --tentacle_ip <ip del tentacle> --tentacle_port <puerto del tentacle> --interval <intervalo> --allow_list <regex> --deny_list <regex> --timeout <segundos> --conf <ruta al fichero de configuración> --targets_file <ruta al fichero de URLs>
-
-
-```
-
-#### Ejemplos
-
-para ejecutar el modo simple
-
-```bash
-./pandora_nginx --urls http://192.168.0.10/nginx_status,http://192.168.0.11/nginx_status --user admin --password 12345 --ssl false --transfer_mode native --tentacle_ip 127.0.0.1 --tentacle_port 41121
-
-
-```
-
-para ejecutar el modo avanzado
-
-```bash
-./pandora_nginx --conf /etc/pandora/nginx.conf --targets_file /etc/pandora/nginx_targets.conf
-
-
-```
-
-#### Modo verbose
-
-El plugin no dispone de ningún parámetro de verbose o depuración. Su único canal de diagnóstico es el resumen de ejecución en formato JSON que imprime por la salida estándar, donde se indica el endpoint que ha fallado cuando no se puede completar una petición a `stub_status`.
 
 ## Configuración en PandoraFMS
 
@@ -323,9 +214,9 @@ Las tareas completadas con éxito tendrán un resumen de ejecución con la sigui
 
 ## Agentes y módulos generados por el plugin
 
-El plugin creará un agente por cada URL de NGINX indicada. El nombre del agente se calcula aplicando un hash MD5 sobre el `netloc` de la URL (host:port), y el alias se corresponde con dicho `netloc` (por ejemplo, `192.168.0.10`). En cada agente se incluirán los módulos obtenidos al parsear el texto plano del endpoint stub_status de NGINX.
+El plugin creará un agente por cada URL de NGINX indicada. El nombre del agente se calcula aplicando un hash MD5 sobre el `netloc` de la URL (host:port), y el alias se corresponde con dicho `netloc` (por ejemplo, `nginx1.example.com`). En cada agente se incluirán los módulos obtenidos al parsear el texto plano del endpoint stub_status de NGINX.
 
-El módulo `Status` se crea **siempre** para cada agente, con valor `1` si el endpoint es alcanzable, indicando que NGINX está funcionando. Si el endpoint no es alcanzable, el plugin reporta el error en la información de ejecución. El resto de campos numéricos se incluyen como módulos `generic_data` (valores instantáneos) o `generic_data_inc` (contadores incrementales con cálculo de tasa por segundo), siguiendo el formato `<prefix><MetricName>`.
+El módulo `Status` se crea por defecto para cada agente, con valor `1` si el endpoint es alcanzable, indicando que NGINX está funcionando. Puede excluirse mediante la allow/deny list, como cualquier otro módulo. Si el endpoint no es alcanzable, el plugin reporta el error en la información de ejecución. El resto de campos numéricos se incluyen como módulos `generic_data` (valores instantáneos) o `generic_data_inc` (contadores incrementales con cálculo de tasa por segundo), siguiendo el formato `<prefix><MetricName>`.
 
 Los campos disponibles en el stub_status de NGINX, y que dan lugar a módulos, son:
 
@@ -366,6 +257,118 @@ El plugin asigna identificadores estables en el campo `extra_data` de cada agent
 
 Estos marcadores no contienen ni el nombre del agente ni el del módulo, sino el identificador externo (la URL del target), que es estable y significativo a nivel de dominio.
 
+## Parámetros
+
+**Modo simple**
+
+| Parámetro | Descripción |
+| --- | --- |
+| `--urls` | URLs del endpoint stub_status de NGINX, separadas por comas. Cada URL generará un agente. |
+| `--user` | nombre del usuario si el endpoint de NGINX requiere autenticación básica HTTP, opcional |
+| `--password` | contraseña si el endpoint de NGINX requiere autenticación básica HTTP, opcional |
+| `--ssl` | para verificar si la URL tiene certificado HTTPS o no, opcional (por defecto true) |
+| `--prefix` | prefijo para los nombres de los módulos, opcional |
+| `--transfer_mode` | modo de transferencia de datos (native o tentacle), opcional |
+| `--tentacle_ip` | ip del tentacle, opcional |
+| `--tentacle_port` | puerto del tentacle, opcional |
+| `--interval` | intervalo de monitorización en segundos, opcional (por defecto 300) |
+| `--allow_list` | expresión regular para incluir únicamente los módulos cuyo nombre coincida, opcional |
+| `--deny_list` | expresión regular para excluir módulos cuyo nombre coincida, opcional |
+| `--timeout` | tiempo máximo de espera para la petición HTTP en segundos, opcional (por defecto 10) |
+| `--as_server_plugin` | devuelve un único `1` (se han creado agentes sin errores) o `0` en lugar del resumen JSON, para poder usar el plugin como plugin de servidor, opcional (por defecto false) |
+
+> Al ejecutar en modo simple con `--urls`, los parámetros de prefijo de módulos, modo de transferencia, dirección del tentacle e intervalo indicados arriba no se aplican: el plugin usa los valores por defecto (`native`, `127.0.0.1:41121`, `300` segundos). Para cambiarlos, utiliza el archivo de configuración con `--conf`.
+
+**Modo avanzado**
+
+| Parámetro | Descripción |
+| --- | --- |
+| `--conf` | ruta del archivo de configuración |
+| `--targets_file` | ruta del archivo con las URLs de NGINX (obligatorio al usar --conf) |
+
+**Archivo de configuración (--conf)**
+
+```
+username= nombre del usuario si el endpoint de NGINX requiere autenticación básica HTTP, opcional
+password= contraseña si el endpoint de NGINX requiere autenticación básica HTTP, opcional
+verify_ssl= para verificar si la URL tiene certificado HTTPS o no, opcional
+prefix= prefijo para los nombres de los módulos, opcional
+transfer_mode= modo de transferencia de datos (native o tentacle), opcional
+tentacle_ip= ip del tentacle, opcional
+tentacle_port= puerto del tentacle, opcional
+agents_group= nombre del grupo de agentes al que se asignarán los agentes creados, opcional
+agents_group_id= id del grupo de agentes al que se asignarán los agentes creados, opcional
+interval= intervalo de monitorización en segundos, opcional
+allow_list= expresión regular para incluir únicamente los módulos cuyo nombre coincida, opcional
+deny_list= expresión regular para excluir módulos cuyo nombre coincida, opcional
+timeout= tiempo máximo de espera para la petición HTTP en segundos, opcional
+
+
+```
+
+**Ejemplo**
+
+```ini
+[CONF]
+username=<USERNAME>
+password=<PASSWORD>
+verify_ssl=false
+prefix=nginx_
+transfer_mode=native
+tentacle_ip=127.0.0.1
+tentacle_port=41121
+interval=300
+allow_list=
+deny_list=
+timeout=10
+
+
+```
+
+Archivo de targets (`--targets_file`):
+
+```
+http://<TARGET_HOST_1>/nginx_status
+http://<TARGET_HOST_2>/nginx_status
+
+
+```
+
+## Ejecución manual
+
+La ejecución devolverá una salida en formato JSON con información sobre la ejecución, y generará un fichero XML por cada agente monitorizado (en modo tentacle) que enviará al servidor de Pandora FMS por el método de transferencia indicado en la configuración. En modo `native` los datos se exponen en el campo `monitoring_data` del JSON de salida para que los consuma el servidor de Discovery.
+
+### Formato de ejecución
+
+El formato de la ejecución del plugin es el siguiente:
+
+```bash
+./pandora_nginx --urls <urls del endpoint de NGINX separadas por comas> --user <usuario> --password <contraseña> --ssl <true|false> --prefix <prefijo> --transfer_mode <native|tentacle> --tentacle_ip <ip del tentacle> --tentacle_port <puerto del tentacle> --interval <intervalo> --allow_list <regex> --deny_list <regex> --timeout <segundos> --as_server_plugin <true|false> --conf <ruta al fichero de configuración> --targets_file <ruta al fichero de URLs>
+
+
+```
+
+#### Ejemplos
+
+para ejecutar el modo simple
+
+```bash
+./pandora_nginx --urls http://<TARGET_HOST_1>/nginx_status,http://<TARGET_HOST_2>/nginx_status --user <USERNAME> --password <PASSWORD> --ssl false
+
+
+```
+
+para ejecutar el modo avanzado
+
+```bash
+./pandora_nginx --conf <PATH_TO_CONFIG> --targets_file <PATH_TO_TARGETS>
+
+
+```
+
+#### Modo verbose
+
+El plugin no dispone de ningún parámetro de verbose o depuración. Su único canal de diagnóstico es el resumen de ejecución en formato JSON que imprime por la salida estándar, donde se indica el endpoint que ha fallado cuando no se puede completar una petición a `stub_status`.
 
 ## Extensión de consola
 
@@ -382,6 +385,6 @@ A la extensión no hay que indicarle qué agentes debe leer. Los descubre consul
 plugin aparece automáticamente, sin configurar nada en la extensión.
 
 Muestra tarjetas de resumen con el número de nodos NGINX, cuántos están activos y caídos, el total de
-conexiones activas y el contador agregado de peticiones, seguidas de una tabla por nodo.
+conexiones activas, el contador agregado de peticiones y las conexiones inactivas, seguidas de una tabla por nodo.
 
 <!-- SCREENSHOT NEEDED: el cuadro de mando de la extensión NGINX Monitoring, con las tarjetas de resumen y la tabla de nodos, con al menos dos nodos monitorizados -->
