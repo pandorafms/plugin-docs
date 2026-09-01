@@ -180,7 +180,7 @@ Reading: 6 Writing: 179 Waiting: 106
 - **Writing**: connections writing a response to the client or processing a request.
 - **Waiting**: idle keep-alive connections waiting for the next request.
 
-## Configuration in PandoraFMS
+## Configuration in Pandora FMS
 
 This plugin can be integrated with Pandora FMS *Discovery*.
 
