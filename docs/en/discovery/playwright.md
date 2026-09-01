@@ -60,7 +60,29 @@ Updating only the first copy silently keeps the old build running on the Discove
 
 ## Configure
 
-Configuring a monitored transaction is two things: writing the Playwright test, and creating the Discovery task that runs it.
+Configuring a monitored transaction is two things: creating the Discovery task, and writing the Playwright test it runs. Start with the task, so you can see where every field lives; [Write the Playwright transaction](#write-the-playwright-transaction) covers the test you paste into it.
+
+### Create the Discovery task
+
+A task is created in the console as a Discovery task of the **Playwright** app:
+
+1. Go to **Discovery → Tasks → New task**, pick the Playwright app and set the task name, group, server and interval — the wizard's own generic **Task definition** step.
+
+    ![Task definition step of the Playwright Discovery task wizard](../assets/images/discovery/playwright/task-wizard-1.png)
+
+2. Walk the wizard steps: **Basic setup** (worker mode, browser), **Worker setup** (only for `remote`), **Test setup** (image, viewport, timeout, full report, agent prefix, the Playwright test itself, error history module) and **Advanced setup** (debug mode, debug directory, advanced timeouts, remove existing container). Every field is documented in [Task parameters](#task-parameters).
+
+    ![Basic setup step: worker mode and browser](../assets/images/discovery/playwright/task-wizard-2.png)
+
+    ![Worker setup step: SSH connection fields, shown only when the worker mode is remote](../assets/images/discovery/playwright/task-wizard-3.png)
+
+    ![Test setup step: Docker image, viewport, test timeout, full report, agent prefix and the Playwright test field](../assets/images/discovery/playwright/task-wizard-4.png)
+
+    ![Advanced setup step: debug mode, debug directory, remove existing container and advanced timeouts](../assets/images/discovery/playwright/task-wizard-5.png)
+
+3. Paste the full `.ts` into the **Playwright test (.ts)** field, pick the browser and worker mode, and save. If you do not have the test yet, write it first — see [Write the Playwright transaction](#write-the-playwright-transaction).
+
+The SSH password can be stored encrypted: the console calls the `password_encrypter` binary (AES-256-CBC) when **Encrypt password** is on, which is the default.
 
 ### Write the Playwright transaction
 
@@ -181,28 +203,6 @@ Writing tips:
 - **Multiple transactions**: several `test(...)` blocks in one `.ts` produce several agents. See [Multiple tests in one file](#multiple-tests-in-one-file).
 - **Recorded code is a starting point, not the deliverable**: review the recorded locators against the live page before wiring it into a Discovery task.
 - **Credentials**: the test content is stored with the task. Use dedicated monitoring accounts with the least privilege the flow needs.
-
-### Create the Discovery task
-
-A task is created in the console as a Discovery task of the **Playwright** app:
-
-1. Go to **Discovery → Tasks → New task**, pick the Playwright app and set the task name, group, server and interval — the wizard's own generic **Task definition** step.
-
-    ![Task definition step of the Playwright Discovery task wizard](../assets/images/discovery/playwright/task-wizard-1.png)
-
-2. Walk the wizard steps: **Basic setup** (worker mode, browser), **Worker setup** (only for `remote`), **Test setup** (image, viewport, timeout, full report, agent prefix, the Playwright test itself, error history module) and **Advanced setup** (debug mode, debug directory, advanced timeouts, remove existing container). Every field is documented in [Task parameters](#task-parameters).
-
-    ![Basic setup step: worker mode and browser](../assets/images/discovery/playwright/task-wizard-2.png)
-
-    ![Worker setup step: SSH connection fields, shown only when the worker mode is remote](../assets/images/discovery/playwright/task-wizard-3.png)
-
-    ![Test setup step: Docker image, viewport, test timeout, full report, agent prefix and the Playwright test field](../assets/images/discovery/playwright/task-wizard-4.png)
-
-    ![Advanced setup step: debug mode, debug directory, remove existing container and advanced timeouts](../assets/images/discovery/playwright/task-wizard-5.png)
-
-3. Paste the full `.ts` into the **Playwright test (.ts)** field, pick the browser and worker mode, and save.
-
-The SSH password can be stored encrypted: the console calls the `password_encrypter` binary (AES-256-CBC) when **Encrypt password** is on, which is the default.
 
 ## Verify the first run
 

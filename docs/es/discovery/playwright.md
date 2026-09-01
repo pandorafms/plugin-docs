@@ -60,7 +60,29 @@ Actualizar solo la primera copia mantiene silenciosamente la versión antigua en
 
 ## Configuración
 
-Configurar una transacción monitorizada son dos cosas: escribir el test de Playwright y crear la tarea de Discovery que lo ejecuta.
+Configurar una transacción monitorizada son dos cosas: crear la tarea de Discovery y escribir el test de Playwright que esta ejecuta. Empiece por la tarea, para ver dónde vive cada campo; [Escribir la transacción de Playwright](#escribir-la-transaccion-de-playwright) cubre el test que se pega en ella.
+
+### Crear la tarea de Discovery
+
+La tarea se crea en la consola como una tarea de Discovery de la aplicación **Playwright**:
+
+1. Vaya a **Discovery → Tasks → New task**, elija la aplicación Playwright y establezca el nombre de la tarea, el grupo, el servidor y el intervalo: el paso genérico **Task definition** del propio asistente.
+
+    ![Paso de definición de la tarea del asistente de la tarea de Discovery de Playwright](../assets/images/discovery/playwright/task-wizard-1.png)
+
+2. Recorra los pasos del asistente: **Basic setup** (modo de worker, navegador), **Worker setup** (solo para `remote`), **Test setup** (imagen, viewport, timeout, informe completo, prefijo de agentes, el propio test de Playwright, módulo de histórico de errores) y **Advanced setup** (modo debug, directorio de debug, timeouts avanzados, eliminar contenedor existente). Todos los campos están documentados en [Parámetros de la tarea](#parametros-de-la-tarea).
+
+    ![Paso Basic setup: modo de worker y navegador](../assets/images/discovery/playwright/task-wizard-2.png)
+
+    ![Paso Worker setup: campos de conexión SSH, mostrados solo cuando el modo de worker es remote](../assets/images/discovery/playwright/task-wizard-3.png)
+
+    ![Paso Test setup: imagen Docker, viewport, timeout del test, informe completo, prefijo de agentes y el campo del test de Playwright](../assets/images/discovery/playwright/task-wizard-4.png)
+
+    ![Paso Advanced setup: modo debug, directorio de debug, eliminar contenedor existente y timeouts avanzados](../assets/images/discovery/playwright/task-wizard-5.png)
+
+3. Pegue el `.ts` completo en el campo **Playwright test (.ts)**, elija el navegador y el modo de worker, y guarde. Si aún no tiene el test, escríbalo primero: consulte [Escribir la transacción de Playwright](#escribir-la-transaccion-de-playwright).
+
+La contraseña SSH puede almacenarse cifrada: la consola llama al binario `password_encrypter` (AES-256-CBC) cuando **Encrypt password** está activo, que es el valor por defecto.
 
 ### Escribir la transacción de Playwright
 
@@ -181,28 +203,6 @@ Consejos de redacción:
 - **Varias transacciones**: varios bloques `test(...)` en un mismo `.ts` producen varios agentes. Consulte [Varios tests en un fichero](#varios-tests-en-un-fichero).
 - **El código grabado es un punto de partida, no el entregable**: revise los localizadores grabados contra la página real antes de conectarlo a una tarea de Discovery.
 - **Credenciales**: el contenido del test se almacena junto con la tarea. Use cuentas de monitorización dedicadas con el menor privilegio que necesite el flujo.
-
-### Crear la tarea de Discovery
-
-La tarea se crea en la consola como una tarea de Discovery de la aplicación **Playwright**:
-
-1. Vaya a **Discovery → Tasks → New task**, elija la aplicación Playwright y establezca el nombre de la tarea, el grupo, el servidor y el intervalo: el paso genérico **Task definition** del propio asistente.
-
-    ![Paso de definición de la tarea del asistente de la tarea de Discovery de Playwright](../assets/images/discovery/playwright/task-wizard-1.png)
-
-2. Recorra los pasos del asistente: **Basic setup** (modo de worker, navegador), **Worker setup** (solo para `remote`), **Test setup** (imagen, viewport, timeout, informe completo, prefijo de agentes, el propio test de Playwright, módulo de histórico de errores) y **Advanced setup** (modo debug, directorio de debug, timeouts avanzados, eliminar contenedor existente). Todos los campos están documentados en [Parámetros de la tarea](#parametros-de-la-tarea).
-
-    ![Paso Basic setup: modo de worker y navegador](../assets/images/discovery/playwright/task-wizard-2.png)
-
-    ![Paso Worker setup: campos de conexión SSH, mostrados solo cuando el modo de worker es remote](../assets/images/discovery/playwright/task-wizard-3.png)
-
-    ![Paso Test setup: imagen Docker, viewport, timeout del test, informe completo, prefijo de agentes y el campo del test de Playwright](../assets/images/discovery/playwright/task-wizard-4.png)
-
-    ![Paso Advanced setup: modo debug, directorio de debug, eliminar contenedor existente y timeouts avanzados](../assets/images/discovery/playwright/task-wizard-5.png)
-
-3. Pegue el `.ts` completo en el campo **Playwright test (.ts)**, elija el navegador y el modo de worker, y guarde.
-
-La contraseña SSH puede almacenarse cifrada: la consola llama al binario `password_encrypter` (AES-256-CBC) cuando **Encrypt password** está activo, que es el valor por defecto.
 
 ## Verificar la primera ejecución
 
