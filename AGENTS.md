@@ -21,7 +21,15 @@ Documentation skills govern content research, writing, and content validation. T
 
 ## Validation
 
-Previewing the site is not validation. Run one strict build:
+Previewing the site is not validation. Run the validator tests, the blocking
+quality gates, and one strict build:
+
+```bash
+python3 -m unittest discover -s tests -p 'test_validate_docs.py'
+python3 scripts/validate_docs.py --fail-on blocking
+```
+
+Then build with either:
 
 ```bash
 .venv/bin/mkdocs build --strict
@@ -33,7 +41,9 @@ or:
 UID=$(id -u) GID=$(id -g) docker compose run --rm docs build --strict
 ```
 
-Report honestly when validation was not run. Do not enforce rules for a future validator until it exists and is documented.
+Use `python3 scripts/validate_docs.py --fail-on all` to inspect report-only debt
+locally; CI blocks only on blocking findings. Report honestly when any validation
+step was not run.
 
 ## Content safeguards
 

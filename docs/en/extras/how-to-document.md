@@ -209,3 +209,23 @@ UID=$(id -u) GID=$(id -g) docker compose up
 
 Both open `http://localhost:8000` with live reload — edits to any `.md` or
 image refresh the browser automatically.
+
+## Validation
+
+Run the automated checks before opening a pull request:
+
+```bash
+python3 -m unittest discover -s tests -p 'test_validate_docs.py'
+python3 scripts/validate_docs.py --fail-on blocking
+.venv/bin/mkdocs build --strict
+```
+
+Blocking gates cover language path parity, one real H1 per page, existing local
+images with Spanish-to-English fallback, and high-confidence secret signatures.
+The validator also reports local link and anchor problems, cross-language links,
+legacy URLs, pending markers, rendered `PandoraFMS` usage, and known content
+contamination signatures. Report-only findings remain visible but do not fail the
+default command. Use `--fail-on all` to treat every finding as a local failure.
+
+A browser preview is useful for visual review, but it does not replace these
+checks.

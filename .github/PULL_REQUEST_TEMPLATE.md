@@ -24,8 +24,10 @@
 
 ## Verification
 
+- [ ] Validator tests pass: `python3 -m unittest discover -s tests -p 'test_validate_docs.py'`
+- [ ] Blocking quality gates pass: `python3 scripts/validate_docs.py --fail-on blocking`
 - [ ] Strict build completed successfully (check one command):
   - [ ] `.venv/bin/mkdocs build --strict`
   - [ ] `UID=$(id -u) GID=$(id -g) docker compose run --rm docs build --strict`
 - [ ] Images referenced with correct relative path and per-language fallback
-- [ ] Optional: preview checked at http://localhost:8000
+- [ ] Optional: preview checked at http://localhost:8000 (preview is not validation)
