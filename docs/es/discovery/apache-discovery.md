@@ -1,269 +1,210 @@
 # Apache Discovery
 
-## Introducción
+## Descripción general
 
-Este plugin de discovery de Apache (versión 1.5) para Pandora FMS está diseñado para automatizar la monitorización de instancias de Apache HTTP Server, aprovechando la información que proporciona `mod_status`. Al interactuar con la página de estado del servidor (`server-status`), el plugin recopila métricas en tiempo real que son cruciales para entender el rendimiento y la salud de tu entorno Apache. El plugin crea un agente por instancia de Apache configurada, con un módulo por cada métrica disponible más un módulo fijo de conexión/disponibilidad.
+*Última actualización del artículo: 2026-09-01.*
 
-## Matriz de compatibilidad
+Apache Discovery consulta el endpoint legible por máquinas que proporciona `mod_status` de Apache HTTP Server. Una tarea de Discovery crea un agente de Pandora FMS por cada ubicación de red distinta de las URL (o por cada valor `agent_name` configurado distinto) y añade un módulo de disponibilidad, además de un módulo por cada línea `clave: valor` interpretada y no filtrada que devuelve Apache.
 
-| **Sistemas donde se ha probado** | Un contenedor `httpd:alpine` que expone `server-status` por HTTP simple (el propio entorno de pruebas del plugin) |
+El plugin puede procesar URL introducidas en la tarea de Discovery, un archivo de configuración de pares clave/valor o un archivo con varias secciones de configuración con nombre. Genera y transfiere archivos de datos XML de Pandora FMS para los agentes resultantes.
+
+## Preparación
+
+### Compatibilidad y disponibilidad
+
+| Ámbito | Evidencia |
 | --- | --- |
-| **Sistemas donde funciona** | Cualquier sistema Linux compatible con Pandora FMS. El plugin se distribuye como binario compilado que incluye sus dependencias, por lo que no requiere Python instalado en el host. No hay registro de los sistemas operativos concretos en los que se ha ejecutado. |
+| Versión del plugin | El paquete distribuido y su entrada de Marketplace identifican la versión `1.5`. |
+| Compatibilidad publicada con Pandora FMS | Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Se trata de compatibilidad publicada, no de un registro de pruebas de este plugin. |
+| Entornos probados | Ningún registro de pruebas publicado demuestra una compatibilidad amplia con sistemas operativos o versiones de Apache para este plugin. |
+| Disponibilidad del paquete | El paquete está disponible para usuarios con licencia de Pandora FMS ONE en [Pandora FMS Marketplace](https://marketplace.pandorafms.com/entries/pandorafms.apache). La distribución se rige por el modelo de licencia de Pandora FMS ONE; la entrada de Marketplace indica las condiciones aplicables. |
 
-## Prerrequisitos
+### Requisitos
 
-- El plugin es un compilado que contiene todas las dependencias necesarias para su uso, por lo que no requiere instalar Python ni librerías adicionales.
-- El módulo `mod_status` de Apache debe estar habilitado y la ruta `server-status` accesible. Consulta la sección [Configuración de Apache](#configuracion-de-apache) para los pasos.
+- Un ejecutable `pandora_apache` empaquetado.
+- Acceso de red desde el sistema que ejecuta el plugin hasta cada URL de estado de Apache.
+- `mod_status` de Apache habilitado con una respuesta `server-status?auto` legible por máquinas.
+- Credenciales de autenticación básica cuando el endpoint de estado las requiera. El plugin solo aplica la autenticación cuando existen el nombre de usuario y la contraseña.
+- Un destino de transferencia aceptado por las herramientas empaquetadas del plugin de Pandora.
 
-## Configuración de Apache
+### Configuración de `mod_status` de Apache
 
-Para que el plugin pueda obtener las estadísticas, Apache debe exponer el endpoint `server-status` a través de `mod_status`. Actívalo editando la configuración de Apache (por ejemplo, en un archivo incluido desde `httpd.conf`):
+Habilita una ubicación de estado en la configuración de Apache correspondiente y restríngela al sistema que ejecuta el plugin:
 
 ```apache
-LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined-status
-
 <Location "/server-status">
     SetHandler server-status
-    Require all granted
+    Require ip <MONITORING_HOST_IP>
 </Location>
-
-SetEnvIf Request_URI "^/server-status" log_combined_status
-CustomLog /proc/self/fd/1 combined-status env=log_combined_status
 ```
 
-En producción, restringe el acceso al host de confianza que ejecuta el plugin en lugar de `Require all granted`, por ejemplo `Require ip 192.168.1.50`.
+`Require all granted` expone ampliamente información operativa del servidor. No lo utilices salvo que dicha exposición sea intencionada y esté protegida por otros controles. Consulta la [documentación de Apache sobre `mod_status`](https://httpd.apache.org/docs/2.4/mod/mod_status.html) para conocer la configuración en el objetivo y sus consideraciones de seguridad.
 
-Tras modificar la configuración de Apache, recarga el servicio para aplicar los cambios:
+Después de aplicar la configuración de Apache mediante el procedimiento adecuado para el sistema objetivo, verifica el endpoint legible por máquinas:
 
 ```bash
-sudo systemctl reload apache2
+curl "https://<TARGET_HOST>/server-status?auto"
 ```
 
-### Verificación
+La respuesta debe contener líneas de texto sin formato `clave: valor`. Protege el endpoint mediante restricciones de red, autenticación y TLS adecuadas.
 
-Para verificar que el endpoint responde correctamente, haz una petición manual a la página de estado con la cadena de consulta `?auto`, que devuelve el formato `clave: valor` que interpreta el plugin:
+### Instalación del paquete de Discovery
 
-```bash
-curl http://192.168.0.1/server-status?auto
-```
+Obtén el paquete Apache Discovery desde [Pandora FMS Marketplace](https://marketplace.pandorafms.com/entries/pandorafms.apache) y carga el paquete `.disco` en Pandora FMS. El plugin se distribuye bajo la licencia de Pandora FMS ONE; consulta la entrada de Marketplace para conocer las condiciones aplicables.
 
-La salida debe ser texto plano con formato `Clave: valor` por línea, por ejemplo:
+## Configuración de la tarea de Discovery
 
-```
-Total Accesses: 14733
-Total kBytes: 2461799
-CPULoad: .0828951
-Uptime: 11979
-ReqPerSec: 1.2299
-BytesPerSec: 210442
-BytesPerReq: 171104
-BusyWorkers: 6
-IdleWorkers: 35
-```
+Crea una tarea de Discovery de aplicaciones para Apache después de cargar el paquete. El paquete define dos pasos de configuración: `Apache Basic` y `Apache Detailed`.
 
-El conjunto exacto de campos presentes depende de la versión de Apache, el MPM activo y qué módulos opcionales (como `mod_cache`) estén compilados.
+En `Apache Basic`, configura las URL directas de los objetivos y los ajustes de transferencia. Todos los campos de la interfaz son opcionales individualmente, pero la tarea necesita al menos una URL en este paso o una sección de objetivo en `Apache Detailed` para recopilar datos.
 
-## Parámetros
-
-**Modo simple**
-
-| Parámetro | Descripción |
-| --- | --- |
-| `--urls` | URL(s) del endpoint `server-status` de Apache, separadas por comas o saltos de línea. Cada URL genera un agente, salvo que se indique `agent_name`. |
-| `--user` | nombre de usuario, si el servidor de Apache lo requiere, opcional |
-| `--password` | contraseña, si el servidor de Apache lo requiere, opcional |
-| `--ssl` | si se debe exigir y verificar el certificado HTTPS de la URL, opcional |
-| `--transfer_mode` | modo de transferencia de datos, opcional |
-| `--tentacle_ip` | IP del tentacle, opcional |
-| `--tentacle_port` | puerto del tentacle, opcional |
-| `--user_agent` | encabezado User-Agent personalizado que se envía a Apache, opcional |
-| `-in` / `--interval` | intervalo de monitorización en segundos, opcional |
-| `--as_server_plugin` | cuando es `true`, imprime un único `1` (los agentes se crearon sin errores) o `0` en lugar del resumen JSON de Discovery, para poder usar el plugin como plugin de servidor normal, opcional (por defecto `false`) |
-
-**Modo avanzado**
-
-| Parámetro | Descripción |
-| --- | --- |
-| `--conf` | ruta a un archivo de configuración con un único bloque `[CONF]`, equivalente al modo simple |
-| `--string_conf` | ruta a un archivo de configuración con uno o varios bloques con nombre (`[nombre_bloque]`), cada uno describiendo un objetivo Apache distinto |
-
-**Archivo de configuración (bloque `--conf` / `--string_conf`)**
-
-```
-urls= URL(s) de server-status de Apache
-agent_name= nombre específico del agente, opcional
-module_prefix= prefijo añadido a cada nombre de módulo, opcional
-username= nombre de usuario, si el servidor de Apache lo requiere, opcional
-password= contraseña, si el servidor de Apache lo requiere, opcional
-verify_ssl= si se debe exigir y verificar el certificado HTTPS, opcional
-transfer_mode= modo de transferencia de datos, opcional
-tentacle_ip= IP del tentacle, opcional
-tentacle_port= puerto del tentacle, opcional
-interval= intervalo de monitorización en segundos, opcional
-user_agent= encabezado User-Agent personalizado que se envía a Apache, opcional
-module_group= grupo de módulos para los módulos creados, opcional
-```
-
-**Ejemplo**
-
-```bash
-urls=https://192.168.0.1/example
-agent_name=example
-module_prefix=apache
-username=admin
-password=12345
-verify_ssl=true
-transfer_mode=tentacle
-tentacle_ip=127.0.0.1
-tentacle_port=41121
-user_agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36
-```
-
-Los archivos `--string_conf` pueden contener varios bloques con nombre, cada uno convertido en un objetivo Apache independiente con su propio agente:
-
-```ini
-[conf1]
-urls=http://192.168.0.1/example
-agent_name=local
-module_prefix=apache
-username=admin
-password=12345
-verify_ssl=true
-tentacle_ip=127.0.0.1
-tentacle_port=41121
-```
-
-## Ejecución manual
-
-La ejecución devuelve una salida en formato JSON con información sobre la ejecución, y genera un fichero XML por cada agente monitorizado, que se envía al servidor de Pandora FMS por el método de transferencia indicado en la configuración.
-
-### Formato de ejecución
-
-El formato de ejecución del plugin es el siguiente:
-
-```bash
-./pandora_apache --urls <URL(s) de server-status de Apache> --user <nombre de usuario> --password <contraseña> --ssl <true|false> --transfer_mode <modo de transferencia> --tentacle_ip <IP del tentacle> --tentacle_port <puerto del tentacle> --user_agent <User-Agent> --interval <segundos> --conf <ruta al fichero de configuración> --string_conf <ruta al fichero de configuración con bloques con nombre> --as_server_plugin <true|false>
-```
-
-#### Ejemplos
-
-para ejecutar en modo simple
-
-```bash
-./pandora_apache --urls http://192.168.0.1/server --ssl false --transfer_mode tentacle --tentacle_ip 127.0.0.1 --tentacle_port 41121
-```
-
-para ejecutar en modo avanzado
-
-```bash
-./pandora_apache --urls http://192.168.0.1/server --ssl false --transfer_mode tentacle --tentacle_ip 127.0.0.1 --tentacle_port 41121 --conf /file/file.conf
-```
-
-#### Modo verbose
-
-El plugin no dispone de opción de verbose o depuración. Su único canal de diagnóstico es el texto informativo incluido en la salida JSON/Discovery, que reporta errores de petición y, cuando se encuentran menos métricas de las esperadas para un objetivo, cuáles faltan.
-
-## Configuración en PandoraFMS
-
-Este plugin puede integrarse con el *Discovery* de Pandora FMS.
-
-Para ello se debe cargar el paquete ".disco" que puede descargarse desde la librería de Pandora FMS:
-
-[https://marketplace.pandorafms.com/](https://marketplace.pandorafms.com/)
-
-Una vez cargado, se pueden monitorizar instancias de Apache creando tareas de *Discovery* desde la sección *Management &gt; Discovery &gt; Application &gt; Apache*.
-
-Para cada tarea se solicitan los siguientes datos mínimos en el paso **Apache Basic**:
-
-- **Apache urls:** URL(s) del server-status de Apache
-- **User:** usuario del servidor, si es requerido, opcional
-- **Password:** contraseña del servidor, si es requerida, opcional
-- **Verify SSL:** activo si es necesario verificar el certificado SSL de la URL, activo por defecto
-- **Tentacle Mode:** modo de transferencia, opcional
-- **Tentacle IP:** IP del tentacle, opcional
-- **Tentacle port:** puerto del tentacle, opcional
-- **Module group:** selector con los grupos de módulos disponibles
+| Nombre | Obligatorio | Valor predeterminado | Descripción |
+| --- | --- | --- | --- |
+| `Apache Urls` | No | Vacío | Una o varias URL de estado de Apache, separadas por comas o saltos de línea. |
+| `User` | No | Vacío | Nombre de usuario para autenticación básica. Solo se utiliza si también existe una contraseña. |
+| `Password` | No | Vacío | Contraseña para autenticación básica. Solo se utiliza si también existe un nombre de usuario. |
+| `Verify SSL` | No | `true` | Cuando está habilitado, exige una URL HTTPS y verifica su certificado. |
+| `transfer mode` | No | `tentacle` | Modo de transferencia de XML que se pasa a las herramientas del plugin. |
+| `tentacle ip` | No | `127.0.0.1` | Destino IPv4 utilizado por la transferencia mediante Tentacle. |
+| `tentacle port` | No | `41121` | Puerto de destino de Tentacle. |
+| `Module Group` | No | Vacío | Grupo de módulos seleccionado para los módulos generados; un valor vacío se procesa como grupo `0`. |
 
 ![Paso Apache Basic de la tarea de Discovery](../assets/images/discovery/apache-discovery/wizard-basic.png)
 
-En el paso **Apache Detailed** se ofrece un área de texto para añadir la configuración de cada bloque de Apache que se quiera monitorizar:
+En `Apache Detailed`, utiliza `Advance Apache` para una o varias secciones de configuración con nombre y, opcionalmente, establece el valor `User-Agent` en el ámbito de la tarea.
 
-- **Block:** nombre del bloque, por ejemplo `[conf]`, requerido.
-- **Apache urls:** URL del server-status de Apache.
-- **Agent name:** nombre específico para el agente, opcional.
-- **Module prefix:** prefijo para cada módulo, opcional.
-- **User:** usuario del servidor, si es requerido, opcional.
-- **Password:** contraseña del servidor, si es requerida, opcional.
-- **Verify SSL:** activo si es necesario verificar el certificado SSL de la URL, activo por defecto.
-- **User_agent:** encabezado User-Agent personalizado que se envía a Apache, opcional.
-- **Tentacle Mode:** modo de transferencia, opcional.
-- **Tentacle IP:** IP del tentacle, opcional.
-- **Tentacle port:** puerto del tentacle, opcional.
+| Nombre | Obligatorio | Valor predeterminado | Descripción |
+| --- | --- | --- | --- |
+| `Advance Apache` | No | Plantilla de ejemplo comentada | Contenido INI con una sección de nombre único por objetivo. Cada sección requiere `urls` para recopilar datos. |
+| `User-Agent` | No | Vacío | Cabecera HTTP `User-Agent` personalizada que se aplica únicamente a los objetivos de `Apache Urls`. Se escribe en la configuración temporal de pares clave/valor que consume el plugin, por lo que nunca llega a las secciones de `Advance Apache`; cada una de esas secciones aplica únicamente su propia clave `user_agent`. |
 
-También hay un campo a nivel de tarea para establecer un User-Agent personalizado.
+<!-- SCREENSHOT NEEDED: Capture the Apache Detailed Discovery task step in the locked Pandora FMS console version with a safe placeholder-only section and no credentials; save as apache-detailed.png -->
 
-![Paso Apache Detailed de la tarea de Discovery](../assets/images/discovery/apache-discovery/wizard-advanced.png)
+Las credenciales introducidas en la tarea se escriben en una configuración temporal de pares clave/valor que consume el plugin. Restringe el acceso a Pandora FMS y a sus archivos de configuración y temporales según la política de seguridad del despliegue.
 
-Las tareas completadas con éxito muestran un resumen de ejecución con la siguiente información:
+## Verificación
 
-- **Total agents:** número total de agentes generados por la tarea.
-- **Total modules:** número total de módulos generados por la tarea.
+Ejecuta la tarea y confirma estos resultados observables:
 
-![Resumen de ejecución de la tarea de Discovery](../assets/images/discovery/apache-discovery/task-summary.png)
+1. El resumen de ejecución indica que se ha generado al menos un agente y un módulo.
+2. Cada ubicación de red de URL distinta (o cada valor `agent_name` configurado distinto) produce un agente con un módulo `Apache Connection`.
+3. Un endpoint de estado accesible asigna el valor `1` a `Apache Connection`; si falla la solicitud, el plugin crea o actualiza igualmente el agente y asigna el valor `0` a este módulo, con el error de la solicitud en su descripción.
+4. Los valores de Apache interpretados aparecen como módulos adicionales. El conjunto exacto depende de la respuesta.
 
-## Agentes y módulos generados por el plugin
+![Resumen de ejecución de Apache Discovery](../assets/images/discovery/apache-discovery/task-summary.png)
 
-El plugin crea un agente por instancia. En modo simple, el nombre del agente se toma de la URL. En modo avanzado, se crea un agente por cada bloque enviado, nombrado según el campo **agent name**; si no se especifica, el nombre se toma de la URL. Cada agente incluye siempre un módulo **Apache Connection** (`generic_proc`), que refleja si el endpoint `server-status` respondió: valor `1` si respondió, `0` si no se pudo alcanzar, con el error descrito en la descripción del módulo en caso de fallo. Este módulo de conexión se crea incluso cuando la petición falla, de modo que la disponibilidad se monitoriza independientemente del resto de métricas.
+Una tarea puede crear un agente y, aun así, comunicar información de diagnóstico cuando faltan métricas esperadas. Revisa la información de ejecución en lugar de considerar que la creación del agente demuestra por sí sola un éxito completo.
 
-El resto de módulos depende de la configuración y la versión del servidor Apache: una instalación reciente de Apache con todos los módulos relevantes activos expone todas las métricas. Se crean como `generic_data` (valores numéricos) o `generic_data_string` (valores no numéricos) según el tipo del valor interpretado:
+## Interpretación de los resultados
 
-| Módulo | Descripción |
+Para cada URL sin un valor `agent_name` configurado, el plugin deriva el nombre interno del agente de Pandora FMS como el MD5 de la ubicación de red de la URL, que también se convierte en el alias legible. Cuando se configura `agent_name`, el nombre interno es el MD5 de ese valor, que también se convierte en el alias. Por tanto, la identidad del agente no es por URL: las URL que comparten una ubicación de red, como distintas rutas en el mismo host y puerto, comparten un único agente y sus módulos se acumulan en él. Las URL o secciones configuradas con el mismo valor `agent_name` también comparten un único agente.
+
+Cada agente recibe `Apache Connection` como módulo `generic_proc`. Cada valor `clave: valor` restante, interpretado y no filtrado, se convierte en `generic_data` si es numérico o en `generic_data_string` en caso contrario. Se filtran `CurrentTime`, `RestartTime`, `Scoreboard`, `ServerUptime` y `TLSSessionCacheStatus`. Las demás claves interpretadas se emiten aunque no estén en la lista de descripciones conocidas del plugin.
+
+Entre las claves conocidas están `ServerVersion`, `ServerMPM`, `Server Built`, `ParentServerConfigGeneration`, `ParentServerMPMGeneration`, `ServerUptimeSeconds`, `Load1`, `Load5`, `Load15`, `Total Accesses`, `Total kBytes`, `Total Duration`, `CPUUser`, `CPUSystem`, `CPUChildrenUser`, `CPUChildrenSystem`, `CPULoad`, `Uptime`, `ReqPerSec`, `BytesPerSec`, `BytesPerReq`, `DurationPerReq`, `BusyWorkers`, `GracefulWorkers`, `IdleWorkers`, `Processes`, `Stopping`, `ConnsTotal`, `ConnsAsyncWriting`, `ConnsAsyncKeepAlive`, `ConnsAsyncClosing` y las métricas `Cache*` definidas por el plugin. Esta lista proporciona descripciones; no es una lista permitida que limite la salida. En particular, `ReqPerSec` y `BytesPerSec` se emiten cuando Apache las devuelve.
+
+![Módulos generados por la tarea de Apache Discovery](../assets/images/discovery/apache-discovery/module-list.png)
+
+Cuando se configura `module_prefix`, el plugin lo antepone directamente a todos los nombres de módulo generados, incluido `Apache Connection`, sin añadir un separador.
+
+## Solución de problemas
+
+| Síntoma | Comprobación |
 | --- | --- |
-| ServerVersion | La versión del servicio Apache (p. ej., Apache/2.4.62) |
-| ServerMPM | El módulo de multiprocesamiento (MPM) que Apache utiliza actualmente (p. ej., event, prefork, worker) |
-| ServerBuilt | La fecha y hora de compilación del binario del servidor Apache |
-| ParentServerConfigGeneration | La generación de la configuración del proceso Apache principal. Se incrementa con cada reinicio elegante |
-| ParentServerMPMGeneration | La generación del MPM del proceso Apache principal |
-| ServerUptimeSeconds | El tiempo de actividad del servicio expresado en segundos |
-| Load1 | El promedio de carga del sistema durante el último minuto |
-| Load5 | El promedio de carga del sistema durante los últimos 5 minutos |
-| Load15 | El promedio de carga del sistema durante los últimos 15 minutos |
-| Total Accesses | El número total de solicitudes de cliente recibidas por el servidor desde su último inicio/reinicio |
-| Total kBytes | La cantidad total de kilobytes de datos servidos por el servidor Apache desde su último inicio/reinicio |
-| Total Duration | El tiempo acumulado dedicado al procesamiento de todas las solicitudes desde que se inició el servidor (en microsegundos o milisegundos, según la versión y configuración de Apache) |
-| CPUUser | Tiempo de CPU utilizado por los procesos Apache en modo de usuario desde el inicio del servidor, expresado como porcentaje |
-| CPUSystem | Tiempo de CPU utilizado por los procesos Apache en modo de sistema (kernel) desde el inicio del servidor, expresado como porcentaje |
-| CPUChildrenUser | Tiempo de CPU utilizado por los procesos secundarios de Apache en modo de usuario |
-| CPUChildrenSystem | Tiempo de CPU utilizado por los procesos secundarios de Apache en modo de sistema (kernel) |
-| CPULoad | Porcentaje de carga de CPU total consumida por todos los procesos Apache combinados desde el inicio del servidor |
-| Uptime | Representación legible del tiempo de actividad del servidor (p. ej., "2 días, 4 horas y 40 minutos"), derivada de ServerUptimeSeconds |
-| ReqPerSec | Número promedio de solicitudes atendidas por segundo desde el inicio/reinicio del servidor. El plugin no lo utiliza, ya que cuenta el promedio desde el último inicio de Apache |
-| BytesPerSec | Promedio de bytes servidos por segundo desde el inicio/reinicio del servidor. El plugin no lo utiliza, ya que cuenta el promedio desde el último inicio de Apache |
-| BytesPerReq | Promedio de bytes servidos por solicitud desde el inicio/reinicio del servidor |
-| DurationPerReq | Tiempo promedio de procesamiento de cada solicitud desde el inicio/reinicio del servidor (en milisegundos o microsegundos) |
-| BusyWorkers | Número total de subprocesos/procesos de trabajo actualmente ocupados gestionando solicitudes |
-| GracefulWorkers | Número de procesos de trabajo en estado de apagado elegante |
-| IdleWorkers | Número total de subprocesos/procesos de trabajo actualmente inactivos y listos para gestionar nuevas solicitudes |
-| Processes | Número de procesos Apache activos (no subprocesos) ejecutándose actualmente |
-| Stopping | Número de procesos de trabajo en estado de detención |
-| ConnsTotal | Número total de conexiones al servidor Apache |
-| ConnsAsyncWriting | Número de conexiones asíncronas en estado de escritura (aplicable solo al MPM event) |
-| ConnsAsyncKeepAlive | Número de conexiones asíncronas en estado de mantenimiento activo (aplicable solo al MPM event) |
-| ConnsAsyncClosing | Número de conexiones asíncronas en estado de cierre (aplicable solo al MPM event) |
-| CacheType | Tipo de mecanismo de caché utilizado por Apache (p. ej., SHMCB para memoria compartida) |
-| CacheSharedMemory | Cantidad total de memoria compartida asignada a la caché |
-| CacheCurrentEntries | Número actual de entradas almacenadas en la caché |
-| CacheSubcaches | Número de subcachés dentro de la caché principal |
-| CacheIndexesPerSubcaches | Número de entradas de índice por subcaché |
-| CacheIndexUsage | Porcentaje del espacio de índice de la caché actualmente en uso |
-| CacheUsage | Porcentaje total de la memoria de caché actualmente en uso |
-| CacheStoreCount | Número total de veces que un elemento se ha almacenado correctamente en la caché |
-| CacheReplaceCount | Número total de veces que se ha reemplazado una entrada de caché existente |
-| CacheExpireCount | Número total de veces que una entrada de caché ha expirado |
-| CacheDiscardCount | Número total de veces que una entrada de caché ha sido descartada |
-| CacheRetrieveHitCount | Número total de veces que un elemento solicitado se encontró en la caché (acierto) |
-| CacheRetrieveMissCount | Número total de veces que un elemento solicitado no se encontró en la caché (fallo) |
-| CacheRemoveHitCount | Número total de veces que un elemento se eliminó correctamente de la caché al encontrarlo |
-| CacheRemoveMissCount | Número total de veces que se intentó eliminar un elemento de la caché pero no se encontró |
+| La tarea indica que las entradas de URL y configuración están vacías | Proporciona al menos un objetivo mediante `Apache Urls`, `--conf` o `--string_conf`. |
+| Falla la verificación de HTTPS | Confirma que la URL utiliza HTTPS y presenta un certificado de confianza para el host del plugin. `Verify SSL`/`--ssl` con valor `true` rechaza las URL HTTP. |
+| La tarea solo funciona con la verificación deshabilitada | Corrige el certificado o la cadena de confianza del objetivo. El valor `false` deshabilita la verificación del certificado y suprime el aviso relacionado; utilízalo solo después de evaluar el riesgo de interceptación. |
+| `Apache Connection` tiene el valor `0` | Comprueba la conectividad de red, la autenticación, el estado HTTP, la URL del objetivo y las restricciones de acceso a `server-status`. La descripción del módulo contiene el error de la solicitud. |
+| Aparecen menos módulos de los esperados | Examina la respuesta `?auto` sin procesar. Las versiones de Apache, los MPM y los módulos opcionales pueden exponer claves distintas; la información de Discovery enumera un subconjunto acotado de claves conocidas ausentes. |
+| El modo de plugin de servidor imprime `0` aunque existe un agente | Este modo solo imprime `1` cuando se ha contado al menos un agente y `info_value` está vacío. Por tanto, las métricas esperadas ausentes u otro diagnóstico pueden producir `0` después de crear un agente. |
+| Falla la transferencia del XML | Verifica el modo de transferencia seleccionado y su destino. Los errores de transferencia se añaden a la información de ejecución. |
 
-![Módulos generados para un agente Apache](../assets/images/discovery/apache-discovery/module-list.png)
+El plugin no dispone de una opción CLI de modo detallado o depuración. Sus diagnósticos se devuelven mediante la información de ejecución de Discovery.
+
+## Referencia
+
+### Parámetros de CLI
+
+Se requiere operativamente al menos uno de `--urls`, `--conf` o `--string_conf`. Cuando se proporcionan varios, el plugin procesa cada superficie aplicable.
+
+| Nombre | Obligatorio | Valor predeterminado | Descripción |
+| --- | --- | --- | --- |
+| `--urls` | Condicional | Sin definir | URL de estado separadas por comas o saltos de línea. Es obligatorio cuando ningún archivo de configuración proporciona un objetivo. |
+| `--conf` | Condicional | Sin definir | Ruta a una configuración de pares clave/valor sin cabecera de sección; el plugin antepone `[CONF]`. |
+| `--string_conf` | Condicional | Sin definir | Ruta a un archivo INI que contiene una o varias secciones de objetivo con nombre. |
+| `--user` | No | Sin definir | Nombre de usuario para autenticación básica con `--urls`; solo se utiliza junto con `--password`. |
+| `--password` | No | Sin definir | Contraseña para autenticación básica con `--urls`; solo se utiliza junto con `--user`. |
+| `--user_agent` | No | Sin definir | Cabecera HTTP `User-Agent` personalizada para `--urls`. |
+| `--ssl` | No | `true` | Interpreta `yes`, `true`, `t`, `y` o `1` como habilitado; los demás valores deshabilitan la verificación. La verificación habilitada también exige HTTPS. |
+| `-tm`, `--transfer_mode` | No | `tentacle` | Modo de transferencia del XML. |
+| `-ti`, `--tentacle_ip` | No | `127.0.0.1` | Destino de Tentacle; el validador de CLI acepta el formato IPv4. |
+| `-tp`, `--tentacle_port` | No | `41121` | Puerto de destino de Tentacle. |
+| `-in`, `--interval` | No | Sin definir | Intervalo del agente en segundos. |
+| `--as_server_plugin` | No | `false` | Imprime únicamente `1` o `0` y termina en lugar de imprimir la salida de Discovery. |
+
+Pasar `--user` y `--password` expone las credenciales en la línea de comandos, donde el historial del shell y la lista de procesos del sistema operativo pueden revelarlas. Cuando una ejecución manual requiera autenticación, utiliza preferentemente un archivo de configuración protegido y restríngelo a la cuenta que ejecuta el plugin.
+
+### Parámetros del archivo de configuración
+
+El archivo indicado mediante `--conf` contiene únicamente líneas de pares clave/valor. No añadas `[CONF]`, porque el plugin incorpora esa cabecera de sección antes de interpretar el archivo. En cambio, un archivo indicado mediante `--string_conf` requiere una o varias secciones INI con nombres únicos.
+
+| Nombre | Obligatorio | Valor predeterminado | Descripción |
+| --- | --- | --- | --- |
+| `urls` | Sí por objetivo | Vacío | URL de estado separadas por comas o saltos de línea. |
+| `agent_name` | No | Vacío | Origen del alias legible; el nombre interno es su valor MD5. |
+| `module_prefix` | No | Vacío | Texto que se antepone directamente a los nombres de módulo. |
+| `username` | No | Vacío | Nombre de usuario para autenticación básica; solo se utiliza con `password`. |
+| `password` | No | Vacío | Contraseña para autenticación básica; solo se utiliza con `username`. |
+| `verify_ssl` | No | `false` | Booleano de verificación del certificado para los objetivos definidos en archivos de configuración. |
+| `transfer_mode` | No | Vacío | Modo de transferencia del XML. |
+| `tentacle_ip` | No | Vacío | Destino de Tentacle. |
+| `tentacle_port` | No | Vacío | Puerto de destino de Tentacle. |
+| `interval` | No | `0` | Intervalo del agente tras la conversión a entero cuando se omite o no es válido. |
+| `user_agent` | No | Vacío | Cabecera HTTP `User-Agent` personalizada. |
+| `module_group` | No | `0` | Los valores vacíos se normalizan al grupo de módulos `0`. |
+
+Protege los archivos de configuración como secretos en texto sin cifrar cuando contengan credenciales. No los almacenes en directorios compartidos, registros ni sistemas de control de versiones.
+
+Ejemplo de archivo para `--conf`:
+
+```ini
+urls=https://<TARGET_HOST>/server-status
+agent_name=<READABLE_ALIAS>
+username=<USERNAME>
+password=<PASSWORD>
+verify_ssl=true
+transfer_mode=tentacle
+tentacle_ip=<PANDORA_FMS_SERVER_IPV4>
+tentacle_port=41121
+interval=300
+module_group=0
+```
+
+Ejemplo de archivo para `--string_conf`:
+
+```ini
+[apache_target_1]
+urls=https://<TARGET_HOST>/server-status
+agent_name=<READABLE_ALIAS>
+verify_ssl=true
+transfer_mode=tentacle
+tentacle_ip=<PANDORA_FMS_SERVER_IPV4>
+tentacle_port=41121
+```
+
+### Ejecución manual
+
+Ejecuta el archivo empaquetado con marcadores de posición seguros:
+
+```bash
+./pandora_apache \
+  --urls "https://<TARGET_HOST>/server-status" \
+  --ssl true \
+  --transfer_mode tentacle \
+  --tentacle_ip <PANDORA_FMS_SERVER_IPV4> \
+  --tentacle_port 41121
+```
+
+El plugin añade `?auto` cuando la consulta de la URL todavía no contiene `auto`. La ejecución normal imprime la salida de Discovery con resúmenes del total de agentes y módulos, y transfiere un archivo de datos XML por cada agente generado.
+
+Con `--as_server_plugin true`, la salida es `1` únicamente cuando se ha contado al menos un agente y no se ha registrado ningún mensaje informativo. Cualquier otro resultado imprime `0`.
