@@ -1,8 +1,8 @@
 # Apache Discovery
 
-## Descripción general
-
 *Última actualización del artículo: 2026-09-01.*
+
+## Qué monitoriza
 
 Apache Discovery consulta el endpoint legible por máquinas que proporciona `mod_status` de Apache HTTP Server. Una tarea de Discovery crea un agente de Pandora FMS por cada ubicación de red distinta de las URL (o por cada valor `agent_name` configurado distinto) y añade un módulo de disponibilidad, además de un módulo por cada línea `clave: valor` interpretada y no filtrada que devuelve Apache.
 

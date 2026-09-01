@@ -1,8 +1,8 @@
 # Apache Discovery
 
-## Overview
-
 *Article last updated: 2026-09-01.*
+
+## What it monitors
 
 Apache Discovery queries the machine-readable Apache HTTP Server `mod_status` endpoint. A Discovery task creates one Pandora FMS agent per unique URL network location (or per unique configured `agent_name`) and adds an availability module plus one module for every parsed, non-filtered `key: value` line returned by Apache.
 
