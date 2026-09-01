@@ -296,37 +296,9 @@ Muestra tarjetas de resumen con el número de nodos NGINX, cuántos están activ
 
 <!-- SCREENSHOT NEEDED: vista de la extensión NGINX Monitoring mostrando las tarjetas de resumen y la tabla por nodo, solo con nombres de host de laboratorio. -->
 
-## Operación y solución de problemas
-
-### Ejecutar el plugin fuera de Discovery
-
-El plugin también puede ejecutarse a mano, que es la forma más rápida de confirmar un endpoint y sus credenciales antes de conectarlos a una tarea, y es además el modo en que se usa como plugin de servidor.
-
-Tiene dos modos de entrada:
-
-- El **modo simple** pasa los endpoints en la línea de comandos con `--urls`.
-- El **modo avanzado** pasa un fichero de configuración con `--conf` más un fichero de destinos con `--targets_file`. Es el modo que usa la propia tarea de Discovery.
-
-```bash
-# Modo simple
-./pandora_nginx --urls http://<TARGET_HOST_1>/nginx_status,http://<TARGET_HOST_2>/nginx_status \
-    --user <USERNAME> --password <PASSWORD> --ssl false
-
-# Modo avanzado
-./pandora_nginx --conf <PATH_TO_CONFIG> --targets_file <PATH_TO_TARGETS>
-```
-
-Pasar una contraseña en la línea de comandos la expone en el historial del shell y en la lista de procesos del sistema operativo. Es preferible el fichero de configuración para todo lo que no sea una comprobación puntual.
-
-La ejecución devuelve un resumen JSON. En modo `native` los datos recogidos se exponen en el campo `monitoring_data` de ese resumen, para que los consuma el servidor de Discovery; en modo `tentacle` el plugin genera un fichero XML por agente y lo envía al servidor de Pandora FMS.
-
-`--as_server_plugin` sustituye el resumen JSON por un único `1` (agentes creados sin errores) o `0`, de modo que el plugin pueda conectarse como plugin de servidor.
-
-### Diagnóstico
+## Solución de problemas
 
 El plugin no tiene opción de modo detallado ni de depuración. Su único canal de diagnóstico es el resumen JSON de ejecución impreso por salida estándar, que indica el endpoint que ha fallado cuando no puede completarse una petición a `stub_status`.
-
-### Solución de problemas
 
 - **La tarea no crea agentes** — han fallado todas las URL. Reproduzca la petición con `curl` como en [Confirmar que el endpoint responde](#confirmar-que-el-endpoint-responde); el resumen JSON de una ejecución manual indica el endpoint que falló.
 - **`stub_status` no está disponible** — el módulo no está en esta build de NGINX. Compruébelo con `nginx -V 2>&1 | grep stub_status` y use una build que lo incluya.
@@ -365,7 +337,29 @@ La consola presenta los campos de la tarea en dos pasos.
 
 El grupo y el intervalo de la tarea se toman del paso genérico de definición de la tarea y llegan al plugin como `agents_group`, `agents_group_id` e `interval`.
 
-### Parámetros de línea de comandos
+### Ejecución por línea de comandos
+
+El plugin también puede ejecutarse a mano, que es la forma más rápida de confirmar un endpoint y sus credenciales antes de conectarlos a una tarea, y es además el modo en que se usa como plugin de servidor.
+
+Tiene dos modos de entrada:
+
+- El **modo simple** pasa los endpoints en la línea de comandos con `--urls`.
+- El **modo avanzado** pasa un fichero de configuración con `--conf` más un fichero de destinos con `--targets_file`. Es el modo que usa la propia tarea de Discovery.
+
+```bash
+# Modo simple
+./pandora_nginx --urls http://<TARGET_HOST_1>/nginx_status,http://<TARGET_HOST_2>/nginx_status \
+    --user <USERNAME> --password <PASSWORD> --ssl false
+
+# Modo avanzado
+./pandora_nginx --conf <PATH_TO_CONFIG> --targets_file <PATH_TO_TARGETS>
+```
+
+Pasar una contraseña en la línea de comandos la expone en el historial del shell y en la lista de procesos del sistema operativo. Es preferible el fichero de configuración para todo lo que no sea una comprobación puntual.
+
+La ejecución devuelve un resumen JSON. En modo `native` los datos recogidos se exponen en el campo `monitoring_data` de ese resumen, para que los consuma el servidor de Discovery; en modo `tentacle` el plugin genera un fichero XML por agente y lo envía al servidor de Pandora FMS.
+
+`--as_server_plugin` sustituye el resumen JSON por un único `1` (agentes creados sin errores) o `0`, de modo que el plugin pueda conectarse como plugin de servidor.
 
 ```bash
 ./pandora_nginx --urls <URLs> [opciones]
