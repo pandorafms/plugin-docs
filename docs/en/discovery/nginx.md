@@ -296,37 +296,9 @@ It displays summary cards for the number of NGINX nodes, how many are up and dow
 
 <!-- SCREENSHOT NEEDED: NGINX Monitoring extension view showing the summary cards and the per-node table, with lab hostnames only. -->
 
-## Operate and troubleshoot
-
-### Run the plugin outside Discovery
-
-The plugin can also be executed by hand, which is the fastest way to confirm an endpoint and its credentials before wiring them into a task, and is also how it is used as a server plugin.
-
-It has two input modes:
-
-- **Simple mode** passes the endpoints on the command line with `--urls`.
-- **Advanced mode** passes a configuration file with `--conf` plus a targets file with `--targets_file`. This is the mode the Discovery task itself uses.
-
-```bash
-# Simple mode
-./pandora_nginx --urls http://<TARGET_HOST_1>/nginx_status,http://<TARGET_HOST_2>/nginx_status \
-    --user <USERNAME> --password <PASSWORD> --ssl false
-
-# Advanced mode
-./pandora_nginx --conf <PATH_TO_CONFIG> --targets_file <PATH_TO_TARGETS>
-```
-
-Passing a password on the command line exposes it in the shell history and in the operating system process list. Prefer the configuration file for anything but a one-off check.
-
-The run returns a JSON summary of the execution. In `native` mode the collected data is exposed in the summary's `monitoring_data` field, for the Discovery server to consume; in `tentacle` mode the plugin generates one XML file per agent and sends it to the Pandora FMS server.
-
-`--as_server_plugin` replaces the JSON summary with a single `1` (agents created without errors) or `0`, so the plugin can be wired as a server plugin.
-
-### Diagnostics
+## Troubleshoot
 
 The plugin has no verbose or debug flag. Its only diagnostic channel is the JSON execution summary printed to standard output, which names the failing endpoint when a request to `stub_status` cannot be completed.
-
-### Troubleshoot
 
 - **The task creates no agents** — every URL failed. Reproduce the request with `curl` as in [Confirm the endpoint responds](#confirm-the-endpoint-responds); the JSON summary of a manual run names the endpoint that failed.
 - **`stub_status` is not available** — the module is not in this NGINX build. Check with `nginx -V 2>&1 | grep stub_status` and use a build that includes it.
@@ -365,7 +337,29 @@ The console presents the task fields in two steps.
 
 The task's group and interval are taken from the generic task-definition step and reach the plugin as `agents_group`, `agents_group_id` and `interval`.
 
-### Command-line parameters
+### Command-line execution
+
+The plugin can also be executed by hand, which is the fastest way to confirm an endpoint and its credentials before wiring them into a task, and is also how it is used as a server plugin.
+
+It has two input modes:
+
+- **Simple mode** passes the endpoints on the command line with `--urls`.
+- **Advanced mode** passes a configuration file with `--conf` plus a targets file with `--targets_file`. This is the mode the Discovery task itself uses.
+
+```bash
+# Simple mode
+./pandora_nginx --urls http://<TARGET_HOST_1>/nginx_status,http://<TARGET_HOST_2>/nginx_status \
+    --user <USERNAME> --password <PASSWORD> --ssl false
+
+# Advanced mode
+./pandora_nginx --conf <PATH_TO_CONFIG> --targets_file <PATH_TO_TARGETS>
+```
+
+Passing a password on the command line exposes it in the shell history and in the operating system process list. Prefer the configuration file for anything but a one-off check.
+
+The run returns a JSON summary of the execution. In `native` mode the collected data is exposed in the summary's `monitoring_data` field, for the Discovery server to consume; in `tentacle` mode the plugin generates one XML file per agent and sends it to the Pandora FMS server.
+
+`--as_server_plugin` replaces the JSON summary with a single `1` (agents created without errors) or `0`, so the plugin can be wired as a server plugin.
 
 ```bash
 ./pandora_nginx --urls <URLs> [options]
