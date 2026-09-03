@@ -137,8 +137,6 @@ Por cada nodo monitorizado, el plugin informa del estado del servidor KVM y de c
 
 Los nombres de los módulos empiezan con el nombre del nodo entre paréntesis: `(local)` cuando el plugin monitoriza la instancia de libvirtd local, y el host de cada entrada `user@server` para los nodos remotos. Todos los módulos se emiten con `module_group` `KVM`.
 
-Tal y como los imprime el plugin, `KVM Server status`, `CPU usage of <vm>`, `Virtual CPU usage of <vm>` y `Virtual memory usage of <vm>` llevan un elemento `<type>` vacío en la salida XML, como muestra el ejemplo de [Verificación](#verificacion).
-
 ## Solución de problemas
 
 - **Un nodo no genera módulos de VM ni de recursos** — el plugin comprueba primero si libvirtd está en ejecución (`ps aux | grep libvirtd | grep -v grep`) y, cuando no encuentra ningún proceso, emite únicamente `(<node>) KVM Server status` con valor `0` y omite el resto del nodo. Compruebe que libvirtd está en ejecución y que el usuario que ejecuta el plugin puede ver el proceso.
@@ -180,15 +178,13 @@ En caso de éxito, el XML de módulos impreso en la salida estándar es la secue
 
 Los nombres de los módulos empiezan con el nombre del nodo entre paréntesis: `(local)` cuando el plugin monitoriza la instancia de libvirtd local, o el host de la entrada para los nodos remotos (`server` en `user@server`). En los nombres de la tabla siguiente, `<node>` es ese prefijo y `<vm>` es el nombre de una VM:
 
-| Nombre del módulo | Significado | Tipo tal como se imprime | Unidad |
+| Nombre del módulo | Significado | Tipo | Unidad |
 | --- | --- | --- | --- |
-| `(<node>) KVM Server status` | Estado del servidor KVM: `1` mientras libvirtd está en ejecución, `0` en caso contrario | (vacío) | — |
+| `(<node>) KVM Server status` | Estado del servidor KVM: `1` mientras libvirtd está en ejecución, `0` en caso contrario | `generic_proc` | — |
 | `(<node>) KVM Server RAM usage` | Uso de RAM del servidor KVM | `generic_data` | — |
 | `(<node>) KVM Server CPU usage` | Uso de CPU del servidor KVM | `generic_data` | — |
 | `(<node>) Number of VMs` | Número total de VM del sistema KVM (`virsh list --all`) | `generic_data` | — |
 | `(<node>) Status of <vm>` | Estado de la VM: `1` en ejecución, `0` en caso contrario; la descripción incluye el estado libvirt, como `running` o `shut` | `generic_proc` | — |
-| `(<node>) CPU usage of <vm>` | Media de los valores `CPU` que informa `virsh vcpuinfo` sobre las vCPU de la VM; solo VM en ejecución | (vacío) | — |
-| `(<node>) Virtual CPU usage of <vm>` | Media de los valores `VCPU` que informa `virsh vcpuinfo` sobre las vCPU de la VM; solo VM en ejecución | (vacío) | `%` |
-| `(<node>) Virtual memory usage of <vm>` | Memoria usada sobre la memoria máxima de la VM (`virsh dominfo`); solo VM en ejecución | (vacío) | `%` |
-
-`(vacío)` en la columna de tipo significa que el módulo se imprime con un elemento `<type>` vacío, como muestra el ejemplo de [Verificación](#verificacion).
+| `(<node>) CPU usage of <vm>` | Media de los valores `CPU` que informa `virsh vcpuinfo` sobre las vCPU de la VM; solo VM en ejecución | `generic_data` | — |
+| `(<node>) Virtual CPU usage of <vm>` | Media de los valores `VCPU` que informa `virsh vcpuinfo` sobre las vCPU de la VM; solo VM en ejecución | `generic_data` | `%` |
+| `(<node>) Virtual memory usage of <vm>` | Memoria usada sobre la memoria máxima de la VM (`virsh dominfo`); solo VM en ejecución | `generic_data` | `%` |

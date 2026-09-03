@@ -137,8 +137,6 @@ For every monitored node the plugin reports the state of the KVM server and of e
 
 Module names start with the node name between parentheses: `(local)` when the plugin monitors the local libvirtd instance, and the host of each `user@server` entry for remote nodes. All modules are emitted with `module_group` `KVM`.
 
-As printed by the plugin, `KVM Server status`, `CPU usage of <vm>`, `Virtual CPU usage of <vm>` and `Virtual memory usage of <vm>` carry an empty `<type>` element in the XML output, as the sample in [Verify](#verify) shows.
-
 ## Troubleshoot
 
 - **A node produces no VM or resource modules** — the plugin first checks whether libvirtd is running (`ps aux | grep libvirtd | grep -v grep`) and, when it finds no process, it emits only `(<node>) KVM Server status` with value `0` and skips the rest of the node. Check that libvirtd is running and that the user executing the plugin may see the process.
@@ -180,15 +178,13 @@ On success, the module XML printed on standard output is the stream that the Pan
 
 Module names start with the node name between parentheses: `(local)` when the plugin monitors the local libvirtd instance, or the host of the entry for remote nodes (`server` in `user@server`). In the names below, `<node>` is that prefix and `<vm>` is the name of a VM:
 
-| Module name | Meaning | Type as printed | Unit |
+| Module name | Meaning | Type | Unit |
 | --- | --- | --- | --- |
-| `(<node>) KVM Server status` | Status of the KVM server: `1` while libvirtd is running, `0` otherwise | (empty) | — |
+| `(<node>) KVM Server status` | Status of the KVM server: `1` while libvirtd is running, `0` otherwise | `generic_proc` | — |
 | `(<node>) KVM Server RAM usage` | RAM usage by the KVM server | `generic_data` | — |
 | `(<node>) KVM Server CPU usage` | CPU usage by the KVM server | `generic_data` | — |
 | `(<node>) Number of VMs` | Total number of VMs in the KVM system (`virsh list --all`) | `generic_data` | — |
 | `(<node>) Status of <vm>` | Status of the VM: `1` while running, `0` otherwise; the description carries the libvirt state, such as `running` or `shut` | `generic_proc` | — |
-| `(<node>) CPU usage of <vm>` | Average of the `CPU` values reported by `virsh vcpuinfo` over the vCPUs of the VM; running VMs only | (empty) | — |
-| `(<node>) Virtual CPU usage of <vm>` | Average of the `VCPU` values reported by `virsh vcpuinfo` over the vCPUs of the VM; running VMs only | (empty) | `%` |
-| `(<node>) Virtual memory usage of <vm>` | Used over maximum memory of the VM (`virsh dominfo`); running VMs only | (empty) | `%` |
-
-`(empty)` in the type column means that the module is printed with an empty `<type>` element, as the sample in [Verify](#verify) shows.
+| `(<node>) CPU usage of <vm>` | Average of the `CPU` values reported by `virsh vcpuinfo` over the vCPUs of the VM; running VMs only | `generic_data` | — |
+| `(<node>) Virtual CPU usage of <vm>` | Average of the `VCPU` values reported by `virsh vcpuinfo` over the vCPUs of the VM; running VMs only | `generic_data` | `%` |
+| `(<node>) Virtual memory usage of <vm>` | Used over maximum memory of the VM (`virsh dominfo`); running VMs only | `generic_data` | `%` |
