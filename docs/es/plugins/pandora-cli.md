@@ -2,7 +2,7 @@
 
 ## Introducción
 
-**Ver**. 04-09-2026
+**Ver**. 07-09-2026
 
 `pandora-cli` es un cliente de línea de comandos para la **API v2** de Pandora FMS. Permite consultar
 y modificar los datos de la consola desde un terminal o un script, sin pasar por la interfaz web.
@@ -30,7 +30,7 @@ consola.
 
 | **Consolas donde se ha probado** | Pandora FMS v8.0NG.800.4 (LTS), v8.0NG.804 (RRR) |
 | --- | --- |
-| **Consolas donde funciona** | Consolas que publiquen la API v2. Las consolas antiguas carecen de algunas funciones de filtrado; consulte [Funciones de filtrado según la consola](#funciones-de-filtrado-segun-la-consola). |
+| **Consolas donde funciona** | Consolas que publiquen la API v2. La aceptación de un parámetro de filtrado la decide la consola por entidad, en el momento de la petición; las consolas antiguas pueden rechazar más. Consulte [Funciones de filtrado por entidad](#funciones-de-filtrado-por-entidad). |
 | **Sistemas donde se ha probado** | Linux x86-64 |
 | **Ejecutables disponibles para** | Linux (x86-64, ARM64), macOS (Intel, Apple silicon), Windows (x86-64) |
 
@@ -107,18 +107,13 @@ URL:      https://consola.ejemplo.com/pandora_console/api/v2/
 Insecure: false
 Config:   /home/usuario/.pandora-cli/config.json
 Token:    valid
-Probed:   2026-09-04T08:01:42Z
 
-Capabilities:
-  filter.fieldConditions   supported (--where)
-  filter.multipleSearch    supported (--in)
-  filter.requestedFields   supported (--fields)
-
-Console specification: 137 operations, 22 entities (read 2026-09-04T08:01:42Z)
+Console specification: 137 operations, 22 entities (read 2026-09-07T08:01:42Z)
 ```
 
 `Token: valid` indica que la consola lo aceptó. El comando termina con un código distinto de cero si
-no fue así.
+no fue así. Con `-o json` la salida son exactamente cinco valores — `context`, `url`, `insecure`,
+`config` y `token` — sin la línea informativa que se muestra arriba en formato tabla.
 
 Después, consulte datos reales:
 
@@ -152,11 +147,12 @@ suprimen, de manera que la salida encadenada siempre es válida.
 Los listados los pagina la consola. `1 shown, 1 total.` indica cuántas filas se han devuelto y
 cuántas existen; use `--page` y `--size` para recorrer un resultado extenso.
 
-### Funciones de filtrado según la consola
+### Funciones de filtrado por entidad
 
-Tres funciones de filtrado dependen de un soporte de la API que las consolas antiguas no tienen. La
-herramienta detecta cuáles ofrece la consola al iniciar sesión y guarda la respuesta para ese
-contexto:
+`--where`, `--fields` y `--in` corresponden a parámetros de la API que cada entidad de la consola
+implementa por su cuenta: la aceptación es **por entidad**, no por consola. `/user/list` puede
+aceptar `fieldConditions` mientras que `/event/list` lo rechaza. La herramienta no mantiene ninguna
+caché de capacidades por consola: envía siempre la petición y la consola responde.
 
 | Función | Opción |
 | --- | --- |
@@ -164,18 +160,15 @@ contexto:
 | `requestedFields` | `--fields` |
 | `multipleSearchString` | `--in` |
 
-Si una consola no admite alguna, el comando se rechaza localmente con una explicación en lugar de
-producir un error de servidor poco claro:
+Si la entidad no acepta el parámetro, la consola rechaza la petición con
+`400 Field: ... is not a valid parameter` y la herramienta explica lo sucedido, indicando la opción
+que envió el parámetro. La opción sigue siendo válida en las entidades que sí lo aceptan; solo falla
+la petición rechazada:
 
 ```
-Error: --fields (requestedFields) is not available on this console.
+Error: POST event/list failed: 400 Field: fieldConditions is not a valid parameter
+--where (fieldConditions) is not available on this console.
 The console at https://consola.ejemplo.com/pandora_console/api/v2/ rejects that parameter.
-```
-
-Tras actualizar una consola, refresque la respuesta almacenada:
-
-```bash
-pandora-cli auth status --refresh
 ```
 
 ## Uso habitual
@@ -190,7 +183,10 @@ pandora-cli user list --in idUser=admin,root
 pandora-cli user list --fields idUser,email --size 50
 ```
 
-Todas las opciones de filtrado son repetibles y se combinan con **AND**.
+Todas las opciones de filtrado son repetibles y se combinan con **AND**. Cuando el esquema declara el
+campo como array, repetir `--filter` sobre el mismo campo acumula en un único parámetro de tipo
+array en lugar de combinarse con AND: `--filter severity=4 --filter severity=2` envía
+`{"severity":[4,2]}`.
 
 **Cada entidad tiene dos conjuntos de campos distintos.** `--filter` acepta cualquier campo de la
 entidad, mientras que `--where`, `--fields` y `--in` aceptan un conjunto más reducido: en `user` son
@@ -224,8 +220,45 @@ cat usuario.json | pandora-cli user create --from-file -
 
 `--set` y `--from-file` no pueden combinarse.
 
+Cuando el esquema declara un campo como **array** — por ejemplo `severity` en `event-filter` o
+`wildcardAgents` en `report-datasource` — un valor de `--set` se serializa como un array de un solo
+elemento, y repetir la opción acumula elementos en ese array.
+
+`--from-file` acepta un **array** JSON como cuerpo completo, no solo un objeto. Los extremos cuyo
+cuerpo es una lista lo requieren, como `pandora-cli monitoring create` más abajo. Un caso límite: el
+esquema puede declarar un escalar donde el extremo de la consola espera un array (un desajuste
+documentado, por ejemplo `position` en `report-design-page-widget`); escriba el array en el fichero y
+envíelo con `--from-file`.
+
 `delete` pide confirmación. En una sesión no interactiva **se niega** en lugar de preguntar, de modo
 que un script que haya olvidado `--yes` falla de forma visible en vez de borrar en silencio.
+
+### Envío de datos de monitorización
+
+`pandora-cli monitoring create` envía datos de agente a Pandora FMS. Su cuerpo es un **array** de
+cargas con claves en snake_case — `agent_data` y `module_data` — y no el objeto `Monitoring` que
+muestra la documentación de la API de la consola. Esa anotación de la consola es incorrecta y se
+corregirá; hasta entonces, la forma de array siguiente es la que funciona:
+
+```bash
+cat > payload.json << 'EOF'
+[
+  {
+    "agent_data": {"agent_name": "web1", "address": "10.0.0.5", "interval": 300},
+    "module_data": [
+      {"name": "cpu_usage", "data": 12.5},
+      {"name": "mem_used", "datalist": [{"value": 2048, "timestamp": "2026/09/07 11:00:00"}]}
+    ]
+  }
+]
+EOF
+pandora-cli monitoring create --from-file payload.json
+```
+
+El agente se crea si no existe. `agent_name` es obligatorio; las demás claves de `agent_data` son
+opcionales. Una carga también puede incluir `events`, `inventory_data`, `log_data`, `trap_data`,
+`discovery_data` y `cmd_data`. Reenviar el mismo agente, módulo y marca de tiempo actualiza el valor
+existente en lugar de duplicarlo.
 
 ### Entidades anidadas
 
@@ -236,6 +269,26 @@ la entidad superior:
 pandora-cli report-design-page list 12
 pandora-cli report-design-page-widget list 12 3
 ```
+
+### Inspeccionar la API de la consola
+
+`spec` lee la descripción de la API que la propia consola publica sobre sí misma, de modo que puede
+ver qué campos acepta una entidad sin abrir el `swagger.json` de la consola:
+
+```bash
+pandora-cli spec list                # esquemas que publica la consola
+pandora-cli spec show EventFilter    # un esquema con allOf resuelto: tipos, enums, readOnly
+pandora-cli spec raw                 # el swagger.json completo de la consola
+```
+
+Para `create` y `update`, consulte el esquema de la entidad con `spec show <Entidad>`; para los
+campos que acepta un filtro de listado, consulte el esquema de filtro correspondiente con
+`spec show <Entidad>Filter`. La composición `allOf` está resuelta, de modo que los campos heredados
+aparecen como propiedades propias del esquema. Los nombres de esquema son los que publica la consola
+— `EventFilter`, `EventFilterFilter`, `ReportDataSource` —, que no son los nombres de entidad con
+guiones de la herramienta; `spec list` muestra los nombres exactos y `spec show` sugiere la
+coincidencia más cercana si escribe mal uno. La salida admite el formato habitual `-o json`, `-o
+table` o `-o yaml`.
 
 ### Documentación y uso por agentes
 
@@ -281,7 +334,7 @@ pandora-cli user list --filter isAdmin=true -v -o json > usuarios.json
 | `404 ... or the API base URL is wrong` | Revise `auth status`; la URL debe terminar en `/api/v2/`. |
 | `TLS verification failed` | Certificado autofirmado. Repita con `--insecure` o guárdelo para el contexto al iniciar sesión. |
 | `has permissions 0644` | El fichero de configuración es legible por otros usuarios. Ejecute `chmod 0600 ~/.pandora-cli/config.json`. |
-| `--fields ... is not available on this console` | La consola carece de esa función de filtrado. Consulte [Funciones de filtrado según la consola](#funciones-de-filtrado-segun-la-consola). |
+| `--fields ... is not available on this console` | La entidad no implementa ese parámetro de filtrado; la consola rechazó la petición y la herramienta indicó la opción que lo envió. Consulte [Funciones de filtrado por entidad](#funciones-de-filtrado-por-entidad). |
 | `unknown field "..."` | El campo no existe en esa entidad. El mensaje enumera los nombres válidos. |
 | `the "..." entity does not exist on this console` | La consola no publica esa entidad. Ejecute `auth status --refresh` si se ha actualizado. |
 | `--... is required by this endpoint` | No se ha indicado un parámetro que la API declara como obligatorio. |
@@ -333,7 +386,7 @@ columna JSON, indique una ruta con `--where '<campo>:<rutaJson> <op> <valor>'`.
 | Comando | Efecto |
 | --- | --- |
 | `auth login` | Valida un token y lo guarda en un contexto. |
-| `auth status` | Muestra el contexto activo y verifica el token. Con `--refresh` vuelve a comprobar las funciones de la consola. |
+| `auth status` | Muestra el contexto activo, verifica el token e informa de la especificación publicada por la consola. Con `--refresh` vuelve a leer esa especificación. |
 | `auth context list` | Enumera los contextos guardados. |
 | `auth context use <nombre>` | Selecciona el contexto actual. |
 | `auth logout [contexto]` | Elimina un contexto guardado. |

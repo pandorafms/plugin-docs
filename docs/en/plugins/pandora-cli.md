@@ -2,7 +2,7 @@
 
 ## Introduction
 
-**Ver**. 04-09-2026
+**Ver**. 07-09-2026
 
 `pandora-cli` is a command-line client for the Pandora FMS **API v2**. It lets you read and change
 console data from a terminal or a script, without going through the web interface.
@@ -29,7 +29,7 @@ command: all validation, permissions and business rules stay in the console.
 
 | **Consoles where tested** | Pandora FMS v8.0NG.800.4 (LTS), v8.0NG.804 (RRR) |
 | --- | --- |
-| **Consoles where it works** | Consoles publishing API v2. Older consoles lack some filtering features; see [Filtering features by console](#filtering-features-by-console). |
+| **Consoles where it works** | Consoles publishing API v2. Whether a filter parameter is accepted is decided by the console per entity, at request time; older consoles may reject more of them. See [Filtering features by entity](#filtering-features-by-entity). |
 | **Systems where tested** | Linux x86-64 |
 | **Executables provided for** | Linux (x86-64, ARM64), macOS (Intel, Apple silicon), Windows (x86-64) |
 
@@ -104,17 +104,13 @@ URL:      https://console.example.com/pandora_console/api/v2/
 Insecure: false
 Config:   /home/user/.pandora-cli/config.json
 Token:    valid
-Probed:   2026-09-04T08:01:42Z
 
-Capabilities:
-  filter.fieldConditions   supported (--where)
-  filter.multipleSearch    supported (--in)
-  filter.requestedFields   supported (--fields)
-
-Console specification: 137 operations, 22 entities (read 2026-09-04T08:01:42Z)
+Console specification: 137 operations, 22 entities (read 2026-09-07T08:01:42Z)
 ```
 
-`Token: valid` means the console accepted it. The command exits non-zero if it did not.
+`Token: valid` means the console accepted it. The command exits non-zero if it did not. With `-o json`
+the output is exactly five values — `context`, `url`, `insecure`, `config` and `token` — without the
+informational summary line shown above in table format.
 
 Then read something real:
 
@@ -148,10 +144,12 @@ are suppressed, so piped output is always valid.
 Listings are paginated by the console. `1 shown, 1 total.` reports how many rows came back and how
 many exist; use `--page` and `--size` to walk a large result.
 
-### Filtering features by console
+### Filtering features by entity
 
-Three filtering features depend on API support that older consoles do not have. The CLI detects
-which ones the console offers when you log in, and caches the answer for that context:
+`--where`, `--fields` and `--in` map to API parameters that each console entity implements on its
+own: acceptance is **per entity**, not per console. `/user/list` may accept `fieldConditions` while
+`/event/list` rejects it. The CLI keeps no per-console capability cache: it always sends the request
+and the console answers.
 
 | Feature | Flag |
 | --- | --- |
@@ -159,18 +157,15 @@ which ones the console offers when you log in, and caches the answer for that co
 | `requestedFields` | `--fields` |
 | `multipleSearchString` | `--in` |
 
-If a console does not support one, the command is refused locally with an explanation instead of
-producing an obscure server error:
+If the entity does not accept the parameter, the console rejects the request with
+`400 Field: ... is not a valid parameter` and the CLI explains what happened, naming the flag that
+sent the parameter. The flag stays usable on the entities that do accept it; only the rejected
+request fails:
 
 ```
-Error: --fields (requestedFields) is not available on this console.
+Error: POST event/list failed: 400 Field: fieldConditions is not a valid parameter
+--where (fieldConditions) is not available on this console.
 The console at https://console.example.com/pandora_console/api/v2/ rejects that parameter.
-```
-
-After upgrading a console, refresh the cached answer:
-
-```bash
-pandora-cli auth status --refresh
 ```
 
 ## Operate
@@ -185,7 +180,9 @@ pandora-cli user list --in idUser=admin,root
 pandora-cli user list --fields idUser,email --size 50
 ```
 
-All filter flags are repeatable and combine with **AND**.
+All filter flags are repeatable and combine with **AND**. When the field's schema declares it as an
+array, repeating `--filter` for the same field accumulates into one array parameter instead of
+ANDing: `--filter severity=4 --filter severity=2` sends `{"severity":[4,2]}`.
 
 **Two different field sets apply per entity.** `--filter` accepts any field of the entity, but
 `--where`, `--fields` and `--in` accept a narrower set — for `user` it is `idUser` and `fullName`
@@ -217,8 +214,45 @@ cat user.json | pandora-cli user create --from-file -
 
 `--set` and `--from-file` cannot be combined.
 
+When the schema declares a field as an **array** — for example `severity` on `event-filter` or
+`wildcardAgents` on `report-datasource` — a `--set` value is serialized as an array with one
+element, and repeating the flag accumulates elements into that array.
+
+`--from-file` accepts a JSON **array** as the whole body, not only an object. Endpoints whose body is
+a list require it, such as `pandora-cli monitoring create` below. One edge case: the schema may
+declare a scalar where the console endpoint expects an array (a documented mismatch, for example
+`position` on `report-design-page-widget`); write the array into the file and send it with
+`--from-file`.
+
 `delete` asks for confirmation. In a non-interactive session it **refuses** instead of prompting, so
 a script that forgot `--yes` fails loudly rather than deleting silently.
+
+### Pushing monitoring data
+
+`pandora-cli monitoring create` pushes agent data into Pandora FMS. Its body is an **array** of
+payloads with snake_case keys — `agent_data` and `module_data` — not the `Monitoring` object the
+console's API documentation shows. That console annotation is wrong and will be corrected; until
+then the array shape below is the one that works:
+
+```bash
+cat > payload.json << 'EOF'
+[
+  {
+    "agent_data": {"agent_name": "web1", "address": "10.0.0.5", "interval": 300},
+    "module_data": [
+      {"name": "cpu_usage", "data": 12.5},
+      {"name": "mem_used", "datalist": [{"value": 2048, "timestamp": "2026/09/07 11:00:00"}]}
+    ]
+  }
+]
+EOF
+pandora-cli monitoring create --from-file payload.json
+```
+
+The agent is created if it does not exist. `agent_name` is required; other `agent_data` keys are
+optional. A payload may also carry `events`, `inventory_data`, `log_data`, `trap_data`,
+`discovery_data` and `cmd_data`. Re-sending the same agent, module and timestamp updates the
+existing value instead of duplicating it.
 
 ### Nested entities
 
@@ -228,6 +262,25 @@ Some entities live under a parent. Their commands take the parent identifier fir
 pandora-cli report-design-page list 12
 pandora-cli report-design-page-widget list 12 3
 ```
+
+### Inspecting the console's API
+
+`spec` reads the API description the console publishes about itself, so you can see which fields an
+entity accepts without opening the console's `swagger.json`:
+
+```bash
+pandora-cli spec list                # schemas the console publishes
+pandora-cli spec show EventFilter    # one schema, allOf resolved: types, enums, readOnly
+pandora-cli spec raw                 # the console's full swagger.json
+```
+
+For `create` and `update`, ask for the entity's schema with `spec show <Entity>`; for the fields a
+list filter accepts, ask for the matching filter schema with `spec show <Entity>Filter`. `allOf`
+composition is resolved, so inherited fields appear as the schema's own properties. Schema names are
+the ones the console publishes — `EventFilter`, `EventFilterFilter`, `ReportDataSource` — which are
+not the CLI's hyphenated entity names; `spec list` shows the exact names, and `spec show` suggests
+the closest match if you mistype one. Output follows the usual `-o json`, `-o table` or `-o yaml`
+format.
 
 ### Documentation and agent usage
 
@@ -271,7 +324,7 @@ pandora-cli user list --filter isAdmin=true -v -o json > users.json
 | `404 ... or the API base URL is wrong` | Check `auth status`; the URL must end in `/api/v2/`. |
 | `TLS verification failed` | Self-signed certificate. Re-run with `--insecure`, or store it for the context at login. |
 | `has permissions 0644` | The configuration file is readable by others. Run `chmod 0600 ~/.pandora-cli/config.json`. |
-| `--fields ... is not available on this console` | The console lacks that filtering feature. See [Filtering features by console](#filtering-features-by-console). |
+| `--fields ... is not available on this console` | The entity does not implement that filter parameter; the console rejected the request and the CLI named the flag that sent it. See [Filtering features by entity](#filtering-features-by-entity). |
 | `unknown field "..."` | The field does not exist on that entity. The message lists the valid names. |
 | `the "..." entity does not exist on this console` | The console does not publish that entity. Run `auth status --refresh` if it was upgraded. |
 | `--... is required by this endpoint` | A parameter the API declares as required was not supplied. |
@@ -323,7 +376,7 @@ column, address a path with `--where '<field>:<jsonPath> <op> <value>'`.
 | Command | Effect |
 | --- | --- |
 | `auth login` | Validate a token and store it in a context. |
-| `auth status` | Show the active context and verify the token. `--refresh` re-checks console features. |
+| `auth status` | Show the active context, verify the token and report the console's published specification. `--refresh` re-reads that specification. |
 | `auth context list` | List stored contexts. |
 | `auth context use <name>` | Select the current context. |
 | `auth logout [context]` | Remove a stored context. |
