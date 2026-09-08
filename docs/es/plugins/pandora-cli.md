@@ -2,7 +2,7 @@
 
 ## Introducción
 
-**Ver**. 07-09-2026
+**Ver**. 08-09-2026
 
 `pandora-cli` es un cliente de línea de comandos para la **API v2** de Pandora FMS. Permite consultar
 y modificar los datos de la consola desde un terminal o un script, sin pasar por la interfaz web.
@@ -145,7 +145,10 @@ Las líneas informativas como `1 shown, 1 total.` solo aparecen en formato tabla
 suprimen, de manera que la salida encadenada siempre es válida.
 
 Los listados los pagina la consola. `1 shown, 1 total.` indica cuántas filas se han devuelto y
-cuántas existen; use `--page` y `--size` para recorrer un resultado extenso.
+cuántas existen; use `--page` y `--size` para recorrer un resultado extenso. La paginación es
+**basada en 1**: `--page 1` es la primera página. `--size` solo también devuelve la primera página,
+porque la consola ignora un tamaño de página sin número de página en algunos extremos; la
+herramienta envía ambos.
 
 ### Funciones de filtrado por entidad
 
@@ -186,7 +189,8 @@ pandora-cli user list --fields idUser,email --size 50
 Todas las opciones de filtrado son repetibles y se combinan con **AND**. Cuando el esquema declara el
 campo como array, repetir `--filter` sobre el mismo campo acumula en un único parámetro de tipo
 array en lugar de combinarse con AND: `--filter severity=4 --filter severity=2` envía
-`{"severity":[4,2]}`.
+`{"severity":[4,2]}`. La excepción es un `null` explícito: se envía como nulo plano (nunca como
+`[null]`), de modo que limpia el campo con independencia de su posición entre los flags repetidos.
 
 **Cada entidad tiene dos conjuntos de campos distintos.** `--filter` acepta cualquier campo de la
 entidad, mientras que `--where`, `--fields` y `--in` aceptan un conjunto más reducido: en `user` son
@@ -222,10 +226,13 @@ cat usuario.json | pandora-cli user create --from-file -
 
 Cuando el esquema declara un campo como **array** — por ejemplo `severity` en `event-filter` o
 `wildcardAgents` en `report-datasource` — un valor de `--set` se serializa como un array de un solo
-elemento, y repetir la opción acumula elementos en ese array.
+elemento, y repetir la opción acumula elementos en ese array. Igual que con `--filter`, un `null`
+explícito se envía como nulo plano y limpia el array acumulado.
 
 `--from-file` acepta un **array** JSON como cuerpo completo, no solo un objeto. Los extremos cuyo
-cuerpo es una lista lo requieren, como `pandora-cli monitoring create` más abajo. Un caso límite: el
+cuerpo es una lista lo requieren, como `pandora-cli monitoring create` más abajo. Un BOM UTF-8 al
+principio del fichero es tolerado, de modo que los ficheros escritos por editores de Windows
+funcionan sin cambios. Un caso límite: el
 esquema puede declarar un escalar donde el extremo de la consola espera un array (un desajuste
 documentado, por ejemplo `position` en `report-design-page-widget`); escriba el array en el fichero y
 envíelo con `--from-file`.
@@ -255,10 +262,11 @@ EOF
 pandora-cli monitoring create --from-file payload.json
 ```
 
-El agente se crea si no existe. `agent_name` es obligatorio; las demás claves de `agent_data` son
-opcionales. Una carga también puede incluir `events`, `inventory_data`, `log_data`, `trap_data`,
-`discovery_data` y `cmd_data`. Reenviar el mismo agente, módulo y marca de tiempo actualiza el valor
-existente en lugar de duplicarlo.
+El agente se crea si no existe. `agent_name` y `address` son obligatorios; la consola rechaza la
+petición si falta cualquiera. Las demás claves de `agent_data` son opcionales. Una carga también
+puede incluir `events`, `inventory_data`, `log_data`, `trap_data`, `discovery_data` y `cmd_data`.
+Reenviar el mismo agente, módulo y marca de tiempo actualiza el valor existente en lugar de
+duplicarlo.
 
 ### Entidades anidadas
 
@@ -268,6 +276,14 @@ la entidad superior:
 ```bash
 pandora-cli report-design-page list 12
 pandora-cli report-design-page-widget list 12 3
+```
+
+Los comandos `list` anidados que leen con un cuerpo de filtro también aceptan opciones de carga: sus
+campos `--set` se serializan del mismo modo, de manera que un campo que el extremo declara como
+array — como `requestedFields` — se acumula con flags repetidos:
+
+```bash
+pandora-cli user profile list admin --set requestedFields=idUserProfile
 ```
 
 ### Inspeccionar la API de la consola
@@ -365,7 +381,7 @@ puede emplearse directamente en el flujo de control de un script.
 | `--search <texto>` | Búsqueda de texto libre. | `--search backup` |
 | `--in <campo>=<v1,v2>` | Campo dentro de una lista de valores. | `--in idUser=admin,root` |
 | `--fields <a,b,c>` | Limita los campos devueltos. | `--fields idUser,email` |
-| `--page <n>` | Número de página. | `--page 2` |
+| `--page <n>` | Número de página, basada en 1 (`--page 1` es la primera). | `--page 2` |
 | `--size <n>` | Filas por página. | `--size 50` |
 | `--sort <campo>` | Campo por el que ordenar. | `--sort fullName` |
 | `--order asc\|desc` | Sentido de la ordenación. | `--order desc` |

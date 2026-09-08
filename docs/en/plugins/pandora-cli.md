@@ -2,7 +2,7 @@
 
 ## Introduction
 
-**Ver**. 07-09-2026
+**Ver**. 08-09-2026
 
 `pandora-cli` is a command-line client for the Pandora FMS **API v2**. It lets you read and change
 console data from a terminal or a script, without going through the web interface.
@@ -142,7 +142,9 @@ Informational lines such as `1 shown, 1 total.` appear only in table format. In 
 are suppressed, so piped output is always valid.
 
 Listings are paginated by the console. `1 shown, 1 total.` reports how many rows came back and how
-many exist; use `--page` and `--size` to walk a large result.
+many exist; use `--page` and `--size` to walk a large result. Pagination is **1-based**: `--page 1`
+is the first page. `--size` alone also returns the first page, because the console ignores a page
+size without a page number on some endpoints; the CLI sends both.
 
 ### Filtering features by entity
 
@@ -182,7 +184,9 @@ pandora-cli user list --fields idUser,email --size 50
 
 All filter flags are repeatable and combine with **AND**. When the field's schema declares it as an
 array, repeating `--filter` for the same field accumulates into one array parameter instead of
-ANDing: `--filter severity=4 --filter severity=2` sends `{"severity":[4,2]}`.
+ANDing: `--filter severity=4 --filter severity=2` sends `{"severity":[4,2]}`. An explicit `null`
+value is the exception: it is sent as a plain null (never as `[null]`), so it clears the field
+regardless of position among the repeated flags.
 
 **Two different field sets apply per entity.** `--filter` accepts any field of the entity, but
 `--where`, `--fields` and `--in` accept a narrower set — for `user` it is `idUser` and `fullName`
@@ -216,10 +220,12 @@ cat user.json | pandora-cli user create --from-file -
 
 When the schema declares a field as an **array** — for example `severity` on `event-filter` or
 `wildcardAgents` on `report-datasource` — a `--set` value is serialized as an array with one
-element, and repeating the flag accumulates elements into that array.
+element, and repeating the flag accumulates elements into that array. As with `--filter`, an
+explicit `null` is sent as a plain null and clears the accumulated array.
 
 `--from-file` accepts a JSON **array** as the whole body, not only an object. Endpoints whose body is
-a list require it, such as `pandora-cli monitoring create` below. One edge case: the schema may
+a list require it, such as `pandora-cli monitoring create` below. A leading UTF-8 BOM in the file is
+tolerated, so files written by Windows editors work as-is. One edge case: the schema may
 declare a scalar where the console endpoint expects an array (a documented mismatch, for example
 `position` on `report-design-page-widget`); write the array into the file and send it with
 `--from-file`.
@@ -249,10 +255,10 @@ EOF
 pandora-cli monitoring create --from-file payload.json
 ```
 
-The agent is created if it does not exist. `agent_name` is required; other `agent_data` keys are
-optional. A payload may also carry `events`, `inventory_data`, `log_data`, `trap_data`,
-`discovery_data` and `cmd_data`. Re-sending the same agent, module and timestamp updates the
-existing value instead of duplicating it.
+The agent is created if it does not exist. `agent_name` and `address` are required; the console
+rejects the request without either. Other `agent_data` keys are optional. A payload may also carry
+`events`, `inventory_data`, `log_data`, `trap_data`, `discovery_data` and `cmd_data`. Re-sending the
+same agent, module and timestamp updates the existing value instead of duplicating it.
 
 ### Nested entities
 
@@ -261,6 +267,14 @@ Some entities live under a parent. Their commands take the parent identifier fir
 ```bash
 pandora-cli report-design-page list 12
 pandora-cli report-design-page-widget list 12 3
+```
+
+Nested list commands that read with a filter body also take payload flags: their `--set` fields are
+serialized the same way, so a field the endpoint declares as an array — like `requestedFields` —
+accumulates from repeated flags:
+
+```bash
+pandora-cli user profile list admin --set requestedFields=idUserProfile
 ```
 
 ### Inspecting the console's API
@@ -355,7 +369,7 @@ control flow.
 | `--search <text>` | Free-text search. | `--search backup` |
 | `--in <field>=<v1,v2>` | Field within a list of values. | `--in idUser=admin,root` |
 | `--fields <a,b,c>` | Restrict the returned fields. | `--fields idUser,email` |
-| `--page <n>` | Page number. | `--page 2` |
+| `--page <n>` | Page number, 1-based (`--page 1` is the first page). | `--page 2` |
 | `--size <n>` | Rows per page. | `--size 50` |
 | `--sort <field>` | Field to sort by. | `--sort fullName` |
 | `--order asc\|desc` | Sort direction. | `--order desc` |
