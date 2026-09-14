@@ -53,7 +53,7 @@ Create the task from **Management → Discovery → Cloud → Azure Load Balance
 - **Azure credentials** selects the stored Azure credential. The credential contains the Account ID, Application secret, Tenant or domain name and Subscription ID.
 - **Custom Resource Group** limits discovery to a single Resource Group, and **Resource group** names it exactly. Regular expressions are not accepted here.
 
-<!-- SCREENSHOT NEEDED: Azure Base wizard step showing the credential selector, the Custom Resource Group toggle and the Resource group field. -->
+![Azure Load Balancer Discovery task Azure Base step: Azure credentials, Custom Resource Group and Resource group.](../assets/images/discovery/azure-load-balancer/azure-base.png)
 
 **Step 3 — Azure Load Balancer Options.** Agent layout, discovery cache and diagnostics:
 
@@ -65,7 +65,7 @@ Create the task from **Management → Discovery → Cloud → Azure Load Balance
 - **Modules prefix** is prepended to every generated module name.
 - **Debug** reveals the local mock options, which exist for testing only.
 
-<!-- SCREENSHOT NEEDED: Azure Load Balancer Options wizard step showing the agent layout, cache and Debug fields. -->
+![Azure Load Balancer Discovery task Azure Load Balancer Options step: agent layout, cache and Debug fields.](../assets/images/discovery/azure-load-balancer/azure-lb-options.png)
 
 **Step 4 — Metrics.** Which metric families are collected:
 
@@ -74,7 +74,7 @@ Create the task from **Management → Discovery → Cloud → Azure Load Balance
 - One toggle per metric family: **Availability modules**, **Traffic modules**, **SNAT modules**, **Backend pool host count module** and **Load Balancer count module**.
 - **Modules allow regexp** and **Modules deny regexp** filter the final module names.
 
-<!-- SCREENSHOT NEEDED: Metrics wizard step showing the metric toggles, the time window, interval, timeout and retry fields and the allow and deny regular expressions. -->
+![Azure Load Balancer Discovery task Metrics step: metric toggles, time window, interval, timeout, retries and the allow and deny regular expressions.](../assets/images/discovery/azure-load-balancer/metrics.png)
 
 ## Verify the first run
 
@@ -89,6 +89,8 @@ Force the task from **Management → Discovery → Task list** and check the res
 4. **The metric modules** for each enabled family. The module set depends on the toggles: availability, traffic, SNAT, backend pool host count and load balancer count.
 
 ![Managed agents created by an Azure Load Balancer task, one per discovered Load Balancer.](../assets/images/discovery/azure-load-balancer/managed-agents.png)
+
+![Azure Load Balancer Discovery task execution summary.](../assets/images/discovery/azure-load-balancer/task-summary.png)
 
 If no agent appears at all, the credential or its permissions are the first thing to check.
 

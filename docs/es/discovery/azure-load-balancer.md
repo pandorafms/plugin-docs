@@ -53,7 +53,7 @@ Cree la tarea desde **Management → Discovery → Cloud → Azure Load Balancer
 - **Azure credentials** selecciona la credencial de Azure guardada. La credencial contiene el Account ID, el Application secret, el Tenant or domain name y el Subscription ID.
 - **Custom Resource Group** limita el descubrimiento a un único Resource Group, y **Resource group** lo nombra exactamente. Aquí no se aceptan expresiones regulares.
 
-<!-- SCREENSHOT NEEDED: Paso Azure Base del asistente con el selector de credencial, el conmutador Custom Resource Group y el campo Resource group. -->
+![Paso Azure Base de la tarea de Discovery de Azure Load Balancer: Azure credentials, Custom Resource Group y Resource group.](../assets/images/discovery/azure-load-balancer/azure-base.png)
 
 **Paso 3 — Azure Load Balancer Options.** Distribución de agentes, caché de descubrimiento y diagnóstico:
 
@@ -65,7 +65,7 @@ Cree la tarea desde **Management → Discovery → Cloud → Azure Load Balancer
 - **Modules prefix** se antepone a todos los nombres de módulo generados.
 - **Debug** revela las opciones de mock local, que existen solo para pruebas.
 
-<!-- SCREENSHOT NEEDED: Paso Azure Load Balancer Options del asistente con los campos de distribución de agentes, caché y Debug. -->
+![Paso Azure Load Balancer Options de la tarea de Discovery de Azure Load Balancer: distribución de agentes, caché y campos de Debug.](../assets/images/discovery/azure-load-balancer/azure-lb-options.png)
 
 **Paso 4 — Metrics.** Qué familias de métricas se recogen:
 
@@ -74,7 +74,7 @@ Cree la tarea desde **Management → Discovery → Cloud → Azure Load Balancer
 - Un conmutador por familia de métricas: **Availability modules**, **Traffic modules**, **SNAT modules**, **Backend pool host count module** y **Load Balancer count module**.
 - **Modules allow regexp** y **Modules deny regexp** filtran los nombres finales de los módulos.
 
-<!-- SCREENSHOT NEEDED: Paso Metrics del asistente con los conmutadores de métricas, los campos de tiempo, intervalo, timeout y reintentos, y las expresiones regulares de allow y deny. -->
+![Paso Metrics de la tarea de Discovery de Azure Load Balancer: conmutadores de métricas, ventana temporal, intervalo, timeout, reintentos y las expresiones regulares de allow y deny.](../assets/images/discovery/azure-load-balancer/metrics.png)
 
 ## Verificar la primera ejecución
 
@@ -91,6 +91,8 @@ Fuerce la tarea desde **Management → Discovery → Task list** y compruebe el 
 Si no aparece ningún agente, lo primero que hay que revisar son la credencial o sus permisos.
 
 ![Agentes gestionados creados por una tarea de Azure Load Balancer, uno por Load Balancer descubierto.](../assets/images/discovery/azure-load-balancer/managed-agents.png)
+
+![Resumen de ejecución de la tarea de Discovery de Azure Load Balancer.](../assets/images/discovery/azure-load-balancer/task-summary.png)
 
 ## Interpretar los resultados
 
