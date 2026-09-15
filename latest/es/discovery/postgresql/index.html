@@ -1,0 +1,2763 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/discovery/postgresql/">
+      
+      
+        <link rel="prev" href="../playwright/">
+      
+      
+        <link rel="next" href="../selenium-4/">
+      
+      
+        
+          <link rel="alternate" href="../../../discovery/postgresql/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>PostgreSQL Discovery - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#postgresql-discovery" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PostgreSQL Discovery
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../discovery/postgresql/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-monitoriza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué monitoriza
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerrequisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerrequisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crear-la-credencial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crear la credencial
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurar-la-tarea-de-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurar la tarea de Discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificar-la-primera-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar la primera ejecución
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entender los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agentes-y-cardinalidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes y cardinalidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-de-instancia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos de instancia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-de-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos de base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fichero-de-entidades-y-bases-de-datos-desaparecidas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fichero de entidades y bases de datos desaparecidas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consultas-personalizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consultas personalizadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de la tarea
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parámetros de la tarea">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL Base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL Detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cadenas-de-destino" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cadenas de destino
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fichero-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fichero de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-por-linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución por línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#referencia-de-consultas-personalizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia de consultas personalizadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Módulos generados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agente-principal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente principal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-de-base-de-datos_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos de base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-monitoriza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué monitoriza
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerrequisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerrequisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crear-la-credencial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crear la credencial
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurar-la-tarea-de-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurar la tarea de Discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificar-la-primera-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar la primera ejecución
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entender los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agentes-y-cardinalidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes y cardinalidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-de-instancia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos de instancia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-de-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos de base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fichero-de-entidades-y-bases-de-datos-desaparecidas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fichero de entidades y bases de datos desaparecidas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consultas-personalizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consultas personalizadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de la tarea
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parámetros de la tarea">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL Base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL Detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cadenas-de-destino" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cadenas de destino
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fichero-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fichero de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-por-linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución por línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#referencia-de-consultas-personalizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia de consultas personalizadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Módulos generados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agente-principal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente principal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-de-base-de-datos_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos de base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="postgresql-discovery">PostgreSQL Discovery<a class="headerlink" href="#postgresql-discovery" title="Permanent link">¶</a></h1>
+<p><em>Última actualización del artículo: 2026-09-14.</em></p>
+<h2 id="que-monitoriza">Qué monitoriza<a class="headerlink" href="#que-monitoriza" title="Permanent link">¶</a></h2>
+<p>El plugin de Discovery de PostgreSQL monitoriza instancias PostgreSQL y sus bases de datos ejecutando consultas SQL contra ellas y convirtiendo los resultados en módulos de monitorización de Pandora FMS. Recoge disponibilidad, uptime, actividad de consultas, uso de conexiones, caché de buffers, fragmentación, almacenamiento, actividad de conexiones y transacciones por base de datos, estadísticas de tablas y cualquier consulta SQL personalizada que defina el operador.</p>
+<p>El plugin crea <strong>un agente principal por cada destino</strong>. Cuando se activa <strong>Scan databases</strong> descubre las bases de datos de la instancia y crea sus módulos en el agente principal o en <strong>un agente por cada base de datos</strong>.</p>
+<p>El plugin está pensado para usarse a través del sistema <strong>Discovery</strong> de Pandora FMS. No genera ficheros XML de agente: devuelve los agentes y módulos descubiertos en la salida JSON de la ejecución, y la tarea de Discovery los crea.</p>
+<h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
+<h3 id="compatibilidad">Compatibilidad<a class="headerlink" href="#compatibilidad" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Alcance</th>
+<th>Estado</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Versión del plugin <code>1.6</code> (<code>pandorafms.postgresql</code>)</td>
+<td>Objetivo documentado</td>
+<td>La versión que describe esta página. Consulte <a href="#identidad-del-plugin">Identidad del plugin</a></td>
+</tr>
+<tr>
+<td>Descubrimiento de agentes de instancia y de base de datos con métricas por base de datos</td>
+<td><code>Probado</code></td>
+<td>Ejecución de verificación: una tarea terminó con <code>Targets up 3</code> y <code>Total agents 3</code>, y se creó un agente de base de datos con sus módulos. Consulte <a href="#verificar-la-primera-ejecucion">Verificar la primera ejecución</a></td>
+</tr>
+<tr>
+<td>Alcance de red desde el servidor de Discovery a cada base de datos de destino</td>
+<td><code>Requerido</code></td>
+<td>El plugin abre una conexión PostgreSQL remota por cada destino</td>
+</tr>
+<tr>
+<td>Un rol de PostgreSQL que pueda conectarse a las instancias y bases de datos monitorizadas</td>
+<td><code>Requerido</code></td>
+<td>Prerrequisito. Consulte <a href="#prerrequisitos">Prerrequisitos</a></td>
+</tr>
+<tr>
+<td>PostgreSQL 17 y posteriores, módulos de caché de buffers</td>
+<td><code>Sin validar</code></td>
+<td>La guía rápida oficial indica que los módulos <code>backend used buffer cache</code>, <code>checkpoints buffer cache</code> y <code>cleaned buffer cache</code> no están disponibles</td>
+</tr>
+<tr>
+<td>Sistema operativo del host que ejecuta el plugin</td>
+<td><code>Sin validar</code></td>
+<td>No se ha registrado ningún sistema operativo de host</td>
+</tr>
+<tr>
+<td>Versiones del servidor PostgreSQL</td>
+<td><code>Sin validar</code></td>
+<td>La compatibilidad se estableció contra las consultas SQL y el contrato de conexión, no contra una matriz de versiones</td>
+</tr>
+</tbody>
+</table>
+<h3 id="prerrequisitos">Prerrequisitos<a class="headerlink" href="#prerrequisitos" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Conectividad de red</strong> entre el servidor de Discovery y cada instancia PostgreSQL de destino.</li>
+<li><strong>Pandora FMS</strong>: un servidor de Discovery para ejecutar la tarea y la consola para definirla.</li>
+<li><strong>Un rol de PostgreSQL</strong> que pueda conectarse a las bases de datos monitorizadas. Los módulos leen <code>pg_stat_activity</code>, <code>pg_settings</code>, <code>pg_database</code>, <code>pg_class</code>, <code>pg_namespace</code>, <code>pg_tables</code>, <code>pg_indexes</code>, <code>pg_stat_user_tables</code>, <code>pg_stat_database</code> y <code>pg_stat_bgwriter</code>.</li>
+<li><strong>Una credencial almacenada</strong> con el usuario y la contraseña de ese rol. Consulte <a href="#crear-la-credencial">Crear la credencial</a>.</li>
+</ol>
+<p>El plugin se distribuye como una aplicación de Discovery autocontenida: el paquete <code>.disco</code> incluye su propio ejecutable, por lo que no hay que instalar ningún runtime adicional para una ejecución normal.</p>
+<h3 id="crear-la-credencial">Crear la credencial<a class="headerlink" href="#crear-la-credencial" title="Permanent link">¶</a></h3>
+<p>La tarea no pide un usuario y una contraseña en claro. Selecciona una credencial <strong>Custom</strong> del almacén de credenciales de Pandora FMS:</p>
+<ol>
+<li>Vaya a <strong>Management → Configuration → Credential store</strong>.</li>
+<li>Cree una credencial <strong>Custom</strong> con el usuario y la contraseña de PostgreSQL.</li>
+<li>Selecciónela en el campo <strong>PostgreSQL Credentials</strong> de la tarea.</li>
+</ol>
+<p>Almacenar la credencial en el almacén evita que la contraseña quede en la definición de la tarea y en el fichero de configuración generado.</p>
+<h3 id="instalar-el-plugin">Instalar el plugin<a class="headerlink" href="#instalar-el-plugin" title="Permanent link">¶</a></h3>
+<p>Cargue el paquete <code>.disco</code> de <code>pandorafms.postgresql</code> desde el marketplace de Pandora FMS:</p>
+<p><a href="https://marketplace.pandorafms.com/entries/pandorafms.postgresql">https://marketplace.pandorafms.com/entries/pandorafms.postgresql</a></p>
+<p>Una vez cargado, la aplicación <strong>PostgreSQL</strong> queda disponible al crear tareas de Discovery.</p>
+<h2 id="configurar-la-tarea-de-discovery">Configurar la tarea de Discovery<a class="headerlink" href="#configurar-la-tarea-de-discovery" title="Permanent link">¶</a></h2>
+<p>Cree la tarea desde <strong>Management → Discovery → Applications → PostgreSQL</strong>. La consola presenta los campos en dos pasos: <strong>PostgreSQL Base</strong> y <strong>PostgreSQL Detailed</strong>. Todos los campos se documentan en <a href="#parametros-de-la-tarea">Parámetros de la tarea</a>.</p>
+<ol>
+<li>
+<p><strong>PostgreSQL Base</strong> — los destinos y cómo alcanzarlos:</p>
+<ul>
+<li><strong>PostgreSQL target strings</strong>: uno o varios destinos, separados por comas o uno por línea. Cada entrada crea un agente principal. Consulte <a href="#cadenas-de-destino">Cadenas de destino</a>.</li>
+<li><strong>PostgreSQL Credentials</strong>: una credencial <strong>Custom</strong> del almacén de credenciales.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/postgresql/postgresql-task-base.png" data-desc-position="bottom"><img alt="Paso PostgreSQL Base de la tarea de Discovery, con el área de texto de cadenas de destino y el selector de credenciales" src="../../../assets/images/discovery/postgresql/postgresql-task-base.png"></a></p>
+</li>
+<li>
+<p><strong>PostgreSQL Detailed</strong> — alcance del descubrimiento y grupos de monitorización:</p>
+<ul>
+<li><strong>Max threads</strong>: número de conexiones concurrentes usadas para monitorizar los destinos.</li>
+<li><strong>Target agent</strong>: nombres que se asignan a los agentes principales, emparejados por posición con las cadenas de destino. Si se deja vacío, se usa la dirección del destino como nombre del agente.</li>
+<li><strong>Custom module prefix</strong>: se antepone a todos los nombres de módulo generados.</li>
+<li><strong>Autodisabled agents</strong>: crea los agentes generados en modo Autodisabled.</li>
+<li><strong>Scan databases</strong>: descubre las bases de datos de cada instancia.</li>
+<li><strong>Create agent per database</strong>: crea un agente por cada base de datos descubierta en lugar de añadir sus módulos al agente principal.</li>
+<li><strong>Custom database agent prefix</strong>: visible cuando <strong>Create agent per database</strong> está activado. Se antepone a los nombres de los agentes por base de datos.</li>
+<li><strong>Enable entities file re-scan interval</strong> y <strong>Re-scan entities file interval</strong>: persisten las bases de datos descubiertas y revalidan la lista periódicamente.</li>
+<li><strong>Check engine uptime</strong>, <strong>Retrieve query statistics</strong>, <strong>Analyze connections</strong>, <strong>Calculate fragmentation ratio</strong>, <strong>Retrieve cache statistics</strong>: grupos de módulos de instancia.</li>
+<li><strong>Storage statistics</strong>, <strong>Query performance</strong>, <strong>Connections statistics</strong>, <strong>Transaction statistics</strong>, <strong>Table statistics</strong>, <strong>Advanced performance</strong>: grupos de módulos por base de datos.</li>
+<li><strong>Execute custom queries</strong> y <strong>Custom queries</strong>: ejecutan SQL definido por el operador y crean un módulo por consulta.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/postgresql/postgresql-task-detailed.png" data-desc-position="bottom"><img alt="Paso PostgreSQL Detailed de la tarea de Discovery, con max threads, target agent, el prefijo de módulos, las casillas de descubrimiento y grupos de módulos, y el área de consultas personalizadas" src="../../../assets/images/discovery/postgresql/postgresql-task-detailed.png"></a></p>
+</li>
+</ol>
+<p>El nombre, el grupo, el intervalo y el timeout propios de la tarea se definen en el paso genérico de la tarea, que precede a estos dos. El grupo y el intervalo se convierten en el grupo de agentes y el intervalo de módulos.</p>
+<h2 id="verificar-la-primera-ejecucion">Verificar la primera ejecución<a class="headerlink" href="#verificar-la-primera-ejecucion" title="Permanent link">¶</a></h2>
+<p>Fuerce la tarea desde <strong>Management → Discovery → Task list</strong> y compruebe el resultado en este orden.</p>
+<ol>
+<li>
+<p><strong>El resumen de la tarea.</strong> Una tarea PostgreSQL completada informa de:</p>
+<ul>
+<li><strong>Total agents</strong>: número de agentes generados por la tarea.</li>
+<li><strong>Targets up</strong>: destinos a los que el plugin se pudo conectar.</li>
+<li><strong>Targets down</strong>: destinos a los que no pudo conectarse.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/postgresql/postgresql-task-summary.png" data-desc-position="bottom"><img alt="Resumen de una tarea PostgreSQL completada, con Targets up 3, Targets down 0 y Total agents 3" src="../../../assets/images/discovery/postgresql/postgresql-task-summary.png"></a></p>
+</li>
+<li>
+<p><strong>Los agentes.</strong> Un agente principal por cada cadena de destino. Con <strong>Scan databases</strong> activado, las bases de datos descubiertas se añaden al agente principal o, con <strong>Create agent per database</strong>, se crean como agentes independientes.</p>
+</li>
+<li>
+<p><strong>Los módulos de cada agente.</strong> El agente principal siempre tiene <code>POSTGRESQL connection</code>. Una base de datos monitorizada produce al menos su módulo <code>connection</code>. El resto de módulos depende de las casillas activadas.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/postgresql/postgresql-database-modules.png" data-desc-position="bottom"><img alt="Lista de módulos de un agente de base de datos PostgreSQL, con los módulos de conexión, almacenamiento, rendimiento de consultas, conexiones, transacciones, tablas y rendimiento avanzado" src="../../../assets/images/discovery/postgresql/postgresql-database-modules.png"></a></p>
+</li>
+</ol>
+<p>Si la tarea informa de <code>Targets down</code> para un destino, revise <a href="#resolucion-de-problemas">Resolución de problemas</a>.</p>
+<h2 id="entender-los-resultados">Entender los resultados<a class="headerlink" href="#entender-los-resultados" title="Permanent link">¶</a></h2>
+<h3 id="agentes-y-cardinalidad">Agentes y cardinalidad<a class="headerlink" href="#agentes-y-cardinalidad" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Un agente principal por cada cadena de destino.</strong> Su nombre es la dirección del destino salvo que se indique un nombre en <strong>Target agent</strong> para esa posición. El sistema operativo del agente se informa como <code>POSTGRESQL</code> y su versión de sistema operativo como la versión del servidor conectado.</li>
+<li><strong>Módulos de instancia</strong> se crean siempre en el agente principal. El módulo <code>POSTGRESQL connection</code> está siempre presente y refleja si la conexión a la instancia se estableció.</li>
+<li><strong>Módulos de base de datos.</strong> Con <strong>Scan databases</strong> activado, cada base de datos descubierta produce al menos un módulo <code>connection</code>.<ul>
+<li>Con <strong>Create agent per database</strong> desactivado, los módulos de la base de datos se añaden al agente principal y sus nombres llevan el nombre de la base de datos como prefijo, por ejemplo <code>&lt;prefix&gt;&lt;database&gt; connection</code>.</li>
+<li>Con <strong>Create agent per database</strong> activado, cada base de datos tiene su propio agente llamado <code>&lt;database agent prefix&gt;&lt;nombre del agente principal&gt; &lt;database&gt;</code>, y los nombres de sus módulos no llevan el prefijo de la base de datos.</li>
+</ul>
+</li>
+</ul>
+<h3 id="modulos-de-instancia">Módulos de instancia<a class="headerlink" href="#modulos-de-instancia" title="Permanent link">¶</a></h3>
+<p>El módulo <code>POSTGRESQL connection</code> se crea siempre en el agente principal.</p>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Se activa con</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;prefix&gt;POSTGRESQL connection</code></td>
+<td><code>generic_proc</code></td>
+<td>—</td>
+<td>Siempre</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;restart detection</code></td>
+<td><code>generic_proc</code></td>
+<td>—</td>
+<td>Check engine uptime</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;queries</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Retrieve query statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;insert</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Retrieve query statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;delete</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Retrieve query statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;update</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Retrieve query statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;session usage</code></td>
+<td><code>generic_data</code></td>
+<td>%</td>
+<td>Analyze connections</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;allocated buffer cache</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Retrieve cache statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;backend used buffer cache</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Retrieve cache statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;checkpoints buffer cache</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Retrieve cache statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;cleaned buffer cache</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Retrieve cache statistics</td>
+</tr>
+</tbody>
+</table>
+<p>Los módulos <code>queries</code>, <code>insert</code>, <code>delete</code> y <code>update</code> cuentan las sentencias que estuvieron activas durante el último intervalo. <code>restart detection</code> vale <code>0</code> cuando el motor se reinició en los dos últimos intervalos y <code>1</code> en caso contrario. <code>session usage</code> es el porcentaje de slots de conexión en uso frente al máximo configurado.</p>
+<h3 id="modulos-de-base-de-datos">Módulos de base de datos<a class="headerlink" href="#modulos-de-base-de-datos" title="Permanent link">¶</a></h3>
+<p>Una base de datos monitorizada produce siempre su módulo <strong>connection</strong>, con valor <code>1</code> cuando la conexión se estableció y <code>0</code> cuando no. El resto de módulos depende de los grupos por base de datos activados.</p>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Se activa con</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;prefix&gt;connection</code></td>
+<td><code>generic_proc</code></td>
+<td>—</td>
+<td>Siempre (por base de datos descubierta)</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;fragmentation ratio</code></td>
+<td><code>generic_data</code></td>
+<td>%</td>
+<td>Calculate fragmentation ratio <strong>y</strong> Table statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;database size</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Storage statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;tables size</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Storage statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;indexes size</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Storage statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;temp bytes</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Storage statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;temp files</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Storage statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;long queries</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Query performance</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;oldest query age</code></td>
+<td><code>generic_data</code></td>
+<td>seconds</td>
+<td>Query performance</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;sequential scans</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Query performance</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;index scans</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Query performance</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;cache hit ratio</code></td>
+<td><code>generic_data</code></td>
+<td>%</td>
+<td>Query performance</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;active connections</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Connections statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;idle connections</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Connections statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;total connections</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Connections statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;transactions</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Transaction statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;commits</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Transaction statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;rollbacks</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Transaction statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;rollback ratio</code></td>
+<td><code>generic_data</code></td>
+<td>%</td>
+<td>Transaction statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;deadlocks</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Transaction statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;conflicts</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Transaction statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;table count</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Table statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;index count</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Table statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;live tuples</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Table statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;dead tuples</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Table statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;blocks read</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Advanced performance</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;blocks hit</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Advanced performance</td>
+</tr>
+</tbody>
+</table>
+<p>Con <strong>Create agent per database</strong> desactivado, inserte el nombre de la base de datos después del prefijo personalizado: <code>&lt;prefix&gt;&lt;database&gt; database size</code>. El módulo <code>fragmentation ratio</code> de base de datos requiere que <strong>Calculate fragmentation ratio</strong> y <strong>Table statistics</strong> estén ambos activados.</p>
+<h3 id="fichero-de-entidades-y-bases-de-datos-desaparecidas">Fichero de entidades y bases de datos desaparecidas<a class="headerlink" href="#fichero-de-entidades-y-bases-de-datos-desaparecidas" title="Permanent link">¶</a></h3>
+<p>Con <strong>Enable entities file re-scan interval</strong> activado, el plugin persiste las bases de datos descubiertas en un fichero de entidades. Cuando una base de datos descubierta antes ya no aparece en el escaneo actual, el plugin sigue generando su módulo <code>connection</code>, de modo que el módulo puede pasar a estado crítico en lugar de desaparecer en silencio. Sin esta opción, la lista no se persiste y una base de datos que ya no se descubre deja de reportarse.</p>
+<h3 id="consultas-personalizadas">Consultas personalizadas<a class="headerlink" href="#consultas-personalizadas" title="Permanent link">¶</a></h3>
+<p>Cada consulta personalizada genera un módulo en los agentes a los que aplica su ámbito. Una consulta puede dirigirse al nivel de instancia (<code>instances</code>), al nivel de base de datos (<code>databases</code>) o a ambos (<code>all</code>), puede limitarse a bases de datos concretas y puede programarse con una expresión crontab de cinco campos. Las consultas programadas conservan su última ejecución correcta, de modo que una ocurrencia perdida mientras el plugin no se ejecutaba se ejecuta en la siguiente ejecución de la tarea. Consulte <a href="#referencia-de-consultas-personalizadas">Referencia de consultas personalizadas</a>.</p>
+<h2 id="resolucion-de-problemas">Resolución de problemas<a class="headerlink" href="#resolucion-de-problemas" title="Permanent link">¶</a></h2>
+<p>El plugin informa de sus diagnósticos en el resumen JSON de ejecución que imprime en la salida estándar: los errores de conexión se reportan como <code>Connection failed: ...</code>, y las consultas omitidas o fallidas se añaden ahí.</p>
+<ul>
+<li><strong><code>Targets down</code> en un destino</strong> — falló la conexión a la instancia. Compruebe el acceso de red desde el servidor de Discovery, el formato de la cadena de destino y la credencial seleccionada.</li>
+<li><strong>Una base de datos no se monitoriza</strong> — no se descubrió. Active <strong>Scan databases</strong>, o lístela explícitamente en la cadena de destino con <code>\</code>, <code>|</code>, o revise la lista de exclusión <code>!|</code>.</li>
+<li><strong>Faltan los tres módulos de caché de buffers</strong> — <code>backend used buffer cache</code>, <code>checkpoints buffer cache</code> y <code>cleaned buffer cache</code> no están disponibles en PostgreSQL 17 y posteriores.</li>
+<li><strong>Una base de datos desapareció de la monitorización</strong> — active <strong>Enable entities file re-scan interval</strong> para conservar su módulo <code>connection</code> y dejar que pase a crítico en lugar de eliminarlo.</li>
+<li><strong>Las estadísticas de consultas son siempre cero</strong> — los módulos <code>queries</code>, <code>insert</code>, <code>delete</code> y <code>update</code> cuentan sentencias activas durante el último intervalo. Una instancia en reposo informa legítimamente de cero.</li>
+<li><strong>Una consulta personalizada no produce módulo</strong> — solo se aceptan sentencias <code>SELECT</code>; cualquier otra se descarta con un aviso. Una consulta cuyo <code>target_scope</code> no encaja con el agente (por ejemplo <code>databases</code> en el agente de instancia) también se omite.</li>
+<li><strong>Se ignora una expresión crontab no válida</strong> — el <code>crontab</code> de una consulta personalizada debe tener cinco campos. Una expresión no válida genera un aviso y la consulta se omite.</li>
+</ul>
+<h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
+<h3 id="parametros-de-la-tarea">Parámetros de la tarea<a class="headerlink" href="#parametros-de-la-tarea" title="Permanent link">¶</a></h3>
+<h4 id="postgresql-base">PostgreSQL Base<a class="headerlink" href="#postgresql-base" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Macro</th>
+<th>Tipo</th>
+<th>Por defecto</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL target strings</td>
+<td><code>_dbstrings_</code></td>
+<td>textarea</td>
+<td>—</td>
+<td>Obligatorio. Separados por comas o uno por línea. <code>#</code> comenta una línea. Cada entrada crea un agente principal. Consulte <a href="#cadenas-de-destino">Cadenas de destino</a></td>
+</tr>
+<tr>
+<td>PostgreSQL Credentials</td>
+<td><code>_credentials_</code></td>
+<td>select</td>
+<td>—</td>
+<td>Obligatorio. Credencial <strong>Custom</strong> del almacén de credenciales. Consulte <a href="#crear-la-credencial">Crear la credencial</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="postgresql-detailed">PostgreSQL Detailed<a class="headerlink" href="#postgresql-detailed" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Macro</th>
+<th>Tipo</th>
+<th>Por defecto</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Max threads</td>
+<td><code>_threads_</code></td>
+<td>number</td>
+<td><code>1</code></td>
+<td>Hilos de monitorización concurrentes</td>
+</tr>
+<tr>
+<td>Target agent</td>
+<td><code>_engineAgent_</code></td>
+<td>textarea</td>
+<td>—</td>
+<td>Nombres de agente, emparejados por posición con las cadenas de destino. Vacío usa la dirección del destino</td>
+</tr>
+<tr>
+<td>Custom module prefix</td>
+<td><code>_prefixModuleName_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Se antepone a todos los nombres de módulo generados</td>
+</tr>
+<tr>
+<td>Autodisabled agents</td>
+<td><code>_autodisabledAgents_</code></td>
+<td>checkbox</td>
+<td>desactivado</td>
+<td>Crea los agentes generados en modo Autodisabled</td>
+</tr>
+<tr>
+<td>Scan databases</td>
+<td><code>_scanDatabases_</code></td>
+<td>checkbox</td>
+<td>desactivado</td>
+<td>Descubre las bases de datos de cada instancia</td>
+</tr>
+<tr>
+<td>Create agent per database</td>
+<td><code>_agentPerDatabase_</code></td>
+<td>checkbox</td>
+<td>desactivado</td>
+<td>Un agente por cada base de datos descubierta</td>
+</tr>
+<tr>
+<td>Custom database agent prefix</td>
+<td><code>_prefixAgent_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Visible cuando <strong>Create agent per database</strong> está activado. Se antepone a los nombres de los agentes por base de datos</td>
+</tr>
+<tr>
+<td>Enable entities file re-scan interval</td>
+<td><code>_enableEntitiesInterval_</code></td>
+<td>checkbox</td>
+<td>desactivado</td>
+<td>Persiste y revalida la lista de bases de datos descubiertas</td>
+</tr>
+<tr>
+<td>Re-scan entities file interval</td>
+<td><code>_entitiesInterval_</code></td>
+<td>select</td>
+<td><code>86400</code></td>
+<td>Visible cuando <strong>Enable entities file re-scan interval</strong> está activado. Intervalo de refresco</td>
+</tr>
+<tr>
+<td>Check engine uptime</td>
+<td><code>_checkUptime_</code></td>
+<td>checkbox</td>
+<td>activado</td>
+<td>Crea el módulo de detección de reinicios</td>
+</tr>
+<tr>
+<td>Retrieve query statistics</td>
+<td><code>_queryStats_</code></td>
+<td>checkbox</td>
+<td>activado</td>
+<td>Crea los módulos <code>queries</code>, <code>insert</code>, <code>delete</code> y <code>update</code></td>
+</tr>
+<tr>
+<td>Analyze connections</td>
+<td><code>_checkConnections_</code></td>
+<td>checkbox</td>
+<td>activado</td>
+<td>Crea el módulo de uso de sesiones</td>
+</tr>
+<tr>
+<td>Calculate fragmentation ratio</td>
+<td><code>_checkFragmentation_</code></td>
+<td>checkbox</td>
+<td>activado</td>
+<td>Crea el módulo de ratio de fragmentación</td>
+</tr>
+<tr>
+<td>Retrieve cache statistics</td>
+<td><code>_checkCache_</code></td>
+<td>checkbox</td>
+<td>activado</td>
+<td>Crea los módulos de caché de buffers</td>
+</tr>
+<tr>
+<td>Storage statistics</td>
+<td><code>_checkStorage_</code></td>
+<td>checkbox</td>
+<td>activado</td>
+<td>Crea los módulos de almacenamiento por base de datos</td>
+</tr>
+<tr>
+<td>Query performance</td>
+<td><code>_checkQueryPerformance_</code></td>
+<td>checkbox</td>
+<td>activado</td>
+<td>Crea los módulos de rendimiento de consultas</td>
+</tr>
+<tr>
+<td>Connections statistics</td>
+<td><code>_checkConnectionStats_</code></td>
+<td>checkbox</td>
+<td>activado</td>
+<td>Crea los módulos de conexiones por base de datos</td>
+</tr>
+<tr>
+<td>Transaction statistics</td>
+<td><code>_checkTransactionStats_</code></td>
+<td>checkbox</td>
+<td>activado</td>
+<td>Crea los módulos de transacciones</td>
+</tr>
+<tr>
+<td>Table statistics</td>
+<td><code>_checkTableStats_</code></td>
+<td>checkbox</td>
+<td>activado</td>
+<td>Crea los módulos de estadísticas de tablas</td>
+</tr>
+<tr>
+<td>Advanced performance</td>
+<td><code>_checkAdvancedPerf_</code></td>
+<td>checkbox</td>
+<td>activado</td>
+<td>Crea los módulos de blocks read y blocks hit</td>
+</tr>
+<tr>
+<td>Execute custom queries</td>
+<td><code>_executeCustomQueries_</code></td>
+<td>checkbox</td>
+<td>activado</td>
+<td>Habilita el bloque de consultas personalizadas</td>
+</tr>
+<tr>
+<td>Custom queries</td>
+<td><code>_customQueries_</code></td>
+<td>textarea</td>
+<td>—</td>
+<td>Visible cuando <strong>Execute custom queries</strong> está activado. Consulte <a href="#referencia-de-consultas-personalizadas">Referencia de consultas personalizadas</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cadenas-de-destino">Cadenas de destino<a class="headerlink" href="#cadenas-de-destino" title="Permanent link">¶</a></h3>
+<p>El campo <strong>PostgreSQL target strings</strong> acepta un destino por línea o separados por comas. Las líneas vacías y las que empiezan por <code>#</code> se ignoran. Cada destino usa <code>HOST</code> o <code>HOST:PORT</code>, opcionalmente con una selección de bases de datos:</p>
+<table>
+<thead>
+<tr>
+<th>Formato</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HOST</code></td>
+<td>Solo la instancia, salvo que <strong>Scan databases</strong> esté activado</td>
+</tr>
+<tr>
+<td><code>HOST:PORT</code></td>
+<td>La instancia en el puerto indicado</td>
+</tr>
+<tr>
+<td><code>HOST:PORT\DATABASE</code></td>
+<td>La instancia más esa base de datos</td>
+</tr>
+<tr>
+<td><code>HOST:PORT\|db1;db2;db3</code></td>
+<td>La instancia más las bases de datos listadas</td>
+</tr>
+<tr>
+<td><code>HOST:PORT!\|db1;db2</code></td>
+<td>La instancia más todas las bases de datos descubiertas excepto las listadas (requiere <strong>Scan databases</strong>)</td>
+</tr>
+</tbody>
+</table>
+<p>Ejemplos:</p>
+<div class="highlight"><pre><span></span><code>172.17.0.3:5432\postgres
+172.17.0.4:5432|pandora;metadata
+172.17.0.5:5432!|template0;template1
+# Esta línea es un comentario y se ignora
+172.17.0.6:5432
+</code></pre></div>
+<h3 id="fichero-de-configuracion">Fichero de configuración<a class="headerlink" href="#fichero-de-configuracion" title="Permanent link">¶</a></h3>
+<p>Una tarea de Discovery construye este fichero a partir de sus propios campos. Una ejecución manual lo proporciona con <code>--conf</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Clave</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>agents_group_id</code></td>
+<td>Id del grupo asignado a los agentes generados</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>Intervalo de agente y módulo, en segundos</td>
+</tr>
+<tr>
+<td><code>credentials</code></td>
+<td>JSON codificado en Base64 con los campos <code>user</code> y <code>password</code>. Tiene precedencia sobre <code>user</code> y <code>password</code></td>
+</tr>
+<tr>
+<td><code>user</code>, <code>password</code></td>
+<td>Credenciales de conexión en claro, se usan cuando <code>credentials</code> no está definido</td>
+</tr>
+<tr>
+<td><code>threads</code></td>
+<td>Número de hilos de monitorización concurrentes</td>
+</tr>
+<tr>
+<td><code>modules_prefix</code></td>
+<td>Prefijo de los nombres de módulo generados</td>
+</tr>
+<tr>
+<td><code>autodisabled_agents</code></td>
+<td><code>1</code> crea los agentes generados en modo Autodisabled</td>
+</tr>
+<tr>
+<td><code>scan_databases</code></td>
+<td><code>1</code> descubre las bases de datos de cada instancia</td>
+</tr>
+<tr>
+<td><code>agent_per_database</code></td>
+<td><code>1</code> crea un agente por cada base de datos descubierta</td>
+</tr>
+<tr>
+<td><code>db_agent_prefix</code></td>
+<td>Prefijo de los nombres de los agentes por base de datos</td>
+</tr>
+<tr>
+<td><code>execute_custom_queries</code></td>
+<td><code>1</code> ejecuta las consultas personalizadas</td>
+</tr>
+<tr>
+<td><code>analyze_connections</code></td>
+<td><code>1</code> crea el módulo de uso de sesiones</td>
+</tr>
+<tr>
+<td><code>engine_uptime</code></td>
+<td><code>1</code> crea el módulo de detección de reinicios</td>
+</tr>
+<tr>
+<td><code>query_stats</code></td>
+<td><code>1</code> crea los módulos de estadísticas de consultas de instancia</td>
+</tr>
+<tr>
+<td><code>cache_stats</code></td>
+<td><code>1</code> crea los módulos de caché de buffers</td>
+</tr>
+<tr>
+<td><code>fragmentation_ratio</code></td>
+<td><code>1</code> crea el módulo de ratio de fragmentación</td>
+</tr>
+<tr>
+<td><code>check_storage_stats</code></td>
+<td><code>1</code> crea los módulos de almacenamiento</td>
+</tr>
+<tr>
+<td><code>check_query_performance</code></td>
+<td><code>1</code> crea los módulos de rendimiento de consultas</td>
+</tr>
+<tr>
+<td><code>check_connection_stats</code></td>
+<td><code>1</code> crea los módulos de conexiones por base de datos</td>
+</tr>
+<tr>
+<td><code>check_transaction_stats</code></td>
+<td><code>1</code> crea los módulos de transacciones</td>
+</tr>
+<tr>
+<td><code>check_table_stats</code></td>
+<td><code>1</code> crea los módulos de estadísticas de tablas</td>
+</tr>
+<tr>
+<td><code>check_advanced_perf</code></td>
+<td><code>1</code> crea los módulos de rendimiento avanzado</td>
+</tr>
+<tr>
+<td><code>entities_list</code></td>
+<td>Ruta del fichero donde se almacenan las bases de datos descubiertas</td>
+</tr>
+<tr>
+<td><code>enable_entities_interval</code></td>
+<td><code>1</code> habilita el reescaneo de la lista de bases de datos</td>
+</tr>
+<tr>
+<td><code>entities_interval</code></td>
+<td>Intervalo de reescaneo, en segundos</td>
+</tr>
+<tr>
+<td><code>cron_state_dir</code></td>
+<td>Directorio donde se almacena la última ejecución correcta de las consultas programadas</td>
+</tr>
+</tbody>
+</table>
+<p>Ejemplo:</p>
+<div class="highlight"><pre><span></span><code><span class="na">agents_group_id</span><span class="o">=</span><span class="s">10</span>
+<span class="na">interval</span><span class="o">=</span><span class="s">300</span>
+<span class="na">user</span><span class="o">=</span><span class="s">&lt;USERNAME&gt;</span>
+<span class="na">password</span><span class="o">=</span><span class="s">&lt;PASSWORD&gt;</span>
+<span class="na">threads</span><span class="o">=</span><span class="s">1</span>
+<span class="na">modules_prefix</span><span class="o">=</span>
+<span class="na">execute_custom_queries</span><span class="o">=</span><span class="s">1</span>
+<span class="na">analyze_connections</span><span class="o">=</span><span class="s">1</span>
+<span class="na">engine_uptime</span><span class="o">=</span><span class="s">1</span>
+<span class="na">query_stats</span><span class="o">=</span><span class="s">1</span>
+<span class="na">fragmentation_ratio</span><span class="o">=</span><span class="s">1</span>
+<span class="na">cache_stats</span><span class="o">=</span><span class="s">1</span>
+<span class="na">scan_databases</span><span class="o">=</span><span class="s">1</span>
+<span class="na">agent_per_database</span><span class="o">=</span><span class="s">1</span>
+<span class="na">db_agent_prefix</span><span class="o">=</span>
+<span class="na">entities_list</span><span class="o">=</span><span class="s">/tmp/postgresql_entities_list.txt</span>
+<span class="na">enable_entities_interval</span><span class="o">=</span><span class="s">1</span>
+<span class="na">entities_interval</span><span class="o">=</span><span class="s">300</span>
+<span class="na">check_storage_stats</span><span class="o">=</span><span class="s">1</span>
+<span class="na">check_query_performance</span><span class="o">=</span><span class="s">1</span>
+<span class="na">check_connection_stats</span><span class="o">=</span><span class="s">1</span>
+<span class="na">check_transaction_stats</span><span class="o">=</span><span class="s">1</span>
+<span class="na">check_table_stats</span><span class="o">=</span><span class="s">1</span>
+<span class="na">check_advanced_perf</span><span class="o">=</span><span class="s">1</span>
+</code></pre></div>
+<blockquote>
+<p>El valor de <code>credentials</code> es JSON codificado en Base64, que es reversible, no cifrado. Proteja el fichero de configuración como un secreto. Cuando la credencial se almacena en el almacén de credenciales de Pandora FMS, la tarea no escribe la contraseña en el fichero generado.</p>
+</blockquote>
+<h3 id="ejecucion-por-linea-de-comandos">Ejecución por línea de comandos<a class="headerlink" href="#ejecucion-por-linea-de-comandos" title="Permanent link">¶</a></h3>
+<p>El plugin se puede ejecutar a mano, lo que es la forma más rápida de confirmar un destino y sus credenciales antes de llevarlos a una tarea.</p>
+<div class="highlight"><pre><span></span><code>./pandora_postgresql<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--target_databases<span class="w"> </span>&lt;PATH_TO_TARGETS&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span>--target_agents<span class="w"> </span>&lt;PATH_TO_AGENT_NAMES&gt;<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span>--custom_queries<span class="w"> </span>&lt;PATH_TO_CUSTOM_QUERIES&gt;<span class="w"> </span><span class="o">]</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--conf</code></td>
+<td>Ruta del fichero de configuración</td>
+</tr>
+<tr>
+<td><code>--target_databases</code></td>
+<td>Ruta del fichero que contiene las bases de datos de destino</td>
+</tr>
+<tr>
+<td><code>--target_agents</code></td>
+<td>Ruta del fichero que contiene los nombres de agente, emparejados por posición con los destinos</td>
+</tr>
+<tr>
+<td><code>--custom_queries</code></td>
+<td>Ruta del fichero que contiene las consultas personalizadas</td>
+</tr>
+</tbody>
+</table>
+<p>La ejecución devuelve un resumen JSON. Los datos recogidos se exponen en el campo <code>monitoring_data</code> del resumen para que los consuma el servidor de Discovery.</p>
+<p>Un <code>--conf</code> manual puede autenticarse con <code>credentials</code> (JSON codificado en Base64 con <code>user</code> y <code>password</code>) o con las claves en claro <code>user</code> y <code>password</code>. Cuando están presentes ambas, gana <code>credentials</code>.</p>
+<h3 id="referencia-de-consultas-personalizadas">Referencia de consultas personalizadas<a class="headerlink" href="#referencia-de-consultas-personalizadas" title="Permanent link">¶</a></h3>
+<p>Cada consulta personalizada es un bloque delimitado por <code>check_begin</code> y <code>check_end</code>. Solo se permiten sentencias <code>SELECT</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Clave</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>Nombre del módulo. Obligatorio. Admite <code>$__self_dbname</code></td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>Descripción del módulo</td>
+</tr>
+<tr>
+<td><code>target</code></td>
+<td>Consulta SQL a ejecutar. Obligatorio. Solo se aceptan sentencias <code>SELECT</code>. Se acepta <code>sql</code> como sinónimo. Admite <code>$__self_dbname</code></td>
+</tr>
+<tr>
+<td><code>target_scope</code></td>
+<td><code>instances</code>, <code>databases</code> o <code>all</code>. Por defecto <code>all</code></td>
+</tr>
+<tr>
+<td><code>target_databases</code></td>
+<td>Nombres de base de datos separados por comas a los que aplica la consulta. <code>all</code> o vacío la aplica a todas. En el nivel de instancia, <code>postgres</code> casa con la instancia</td>
+</tr>
+<tr>
+<td><code>operation</code></td>
+<td><code>value</code> devuelve un único valor; <code>full</code> devuelve todas las filas como una cadena</td>
+</tr>
+<tr>
+<td><code>datatype</code></td>
+<td><code>generic_data</code>, <code>generic_data_string</code> o <code>generic_proc</code>. Las operaciones <code>full</code> se fuerzan a <code>generic_data_string</code></td>
+</tr>
+<tr>
+<td><code>min_warning</code>, <code>max_warning</code></td>
+<td>Umbrales de warning</td>
+</tr>
+<tr>
+<td><code>min_critical</code>, <code>max_critical</code></td>
+<td>Umbrales de critical</td>
+</tr>
+<tr>
+<td><code>warning_inverse</code>, <code>critical_inverse</code></td>
+<td>Poner a <code>1</code> para invertir el intervalo de umbral correspondiente</td>
+</tr>
+<tr>
+<td><code>str_warning</code>, <code>str_critical</code></td>
+<td>Umbrales de cadena</td>
+</tr>
+<tr>
+<td><code>module_interval</code></td>
+<td>Intervalo del módulo como múltiplo del intervalo del agente</td>
+</tr>
+<tr>
+<td><code>crontab</code></td>
+<td>Expresión cron de cinco campos. Cuando está presente, la consulta solo se ejecuta cuando vence una ocurrencia</td>
+</tr>
+</tbody>
+</table>
+<p>Ejemplo:</p>
+<div class="highlight"><pre><span></span><code>check_begin
+name Select 1
+description Number of invalid objects
+operation value
+datatype generic_data
+min_warning 5
+target SELECT 1;
+target_databases all
+check_end
+</code></pre></div>
+<p>La palabra reservada <code>$__self_dbname</code> se sustituye por la base de datos donde se ejecuta la consulta (o <code>postgres</code> en el nivel de instancia) tanto en <code>target</code> como en <code>name</code>. La consola incluye una guía comentada del formato como contenido por defecto del área de texto <strong>Custom queries</strong>.</p>
+<h3 id="modulos-generados">Módulos generados<a class="headerlink" href="#modulos-generados" title="Permanent link">¶</a></h3>
+<p>Todos los nombres de módulo llevan el <strong>Custom module prefix</strong> cuando se define.</p>
+<h4 id="agente-principal">Agente principal<a class="headerlink" href="#agente-principal" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Se activa con</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;prefix&gt;POSTGRESQL connection</code></td>
+<td><code>generic_proc</code></td>
+<td>—</td>
+<td>Siempre</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;restart detection</code></td>
+<td><code>generic_proc</code></td>
+<td>—</td>
+<td>Check engine uptime</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;queries</code>, <code>&lt;prefix&gt;insert</code>, <code>&lt;prefix&gt;delete</code>, <code>&lt;prefix&gt;update</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Retrieve query statistics</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;session usage</code></td>
+<td><code>generic_data</code></td>
+<td>%</td>
+<td>Analyze connections</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;allocated buffer cache</code>, <code>&lt;prefix&gt;backend used buffer cache</code>, <code>&lt;prefix&gt;checkpoints buffer cache</code>, <code>&lt;prefix&gt;cleaned buffer cache</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Retrieve cache statistics</td>
+</tr>
+</tbody>
+</table>
+<h4 id="modulos-de-base-de-datos_1">Módulos de base de datos<a class="headerlink" href="#modulos-de-base-de-datos_1" title="Permanent link">¶</a></h4>
+<p>Una base de datos monitorizada produce siempre su módulo <code>connection</code>. El resto depende de los grupos activados, como se detalla en <a href="#modulos-de-base-de-datos">Módulos de base de datos</a>.</p>
+<p>Con <strong>Create agent per database</strong> activado, cada base de datos tiene su propio agente y sus módulos usan los nombres simples (<code>connection</code>, <code>database size</code>, ...). Con la opción desactivada, los módulos se añaden al agente principal y cada nombre lleva el prefijo de la base de datos (<code>&lt;prefix&gt;&lt;database&gt; connection</code>, <code>&lt;prefix&gt;&lt;database&gt; database size</code>, ...).</p>
+<h3 id="identidad-del-plugin">Identidad del plugin<a class="headerlink" href="#identidad-del-plugin" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre corto de la aplicación</td>
+<td><code>pandorafms.postgresql</code></td>
+</tr>
+<tr>
+<td>Versión del plugin</td>
+<td><code>1.6</code></td>
+</tr>
+<tr>
+<td>Tipo</td>
+<td>Aplicación de Discovery (<code>.disco</code>)</td>
+</tr>
+<tr>
+<td>Sección</td>
+<td>Discovery → Applications</td>
+</tr>
+<tr>
+<td>Disponibilidad</td>
+<td>Marketplace de Pandora FMS (<code>pandorafms.postgresql</code>)</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
