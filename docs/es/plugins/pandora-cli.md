@@ -2,7 +2,7 @@
 
 ## Introducción
 
-**Ver**. 08-09-2026
+**Ver**. 17-09-2026
 
 `pandora-cli` es un cliente de línea de comandos para la **API v2** de Pandora FMS. Permite consultar
 y modificar los datos de la consola desde un terminal o un script, sin pasar por la interfaz web.
@@ -108,7 +108,7 @@ Insecure: false
 Config:   /home/usuario/.pandora-cli/config.json
 Token:    valid
 
-Console specification: 137 operations, 22 entities (read 2026-09-07T08:01:42Z)
+Console specification: 273 operations, 45 entities (read 2026-09-17T08:01:42Z)
 ```
 
 `Token: valid` indica que la consola lo aceptó. El comando termina con un código distinto de cero si
@@ -193,11 +193,21 @@ array en lugar de combinarse con AND: `--filter severity=4 --filter severity=2` 
 `[null]`), de modo que limpia el campo con independencia de su posición entre los flags repetidos.
 
 **Cada entidad tiene dos conjuntos de campos distintos.** `--filter` acepta cualquier campo de la
-entidad, mientras que `--where`, `--fields` y `--in` aceptan un conjunto más reducido: en `user` son
-únicamente `idUser` y `fullName`. Los dos conjuntos no están anidados: una entidad puede aceptar en
-`--fields` un campo que no es un campo normal de la entidad. La herramienta valida ambos localmente
-y enumera los nombres válidos cuando rechaza uno, así que conviene leer el error en lugar de volver
-a probar a ciegas.
+entidad, mientras que `--where`, `--fields` y `--in` aceptan un conjunto más reducido y propio de
+cada entidad: en `agent-secondary-group` son únicamente `idAgent` e `idGroup`; en `user` es un
+subconjunto fijo de 20 campos de los 81 de la entidad. Los dos conjuntos no están anidados: una
+entidad puede aceptar en `--fields` un campo que no es un campo normal de la entidad. La herramienta
+valida ambos localmente y enumera los nombres válidos cuando rechaza uno, así que conviene leer el
+error en lugar de volver a probar a ciegas. Varias entidades — entre ellas `group`, `tag`, `profile`,
+`token` y `data-translation` — aceptan un conjunto de campos `--where`/`--fields`/`--in` más amplio
+que en versiones anteriores; ejecute `pandora-cli <entidad> --help` para ver la lista exacta de la
+versión instalada.
+
+`event` es la única excepción: la herramienta no valida localmente `--where`, `--fields` ni `--in`
+para esta entidad. Envía lo que se le indique y deja que decida la consola, porque el listado de
+eventos de la consola no implementa `fieldConditions`, `requestedFields` ni `multipleSearchString`
+para ningún campo. El rechazo, por tanto, llega siempre desde la consola, explicado de la misma
+forma descrita en [Funciones de filtrado por entidad](#funciones-de-filtrado-por-entidad).
 
 Los valores se convierten a su tipo JSON: `true` y `false` pasan a booleanos, los dígitos a números
 y `null` a nulo. Entrecomille para forzar una cadena:
@@ -240,12 +250,18 @@ envíelo con `--from-file`.
 `delete` pide confirmación. En una sesión no interactiva **se niega** en lugar de preguntar, de modo
 que un script que haya olvidado `--yes` falla de forma visible en vez de borrar en silencio.
 
+Algunas entidades imponen reglas del lado del servidor que no aparecen en su lista de campos:
+`agent create` necesita un grupo real — `idGroup=0` se rechaza con `400 Agent group is missing`; la
+consola asigna el `name` del agente por su cuenta con independencia de la carga enviada, así que
+`alias` es el campo que realmente controla la etiqueta; `module create` necesita `idModule` (el tipo
+de servidor del módulo) junto con `idModuleType`, no solo las columnas indicadas en
+`--where`/`--fields`/`--in`; y un usuario no administrador creado con `user create` necesita al menos
+un perfil asignado con `user profile add` antes de poder iniciar sesión.
+
 ### Envío de datos de monitorización
 
 `pandora-cli monitoring create` envía datos de agente a Pandora FMS. Su cuerpo es un **array** de
-cargas con claves en snake_case — `agent_data` y `module_data` — y no el objeto `Monitoring` que
-muestra la documentación de la API de la consola. Esa anotación de la consola es incorrecta y se
-corregirá; hasta entonces, la forma de array siguiente es la que funciona:
+cargas con claves en snake_case — `agent_data` y `module_data`:
 
 ```bash
 cat > payload.json << 'EOF'
@@ -253,8 +269,8 @@ cat > payload.json << 'EOF'
   {
     "agent_data": {"agent_name": "web1", "address": "10.0.0.5", "interval": 300},
     "module_data": [
-      {"name": "cpu_usage", "data": 12.5},
-      {"name": "mem_used", "datalist": [{"value": 2048, "timestamp": "2026/09/07 11:00:00"}]}
+      {"name": "cpu_usage", "type": "generic_data", "data": 12.5},
+      {"name": "mem_used", "type": "generic_data", "datalist": [{"value": 2048, "timestamp": "2026/09/07 11:00:00"}]}
     ]
   }
 ]
@@ -262,8 +278,9 @@ EOF
 pandora-cli monitoring create --from-file payload.json
 ```
 
-El agente se crea si no existe. `agent_name` y `address` son obligatorios; la consola rechaza la
-petición si falta cualquiera. Las demás claves de `agent_data` son opcionales. Una carga también
+El agente se crea si no existe. `agent_name`, `address` e `interval` son obligatorios; la consola
+rechaza la petición si falta cualquiera. Las demás claves de `agent_data` son opcionales. Cada entrada de
+`module_data` necesita un `type`, por ejemplo `generic_data`; la consola rechaza la petición sin él. Una carga también
 puede incluir `events`, `inventory_data`, `log_data`, `trap_data`, `discovery_data` y `cmd_data`.
 Reenviar el mismo agente, módulo y marca de tiempo actualiza el valor existente en lugar de
 duplicarlo.
@@ -415,14 +432,33 @@ instalada.
 
 | Entidad | Contenido | Verbos |
 | --- | --- | --- |
+| `agent` | Agentes de monitorización | `list`, `get`, `create`, `update`, `delete` + 1 más |
 | `agent-extended-data` | Datos extendidos asociados a agentes | `list`, `get`, `create`, `update`, `delete` |
+| `agent-secondary-group` | Grupos secundarios de un agente | `list`, `create`, `delete` |
+| `alert-action` | Acciones de alerta | `list`, `get`, `create`, `update`, `delete` + 1 más |
+| `alert-calendar` | Calendarios de alerta | `list`, `get`, `create`, `update`, `delete` |
+| `alert-command` | Comandos de alerta | `list`, `get`, `create`, `update`, `delete` + 1 más |
+| `alert-special-day` | Días especiales de un calendario de alerta | `list`, `get`, `create`, `update`, `delete` |
+| `alert-template` | Plantillas de alerta | `list`, `get`, `create`, `update`, `delete` + 1 más |
 | `bulk-draft` | Borradores de operaciones masivas | `list`, `get`, `delete` + 1 más |
 | `bulk-queue` | Cola de operaciones masivas | `list`, `get`, `delete` |
+| `dashboard` | Dashboards | `list`, `get`, `create`, `update`, `delete` |
+| `dashboard-widget` | Widgets colocados en un dashboard | `list`, `get`, `create`, `update`, `delete` |
 | `data-translation` | Definiciones de traducción de datos | `list`, `get`, `create`, `update`, `delete` |
-| `event` | Eventos de monitorización | `list`, `get`, `create`, `update`, `delete` + 10 más |
+| `event` | Eventos de monitorización | `list`, `get`, `create`, `update`, `delete` + 12 más |
+| `event-alert` | Alertas de evento | `list`, `get`, `create`, `update`, `delete` |
+| `event-alert-action` | Acciones de una alerta de evento | `list`, `get`, `create`, `update`, `delete` |
 | `event-filter` | Filtros de eventos guardados | `list`, `get`, `create`, `update`, `delete` |
 | `event-tag` | Etiquetas de eventos | `list`, `get`, `create`, `update`, `delete` |
 | `group` | Grupos de agentes | `list`, `get`, `create`, `update`, `delete` |
+| `module` (alias `agent-module`) | Módulos de agente | `list`, `get`, `create`, `update`, `delete` |
+| `module-alert` | Alertas asignadas a un módulo de agente | `list`, `get`, `create`, `update`, `delete` |
+| `module-alert-action` | Acciones que dispara una alerta de módulo de agente | `list`, `get`, `create`, `update`, `delete` |
+| `module-data` | Datos históricos de un módulo de agente | `list`, `get` + 1 más |
+| `module-group` | Grupos de módulos | `list`, `get`, `create`, `update`, `delete` |
+| `module-state` | Estado actual de sondeo de los módulos de agente | `list`, `get` |
+| `module-tag` | Etiquetas asociadas a un módulo de agente | `list`, `get`, `create`, `delete` |
+| `module-type` | Tipos de módulo | `list`, `get` |
 | `monitoring` | Envío de datos de monitorización | `create` |
 | `pandora-itsm-inventory` | Inventario de Pandora ITSM | `list`, `get` |
 | `profile` | Perfiles ACL | `list`, `get`, `create`, `update`, `delete` |

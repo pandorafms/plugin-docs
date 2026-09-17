@@ -2,7 +2,7 @@
 
 ## Introduction
 
-**Ver**. 08-09-2026
+**Ver**. 17-09-2026
 
 `pandora-cli` is a command-line client for the Pandora FMS **API v2**. It lets you read and change
 console data from a terminal or a script, without going through the web interface.
@@ -105,7 +105,7 @@ Insecure: false
 Config:   /home/user/.pandora-cli/config.json
 Token:    valid
 
-Console specification: 137 operations, 22 entities (read 2026-09-07T08:01:42Z)
+Console specification: 273 operations, 45 entities (read 2026-09-17T08:01:42Z)
 ```
 
 `Token: valid` means the console accepted it. The command exits non-zero if it did not. With `-o json`
@@ -189,10 +189,19 @@ value is the exception: it is sent as a plain null (never as `[null]`), so it cl
 regardless of position among the repeated flags.
 
 **Two different field sets apply per entity.** `--filter` accepts any field of the entity, but
-`--where`, `--fields` and `--in` accept a narrower set — for `user` it is `idUser` and `fullName`
-only. The two sets are not nested: an entity may accept a field for `--fields` that is not a normal
-entity field. The CLI validates both locally and lists the valid names when it refuses, so read the
-error rather than guessing again.
+`--where`, `--fields` and `--in` accept a narrower, per-entity set — for `agent-secondary-group` it
+is just `idAgent` and `idGroup`; for `user` it is a fixed subset of 20 fields out of the entity's 81.
+The two sets are not nested: an entity may accept a field for `--fields` that is not a normal entity
+field. The CLI validates both locally and lists the valid names when it refuses, so read the error
+rather than guessing again. Several entities — including `group`, `tag`, `profile`, `token` and
+`data-translation` — accept a wider `--where`/`--fields`/`--in` field set than earlier builds; run
+`pandora-cli <entity> --help` to see the exact list for the installed build.
+
+`event` is the one exception: the CLI does not validate `--where`, `--fields` or `--in` locally for
+it. It sends whatever is passed and lets the console decide, because the console's event listing
+does not implement `fieldConditions`, `requestedFields` or `multipleSearchString` for any field. A
+rejection therefore always comes back from the console, explained the same way described in
+[Filtering features by entity](#filtering-features-by-entity).
 
 Values are converted to their JSON type: `true` and `false` become booleans, digits become numbers,
 `null` becomes null. Quote to force a string:
@@ -233,12 +242,17 @@ declare a scalar where the console endpoint expects an array (a documented misma
 `delete` asks for confirmation. In a non-interactive session it **refuses** instead of prompting, so
 a script that forgot `--yes` fails loudly rather than deleting silently.
 
+Some entities enforce server-side rules that are not visible in their field list: `agent create`
+needs a real group — `idGroup=0` is rejected with `400 Agent group is missing`; the console assigns
+the agent's `name` itself regardless of the payload, so use `alias` for the label you actually
+control; `module create` needs `idModule` (the module's server type) together with `idModuleType`,
+not only the columns listed under `--where`/`--fields`/`--in`; and a non-admin user created with
+`user create` needs at least one profile assigned with `user profile add` before it can log in.
+
 ### Pushing monitoring data
 
 `pandora-cli monitoring create` pushes agent data into Pandora FMS. Its body is an **array** of
-payloads with snake_case keys — `agent_data` and `module_data` — not the `Monitoring` object the
-console's API documentation shows. That console annotation is wrong and will be corrected; until
-then the array shape below is the one that works:
+payloads with snake_case keys — `agent_data` and `module_data`:
 
 ```bash
 cat > payload.json << 'EOF'
@@ -246,8 +260,8 @@ cat > payload.json << 'EOF'
   {
     "agent_data": {"agent_name": "web1", "address": "10.0.0.5", "interval": 300},
     "module_data": [
-      {"name": "cpu_usage", "data": 12.5},
-      {"name": "mem_used", "datalist": [{"value": 2048, "timestamp": "2026/09/07 11:00:00"}]}
+      {"name": "cpu_usage", "type": "generic_data", "data": 12.5},
+      {"name": "mem_used", "type": "generic_data", "datalist": [{"value": 2048, "timestamp": "2026/09/07 11:00:00"}]}
     ]
   }
 ]
@@ -255,8 +269,9 @@ EOF
 pandora-cli monitoring create --from-file payload.json
 ```
 
-The agent is created if it does not exist. `agent_name` and `address` are required; the console
-rejects the request without either. Other `agent_data` keys are optional. A payload may also carry
+The agent is created if it does not exist. `agent_name`, `address` and `interval` are required;
+the console rejects the request without any of them. Other `agent_data` keys are optional. Every entry in
+`module_data` needs a `type` such as `generic_data`; the console rejects the request without it. A payload may also carry
 `events`, `inventory_data`, `log_data`, `trap_data`, `discovery_data` and `cmd_data`. Re-sending the
 same agent, module and timestamp updates the existing value instead of duplicating it.
 
@@ -402,14 +417,33 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 
 | Entity | Covers | Verbs |
 | --- | --- | --- |
+| `agent` | Monitoring agents | `list`, `get`, `create`, `update`, `delete` + 1 more |
 | `agent-extended-data` | Extended data attached to agents | `list`, `get`, `create`, `update`, `delete` |
+| `agent-secondary-group` | Secondary groups of an agent | `list`, `create`, `delete` |
+| `alert-action` | Alert actions | `list`, `get`, `create`, `update`, `delete` + 1 more |
+| `alert-calendar` | Alert calendars | `list`, `get`, `create`, `update`, `delete` |
+| `alert-command` | Alert commands | `list`, `get`, `create`, `update`, `delete` + 1 more |
+| `alert-special-day` | Special days of an alert calendar | `list`, `get`, `create`, `update`, `delete` |
+| `alert-template` | Alert templates | `list`, `get`, `create`, `update`, `delete` + 1 more |
 | `bulk-draft` | Bulk operation drafts | `list`, `get`, `delete` + 1 more |
 | `bulk-queue` | Bulk operation queue | `list`, `get`, `delete` |
+| `dashboard` | Dashboards | `list`, `get`, `create`, `update`, `delete` |
+| `dashboard-widget` | Widgets placed on a dashboard | `list`, `get`, `create`, `update`, `delete` |
 | `data-translation` | Data translation definitions | `list`, `get`, `create`, `update`, `delete` |
-| `event` | Monitoring events | `list`, `get`, `create`, `update`, `delete` + 10 more |
+| `event` | Monitoring events | `list`, `get`, `create`, `update`, `delete` + 12 more |
+| `event-alert` | Event alerts | `list`, `get`, `create`, `update`, `delete` |
+| `event-alert-action` | Actions of an event alert | `list`, `get`, `create`, `update`, `delete` |
 | `event-filter` | Saved event filters | `list`, `get`, `create`, `update`, `delete` |
 | `event-tag` | Event tags | `list`, `get`, `create`, `update`, `delete` |
 | `group` | Agent groups | `list`, `get`, `create`, `update`, `delete` |
+| `module` (alias `agent-module`) | Agent modules | `list`, `get`, `create`, `update`, `delete` |
+| `module-alert` | Alerts assigned to an agent module | `list`, `get`, `create`, `update`, `delete` |
+| `module-alert-action` | Actions fired by an agent module alert | `list`, `get`, `create`, `update`, `delete` |
+| `module-data` | Historical data of an agent module | `list`, `get` + 1 more |
+| `module-group` | Module groups | `list`, `get`, `create`, `update`, `delete` |
+| `module-state` | Current polling state of agent modules | `list`, `get` |
+| `module-tag` | Tags attached to an agent module | `list`, `get`, `create`, `delete` |
+| `module-type` | Module types | `list`, `get` |
 | `monitoring` | Push monitoring data | `create` |
 | `pandora-itsm-inventory` | Pandora ITSM inventory | `list`, `get` |
 | `profile` | ACL profiles | `list`, `get`, `create`, `update`, `delete` |
