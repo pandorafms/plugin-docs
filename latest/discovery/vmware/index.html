@@ -1,0 +1,3797 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/discovery/vmware/">
+      
+      
+        <link rel="prev" href="../veeam-backup/">
+      
+      
+        <link rel="next" href="../../extras/how-to-document/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../../es/discovery/vmware/" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>VMware Discovery - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#vmware-discovery" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              VMware Discovery
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/discovery/vmware/" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware Discovery
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-monitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it monitors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-the-discovery-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure the Discovery task
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure the Discovery task">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-task-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Task definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-vmware-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — VMware base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-vmware-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — VMware agents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-vmware-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — VMware detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-the-first-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify the first run
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understand the results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agents-and-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents and identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modules-by-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modules by agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#events-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshoot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vmware-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vmware-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware agents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vmware-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration block
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity-module-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity module blocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rename-reject-and-header-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rename, Reject and Header blocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-performance-counters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom performance counters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated modules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Generated modules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#datacenter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datacenter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datastores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datastores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#esxi-hosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXi hosts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-machines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual machines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-pools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource pools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-switches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual switches
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command line
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Chat integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft Teams integration (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegram integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to document
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-monitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it monitors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-the-discovery-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure the Discovery task
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure the Discovery task">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-task-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Task definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-vmware-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — VMware base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-vmware-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — VMware agents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-vmware-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — VMware detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-the-first-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify the first run
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understand the results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agents-and-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents and identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modules-by-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modules by agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#events-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshoot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vmware-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vmware-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware agents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vmware-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration block
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity-module-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity module blocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rename-reject-and-header-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rename, Reject and Header blocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-performance-counters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom performance counters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated modules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Generated modules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#datacenter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datacenter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datastores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datastores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#esxi-hosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXi hosts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-machines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual machines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-pools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource pools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-switches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual switches
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command line
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="vmware-discovery">VMware Discovery<a class="headerlink" href="#vmware-discovery" title="Permanent link">¶</a></h1>
+<p><em>Article last updated: 2026-09-15.</em></p>
+<h2 id="what-it-monitors">What it monitors<a class="headerlink" href="#what-it-monitors" title="Permanent link">¶</a></h2>
+<p>The VMware Discovery plugin connects to a VMware vCenter Server through the vSphere API and discovers the resources of one datacenter. It generates one Pandora FMS agent per discovered resource and fills it with availability, capacity, configuration and performance modules read from vCenter.</p>
+<p>The plugin generates agents for:</p>
+<ul>
+<li>the datacenter itself;</li>
+<li>every ESXi host in the datacenter;</li>
+<li>every datastore;</li>
+<li>every virtual machine, including those nested in VMware folders;</li>
+<li>every resource pool, when <strong>Scan Resource Pools</strong> is enabled;</li>
+<li>optionally, one agent per virtual switch (vSwitch) of each ESXi host when <strong>Virtual network monitoring</strong> is enabled.</li>
+</ul>
+<p>When <strong>Event mode</strong> is enabled, the plugin also reads vCenter events and forwards them to the Pandora FMS event console, where they follow the normal event flow.</p>
+<p>The plugin runs as a Discovery task: the console creates the task, the Discovery server runs the plugin, and the generated agents and modules are created automatically. The task delivers the generated agent data through Tentacle.</p>
+<h2 id="prepare">Prepare<a class="headerlink" href="#prepare" title="Permanent link">¶</a></h2>
+<h3 id="compatibility">Compatibility<a class="headerlink" href="#compatibility" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>State</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plugin version <code>1.21</code> (<code>pandorafms.vmware</code>)</td>
+<td>Documented target</td>
+<td>The version this page describes, as identified by the package definition.</td>
+</tr>
+<tr>
+<td>VMware vCenter Server with at least one datacenter</td>
+<td><code>Required</code></td>
+<td>The plugin resolves every managed object through a datacenter container and connects to a vCenter endpoint.</td>
+</tr>
+<tr>
+<td>A vCenter account with read access to the target datacenter</td>
+<td><code>Required</code></td>
+<td>The plugin authenticates and reads resource and performance data. It never changes vCenter configuration.</td>
+</tr>
+<tr>
+<td>A specific vCenter or ESXi version</td>
+<td><code>Not validated</code></td>
+<td>No published test record establishes compatibility with a concrete VMware release.</td>
+</tr>
+<tr>
+<td>Host operating system running the plugin</td>
+<td><code>Not validated</code></td>
+<td>No published test record establishes operating-system compatibility.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">¶</a></h3>
+<ul>
+<li>A Pandora FMS server with Discovery enabled to run the task, and a console to define it.</li>
+<li>A VMware vCenter Server that exposes the vSphere API and is reachable from the Discovery server. The plugin addresses the datacenter by the exact name shown in vCenter.</li>
+<li>A vCenter user account that can authenticate and read the datacenter, hosts, datastores, VMs, resource pools and performance counters. Grant only the read permissions your monitoring requires.</li>
+<li>A target agent group and a monitoring interval for the generated agents. Both come from the Discovery task and are inherited by every generated agent.</li>
+<li>Network reachability to the Tentacle destination, because the task transfers the generated agent data through Tentacle.</li>
+<li>For <strong>Event mode</strong>, a reachable Pandora FMS console API and valid API credentials. The task passes the console API endpoint and credentials to the plugin.</li>
+<li>The plugin is distributed as a Pandora FMS Discovery application (<code>.disco</code> package) that the Discovery server executes on the Pandora FMS server.</li>
+</ul>
+<h3 id="install-the-plugin">Install the plugin<a class="headerlink" href="#install-the-plugin" title="Permanent link">¶</a></h3>
+<p>Load the <code>.disco</code> package from <strong>Management → Discovery → Manage disco packages</strong>: choose <strong>Select a file</strong>, pick the package, and click <strong>Upload DISCO</strong>. After loading, <strong>VMware</strong> appears in the package list and under the <strong>Applications</strong> section of the Discovery wizard.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/vmware/manage-disco-packages.png" data-desc-position="bottom"><img alt="Manage disco packages" src="../../assets/images/discovery/vmware/manage-disco-packages.png"></a></p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/vmware/applications-vmware.png" data-desc-position="bottom"><img alt="VMware under Discovery applications" src="../../assets/images/discovery/vmware/applications-vmware.png"></a></p>
+<h2 id="configure-the-discovery-task">Configure the Discovery task<a class="headerlink" href="#configure-the-discovery-task" title="Permanent link">¶</a></h2>
+<p>Create the task from <strong>Management → Discovery → Applications → VMware</strong>. The wizard walks through the generic task definition and three plugin steps: <strong>VMware base</strong>, <strong>VMware agents</strong> and <strong>VMware detailed</strong>. Every field is documented in <a href="#task-parameters">Task parameters</a>.</p>
+<h3 id="step-1-task-definition">Step 1 — Task definition<a class="headerlink" href="#step-1-task-definition" title="Permanent link">¶</a></h3>
+<p>The generic step asks for the task <strong>name</strong>, the <strong>agent group</strong> and <strong>server</strong> on which the task runs, and the <strong>interval</strong>. The group and the interval are passed to the plugin and inherited by every generated agent.</p>
+<h3 id="step-2-vmware-base">Step 2 — VMware base<a class="headerlink" href="#step-2-vmware-base" title="Permanent link">¶</a></h3>
+<p>Connection details and the Tentacle destination:</p>
+<ul>
+<li><strong>V-Center IP</strong> is the address or hostname of the vCenter server.</li>
+<li><strong>Datacenter name</strong> must match exactly the datacenter name that appears in the VMware manager.</li>
+<li><strong>Datacenter user</strong> and <strong>Password</strong> are the vCenter credentials.</li>
+<li><strong>Encrypt passwords</strong> encrypts the password before it is stored in the task configuration.</li>
+<li><strong>Tentacle IP</strong>, <strong>Tentacle port</strong> and <strong>Tentacle extra options</strong> set how the generated data is sent. Leave the defaults unless your environment needs another Tentacle target.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/vmware/vmware-base.png" data-desc-position="bottom"><img alt="VMware base step" src="../../assets/images/discovery/vmware/vmware-base.png"></a></p>
+<h3 id="step-3-vmware-agents">Step 3 — VMware agents<a class="headerlink" href="#step-3-vmware-agents" title="Permanent link">¶</a></h3>
+<p>Once the connection details are valid, the task queries vCenter and shows the discovered tree: <strong>ESXi</strong>, <strong>Datastores</strong>, <strong>VMs</strong> and <strong>Resource pools</strong>.</p>
+<ul>
+<li><strong>Monitor exclusive agents</strong>, when enabled, restricts the task to the entities selected in the tree instead of the automatic scan. This option takes precedence over the scanning options in the next step.</li>
+<li><strong>Exclusive agents</strong> is the tree where you select the entities to monitor. Select the checkbox next to an entity, a group or the whole category to include it.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/vmware/vmware-agents.png" data-desc-position="bottom"><img alt="VMware agents step" src="../../assets/images/discovery/vmware/vmware-agents.png"></a></p>
+<h3 id="step-4-vmware-detailed">Step 4 — VMware detailed<a class="headerlink" href="#step-4-vmware-detailed" title="Permanent link">¶</a></h3>
+<p>Fine-grained task behaviour:</p>
+<ul>
+<li><strong>Max threads</strong> sets how many entities are monitored concurrently. Raising it reduces execution time and increases CPU usage.</li>
+<li><strong>Autodisabled agents</strong>, when enabled, creates the generated agents in autodisabled mode.</li>
+<li><strong>Enable re-scan interval</strong> and <strong>Re-scan interval</strong> control how often the plugin refreshes the list of entities to look for new ones. The re-scan interval is not the task execution interval.</li>
+<li><strong>Retry send</strong> retries the Tentacle transfer when it fails.</li>
+<li><strong>Event mode</strong> forwards vCenter events to the Pandora FMS event console. It is only available for vCenter and it requires the datacenter agent to exist in Pandora FMS.</li>
+<li><strong>Virtual network monitoring</strong> generates one agent per virtual switch (vSwitch) of each ESXi host, with modules for each port group.</li>
+<li><strong>Scan datastores</strong>, <strong>Scan datacenters</strong>, <strong>Scan ESXs</strong>, <strong>Scan VMs</strong> and <strong>Scan Resource Pools</strong> enable or disable each entity category. They are ignored for entity selection when <strong>Monitor exclusive agents</strong> is enabled.</li>
+<li><strong>Extra settings</strong> is a raw configuration block that is appended to the configuration file the task builds. Use it to set options that the wizard does not expose, for example a <strong>Rename</strong> block. See <a href="#configuration-file">Configuration file</a>.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/vmware/vmware-detailed.png" data-desc-position="bottom"><img alt="VMware detailed step" src="../../assets/images/discovery/vmware/vmware-detailed.png"></a></p>
+<h2 id="verify-the-first-run">Verify the first run<a class="headerlink" href="#verify-the-first-run" title="Permanent link">¶</a></h2>
+<p>Run the task from <strong>Management → Discovery → Task list</strong> and check the result in this order.</p>
+<ol>
+<li><strong>The task summary</strong> shows the overall progress and a summary with the datacenter name and the number of ESXs, datastores, VMs and resource pools processed.</li>
+<li><strong>The agents.</strong> Expect one agent per enabled entity category that is reachable, plus one vSwitch agent per ESXi host when <strong>Virtual network monitoring</strong> is enabled.</li>
+<li><strong>The modules.</strong> Every generated agent carries its entity modules; a reachable environment populates availability, capacity and performance values.</li>
+<li><strong>The execution information.</strong> A successful run reports no errors; any per-entity failure is recorded there.</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/vmware/task-summary.png" data-desc-position="bottom"><img alt="Task execution summary" src="../../assets/images/discovery/vmware/task-summary.png"></a></p>
+<p>If the task fails before generating anything, the vCenter address, the datacenter name and the credentials are the first things to check.</p>
+<h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
+<h3 id="agents-and-identity">Agents and identity<a class="headerlink" href="#agents-and-identity" title="Permanent link">¶</a></h3>
+<p>The plugin creates one agent per discovered entity. Every generated agent belongs to the task's agent group, inherits its interval, reports <code>VMware</code> as its operating system, and carries custom fields with the vCenter address (<code>vmware_vcenter_ip</code>), the datacenter (<code>vmware_datacenter</code>), the entity type (<code>vmware_type</code>) and, when it has one, its parent agent (<code>vmware_parent</code>).</p>
+<p>Agent names are built from the original entity name plus an optional prefix, and each entity type has its own parent:</p>
+<table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Agent name</th>
+<th>Parent agent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Datacenter</td>
+<td>The datacenter name</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Datastore</td>
+<td>The datastore managed object ID by default; the datastore name when configured to use it</td>
+<td>The datacenter agent</td>
+</tr>
+<tr>
+<td>ESXi host</td>
+<td>The ESXi host name</td>
+<td>The datacenter agent</td>
+</tr>
+<tr>
+<td>Virtual machine</td>
+<td>The virtual machine name</td>
+<td>The ESXi host agent that runs it</td>
+</tr>
+<tr>
+<td>Resource pool</td>
+<td>The resource pool name</td>
+<td>—</td>
+</tr>
+<tr>
+<td>vSwitch (virtual network monitoring)</td>
+<td><code>&lt;ESXi host&gt;_&lt;vSwitch&gt;</code></td>
+<td>The ESXi host agent</td>
+</tr>
+</tbody>
+</table>
+<p>Prefixes per entity type are configured with the <strong>Header</strong> block, and entity names can be rewritten with the <strong>Rename</strong> block; both are described in <a href="#configuration-file">Configuration file</a>. Changing a prefix or a rename later changes the generated agent identity.</p>
+<p>The datacenter agent is the entry point: the plugin looks it up by name when <strong>Event mode</strong> creates events, so keep <strong>Scan datacenters</strong> enabled (or create the datacenter agent by another means) before relying on events.</p>
+<p>When <strong>Enable re-scan interval</strong> is active, the plugin caches the list of discovered entities and refreshes it again only after the configured <strong>Re-scan interval</strong> has elapsed. New entities appear after a re-scan; entities removed from vCenter are not deleted automatically.</p>
+<h3 id="modules-by-agent">Modules by agent<a class="headerlink" href="#modules-by-agent" title="Permanent link">¶</a></h3>
+<p>Each agent receives the modules of its entity type. The module values are read from vCenter during every task run; the exact name and default state of each module are listed in <a href="#generated-modules">Generated modules</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Modules it carries</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Datacenter</td>
+<td>vCenter availability: <code>Ping</code> and <code>Check 443 port</code></td>
+</tr>
+<tr>
+<td>Datastore</td>
+<td>Capacity, free space, overallocation and path status of the datastore</td>
+</tr>
+<tr>
+<td>ESXi host</td>
+<td>Host state, configuration and hardware modules, plus CPU, memory, disk and network performance modules</td>
+</tr>
+<tr>
+<td>Virtual machine</td>
+<td>Power and tools state, configuration, resource allocation, disks, snapshots and performance modules</td>
+</tr>
+<tr>
+<td>Resource pool</td>
+<td>CPU and memory consumption, granted, shared, swapped, balloon and overhead memory</td>
+</tr>
+<tr>
+<td>vSwitch</td>
+<td>Per port group: received/transmitted octets, operational status, overall status and connected VM count</td>
+</tr>
+</tbody>
+</table>
+<h2 id="operate">Operate<a class="headerlink" href="#operate" title="Permanent link">¶</a></h2>
+<h3 id="manual-execution">Manual execution<a class="headerlink" href="#manual-execution" title="Permanent link">¶</a></h3>
+<p>The plugin can also be run outside the Discovery wizard with a configuration file. This is useful for testing connectivity, for a one-off run, or for a custom schedule. Write a configuration file that uses at least the <code>Configuration</code> block with <code>server</code>, <code>datacenter</code>, <code>user</code> and <code>pass</code>, then run the plugin entry point with the file as argument. All blocks and parameters are documented in <a href="#configuration-file">Configuration file</a>.</p>
+<p>The manual run prints a single module, <code>VMware Plugin &lt;datacenter&gt;</code>, of type <code>async_proc</code>: its value is <code>1</code> when the execution finished with no error and <code>0</code> otherwise, and its description contains the execution summary and any errors. When the plugin runs as a Discovery task, the same information becomes the task execution information.</p>
+<h3 id="events-monitoring">Events monitoring<a class="headerlink" href="#events-monitoring" title="Permanent link">¶</a></h3>
+<p>With <strong>Event mode</strong> enabled, the plugin reads the vCenter events that occurred since the previous run and creates them in the Pandora FMS event console. The time window starts at the timestamp stored by the previous run and ends at the current time, so the first run reads only events newer than the configured interval.</p>
+<ul>
+<li>The events are created on the datacenter agent, with <code>VMware</code> as their source.</li>
+<li>The vCenter severity is mapped to the Pandora FMS severity: <code>error</code> events become critical, <code>warning</code> events become warning, and any other event is informational.</li>
+<li>Event correlation is only available when connecting to vCenter; a standalone connection cannot return events.</li>
+<li>Event mode requires the Pandora FMS console API to be reachable and the datacenter agent to exist.</li>
+</ul>
+<p>The password supplied in the task is encrypted with a symmetric algorithm before it is stored in the task configuration. Treat this as obfuscation, not as a substitute for access control: protect the Pandora FMS console, its server and its temporary files according to your security policy.</p>
+<h2 id="troubleshoot">Troubleshoot<a class="headerlink" href="#troubleshoot" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The task reports an error connecting to vCenter</td>
+<td>Confirm <strong>V-Center IP</strong> and that the vCenter server is reachable over the network from the Discovery server.</td>
+</tr>
+<tr>
+<td>The task reports that the datacenter was not found</td>
+<td>The message lists the available datacenters. Correct <strong>Datacenter name</strong> so it matches the vCenter name exactly.</td>
+</tr>
+<tr>
+<td>No agents are generated at all</td>
+<td>Confirm the credentials, that the target datacenter has the entities you expect, and that the relevant <strong>Scan</strong> options are enabled.</td>
+</tr>
+<tr>
+<td>Expected entities are missing</td>
+<td>Review <strong>Monitor exclusive agents</strong> and its tree: when it is enabled, the scanning options are ignored and only the selected entities are monitored. Also confirm the re-scan interval has elapsed.</td>
+</tr>
+<tr>
+<td>Event mode reports that the datacenter agent does not exist</td>
+<td>Enable <strong>Scan datacenters</strong> so the datacenter agent is generated, and confirm the console API is reachable with valid credentials.</td>
+</tr>
+<tr>
+<td>Event mode reports that event correlation is only available in vCenter</td>
+<td>Events cannot be read from a connection that does not expose the vCenter event manager.</td>
+</tr>
+<tr>
+<td>Tentacle transfer fails</td>
+<td>Confirm the Discovery server can reach <strong>Tentacle IP</strong> on <strong>Tentacle port</strong>, and enable <strong>Retry send</strong>.</td>
+</tr>
+<tr>
+<td>The execution takes too long</td>
+<td>Raise <strong>Max threads</strong> to monitor more entities concurrently, keeping in mind the extra CPU usage.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">¶</a></h2>
+<h3 id="task-parameters">Task parameters<a class="headerlink" href="#task-parameters" title="Permanent link">¶</a></h3>
+<p>The console presents these fields after the generic task definition. The macro column is the identifier used in the generated task configuration.</p>
+<h4 id="vmware-base">VMware base<a class="headerlink" href="#vmware-base" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Macro</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V-Center IP</td>
+<td><code>_server_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Address or hostname of the vCenter server. Required</td>
+</tr>
+<tr>
+<td>Datacenter name</td>
+<td><code>_datacenter_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Datacenter to monitor. Must match the vCenter name. Required</td>
+</tr>
+<tr>
+<td>Datacenter user</td>
+<td><code>_user_</code></td>
+<td>string</td>
+<td>—</td>
+<td>vCenter user. Required</td>
+</tr>
+<tr>
+<td>Password</td>
+<td><code>_pass_</code></td>
+<td>password</td>
+<td>—</td>
+<td>vCenter password. Required. Encrypted when <strong>Encrypt passwords</strong> is enabled</td>
+</tr>
+<tr>
+<td>Encrypt passwords</td>
+<td><code>_useEncryptedPassword_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Encrypts the password stored in the task configuration</td>
+</tr>
+<tr>
+<td>Tentacle IP</td>
+<td><code>_tentacleIP_</code></td>
+<td>string</td>
+<td><code>127.0.0.1</code></td>
+<td>Tentacle transfer destination</td>
+</tr>
+<tr>
+<td>Tentacle port</td>
+<td><code>_tentaclePort_</code></td>
+<td>number</td>
+<td><code>41121</code></td>
+<td>Tentacle transfer destination port</td>
+</tr>
+<tr>
+<td>Tentacle extra options</td>
+<td><code>_tentacleExtraOpt_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Extra options passed to the Tentacle client</td>
+</tr>
+</tbody>
+</table>
+<h4 id="vmware-agents">VMware agents<a class="headerlink" href="#vmware-agents" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Macro</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Monitor exclusive agents</td>
+<td><code>_monitorExclusiveAgents_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Monitors only the entities selected in <strong>Exclusive agents</strong> and ignores the scanning options</td>
+</tr>
+<tr>
+<td>Exclusive agents</td>
+<td><code>_exclusiveAgents_</code></td>
+<td>tree</td>
+<td>—</td>
+<td>Selection tree. The chosen entities are stored in <code>_exclusiveESXi_</code>, <code>_exclusiveDatastores_</code>, <code>_exclusiveVMs_</code> and <code>_exclusiveRP_</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="vmware-detailed">VMware detailed<a class="headerlink" href="#vmware-detailed" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Macro</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Max threads</td>
+<td><code>_threads_</code></td>
+<td>number</td>
+<td><code>5</code></td>
+<td>Number of entities monitored concurrently</td>
+</tr>
+<tr>
+<td>Autodisabled agents</td>
+<td><code>_autodisabledAgents_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Creates the generated agents in autodisabled mode</td>
+</tr>
+<tr>
+<td>Enable re-scan interval</td>
+<td><code>_enableReconInterval_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Enables refreshing the entity list</td>
+</tr>
+<tr>
+<td>Re-scan interval</td>
+<td><code>_reconInterval_</code></td>
+<td>select (interval)</td>
+<td><code>5 minutes</code></td>
+<td>How often the entity list is refreshed. Only shown when <strong>Enable re-scan interval</strong> is on</td>
+</tr>
+<tr>
+<td>Retry send</td>
+<td><code>_retrySend_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Retries the Tentacle transfer on failure</td>
+</tr>
+<tr>
+<td>Event mode</td>
+<td><code>_eventMode_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Forwards vCenter events. Only for vCenter</td>
+</tr>
+<tr>
+<td>Virtual network monitoring</td>
+<td><code>_virtualNetworkMonitoring_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Generates an agent per vSwitch</td>
+</tr>
+<tr>
+<td>Scan datastores</td>
+<td><code>_scanDatastore_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Generates an agent per datastore</td>
+</tr>
+<tr>
+<td>Scan datacenters</td>
+<td><code>_scanDatacenter_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Generates the datacenter agent</td>
+</tr>
+<tr>
+<td>Scan ESXs</td>
+<td><code>_scanESX_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Generates an agent per ESXi host</td>
+</tr>
+<tr>
+<td>Scan VMs</td>
+<td><code>_scanVM_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Generates an agent per virtual machine</td>
+</tr>
+<tr>
+<td>Scan Resource Pools</td>
+<td><code>_scanRP_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Generates an agent per resource pool</td>
+</tr>
+<tr>
+<td>Extra settings</td>
+<td><code>_extraSettings_</code></td>
+<td>textarea</td>
+<td>—</td>
+<td>Raw configuration block appended to the generated configuration file</td>
+</tr>
+</tbody>
+</table>
+<p>The task always delivers data through Tentacle with the configured <strong>Tentacle IP</strong> and <strong>Tentacle port</strong>; the wizard does not offer a local transfer mode.</p>
+<h3 id="configuration-file">Configuration file<a class="headerlink" href="#configuration-file" title="Permanent link">¶</a></h3>
+<p>The Discovery task builds a configuration file for the plugin. The same format is used for a manual execution. It is a plain text file of blocks and <code>key value</code> lines; empty lines and lines starting with <code>#</code> are ignored.</p>
+<h4 id="configuration-block">Configuration block<a class="headerlink" href="#configuration-block" title="Permanent link">¶</a></h4>
+<p>These parameters apply to the whole execution and are read from the <code>Configuration</code> block.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>server</code></td>
+<td>—</td>
+<td>vCenter address or hostname. Required</td>
+</tr>
+<tr>
+<td><code>datacenter</code></td>
+<td>—</td>
+<td>Datacenter name. Required</td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td>—</td>
+<td>vCenter user. Required</td>
+</tr>
+<tr>
+<td><code>pass</code></td>
+<td>—</td>
+<td>vCenter password. Required</td>
+</tr>
+<tr>
+<td><code>group</code></td>
+<td><code>1</code></td>
+<td>Agent group for the generated agents</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td><code>1</code></td>
+<td>Agent interval for the generated agents</td>
+</tr>
+<tr>
+<td><code>use_encrypted_password</code></td>
+<td><code>0</code></td>
+<td>Set to <code>1</code> when <code>pass</code> is encrypted</td>
+</tr>
+<tr>
+<td><code>threads</code></td>
+<td><code>4</code></td>
+<td>Number of entities monitored concurrently</td>
+</tr>
+<tr>
+<td><code>autodisabled_agents</code></td>
+<td><code>0</code></td>
+<td>Set to <code>1</code> to create the generated agents in autodisabled mode</td>
+</tr>
+<tr>
+<td><code>enable_recon_interval</code></td>
+<td><code>1</code></td>
+<td>Enables refreshing the entity list</td>
+</tr>
+<tr>
+<td><code>recon_interval</code></td>
+<td><code>1</code></td>
+<td>Seconds before the entity list is refreshed again</td>
+</tr>
+<tr>
+<td><code>scan_datacenter</code></td>
+<td><code>1</code></td>
+<td>Generate the datacenter agent</td>
+</tr>
+<tr>
+<td><code>scan_datastore</code></td>
+<td><code>1</code></td>
+<td>Generate an agent per datastore</td>
+</tr>
+<tr>
+<td><code>scan_esx</code></td>
+<td><code>1</code></td>
+<td>Generate an agent per ESXi host</td>
+</tr>
+<tr>
+<td><code>scan_vm</code></td>
+<td><code>1</code></td>
+<td>Generate an agent per virtual machine</td>
+</tr>
+<tr>
+<td><code>scan_rp</code></td>
+<td><code>0</code></td>
+<td>Generate an agent per resource pool</td>
+</tr>
+<tr>
+<td><code>monitor_exclusive_agents</code></td>
+<td><code>0</code></td>
+<td>Monitor only the entities listed in the exclusive lists</td>
+</tr>
+<tr>
+<td><code>exclusive_esx</code></td>
+<td><code>[]</code></td>
+<td>JSON list of ESXi host names to monitor</td>
+</tr>
+<tr>
+<td><code>exclusive_datastores</code></td>
+<td><code>[]</code></td>
+<td>JSON list of datastore names to monitor</td>
+</tr>
+<tr>
+<td><code>exclusive_vm</code></td>
+<td><code>[]</code></td>
+<td>JSON list of virtual machine names to monitor</td>
+</tr>
+<tr>
+<td><code>exclusive_rp</code></td>
+<td><code>[]</code></td>
+<td>JSON list of resource pool names to monitor</td>
+</tr>
+<tr>
+<td><code>virtual_network_monitoring</code></td>
+<td><code>0</code></td>
+<td>Generate an agent per vSwitch</td>
+</tr>
+<tr>
+<td><code>event_mode</code></td>
+<td><code>0</code></td>
+<td>Forward vCenter events to Pandora FMS</td>
+</tr>
+<tr>
+<td><code>transfer_mode</code></td>
+<td><code>tentacle</code></td>
+<td><code>tentacle</code> sends the data through Tentacle; <code>local</code> writes it to <code>local_folder</code></td>
+</tr>
+<tr>
+<td><code>tentacle_ip</code></td>
+<td><code>127.0.0.1</code></td>
+<td>Tentacle destination address</td>
+</tr>
+<tr>
+<td><code>tentacle_port</code></td>
+<td><code>41121</code></td>
+<td>Tentacle destination port</td>
+</tr>
+<tr>
+<td><code>tentacle_opts</code></td>
+<td>—</td>
+<td>Extra options passed to the Tentacle client</td>
+</tr>
+<tr>
+<td><code>local_folder</code></td>
+<td><code>/var/spool/pandora/data_in</code></td>
+<td>Destination folder when <code>transfer_mode</code> is <code>local</code></td>
+</tr>
+<tr>
+<td><code>temporal</code></td>
+<td><code>/tmp</code></td>
+<td>Working folder for temporary files</td>
+</tr>
+<tr>
+<td><code>logfile</code></td>
+<td><code>/tmp/vmware_plugin.log</code></td>
+<td>Execution log file</td>
+</tr>
+<tr>
+<td><code>entities_list</code></td>
+<td><code>/tmp/vmware_entities_list.txt</code></td>
+<td>Cached entity list</td>
+</tr>
+<tr>
+<td><code>event_pointer_file</code></td>
+<td><code>/tmp/vmware_events_pointer.txt</code></td>
+<td>Timestamp of the last processed event</td>
+</tr>
+<tr>
+<td><code>retry_send</code></td>
+<td><code>0</code></td>
+<td>Retry the Tentacle transfer on failure</td>
+</tr>
+<tr>
+<td><code>pandora_url</code></td>
+<td>—</td>
+<td>Console API URL, required by event mode</td>
+</tr>
+<tr>
+<td><code>api_user</code></td>
+<td><code>admin</code></td>
+<td>Console API user, required by event mode</td>
+</tr>
+<tr>
+<td><code>api_pass</code></td>
+<td><code>1234</code></td>
+<td>Console API password, required by event mode</td>
+</tr>
+<tr>
+<td><code>apiuser_pass</code></td>
+<td><code>pandora</code></td>
+<td>Console API user password, required by event mode</td>
+</tr>
+<tr>
+<td><code>verbosity</code></td>
+<td><code>1</code></td>
+<td>Set to <code>0</code> to suppress informational log messages</td>
+</tr>
+<tr>
+<td><code>use_ds_entity_name</code></td>
+<td><code>0</code></td>
+<td>Set to <code>1</code> to name datastore agents after the datastore name instead of the managed object ID</td>
+</tr>
+<tr>
+<td><code>use_ds_alias_as_name</code></td>
+<td><code>0</code></td>
+<td>Set to <code>1</code> to name datastore agents after the datastore name</td>
+</tr>
+<tr>
+<td><code>flat_datastore_agents</code></td>
+<td><code>0</code></td>
+<td>Set to <code>1</code> to group every datastore of the datacenter into a single agent</td>
+</tr>
+<tr>
+<td><code>discard_empty_adapters</code></td>
+<td><code>0</code></td>
+<td>Set to <code>1</code> to skip ESXi HBA adapters with no targets, devices or paths</td>
+</tr>
+</tbody>
+</table>
+<h4 id="entity-module-blocks">Entity module blocks<a class="headerlink" href="#entity-module-blocks" title="Permanent link">¶</a></h4>
+<p>Module generation is configured per entity type inside the <code>Datacenter</code>, <code>Datastore</code>, <code>ESX</code> and <code>VM</code> blocks. Each line inside one of these blocks starts with a module identifier followed by one of:</p>
+<ul>
+<li><code>enabled</code> or <code>disabled</code> to turn a module on or off.</li>
+<li>One or more <code>option=value</code> pairs separated by <code>;</code>, which set module options and enable the module.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>Module name. Use <code>%s</code> to insert the module index</td>
+</tr>
+<tr>
+<td><code>desc</code></td>
+<td>Module description</td>
+</tr>
+<tr>
+<td><code>limits_warn</code></td>
+<td>Warning limits, either <code>min max</code> or a string value</td>
+</tr>
+<tr>
+<td><code>limits_crit</code></td>
+<td>Critical limits, either <code>min max</code> or a string value</td>
+</tr>
+<tr>
+<td><code>min_warn</code>, <code>max_warn</code>, <code>str_warning</code></td>
+<td>Warning thresholds</td>
+</tr>
+<tr>
+<td><code>min_crit</code>, <code>max_crit</code>, <code>str_critical</code></td>
+<td>Critical thresholds</td>
+</tr>
+<tr>
+<td><code>min_warn_forced</code>, <code>max_warn_forced</code>, <code>str_warning_forced</code></td>
+<td>Forced warning thresholds</td>
+</tr>
+<tr>
+<td><code>min_crit_forced</code>, <code>max_crit_forced</code>, <code>str_critical_forced</code></td>
+<td>Forced critical thresholds</td>
+</tr>
+<tr>
+<td><code>critical_inverse</code>, <code>warning_inverse</code></td>
+<td>Inverse the threshold direction</td>
+</tr>
+<tr>
+<td><code>min</code>, <code>max</code></td>
+<td>Allowed module range</td>
+</tr>
+</tbody>
+</table>
+<p>The available module identifiers and their default state per entity are listed in <a href="#generated-modules">Generated modules</a>.</p>
+<h4 id="rename-reject-and-header-blocks">Rename, Reject and Header blocks<a class="headerlink" href="#rename-reject-and-header-blocks" title="Permanent link">¶</a></h4>
+<ul>
+<li><strong>Rename</strong> rewrites entity names before they become agent names. Each line is <code>&lt;current name&gt; TO &lt;new name&gt;</code>.</li>
+<li><strong>Reject</strong> excludes named entities from the scan. Each line is an entity name. The special entry <code>all_ipaddresses</code> toggles whether the datacenter agent is created without an explicit address (default) or bound to the vCenter address.</li>
+<li><strong>Header</strong> adds a prefix to the generated agent names. Valid entries are <code>dc &lt;prefix&gt;</code>, <code>ds &lt;prefix&gt;</code>, <code>esx &lt;prefix&gt;</code>, <code>vm &lt;prefix&gt;</code> and <code>rp &lt;prefix&gt;</code>.</li>
+</ul>
+<h4 id="custom-performance-counters">Custom performance counters<a class="headerlink" href="#custom-performance-counters" title="Permanent link">¶</a></h4>
+<p>Custom performance modules can be added per entity type with a line that starts with <code>custom_performance</code>:</p>
+<div class="highlight"><pre><span></span><code>custom_performance type=&lt;cpu|mem|disk|net|sys&gt;;metric=&lt;counter&gt;;name=&lt;name&gt;;desc=&lt;description&gt;;limits_warn=&lt;min max&gt;;limits_crit=&lt;min max&gt;
+</code></pre></div>
+<p>The <code>type</code> and <code>metric</code> values identify the vCenter performance counter to read; the remaining options match the module options above.</p>
+<h3 id="generated-modules">Generated modules<a class="headerlink" href="#generated-modules" title="Permanent link">¶</a></h3>
+<p>The following tables list the modules the plugin generates per entity. <strong>Default</strong> is the state in which the module is generated when the task does not configure it explicitly.</p>
+<h4 id="datacenter">Datacenter<a class="headerlink" href="#datacenter" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Module key</th>
+<th>Module name</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping</code></td>
+<td><code>Ping</code></td>
+<td>generic_proc</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>check443</code></td>
+<td><code>Check 443 port</code></td>
+<td>generic_proc</td>
+<td>on</td>
+</tr>
+</tbody>
+</table>
+<h4 id="datastores">Datastores<a class="headerlink" href="#datastores" title="Permanent link">¶</a></h4>
+<p>In the module names, <code>&lt;id&gt;</code> is the datastore managed object ID by default, or the datastore name when the datastore naming options are set.</p>
+<table>
+<thead>
+<tr>
+<th>Module key</th>
+<th>Module name</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>capacity</code></td>
+<td><code>CAPACITY - &lt;id&gt;</code></td>
+<td>generic_data</td>
+<td>B</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>freeSpace</code></td>
+<td><code>Free Space - &lt;id&gt;</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>freeSpaceBytes</code></td>
+<td><code>Free Space Bytes - &lt;id&gt;</code></td>
+<td>generic_data</td>
+<td>B</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>overallocation</code></td>
+<td><code>Disk Overallocation - &lt;id&gt;</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>dsPathStatus</code></td>
+<td><code>ESX-DS Paths Status - &lt;id&gt;</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>on</td>
+</tr>
+</tbody>
+</table>
+<h4 id="esxi-hosts">ESXi hosts<a class="headerlink" href="#esxi-hosts" title="Permanent link">¶</a></h4>
+<p>These modules are always generated for a connected, powered-on ESXi host:</p>
+<table>
+<thead>
+<tr>
+<th>Module name</th>
+<th>Type</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Overall CPU Usage</code></td>
+<td>generic_data</td>
+<td>MHz</td>
+</tr>
+<tr>
+<td><code>Host Alive</code></td>
+<td>generic_proc</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>Connection State</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>Uptime</code></td>
+<td>generic_data</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>Overall Memory Usage</code></td>
+<td>generic_data</td>
+<td>KB</td>
+</tr>
+<tr>
+<td><code>Boot Time</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>SSL Thumbprint</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>Power State</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>Memory Size</code></td>
+<td>generic_data</td>
+<td>B</td>
+</tr>
+</tbody>
+</table>
+<p>These modules are configurable with a module key:</p>
+<table>
+<thead>
+<tr>
+<th>Module key</th>
+<th>Module name</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cpuUsagePercent</code></td>
+<td><code>CPU Usage</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>memoryUsagePercent</code></td>
+<td><code>Memory Usage</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>netReceived</code></td>
+<td><code>Data received</code></td>
+<td>generic_data</td>
+<td>KBps</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>netTransmitted</code></td>
+<td><code>Data transmitted</code></td>
+<td>generic_data</td>
+<td>KBps</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>netUsage</code></td>
+<td><code>Net Usage</code></td>
+<td>generic_data</td>
+<td>KBps</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>kernelReadLatency</code></td>
+<td><code>Disk Read Latency</code></td>
+<td>generic_data</td>
+<td>ms</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>kernelWriteLatency</code></td>
+<td><code>Disk Write Latency</code></td>
+<td>generic_data</td>
+<td>ms</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>diskRate</code></td>
+<td><code>Disk Rate</code></td>
+<td>generic_data</td>
+<td>KBps</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>haStatus</code></td>
+<td><code>HA Status</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>pathStatus</code></td>
+<td><code>&lt;path name&gt;</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>systemHealthInfoMetrics</code></td>
+<td><code>Sensor &lt;type&gt; &lt;name&gt;.metric</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>cpuInfo</code></td>
+<td><code>CPU Info [&lt;i&gt;]</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>pciDevice</code></td>
+<td><code>Physical Disk &lt;device&gt;</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>hbaDevice</code></td>
+<td><code>HBA &lt;device&gt;</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>pnicInfo</code></td>
+<td><code>PNIC Info &lt;device&gt;</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>vnicInfo</code></td>
+<td><code>VNIC Info [&lt;i&gt;]</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>systemHealthInfo</code></td>
+<td><code>Sensor &lt;type&gt; &lt;name&gt;</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>disksState</code></td>
+<td><code>Disk State &lt;device&gt;</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>diskRead</code></td>
+<td><code>Disk Read</code></td>
+<td>generic_data</td>
+<td>KBps</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>diskWrite</code></td>
+<td><code>KBps disk write</code></td>
+<td>generic_data</td>
+<td>KBps</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>deviceReadLatency</code></td>
+<td><code>Device Read Latency</code></td>
+<td>generic_data</td>
+<td>ms</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>deviceWriteLatency</code></td>
+<td><code>Device Write Latency</code></td>
+<td>generic_data</td>
+<td>ms</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>netPkgRx</code></td>
+<td><code>Packages Received</code></td>
+<td>generic_data</td>
+<td>Packets</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>netPkgTx</code></td>
+<td><code>Packages Transmitted</code></td>
+<td>generic_data</td>
+<td>Packets</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>maxDiskLatency</code></td>
+<td><code>Max Disk Latency</code></td>
+<td>generic_data</td>
+<td>ms</td>
+<td>off</td>
+</tr>
+</tbody>
+</table>
+<h4 id="virtual-machines">Virtual machines<a class="headerlink" href="#virtual-machines" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Module key</th>
+<th>Module name</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hostAlive</code></td>
+<td><code>Host Alive</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>cpuUsagePercent</code></td>
+<td><code>CPU Usage</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>memoryUsagePercent</code></td>
+<td><code>Memory Usage</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>toolsRunningStatus</code></td>
+<td><code>Tools Running Status</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>diskUsed</code></td>
+<td><code>vDiskUsed &lt;path&gt;</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>provisioningUsed</code></td>
+<td><code>ProvisioningUsed</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>totalReadLatency</code></td>
+<td><code>Disk Read Latency</code></td>
+<td>generic_data</td>
+<td>ms</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>totalWriteLatency</code></td>
+<td><code>Disk Write Latency</code></td>
+<td>generic_data</td>
+<td>ms</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>netReceived</code></td>
+<td><code>Data received</code></td>
+<td>generic_data</td>
+<td>KBps</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>netTransmitted</code></td>
+<td><code>Data transmitted</code></td>
+<td>generic_data</td>
+<td>KBps</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>netUsage</code></td>
+<td><code>Net Usage</code></td>
+<td>generic_data</td>
+<td>KBps</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>haStatus</code></td>
+<td><code>HA Status</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>virtualImagePath</code></td>
+<td><code>Virtual Image Path</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>host</code></td>
+<td><code>Host Info</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>connectionState</code></td>
+<td><code>Connection State</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>guestState</code></td>
+<td><code>Guest State</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>guestOS</code></td>
+<td><code>Guest OS</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>hostName</code></td>
+<td><code>Host Name</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>powerState</code></td>
+<td><code>Power State</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>bootTime</code></td>
+<td><code>Boot Time</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>vcpuAllocation</code></td>
+<td><code>CPU Allocation - vCPU</code></td>
+<td>generic_data</td>
+<td>CPUs</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>cpuAllocation</code></td>
+<td><code>CPU Allocation</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>consumedOverheadMemory</code></td>
+<td><code>Consumed Overhead Memory</code></td>
+<td>generic_data</td>
+<td>KB</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>hostMemoryUsage</code></td>
+<td><code>Host Memory Usage</code></td>
+<td>generic_data</td>
+<td>KB</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>maxCpuUsage</code></td>
+<td><code>Max CPU Usage</code></td>
+<td>generic_data</td>
+<td>MHz</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>maxMemoryUsage</code></td>
+<td><code>Max Memory Usage</code></td>
+<td>generic_data</td>
+<td>KB</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>memoryMBAllocation</code></td>
+<td><code>Memory Allocation - MB</code></td>
+<td>generic_data</td>
+<td>MB</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>memoryAllocation</code></td>
+<td><code>Memory Allocation</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>uptimeSeconds</code></td>
+<td><code>Memory Seconds</code></td>
+<td>generic_data</td>
+<td>s</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>memoryOverhead</code></td>
+<td><code>Memory Overhead</code></td>
+<td>generic_data</td>
+<td>KB</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>overallCpuDemand</code></td>
+<td><code>Overall CPU Demand</code></td>
+<td>generic_data</td>
+<td>MHz</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>overallCpuUsage</code></td>
+<td><code>Overall CPU Usage</code></td>
+<td>generic_data</td>
+<td>MHz</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>privateMemory</code></td>
+<td><code>Private Memory</code></td>
+<td>generic_data</td>
+<td>KB</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>sharedMemory</code></td>
+<td><code>Shared Memory</code></td>
+<td>generic_data</td>
+<td>KB</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>macAddress</code></td>
+<td><code>MAC Address Net [&lt;i&gt;]</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>ipAddress</code></td>
+<td><code>IP Address [&lt;i&gt;]</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>snapshotCounter</code></td>
+<td><code>Number Snapshots</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>snapshotDate</code></td>
+<td><code>Snapshot Date &lt;name&gt;</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>triggeredAlarmState</code></td>
+<td><code>Trigger Alarm State</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>diskRead</code></td>
+<td><code>Disk Read</code></td>
+<td>generic_data</td>
+<td>KBps</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>diskWrite</code></td>
+<td><code>Disk Write</code></td>
+<td>generic_data</td>
+<td>KBps</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>netPkgRx</code></td>
+<td><code>Packages Received</code></td>
+<td>generic_data</td>
+<td>Packets</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>netPkgTx</code></td>
+<td><code>Packages Transmitted</code></td>
+<td>generic_data</td>
+<td>Packets</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>diskRate</code></td>
+<td><code>Disk Rate</code></td>
+<td>generic_data</td>
+<td>KBps</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>maxDiskLatency</code></td>
+<td><code>Max Disk Latency</code></td>
+<td>generic_data</td>
+<td>ms</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>heartbeat</code></td>
+<td><code>HeartBeat</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>off</td>
+</tr>
+<tr>
+<td><code>cpuReady</code></td>
+<td><code>CPU Ready</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>off</td>
+</tr>
+</tbody>
+</table>
+<h4 id="resource-pools">Resource pools<a class="headerlink" href="#resource-pools" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Module key</th>
+<th>Module name</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cpuUsageMhz</code></td>
+<td><code>CPU usage MHz</code></td>
+<td>generic_data</td>
+<td>MHz</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>memActive</code></td>
+<td><code>Active memory</code></td>
+<td>generic_data</td>
+<td>KB</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>memGranted</code></td>
+<td><code>Granted memory</code></td>
+<td>generic_data</td>
+<td>KB</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>memShared</code></td>
+<td><code>Shared memory</code></td>
+<td>generic_data</td>
+<td>KB</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>memSwapped</code></td>
+<td><code>Swapped memory</code></td>
+<td>generic_data</td>
+<td>KB</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>memVmmemctl</code></td>
+<td><code>Balloon memory</code></td>
+<td>generic_data</td>
+<td>KB</td>
+<td>on</td>
+</tr>
+<tr>
+<td><code>memOverhead</code></td>
+<td><code>Overhead memory</code></td>
+<td>generic_data</td>
+<td>KB</td>
+<td>on</td>
+</tr>
+</tbody>
+</table>
+<h4 id="virtual-switches">Virtual switches<a class="headerlink" href="#virtual-switches" title="Permanent link">¶</a></h4>
+<p>When <strong>Virtual network monitoring</strong> is enabled, the plugin creates one agent per vSwitch. For every port group of the vSwitch it generates:</p>
+<table>
+<thead>
+<tr>
+<th>Module name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;port group&gt;_ifInOctects</code></td>
+<td>generic_data</td>
+<td>Received octets</td>
+</tr>
+<tr>
+<td><code>&lt;port group&gt;_ifOutOctects</code></td>
+<td>generic_data</td>
+<td>Transmitted octets</td>
+</tr>
+<tr>
+<td><code>&lt;port group&gt;_ifOperStatus</code></td>
+<td>generic_proc</td>
+<td>Port group accessibility</td>
+</tr>
+<tr>
+<td><code>&lt;port group&gt;_overallStatus</code></td>
+<td>generic_proc</td>
+<td>Port group overall status</td>
+</tr>
+<tr>
+<td><code>&lt;port group&gt;_connectedVMs</code></td>
+<td>generic_data</td>
+<td>Number of active ports</td>
+</tr>
+</tbody>
+</table>
+<h3 id="command-line">Command line<a class="headerlink" href="#command-line" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pandora_vmware &lt;configuration file&gt;</code></td>
+<td>Runs the plugin with a configuration file</td>
+</tr>
+<tr>
+<td><code>pass_encrypter --Encrypt '&lt;password&gt;'</code></td>
+<td>Encrypts a password for <code>use_encrypted_password</code></td>
+</tr>
+<tr>
+<td><code>pass_encrypter --Decrypt '&lt;encrypted password&gt;'</code></td>
+<td>Decrypts a password produced by the plugin</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
