@@ -105,7 +105,7 @@ Insecure: false
 Config:   /home/user/.pandora-cli/config.json
 Token:    valid
 
-Console specification: 273 operations, 45 entities (read 2026-09-17T08:01:42Z)
+Console specification: 279 operations, 46 entities (read 2026-09-17T15:30:49Z)
 ```
 
 `Token: valid` means the console accepted it. The command exits non-zero if it did not. With `-o json`
@@ -433,6 +433,7 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `event` | Monitoring events | `list`, `get`, `create`, `update`, `delete` + 12 more |
 | `event-alert` | Event alerts | `list`, `get`, `create`, `update`, `delete` |
 | `event-alert-action` | Actions of an event alert | `list`, `get`, `create`, `update`, `delete` |
+| `event-alert-rule` | Rules that trigger an event alert | `list`, `get`, `create`, `update`, `delete` |
 | `event-filter` | Saved event filters | `list`, `get`, `create`, `update`, `delete` |
 | `event-tag` | Event tags | `list`, `get`, `create`, `update`, `delete` |
 | `group` | Agent groups | `list`, `get`, `create`, `update`, `delete` |

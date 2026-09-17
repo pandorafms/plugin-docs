@@ -108,7 +108,7 @@ Insecure: false
 Config:   /home/usuario/.pandora-cli/config.json
 Token:    valid
 
-Console specification: 273 operations, 45 entities (read 2026-09-17T08:01:42Z)
+Console specification: 279 operations, 46 entities (read 2026-09-17T15:30:49Z)
 ```
 
 `Token: valid` indica que la consola lo aceptó. El comando termina con un código distinto de cero si
@@ -448,6 +448,7 @@ instalada.
 | `event` | Eventos de monitorización | `list`, `get`, `create`, `update`, `delete` + 12 más |
 | `event-alert` | Alertas de evento | `list`, `get`, `create`, `update`, `delete` |
 | `event-alert-action` | Acciones de una alerta de evento | `list`, `get`, `create`, `update`, `delete` |
+| `event-alert-rule` | Reglas que disparan una alerta de evento | `list`, `get`, `create`, `update`, `delete` |
 | `event-filter` | Filtros de eventos guardados | `list`, `get`, `create`, `update`, `delete` |
 | `event-tag` | Etiquetas de eventos | `list`, `get`, `create`, `update`, `delete` |
 | `group` | Grupos de agentes | `list`, `get`, `create`, `update`, `delete` |
