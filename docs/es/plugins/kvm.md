@@ -23,9 +23,9 @@ El plugin se ha probado en CentOS, Ubuntu 24.04 y Rocky Linux 9, y se espera que
 
 ### Instalar el plugin
 
-El plugin se distribuye como el script `pandora_kvm.pl` y su archivo de configuración `pandora_kvm.conf`. Hay dos formas de desplegarlo:
+El plugin se distribuye como el script `pandora_kvm` y su archivo de configuración `pandora_kvm.conf`. Hay dos formas de desplegarlo:
 
-- **Subida manual** — suba `pandora_kvm.pl` y `pandora_kvm.conf` al endpoint que ejecutará el plugin.
+- **Subida manual** — suba `pandora_kvm` y `pandora_kvm.conf` al endpoint que ejecutará el plugin.
 - **Colecciones** — despliegue ambos archivos en los endpoints mediante Enterprise collections.
 
 ## Configuración
@@ -48,7 +48,7 @@ El acceso a los hosts monitorizados debe realizarse sin intervención del usuari
 Ejecute el plugin manualmente desde el directorio que lo contiene:
 
 ```bash
-./pandora_kvm.pl pandora_kvm.conf
+./pandora_kvm pandora_kvm.conf
 ```
 
 Una ejecución correcta imprime un bloque XML `<module>` por cada módulo generado en la salida estándar. La siguiente muestra corresponde a una ejecución en modo local — prefijo `(local)` — en un entorno KVM con dos VM, `ubuntu22.04` en ejecución y `crc` apagada:
@@ -141,7 +141,7 @@ Los nombres de los módulos empiezan con el nombre del nodo entre paréntesis: `
 
 - **Un nodo no genera módulos de VM ni de recursos** — el plugin comprueba primero si libvirtd está en ejecución (`ps aux | grep libvirtd | grep -v grep`) y, cuando no encuentra ningún proceso, emite únicamente `(<node>) KVM Server status` con valor `0` y omite el resto del nodo. Compruebe que libvirtd está en ejecución y que el usuario que ejecuta el plugin puede ver el proceso.
 - **Un host KVM remoto no se monitoriza** — el plugin accede a cada entrada remota mediante SSH y la conexión no debe requerir intervención del usuario. Copie la clave pública SSH del equipo que ejecuta el plugin a todos los servidores de destino y asegúrese de que cada entrada usa la forma `user@server`.
-- **El plugin imprime su texto de uso y no genera XML de módulos** — el archivo de configuración indicado como argumento no existe o se ha indicado más de un argumento. Compruebe la ruta y ejecute el plugin con un único archivo existente, por ejemplo `./pandora_kvm.pl pandora_kvm.conf`.
+- **El plugin imprime su texto de uso y no genera XML de módulos** — el archivo de configuración indicado como argumento no existe o se ha indicado más de un argumento. Compruebe la ruta y ejecute el plugin con un único archivo existente, por ejemplo `./pandora_kvm pandora_kvm.conf`.
 - **Un nodo con libvirtd en ejecución sigue sin informar de VM** — el plugin obtiene la lista de VM con `virsh list --all` y, cuando ese comando no devuelve ninguna lista, recurre a `/usr/bin/virsh -r -c qemu:///system`, en modo de solo lectura. Compruebe que `virsh` está instalado y que el usuario que ejecuta el plugin puede ejecutarlo y conectarse a la instancia de libvirtd (el paquete requiere libvirt, `libvirt-bin` o `libvirt`).
 
 ## Referencia
@@ -162,7 +162,7 @@ El archivo incluido en el paquete contiene una única entrada, `root@localhost`,
 El plugin recibe su archivo de configuración como argumento de línea de comandos:
 
 ```bash
-./pandora_kvm.pl <config-file>
+./pandora_kvm <config-file>
 ```
 
 | Condición | Comportamiento |
