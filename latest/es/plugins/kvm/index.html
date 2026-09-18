@@ -1626,9 +1626,9 @@
 <li><strong>El comando <code>unzip</code></strong>, necesario únicamente cuando el plugin se despliega mediante colecciones.</li>
 </ol>
 <h3 id="instalar-el-plugin">Instalar el plugin<a class="headerlink" href="#instalar-el-plugin" title="Permanent link">¶</a></h3>
-<p>El plugin se distribuye como el script <code>pandora_kvm.pl</code> y su archivo de configuración <code>pandora_kvm.conf</code>. Hay dos formas de desplegarlo:</p>
+<p>El plugin se distribuye como el script <code>pandora_kvm</code> y su archivo de configuración <code>pandora_kvm.conf</code>. Hay dos formas de desplegarlo:</p>
 <ul>
-<li><strong>Subida manual</strong> — suba <code>pandora_kvm.pl</code> y <code>pandora_kvm.conf</code> al endpoint que ejecutará el plugin.</li>
+<li><strong>Subida manual</strong> — suba <code>pandora_kvm</code> y <code>pandora_kvm.conf</code> al endpoint que ejecutará el plugin.</li>
 <li><strong>Colecciones</strong> — despliegue ambos archivos en los endpoints mediante Enterprise collections.</li>
 </ul>
 <h2 id="configuracion">Configuración<a class="headerlink" href="#configuracion" title="Permanent link">¶</a></h2>
@@ -1644,7 +1644,7 @@
 <p>El acceso a los hosts monitorizados debe realizarse sin intervención del usuario. Cuando una entrada apunta a un servidor remoto, copie la clave pública SSH del equipo que ejecuta el plugin a los servidores de destino.</p>
 <h2 id="verificacion">Verificación<a class="headerlink" href="#verificacion" title="Permanent link">¶</a></h2>
 <p>Ejecute el plugin manualmente desde el directorio que lo contiene:</p>
-<div class="highlight"><pre><span></span><code>./pandora_kvm.pl<span class="w"> </span>pandora_kvm.conf
+<div class="highlight"><pre><span></span><code>./pandora_kvm<span class="w"> </span>pandora_kvm.conf
 </code></pre></div>
 <p>Una ejecución correcta imprime un bloque XML <code>&lt;module&gt;</code> por cada módulo generado en la salida estándar. La siguiente muestra corresponde a una ejecución en modo local — prefijo <code>(local)</code> — en un entorno KVM con dos VM, <code>ubuntu22.04</code> en ejecución y <code>crc</code> apagada:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;module&gt;</span>
@@ -1728,7 +1728,7 @@
 <ul>
 <li><strong>Un nodo no genera módulos de VM ni de recursos</strong> — el plugin comprueba primero si libvirtd está en ejecución (<code>ps aux | grep libvirtd | grep -v grep</code>) y, cuando no encuentra ningún proceso, emite únicamente <code>(&lt;node&gt;) KVM Server status</code> con valor <code>0</code> y omite el resto del nodo. Compruebe que libvirtd está en ejecución y que el usuario que ejecuta el plugin puede ver el proceso.</li>
 <li><strong>Un host KVM remoto no se monitoriza</strong> — el plugin accede a cada entrada remota mediante SSH y la conexión no debe requerir intervención del usuario. Copie la clave pública SSH del equipo que ejecuta el plugin a todos los servidores de destino y asegúrese de que cada entrada usa la forma <code>user@server</code>.</li>
-<li><strong>El plugin imprime su texto de uso y no genera XML de módulos</strong> — el archivo de configuración indicado como argumento no existe o se ha indicado más de un argumento. Compruebe la ruta y ejecute el plugin con un único archivo existente, por ejemplo <code>./pandora_kvm.pl pandora_kvm.conf</code>.</li>
+<li><strong>El plugin imprime su texto de uso y no genera XML de módulos</strong> — el archivo de configuración indicado como argumento no existe o se ha indicado más de un argumento. Compruebe la ruta y ejecute el plugin con un único archivo existente, por ejemplo <code>./pandora_kvm pandora_kvm.conf</code>.</li>
 <li><strong>Un nodo con libvirtd en ejecución sigue sin informar de VM</strong> — el plugin obtiene la lista de VM con <code>virsh list --all</code> y, cuando ese comando no devuelve ninguna lista, recurre a <code>/usr/bin/virsh -r -c qemu:///system</code>, en modo de solo lectura. Compruebe que <code>virsh</code> está instalado y que el usuario que ejecuta el plugin puede ejecutarlo y conectarse a la instancia de libvirtd (el paquete requiere libvirt, <code>libvirt-bin</code> o <code>libvirt</code>).</li>
 </ul>
 <h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
@@ -1758,7 +1758,7 @@
 <p>El archivo incluido en el paquete contiene una única entrada, <code>root@localhost</code>, que monitoriza la instancia de libvirtd que se ejecuta en el propio host. Para monitorizar servidores remotos, añada una entrada <code>user@server</code> por servidor, como se describe en <a href="#configuracion">Configuración</a>.</p>
 <h3 id="ejecucion-por-linea-de-comandos">Ejecución por línea de comandos<a class="headerlink" href="#ejecucion-por-linea-de-comandos" title="Permanent link">¶</a></h3>
 <p>El plugin recibe su archivo de configuración como argumento de línea de comandos:</p>
-<div class="highlight"><pre><span></span><code>./pandora_kvm.pl<span class="w"> </span>&lt;config-file&gt;
+<div class="highlight"><pre><span></span><code>./pandora_kvm<span class="w"> </span>&lt;config-file&gt;
 </code></pre></div>
 <table>
 <thead>
