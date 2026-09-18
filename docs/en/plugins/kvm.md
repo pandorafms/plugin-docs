@@ -23,9 +23,9 @@ The plugin has been tested on CentOS, Ubuntu 24.04 and Rocky Linux 9, and it is 
 
 ### Install the plugin
 
-The plugin is distributed as the `pandora_kvm.pl` script and its `pandora_kvm.conf` configuration file. Two deployment paths are available:
+The plugin is distributed as the `pandora_kvm` script and its `pandora_kvm.conf` configuration file. Two deployment paths are available:
 
-- **Manual upload** — upload `pandora_kvm.pl` and `pandora_kvm.conf` to the endpoint that will run the plugin.
+- **Manual upload** — upload `pandora_kvm` and `pandora_kvm.conf` to the endpoint that will run the plugin.
 - **Collections** — deploy both files to the endpoints through Enterprise collections.
 
 ## Configure
@@ -48,7 +48,7 @@ Access to the monitored hosts must be unattended. When an entry points to a remo
 Run the plugin manually from the directory that contains it:
 
 ```bash
-./pandora_kvm.pl pandora_kvm.conf
+./pandora_kvm pandora_kvm.conf
 ```
 
 A successful run prints one XML `<module>` block per generated module on standard output. The sample below shows the output of an execution in local mode — `(local)` prefix — for a KVM environment with two VMs, `ubuntu22.04` running and `crc` shut:
@@ -141,7 +141,7 @@ Module names start with the node name between parentheses: `(local)` when the pl
 
 - **A node produces no VM or resource modules** — the plugin first checks whether libvirtd is running (`ps aux | grep libvirtd | grep -v grep`) and, when it finds no process, it emits only `(<node>) KVM Server status` with value `0` and skips the rest of the node. Check that libvirtd is running and that the user executing the plugin may see the process.
 - **A remote KVM host is not monitored** — the plugin reaches each remote entry over SSH, and the connection must not require user intervention. Copy the SSH public key of the host that runs the plugin to every target server, and make sure each entry uses the `user@server` form.
-- **The plugin prints its usage text and no module XML** — the configuration file passed as its argument does not exist, or more than one argument was given. Check the path and run the plugin with a single existing file, for example `./pandora_kvm.pl pandora_kvm.conf`.
+- **The plugin prints its usage text and no module XML** — the configuration file passed as its argument does not exist, or more than one argument was given. Check the path and run the plugin with a single existing file, for example `./pandora_kvm pandora_kvm.conf`.
 - **A node with libvirtd running still reports no VMs** — the plugin lists the VMs with `virsh list --all` and falls back to the read-only `/usr/bin/virsh -r -c qemu:///system` when that command returns no list. Check that `virsh` is installed and that the user executing the plugin can run it and connect to the libvirtd instance (the package requires libvirt, `libvirt-bin` or `libvirt`).
 
 ## Reference
@@ -162,7 +162,7 @@ The file shipped with the plugin contains the single entry `root@localhost`, whi
 The plugin receives its configuration file as a command-line argument:
 
 ```bash
-./pandora_kvm.pl <config-file>
+./pandora_kvm <config-file>
 ```
 
 | Condition | Behavior |
