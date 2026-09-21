@@ -2,7 +2,7 @@
 
 ## Introduction
 
-**Ver**. 17-09-2026
+**Ver**. 21-09-2026
 
 `pandora-cli` is a command-line client for the Pandora FMS **API v2**. It lets you read and change
 console data from a terminal or a script, without going through the web interface.
@@ -105,7 +105,7 @@ Insecure: false
 Config:   /home/user/.pandora-cli/config.json
 Token:    valid
 
-Console specification: 279 operations, 46 entities (read 2026-09-17T15:30:49Z)
+Console specification: 280 operations, 46 entities (read 2026-09-21T09:37:31Z)
 ```
 
 `Token: valid` means the console accepted it. The command exits non-zero if it did not. With `-o json`
@@ -203,6 +203,16 @@ does not implement `fieldConditions`, `requestedFields` or `multipleSearchString
 rejection therefore always comes back from the console, explained the same way described in
 [Filtering features by entity](#filtering-features-by-entity).
 
+`event list`'s `dateRange` filter takes a JSON string, not a `"<start> - <end>"` string:
+
+```bash
+pandora-cli event list --filter 'dateRange={"preset":{"value":"last_24_hours"}}'
+pandora-cli event list --filter 'dateRange={"start":{"mode":"relative","value":1,"unit":"hours"},"end":{"mode":"now"}}'
+```
+
+The older `"<start> - <end>"` string now fails with `400 Invalid date range format. Must be valid
+JSON`.
+
 Values are converted to their JSON type: `true` and `false` become booleans, digits become numbers,
 `null` becomes null. Quote to force a string:
 
@@ -247,7 +257,13 @@ needs a real group — `idGroup=0` is rejected with `400 Agent group is missing`
 the agent's `name` itself regardless of the payload, so use `alias` for the label you actually
 control; `module create` needs `idModule` (the module's server type) together with `idModuleType`,
 not only the columns listed under `--where`/`--fields`/`--in`; and a non-admin user created with
-`user create` needs at least one profile assigned with `user profile add` before it can log in.
+`user create` needs at least one profile assigned with `user profile add` before it can log in; an
+`event-alert-rule` created with `event-alert-rule create` needs the alert's first ordered rule to
+have `operation=NOP` — the console rejects any other operation on that first rule.
+`module force-check` requests an immediate check of an agent module; the check itself completes out
+of band, so a successful call returns `202` with no body. The console rejects it with `400` for
+module types that do not support an immediate check, such as data-push modules. The optional
+`--serverId` flag targets a federated node's module from a metaconsole.
 
 ### Pushing monitoring data
 
@@ -437,7 +453,7 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `event-filter` | Saved event filters | `list`, `get`, `create`, `update`, `delete` |
 | `event-tag` | Event tags | `list`, `get`, `create`, `update`, `delete` |
 | `group` | Agent groups | `list`, `get`, `create`, `update`, `delete` |
-| `module` (alias `agent-module`) | Agent modules | `list`, `get`, `create`, `update`, `delete` |
+| `module` (alias `agent-module`) | Agent modules | `list`, `get`, `create`, `update`, `delete` + 1 more |
 | `module-alert` | Alerts assigned to an agent module | `list`, `get`, `create`, `update`, `delete` |
 | `module-alert-action` | Actions fired by an agent module alert | `list`, `get`, `create`, `update`, `delete` |
 | `module-data` | Historical data of an agent module | `list`, `get` + 1 more |

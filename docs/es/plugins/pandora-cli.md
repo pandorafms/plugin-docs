@@ -2,7 +2,7 @@
 
 ## Introducción
 
-**Ver**. 17-09-2026
+**Ver**. 21-09-2026
 
 `pandora-cli` es un cliente de línea de comandos para la **API v2** de Pandora FMS. Permite consultar
 y modificar los datos de la consola desde un terminal o un script, sin pasar por la interfaz web.
@@ -108,7 +108,7 @@ Insecure: false
 Config:   /home/usuario/.pandora-cli/config.json
 Token:    valid
 
-Console specification: 279 operations, 46 entities (read 2026-09-17T15:30:49Z)
+Console specification: 280 operations, 46 entities (read 2026-09-21T09:37:31Z)
 ```
 
 `Token: valid` indica que la consola lo aceptó. El comando termina con un código distinto de cero si
@@ -209,6 +209,16 @@ eventos de la consola no implementa `fieldConditions`, `requestedFields` ni `mul
 para ningún campo. El rechazo, por tanto, llega siempre desde la consola, explicado de la misma
 forma descrita en [Funciones de filtrado por entidad](#funciones-de-filtrado-por-entidad).
 
+El filtro `dateRange` de `event list` recibe una cadena JSON, no una cadena `"<inicio> - <fin>"`:
+
+```bash
+pandora-cli event list --filter 'dateRange={"preset":{"value":"last_24_hours"}}'
+pandora-cli event list --filter 'dateRange={"start":{"mode":"relative","value":1,"unit":"hours"},"end":{"mode":"now"}}'
+```
+
+El formato anterior `"<inicio> - <fin>"` ahora falla con `400 Invalid date range format. Must be
+valid JSON`.
+
 Los valores se convierten a su tipo JSON: `true` y `false` pasan a booleanos, los dígitos a números
 y `null` a nulo. Entrecomille para forzar una cadena:
 
@@ -256,7 +266,14 @@ consola asigna el `name` del agente por su cuenta con independencia de la carga 
 `alias` es el campo que realmente controla la etiqueta; `module create` necesita `idModule` (el tipo
 de servidor del módulo) junto con `idModuleType`, no solo las columnas indicadas en
 `--where`/`--fields`/`--in`; y un usuario no administrador creado con `user create` necesita al menos
-un perfil asignado con `user profile add` antes de poder iniciar sesión.
+un perfil asignado con `user profile add` antes de poder iniciar sesión; una `event-alert-rule`
+creada con `event-alert-rule create` necesita que la primera regla ordenada de la alerta tenga
+`operation=NOP` — la consola rechaza cualquier otra operación en esa primera regla.
+`module force-check` solicita una comprobación inmediata de un módulo de agente; la comprobación en
+sí se completa de forma asíncrona, así que una llamada correcta devuelve `202` sin cuerpo. La
+consola la rechaza con `400` en los tipos de módulo que no admiten una comprobación inmediata, como
+los módulos data-push. La opción `--serverId`, opcional, apunta al módulo de un nodo federado desde
+un metaconsole.
 
 ### Envío de datos de monitorización
 
@@ -452,7 +469,7 @@ instalada.
 | `event-filter` | Filtros de eventos guardados | `list`, `get`, `create`, `update`, `delete` |
 | `event-tag` | Etiquetas de eventos | `list`, `get`, `create`, `update`, `delete` |
 | `group` | Grupos de agentes | `list`, `get`, `create`, `update`, `delete` |
-| `module` (alias `agent-module`) | Módulos de agente | `list`, `get`, `create`, `update`, `delete` |
+| `module` (alias `agent-module`) | Módulos de agente | `list`, `get`, `create`, `update`, `delete` + 1 más |
 | `module-alert` | Alertas asignadas a un módulo de agente | `list`, `get`, `create`, `update`, `delete` |
 | `module-alert-action` | Acciones que dispara una alerta de módulo de agente | `list`, `get`, `create`, `update`, `delete` |
 | `module-data` | Datos históricos de un módulo de agente | `list`, `get` + 1 más |
