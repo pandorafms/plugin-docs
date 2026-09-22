@@ -2,7 +2,7 @@
 
 ## Introduction
 
-**Ver**. 21-09-2026
+**Ver**. 22-09-2026
 
 `pandora-cli` is a command-line client for the Pandora FMS **API v2**. It lets you read and change
 console data from a terminal or a script, without going through the web interface.
@@ -105,7 +105,7 @@ Insecure: false
 Config:   /home/user/.pandora-cli/config.json
 Token:    valid
 
-Console specification: 280 operations, 46 entities (read 2026-09-21T09:37:31Z)
+Console specification: 282 operations, 46 entities (read 2026-09-22T09:12:37Z)
 ```
 
 `Token: valid` means the console accepted it. The command exits non-zero if it did not. With `-o json`
@@ -196,6 +196,25 @@ field. The CLI validates both locally and lists the valid names when it refuses,
 rather than guessing again. Several entities — including `group`, `tag`, `profile`, `token` and
 `data-translation` — accept a wider `--where`/`--fields`/`--in` field set than earlier builds; run
 `pandora-cli <entity> --help` to see the exact list for the installed build.
+
+`agent list` additionally accepts module counters — `criticalCount`, `warningCount`,
+`unknownCount`, `normalCount`, `notinitCount`, `totalCount` and `firedCount` — in `--fields`,
+`--where` and `--in`, alongside the entity's own columns:
+
+```bash
+pandora-cli agent list --fields idAgent,alias,criticalCount,totalCount
+```
+
+`module-alert list` takes an optional `idAgentModule`. With it, it lists that module's alerts, as
+before. Without it, it lists every module alert on the console:
+
+```bash
+pandora-cli module-alert list
+pandora-cli module-alert list --where 'timesFired = 1'
+```
+
+Module alerts also expose a `status` field — `fired`, `notFired`, `disabled` or `allEnabled` —
+usable with `--filter` (`--filter status=fired`), but not with `--where`, `--fields` or `--in`.
 
 `event` is the one exception: the CLI does not validate `--where`, `--fields` or `--in` locally for
 it. It sends whatever is passed and lets the console decide, because the console's event listing
@@ -307,6 +326,17 @@ accumulates from repeated flags:
 ```bash
 pandora-cli user profile list admin --set requestedFields=idUserProfile
 ```
+
+`user profile get` and `user profile remove` take that same `idUserProfile` — the assignment's own
+id, not the profile's id (`idProfile`). `user profile add` is unchanged and still takes `idProfile`:
+
+```bash
+pandora-cli user profile get operator1 3
+pandora-cli user profile remove operator1 3
+```
+
+**Breaking change**: earlier builds took `idProfile` for `user profile get`. When the same profile
+is assigned to a user on more than one group, each assignment has its own `idUserProfile`.
 
 ### Inspecting the console's API
 

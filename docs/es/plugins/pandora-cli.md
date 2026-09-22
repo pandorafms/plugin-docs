@@ -2,7 +2,7 @@
 
 ## Introducción
 
-**Ver**. 21-09-2026
+**Ver**. 22-09-2026
 
 `pandora-cli` es un cliente de línea de comandos para la **API v2** de Pandora FMS. Permite consultar
 y modificar los datos de la consola desde un terminal o un script, sin pasar por la interfaz web.
@@ -108,7 +108,7 @@ Insecure: false
 Config:   /home/usuario/.pandora-cli/config.json
 Token:    valid
 
-Console specification: 280 operations, 46 entities (read 2026-09-21T09:37:31Z)
+Console specification: 282 operations, 46 entities (read 2026-09-22T09:12:37Z)
 ```
 
 `Token: valid` indica que la consola lo aceptó. El comando termina con un código distinto de cero si
@@ -202,6 +202,26 @@ error en lugar de volver a probar a ciegas. Varias entidades — entre ellas `gr
 `token` y `data-translation` — aceptan un conjunto de campos `--where`/`--fields`/`--in` más amplio
 que en versiones anteriores; ejecute `pandora-cli <entidad> --help` para ver la lista exacta de la
 versión instalada.
+
+`agent list` acepta además los contadores de módulos — `criticalCount`, `warningCount`,
+`unknownCount`, `normalCount`, `notinitCount`, `totalCount` y `firedCount` — en `--fields`,
+`--where` e `--in`, junto con las columnas propias de la entidad:
+
+```bash
+pandora-cli agent list --fields idAgent,alias,criticalCount,totalCount
+```
+
+`module-alert list` admite un `idAgentModule` opcional. Con él, lista las alertas de ese módulo,
+como antes. Sin él, lista todas las alertas de módulo de la consola:
+
+```bash
+pandora-cli module-alert list
+pandora-cli module-alert list --where 'timesFired = 1'
+```
+
+Las alertas de módulo también exponen un campo `status` — `fired`, `notFired`, `disabled` o
+`allEnabled` —, utilizable con `--filter` (`--filter status=fired`), pero no con `--where`,
+`--fields` ni `--in`.
 
 `event` es la única excepción: la herramienta no valida localmente `--where`, `--fields` ni `--in`
 para esta entidad. Envía lo que se le indique y deja que decida la consola, porque el listado de
@@ -319,6 +339,19 @@ array — como `requestedFields` — se acumula con flags repetidos:
 ```bash
 pandora-cli user profile list admin --set requestedFields=idUserProfile
 ```
+
+`user profile get` y `user profile remove` reciben ese mismo `idUserProfile` — el id propio de la
+asignación, no el id del perfil (`idProfile`). `user profile add` no ha cambiado y sigue recibiendo
+`idProfile`:
+
+```bash
+pandora-cli user profile get operator1 3
+pandora-cli user profile remove operator1 3
+```
+
+**Cambio disruptivo**: las versiones anteriores recibían `idProfile` en `user profile get`. Cuando
+el mismo perfil está asignado a un usuario en varios grupos, cada asignación tiene su propio
+`idUserProfile`.
 
 ### Inspeccionar la API de la consola
 
