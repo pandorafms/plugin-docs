@@ -232,6 +232,14 @@ pandora-cli event list --filter 'dateRange={"start":{"mode":"relative","value":1
 The older `"<start> - <end>"` string now fails with `400 Invalid date range format. Must be valid
 JSON`.
 
+In Windows PowerShell 5.1 (and PowerShell 7 before 7.3), the double quotes inside an argument are
+removed before it reaches `pandora-cli`, so the console receives invalid JSON and answers with the
+same `400`. Escape each inner double quote with a backslash:
+
+```powershell
+pandora-cli event list --filter 'dateRange={\"preset\":{\"value\":\"last_24_hours\"}}'
+```
+
 Values are converted to their JSON type: `true` and `false` become booleans, digits become numbers,
 `null` becomes null. Quote to force a string:
 
