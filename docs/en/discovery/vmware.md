@@ -1,6 +1,6 @@
 # VMware Discovery
 
-*Article last updated: 2026-09-15.*
+*Article last updated: 2026-09-24.*
 
 ## What it monitors
 
@@ -25,7 +25,7 @@ The plugin runs as a Discovery task: the console creates the task, the Discovery
 
 | Scope | State | Evidence |
 | --- | --- | --- |
-| Plugin version `1.21` (`pandorafms.vmware`) | Documented target | The version this page describes, as identified by the package definition. |
+| Plugin version `1.23` (`pandorafms.vmware`) | Documented target | The version this page describes, as identified by the package definition. |
 | VMware vCenter Server with at least one datacenter | `Required` | The plugin resolves every managed object through a datacenter container and connects to a vCenter endpoint. |
 | A vCenter account with read access to the target datacenter | `Required` | The plugin authenticates and reads resource and performance data. It never changes vCenter configuration. |
 | A specific vCenter or ESXi version | `Not validated` | No published test record establishes compatibility with a concrete VMware release. |
@@ -90,6 +90,7 @@ Fine-grained task behaviour:
 - **Virtual network monitoring** generates one agent per virtual switch (vSwitch) of each ESXi host, with modules for each port group.
 - **Scan datastores**, **Scan datacenters**, **Scan ESXs**, **Scan VMs** and **Scan Resource Pools** enable or disable each entity category. They are ignored for entity selection when **Monitor exclusive agents** is enabled.
 - **Extra settings** is a raw configuration block that is appended to the configuration file the task builds. Use it to set options that the wizard does not expose, for example a **Rename** block. See [Configuration file](#configuration-file).
+- **Disable non-explicit monitoring**, when enabled, stops the plugin from creating its default module set automatically and creates only the modules explicitly enabled or configured in the `Datacenter`, `Datastore`, `ESX`, `VM` and `RP` blocks. Modules that already exist on an agent are not deleted. See [Explicit and non-explicit monitoring](#explicit-and-non-explicit-monitoring).
 
 ![VMware detailed step](../assets/images/discovery/vmware/vmware-detailed.png)
 
@@ -141,6 +142,15 @@ Each agent receives the modules of its entity type. The module values are read f
 | Virtual machine | Power and tools state, configuration, resource allocation, disks, snapshots and performance modules |
 | Resource pool | CPU and memory consumption, granted, shared, swapped, balloon and overhead memory |
 | vSwitch | Per port group: received/transmitted octets, operational status, overall status and connected VM count |
+
+### Explicit and non-explicit monitoring
+
+The plugin distinguishes two ways in which a module reaches an agent:
+
+- **Non-explicit monitoring** is the default module set the plugin creates automatically for each entity type. These are the modules whose default state is **on** in [Generated modules](#generated-modules); you never declare them.
+- **Explicit monitoring** is a module you declare yourself inside an entity block, either with `enabled` or with any `option=value` configuration.
+
+With **Disable non-explicit monitoring** off (the default), the plugin creates the automatic default set plus every module you declare explicitly. With it on, the automatic default set is not created and only the modules you declare explicitly are created. The option never deletes modules that already exist on an agent, so enabling it stops the default set from being generated on the next run but does not remove what is already there.
 
 ## Operate
 
@@ -217,6 +227,7 @@ The console presents these fields after the generic task definition. The macro c
 | Scan VMs | `_scanVM_` | checkbox | on | Generates an agent per virtual machine |
 | Scan Resource Pools | `_scanRP_` | checkbox | off | Generates an agent per resource pool |
 | Extra settings | `_extraSettings_` | textarea | — | Raw configuration block appended to the generated configuration file |
+| Disable non-explicit monitoring | `_disableNonExplicitMonitoring_` | checkbox | off | Creates only the modules explicitly enabled or configured in the entity blocks; the default module set is not created automatically. Existing modules are not deleted |
 
 The task always delivers data through Tentacle with the configured **Tentacle IP** and **Tentacle port**; the wizard does not offer a local transfer mode.
 
@@ -272,6 +283,7 @@ These parameters apply to the whole execution and are read from the `Configurati
 | `use_ds_alias_as_name` | `0` | Set to `1` to name datastore agents after the datastore name |
 | `flat_datastore_agents` | `0` | Set to `1` to group every datastore of the datacenter into a single agent |
 | `discard_empty_adapters` | `0` | Set to `1` to skip ESXi HBA adapters with no targets, devices or paths |
+| `disable_non_explicit_monitoring` | `0` | Set to `1` to create only the modules explicitly enabled or configured in the entity blocks; the default module set is not created automatically. Existing modules are not deleted |
 
 #### Entity module blocks
 
@@ -336,7 +348,7 @@ In the module names, `<id>` is the datastore managed object ID by default, or th
 
 #### ESXi hosts
 
-These modules are always generated for a connected, powered-on ESXi host:
+These modules are generated by default for a connected, powered-on ESXi host. They belong to the non-explicit default set, so **Disable non-explicit monitoring** stops them from being generated unless you declare them explicitly:
 
 | Module name | Type | Unit |
 | --- | --- | --- |
