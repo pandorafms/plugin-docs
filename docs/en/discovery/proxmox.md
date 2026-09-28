@@ -25,7 +25,7 @@ The plugin runs as a Discovery task: the console creates the task, the Discovery
 
 | Scope | State | Evidence |
 | --- | --- | --- |
-| Plugin version `1.6.1` (`pandorafms.proxmox`) | Documented target | The version this page describes, as identified by the package definition. |
+| Plugin version `1.6` (`pandorafms.proxmox`) | Documented target | The version this page describes, as identified by the package definition. |
 | Proxmox VE cluster with the API reachable on the configured port (default `8006`) | `Required` | The plugin authenticates and reads every resource through the Proxmox VE API. |
 | An account or API token with read access to nodes, guests, storage, backups and cluster status | `Required` | The plugin lists nodes, QEMU and LXC guests, storage and cluster backups; it never changes the Proxmox configuration. |
 | A specific Proxmox VE version | `Not validated` | No published test record establishes compatibility with a concrete Proxmox VE release. |
@@ -81,9 +81,10 @@ The two authentication checkboxes only control which fields the wizard shows. Th
 Resource categories, the entities list and the re-scan behaviour:
 
 - **Scan VMs**, **Scan LXC**, **Scan backups**, **Scan nodes**, **Scan data center** and **Scan storage** enable or disable each resource category. All of them are enabled by default.
-- **Entities list file** is the path of the editable file that selects and renames resources. See [Entities list file](#entities-list-file).
 - **Enable entities list re-scan interval** rebuilds the resource sections of the entities list after the configured interval. See [Entities list file](#entities-list-file) for the consequences.
 - **Re-scan entities list interval** is how often the list is rebuilt. It is only shown when **Enable entities list re-scan interval** is on.
+
+The wizard does not expose the path of the entities list. The plugin keeps it in a file specific to the task under Pandora's temporary directory and reads it on every run. See [Entities list file](#entities-list-file).
 
 ![Proxmox detailed step](../assets/images/discovery/proxmox/proxmox-detailed.png)
 
@@ -207,7 +208,7 @@ All keys are documented in [Configuration file](#configuration-file). When no `t
 | Expected resources are missing | Review the entities list file: a removed line excludes the resource, and a disabled category is not written when the list is first built. |
 | A renamed agent is not updated | Use the original alias, the resource name or the resource identifier in the rename rule, and confirm the rule is under the `Rename` section. |
 | Storage agents are missing for a node | The plugin skips a node whose node storage list does not match the cluster storage list. Confirm the node reports its storages correctly. |
-| New agents appeared after upgrading the plugin | Version `1.6.1` changed the internal agent identity. Its first run creates new agents instead of updating the ones created by earlier versions. Review alerts and dashboards that refer to the old agents before removing them. |
+| New agents appeared after upgrading the plugin | This version changed the internal agent identity: earlier versions built it from the display name. The first run of this version creates new agents instead of updating the ones created by earlier versions. Review alerts and dashboards that refer to the old agents before removing them. |
 | Tentacle transfer fails | Confirm the Discovery server can reach **Tentacle IP** on **Tentacle port** and that the Tentacle client is available, or set **Tentacle client path**. |
 
 ## Reference
@@ -245,7 +246,6 @@ The console presents these fields after the generic task definition. The macro c
 | Scan nodes | `_scanNodes_` | checkbox | on | Generates an agent per node |
 | Scan data center | `_scanDataCenter_` | checkbox | on | Generates the data center agent |
 | Scan storage | `_scanStorage_` | checkbox | on | Generates an agent per node storage |
-| Entities list file | `_entitiesList_` | string | Task-specific file under Pandora's temporary directory | Editable file that selects and renames resources |
 | Enable entities list re-scan interval | `_enableEntitiesInterval_` | checkbox | off | Rebuilds the resource sections after the interval |
 | Re-scan entities list interval | `_entitiesInterval_` | select (interval) | `86400` | Rebuild interval in seconds. Only shown when the re-scan is enabled |
 
@@ -275,7 +275,7 @@ The Discovery task builds a configuration file for the plugin. The same format i
 | `scan_data_center` | `1` | Generate the data center agent |
 | `scan_storage` | `1` | Generate an agent per node storage |
 | `discard_nodes` | `[]` | JSON list of node names to discard from node, guest and storage monitoring |
-| `entities_list` | `/tmp/proxmox_entities_list.txt` | Path of the entities list file |
+| `entities_list` | `/tmp/proxmox_entities_list.txt` | Path of the entities list file. A Discovery task always sets a task-specific path under Pandora's temporary directory |
 | `enable_entities_interval` | `False` | Set to `true` to rebuild the entities list on an interval |
 | `entities_interval` | `86400` | Rebuild interval in seconds |
 | `transfer_mode` | `tentacle` | `tentacle` sends the data through Tentacle; `local` writes it to `local_folder` |
@@ -294,7 +294,7 @@ The console API parameters are used to create the `proxmox_device` custom field 
 
 ### Entities list file
 
-The entities list is a plain text file that selects and renames resources. The plugin creates it on the first run and reads it on every run.
+The entities list is a plain text file that selects and renames resources. The plugin creates it on the first run and reads it on every run. In a Discovery task the path is fixed to a task-specific file under Pandora's temporary directory and is not configurable from the wizard; only a manual execution can set it with the `entities_list` key.
 
 | Section | Entry format | Example |
 | --- | --- | --- |

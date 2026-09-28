@@ -25,7 +25,7 @@ El plugin se ejecuta como una tarea de Discovery: la consola crea la tarea, el s
 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
-| Versión del plugin `1.6.1` (`pandorafms.proxmox`) | Objetivo documentado | La versión que describe esta página, identificada por la definición del paquete. |
+| Versión del plugin `1.6` (`pandorafms.proxmox`) | Objetivo documentado | La versión que describe esta página, identificada por la definición del paquete. |
 | Clúster de Proxmox VE con la API accesible en el puerto configurado (por defecto `8006`) | `Required` | El plugin se autentica y lee cada recurso a través de la API de Proxmox VE. |
 | Una cuenta o token de API con acceso de lectura a nodos, invitados, almacenamiento, copias de seguridad y estado del clúster | `Required` | El plugin lista nodos, invitados QEMU y LXC, almacenamiento y copias de seguridad del clúster; nunca cambia la configuración de Proxmox. |
 | Una versión concreta de Proxmox VE | `Not validated` | Ningún registro de pruebas publicado establece compatibilidad con una versión concreta de Proxmox VE. |
@@ -81,9 +81,10 @@ Las dos casillas de autenticación solo controlan qué campos muestra el asisten
 Categorías de recursos, la lista de entidades y el comportamiento del reescaneo:
 
 - **Scan VMs**, **Scan LXC**, **Scan backups**, **Scan nodes**, **Scan data center** y **Scan storage** habilitan o deshabilitan cada categoría de recurso. Todas están habilitadas por defecto.
-- **Entities list file** es la ruta del archivo editable que selecciona y renombra recursos. Consulta [Archivo de lista de entidades](#archivo-de-lista-de-entidades).
 - **Enable entities list re-scan interval** reconstruye las secciones de recursos de la lista de entidades tras el intervalo configurado. Consulta [Archivo de lista de entidades](#archivo-de-lista-de-entidades) para conocer sus consecuencias.
 - **Re-scan entities list interval** es la frecuencia con la que se reconstruye la lista. Solo se muestra cuando **Enable entities list re-scan interval** está activado.
+
+El asistente no expone la ruta de la lista de entidades. El plugin la mantiene en un archivo específico de la tarea dentro del directorio temporal de Pandora y la lee en cada ejecución. Consulta [Archivo de lista de entidades](#archivo-de-lista-de-entidades).
 
 ![Paso Proxmox detailed del asistente de Discovery](../assets/images/discovery/proxmox/proxmox-detailed.png)
 
@@ -207,7 +208,7 @@ Todas las claves se documentan en [Archivo de configuración](#archivo-de-config
 | Faltan recursos esperados | Revisa el archivo de lista de entidades: una línea eliminada excluye el recurso, y una categoría deshabilitada no se escribe cuando la lista se crea por primera vez. |
 | Un agente renombrado no se actualiza | Usa en la regla de renombrado el alias original, el nombre del recurso o el identificador del recurso, y confirma que la regla está en la sección `Rename`. |
 | Faltan agentes de almacenamiento en un nodo | El plugin omite un nodo cuya lista de almacenamientos no coincide con la lista del clúster. Confirma que el nodo informa correctamente de sus almacenamientos. |
-| Aparecieron agentes nuevos tras actualizar el plugin | La versión `1.6.1` cambió la identidad interna de los agentes. Su primera ejecución crea agentes nuevos en lugar de actualizar los creados por versiones anteriores. Revisa las alertas y paneles que hagan referencia a los agentes antiguos antes de eliminarlos. |
+| Aparecieron agentes nuevos tras actualizar el plugin | Esta versión cambió la identidad interna de los agentes: las versiones anteriores la construían a partir del nombre visible. La primera ejecución de esta versión crea agentes nuevos en lugar de actualizar los creados por versiones anteriores. Revisa las alertas y paneles que hagan referencia a los agentes antiguos antes de eliminarlos. |
 | La transferencia por Tentacle falla | Confirma que el servidor de Discovery puede alcanzar **Tentacle IP** en **Tentacle port** y que el cliente Tentacle está disponible, o define **Tentacle client path**. |
 
 ## Referencia
@@ -245,7 +246,6 @@ La consola muestra estos campos después de la definición genérica de la tarea
 | Scan nodes | `_scanNodes_` | checkbox | on | Genera un agente por nodo |
 | Scan data center | `_scanDataCenter_` | checkbox | on | Genera el agente de centro de datos |
 | Scan storage | `_scanStorage_` | checkbox | on | Genera un agente por almacenamiento de nodo |
-| Entities list file | `_entitiesList_` | string | Archivo específico de la tarea en el directorio temporal de Pandora | Archivo editable que selecciona y renombra recursos |
 | Enable entities list re-scan interval | `_enableEntitiesInterval_` | checkbox | off | Reconstruye las secciones de recursos tras el intervalo |
 | Re-scan entities list interval | `_entitiesInterval_` | select (interval) | `86400` | Intervalo de reconstrucción en segundos. Solo se muestra cuando el reescaneo está habilitado |
 
@@ -275,7 +275,7 @@ La tarea de Discovery genera un archivo de configuración para el plugin. Se usa
 | `scan_data_center` | `1` | Genera el agente de centro de datos |
 | `scan_storage` | `1` | Genera un agente por almacenamiento de nodo |
 | `discard_nodes` | `[]` | Lista JSON de nombres de nodo que se descartan de la monitorización de nodos, invitados y almacenamiento |
-| `entities_list` | `/tmp/proxmox_entities_list.txt` | Ruta del archivo de lista de entidades |
+| `entities_list` | `/tmp/proxmox_entities_list.txt` | Ruta del archivo de lista de entidades. Una tarea de Discovery siempre fija una ruta específica de la tarea dentro del directorio temporal de Pandora |
 | `enable_entities_interval` | `False` | Ponlo a `true` para reconstruir la lista de entidades por intervalos |
 | `entities_interval` | `86400` | Intervalo de reconstrucción en segundos |
 | `transfer_mode` | `tentacle` | `tentacle` envía los datos por Tentacle; `local` los escribe en `local_folder` |
@@ -294,7 +294,7 @@ Los parámetros de la API de la consola se usan para crear el campo personalizad
 
 ### Archivo de lista de entidades
 
-La lista de entidades es un archivo de texto plano que selecciona y renombra recursos. El plugin lo crea en la primera ejecución y lo lee en cada ejecución.
+La lista de entidades es un archivo de texto plano que selecciona y renombra recursos. El plugin lo crea en la primera ejecución y lo lee en cada ejecución. En una tarea de Discovery la ruta es fija, un archivo específico de la tarea dentro del directorio temporal de Pandora, y no se configura desde el asistente; solo una ejecución manual puede fijarla con la clave `entities_list`.
 
 | Sección | Formato de entrada | Ejemplo |
 | --- | --- | --- |
