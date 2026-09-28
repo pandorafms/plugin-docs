@@ -820,6 +820,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#timeouts-and-connection-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeouts and connection recovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debug logs
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1741,6 +1763,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#timeouts-and-connection-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeouts and connection recovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debug logs
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1911,7 +1955,7 @@
 
 
 <h1 id="microsoft-sql-server-discovery">Microsoft SQL Server Discovery<a class="headerlink" href="#microsoft-sql-server-discovery" title="Permanent link">¶</a></h1>
-<p><em>Article last updated: 2026-09-08.</em></p>
+<p><em>Article last updated: 2026-09-21.</em></p>
 <h2 id="what-it-monitors">What it monitors<a class="headerlink" href="#what-it-monitors" title="Permanent link">¶</a></h2>
 <p>The Microsoft SQL Server Discovery plugin connects to Microsoft SQL Server instances and databases and turns their state and performance into Pandora FMS agents and modules. It reads a list of target instances, connects with a SQL Server login, and collects instance-wide metrics and per-database metrics through system views and performance counters.</p>
 <p>A Discovery task creates one agent per target instance by default, and one agent per database when <strong>Create agent per database</strong> is enabled. Each agent carries the instance metrics of its target and the metrics of the databases it monitors. Custom queries can be defined to add one module per query and target.</p>
@@ -1927,7 +1971,7 @@
 </thead>
 <tbody>
 <tr>
-<td>Plugin version <code>1.13</code> (<code>pandorafms.mssql</code>)</td>
+<td>Plugin version <code>1.16</code> (<code>pandorafms.mssql</code>)</td>
 <td>Documented target</td>
 <td>The version this page describes, as identified by the package definition. See <a href="#plugin-identity">Plugin identity</a>.</td>
 </tr>
@@ -1989,8 +2033,10 @@
 <li><strong>Microsoft SQL Server target strings</strong> is the list of instances to monitor, comma-separated or one per line. Each target is <code>SERVER</code>, <code>SERVER:PORT</code>, <code>SERVER\INSTANCE</code> or <code>SERVER:PORT\INSTANCE</code>. Lines starting with <code>#</code> are comments. To monitor specific databases of an instance, append <code>|db1;db2</code>; to monitor every database except a set, append <code>!</code> before the <code>|</code>. See <a href="#target-databases">Target databases</a>.</li>
 <li><strong>User</strong> and <strong>Password</strong> are the SQL Server login used to connect.</li>
 <li><strong>ODBC mode</strong> connects through the ODBC driver instead of the native <code>pymssql</code> driver.</li>
+<li><strong>Connection timeout</strong> and <strong>Query timeout</strong> are the maximum seconds allowed to establish the connection and to run each query. Both default to <code>5</code>.</li>
+<li><strong>Enable debug</strong> writes execution traces of the task, and <strong>Debug log directory</strong> (default <code>/tmp</code>) is where they are stored; the directory is shown only when debug is enabled.</li>
 </ul>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/mssql-discovery/base-step.png" data-desc-position="bottom"><img alt="Microsoft SQL Server Discovery task Base step: target strings, User and Password." src="../../assets/images/discovery/mssql-discovery/base-step.png"></a></p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/mssql-discovery/base-step.png" data-desc-position="bottom"><img alt="Microsoft SQL Server Discovery task Base step: target strings, User and Password, ODBC mode, connection and query timeouts and the debug options." src="../../assets/images/discovery/mssql-discovery/base-step.png"></a></p>
 <p><strong>Step 3 — Microsoft SQL Server Detailed.</strong> Execution, agent layout and which metrics to collect:</p>
 <ul>
 <li><strong>Max threads</strong> distributes the targets and databases across parallel workers.</li>
@@ -1998,6 +2044,7 @@
 <li><strong>Custom module prefix</strong> is prepended to every generated module name.</li>
 <li><strong>Scan databases</strong> enumerates the databases of each instance automatically.</li>
 <li><strong>Create agent per database</strong> creates one agent per database, with <strong>Custom database agent prefix</strong> naming them.</li>
+<li><strong>Autodisabled agents</strong> creates the generated agents in disabled mode, so they stay idle until you enable them in the console.</li>
 <li><strong>Enable entities file re-scan interval</strong> and <strong>Re-scan entities file interval</strong> control how often the discovered-database cache is rebuilt.</li>
 <li>The <strong>Database monitoring modules</strong> and <strong>Instance monitoring modules</strong> toggles select which metric groups are collected.</li>
 <li><strong>Rename default modules</strong> and <strong>Modules names</strong> let you replace the default module labels, and <strong>Execute custom queries</strong> and <strong>Custom queries</strong> define the custom queries.</li>
@@ -2025,7 +2072,7 @@
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/mssql-discovery/task-summary.png" data-desc-position="bottom"><img alt="Microsoft SQL Server Discovery task execution summary." src="../../assets/images/discovery/mssql-discovery/task-summary.png"></a></p>
 <h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
 <h3 id="agents-and-identity">Agents and identity<a class="headerlink" href="#agents-and-identity" title="Permanent link">¶</a></h3>
-<p>The plugin creates one agent per target instance by default. The agent name is the value from the <strong>Target agent</strong> list that matches the target position, or the target string itself when none is given. Each generated agent reports <code>MSSQL</code> as its operating system, its <code>os_version</code> is the SQL Server version returned by <code>SELECT @@VERSION</code> (or <code>Discovery</code> when it cannot be read), its <code>address</code> is the instance host, and it belongs to the task's group (by ID) with the task interval.</p>
+<p>The plugin creates one agent per target instance by default. The agent name is the value from the <strong>Target agent</strong> list that matches the target position, or the target string itself when none is given. Each generated agent reports <code>MSSQL</code> as its operating system, its <code>os_version</code> is the SQL Server version returned by <code>SELECT @@VERSION</code> (or <code>Discovery</code> when it cannot be read), its <code>address</code> is the instance host, and it belongs to the task's group (by ID) with the task interval. With <strong>Autodisabled agents</strong> enabled, every generated agent is created in disabled mode and stays idle until you enable it.</p>
 <p>With <strong>Create agent per database</strong>, the plugin also creates one agent per database, named <code>&lt;Custom database agent prefix&gt;&lt;instance&gt; &lt;database&gt;</code>, and counts them in <strong>Databases agents</strong>. The database modules are then placed on those agents.</p>
 <p>Databases to monitor are either listed explicitly after <code>|</code> in the target string, or discovered by scanning when <strong>Scan databases</strong> is enabled. The list of discovered databases is persisted in the entities file, and <strong>Enable entities file re-scan interval</strong> decides when that file is rebuilt so new databases are picked up and removed ones are dropped. Explicitly listed databases are always monitored.</p>
 <h3 id="modules-by-agent">Modules by agent<a class="headerlink" href="#modules-by-agent" title="Permanent link">¶</a></h3>
@@ -2058,6 +2105,10 @@
 </code></pre></div>
 <p>Only <code>--conf</code> and <code>--target_databases</code> are required; <code>--target_agents</code> and <code>--custom_queries</code> are optional. The plugin connects to each target in parallel according to <strong>Max threads</strong> and produces the agents and modules in its Discovery JSON output.</p>
 <p>The configuration file and the target lists hold the SQL Server password in plain text. Restrict them to the account that runs the plugin and keep them out of shared directories, logs and version control. Following the Discovery workflow for task runs means the console builds these files for you.</p>
+<h3 id="timeouts-and-connection-recovery">Timeouts and connection recovery<a class="headerlink" href="#timeouts-and-connection-recovery" title="Permanent link">¶</a></h3>
+<p>Every target is subject to <strong>Connection timeout</strong> and <strong>Query timeout</strong>, both <code>5</code> seconds by default. When a query fails because the session was dropped or timed out, the plugin closes that session, reconnects and continues with the remaining checks, so one slow or interrupted query does not stop the rest of the task. A non-positive or non-numeric timeout falls back to <code>5</code>.</p>
+<h3 id="debug-logs">Debug logs<a class="headerlink" href="#debug-logs" title="Permanent link">¶</a></h3>
+<p>With <strong>Enable debug</strong> on, the plugin writes JSON traces into <strong>Debug log directory</strong> (default <code>/tmp</code>), one file per agent and module. Each record is timestamped and carries the plugin execution ID, and covers the plugin lifecycle, every connection and query (the query text is truncated), the value and description returned by each generated module, and the final Discovery JSON. Trace files rotate once they reach 2 MB, keeping three backups. Debug logging is a diagnostic aid; leave it off for normal runs.</p>
 <h2 id="troubleshoot">Troubleshoot<a class="headerlink" href="#troubleshoot" title="Permanent link">¶</a></h2>
 <table>
 <thead>
@@ -2098,6 +2149,18 @@
 <tr>
 <td>Expected modules are missing</td>
 <td>Review the <strong>Database monitoring modules</strong> and <strong>Instance monitoring modules</strong> toggles: a disabled group produces no modules.</td>
+</tr>
+<tr>
+<td>A target is slow or the task hangs</td>
+<td>Lower <strong>Connection timeout</strong> and <strong>Query timeout</strong>, and confirm the instance responds on its port. The plugin reconnects after a dropped or timed-out session and continues with the remaining checks.</td>
+</tr>
+<tr>
+<td>You need to find which query or module failed</td>
+<td>Enable <strong>Enable debug</strong>, set <strong>Debug log directory</strong>, and read the per-agent JSON traces; they include each query and the value and description returned by each generated module.</td>
+</tr>
+<tr>
+<td>Generated agents appear disabled</td>
+<td><strong>Autodisabled agents</strong> is enabled. Enable the agents in the console, or turn the option off and run the task again.</td>
 </tr>
 </tbody>
 </table>
@@ -2143,6 +2206,34 @@
 <td>checkbox</td>
 <td>off</td>
 <td>Connects through the ODBC driver instead of the native driver</td>
+</tr>
+<tr>
+<td>Connection timeout</td>
+<td><code>_connectionTimeout_</code></td>
+<td>select</td>
+<td><code>5</code></td>
+<td>Maximum seconds allowed to establish the connection</td>
+</tr>
+<tr>
+<td>Query timeout</td>
+<td><code>_queryTimeout_</code></td>
+<td>select</td>
+<td><code>5</code></td>
+<td>Maximum seconds allowed for each query</td>
+</tr>
+<tr>
+<td>Enable debug</td>
+<td><code>_debug_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Writes execution traces of the task</td>
+</tr>
+<tr>
+<td>Debug log directory</td>
+<td><code>_debugDirectory_</code></td>
+<td>string</td>
+<td><code>/tmp</code></td>
+<td>Directory for the debug traces. Shown only when <strong>Enable debug</strong> is enabled</td>
 </tr>
 </tbody>
 </table>
@@ -2199,6 +2290,13 @@
 <td>string</td>
 <td>—</td>
 <td>Prefix for the database agents. Shown only when <strong>Create agent per database</strong> is enabled</td>
+</tr>
+<tr>
+<td>Autodisabled agents</td>
+<td><code>_autodisabledAgents_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Creates the generated agents in disabled mode</td>
 </tr>
 <tr>
 <td>Enable entities file re-scan interval</td>
@@ -2445,6 +2543,26 @@
 <td>Connects through the ODBC driver</td>
 </tr>
 <tr>
+<td><code>connection_timeout</code></td>
+<td><code>5</code></td>
+<td>Maximum seconds allowed to establish the connection</td>
+</tr>
+<tr>
+<td><code>query_timeout</code></td>
+<td><code>5</code></td>
+<td>Maximum seconds allowed for each query</td>
+</tr>
+<tr>
+<td><code>debug</code></td>
+<td><code>0</code></td>
+<td>Writes execution traces of the task</td>
+</tr>
+<tr>
+<td><code>debug_directory</code></td>
+<td><code>/tmp</code></td>
+<td>Directory for the debug traces</td>
+</tr>
+<tr>
 <td><code>agent_per_database</code></td>
 <td><code>0</code></td>
 <td>Creates one agent per database</td>
@@ -2455,6 +2573,11 @@
 <td>Prefix for the database agent names</td>
 </tr>
 <tr>
+<td><code>autodisabled_agents</code></td>
+<td><code>0</code></td>
+<td>Creates the generated agents in disabled mode</td>
+</tr>
+<tr>
 <td><code>rename_modules</code></td>
 <td><code>1</code></td>
 <td>Applies the <code>[MODULE_NAMES]</code> labels</td>
@@ -2463,6 +2586,11 @@
 <td><code>execute_custom_queries</code></td>
 <td><code>1</code></td>
 <td>Enables the custom queries</td>
+</tr>
+<tr>
+<td><code>cron_state_dir</code></td>
+<td><code>&lt;entities_list&gt;.cron_state</code></td>
+<td>Directory that persists the custom-query crontab state</td>
 </tr>
 </tbody>
 </table>
@@ -2646,6 +2774,11 @@ agente5,agente6,agente7,,agente9
 <span class="na">monitor_filegroups_space</span><span class="o">=</span><span class="s">1</span>
 <span class="na">monitor_user_reserved_space</span><span class="o">=</span><span class="s">1</span>
 <span class="na">monitor_backups</span><span class="o">=</span><span class="s">1</span>
+<span class="na">connection_timeout</span><span class="o">=</span><span class="s">5</span>
+<span class="na">query_timeout</span><span class="o">=</span><span class="s">5</span>
+<span class="na">debug</span><span class="o">=</span><span class="s">0</span>
+<span class="na">debug_directory</span><span class="o">=</span><span class="s">/tmp</span>
+<span class="na">autodisabled_agents</span><span class="o">=</span><span class="s">0</span>
 <span class="na">agent_per_database</span><span class="o">=</span><span class="s">0</span>
 <span class="na">scan_databases</span><span class="o">=</span><span class="s">1</span>
 
@@ -2731,6 +2864,7 @@ agente5,agente6,agente7,,agente9
 </tbody>
 </table>
 <p>The <code>crontab</code> field follows the standard 5-field format (<code>minute hour day_of_month month day_of_week</code>) and supports <code>*</code>, exact values, ranges, steps and lists. On the first run after enabling a scheduled query only an occurrence inside the current interval is picked up, so a daily or monthly query does not run immediately.</p>
+<p>The schedule is persisted under <code>cron_state_dir</code> (by default next to the entities file), so consecutive Discovery executions keep the same schedule. Only successful executions advance it; a query that fails stays due and is retried on the next execution.</p>
 <div class="highlight"><pre><span></span><code>check_begin
 name Select 1
 description Number of invalid objects
@@ -2802,7 +2936,7 @@ check_end
 </tr>
 <tr>
 <td>Plugin version</td>
-<td><code>1.13</code></td>
+<td><code>1.16</code></td>
 </tr>
 <tr>
 <td>Type</td>
