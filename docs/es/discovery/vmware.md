@@ -1,6 +1,6 @@
 # Discovery de VMware
 
-*Última actualización del artículo: 2026-09-15.*
+*Última actualización del artículo: 2026-09-24.*
 
 ## Qué monitoriza
 
@@ -25,7 +25,7 @@ El plugin se ejecuta como una tarea de Discovery: la consola crea la tarea, el s
 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
-| Versión del plugin `1.21` (`pandorafms.vmware`) | Objetivo documentado | Versión descrita en esta página, identificada por la definición del paquete. |
+| Versión del plugin `1.23` (`pandorafms.vmware`) | Objetivo documentado | Versión descrita en esta página, identificada por la definición del paquete. |
 | VMware vCenter Server con al menos un datacenter | `Requerido` | El plugin resuelve todos los objetos gestionados a través de un contenedor de datacenter y se conecta a un endpoint de vCenter. |
 | Una cuenta de vCenter con acceso de lectura al datacenter objetivo | `Requerido` | El plugin se autentica y lee datos de recursos y de rendimiento. Nunca modifica la configuración de vCenter. |
 | Una versión concreta de vCenter o ESXi | `Sin validar` | Ningún registro de pruebas publicado establece compatibilidad con una versión concreta de VMware. |
@@ -90,6 +90,7 @@ Comportamiento detallado de la tarea:
 - **Virtual network monitoring** genera un agente por cada switch virtual (vSwitch) de cada host ESXi, con módulos por cada port group.
 - **Scan datastores**, **Scan datacenters**, **Scan ESXs**, **Scan VMs** y **Scan Resource Pools** habilitan o deshabilitan cada categoría de entidad. Se ignoran para la selección de entidades cuando **Monitor exclusive agents** está activado.
 - **Extra settings** es un bloque de configuración en bruto que se añade al archivo de configuración que construye la tarea. Úsalo para opciones que el asistente no expone, por ejemplo un bloque **Rename**. Consulta [Archivo de configuración](#archivo-de-configuracion).
+- **Disable non-explicit monitoring**, cuando se activa, impide que el plugin cree automáticamente su set de módulos por defecto y crea únicamente los módulos habilitados o configurados explícitamente en los bloques `Datacenter`, `Datastore`, `ESX`, `VM` y `RP`. Los módulos que ya existan en un agente no se eliminan. Consulta [Monitorización explícita y no explícita](#monitorizacion-explicita-y-no-explicita).
 
 ![Paso VMware detailed](../assets/images/discovery/vmware/vmware-detailed.png)
 
@@ -141,6 +142,15 @@ Cada agente recibe los módulos de su tipo de entidad. Los valores de los módul
 | Máquina virtual | Estado de encendido y de las tools, configuración, asignación de recursos, discos, snapshots y módulos de rendimiento |
 | Resource pool | Consumo de CPU y memoria, memoria concedida, compartida, swap, balloon y overhead |
 | vSwitch | Por cada port group: octetos recibidos/enviados, estado operativo, estado general y número de VMs conectadas |
+
+### Monitorización explícita y no explícita
+
+El plugin distingue dos formas en las que un módulo llega a un agente:
+
+- La **monitorización no explícita** es el set de módulos por defecto que el plugin crea automáticamente para cada tipo de entidad. Son los módulos cuyo estado por defecto es **on** en [Módulos generados](#modulos-generados); no los declaras en ningún sitio.
+- La **monitorización explícita** es un módulo que declaras tú mismo dentro de un bloque de entidad, ya sea con `enabled` o con cualquier configuración `opcion=valor`.
+
+Con **Disable non-explicit monitoring** desactivado (por defecto), el plugin crea el set por defecto automático más todos los módulos que declares explícitamente. Con la opción activada, el set por defecto automático no se crea y solo se crean los módulos que declares explícitamente. La opción nunca elimina los módulos que ya existan en un agente, por lo que activarla detiene la generación del set por defecto en la siguiente ejecución pero no borra lo que ya hay.
 
 ## Operación
 
@@ -217,6 +227,7 @@ La consola presenta estos campos después de la definición genérica de la tare
 | Scan VMs | `_scanVM_` | checkbox | on | Genera un agente por máquina virtual |
 | Scan Resource Pools | `_scanRP_` | checkbox | off | Genera un agente por resource pool |
 | Extra settings | `_extraSettings_` | textarea | — | Bloque de configuración en bruto que se añade al archivo de configuración generado |
+| Disable non-explicit monitoring | `_disableNonExplicitMonitoring_` | checkbox | off | Crea solo los módulos habilitados o configurados explícitamente en los bloques de entidad; no genera el set por defecto automáticamente. Los módulos existentes no se eliminan |
 
 La tarea entrega siempre los datos a través de Tentacle con la **Tentacle IP** y el **Tentacle port** configurados; el asistente no ofrece un modo de transferencia local.
 
@@ -272,6 +283,7 @@ Estos parámetros se aplican a toda la ejecución y se leen del bloque `Configur
 | `use_ds_alias_as_name` | `0` | Ponlo a `1` para nombrar los agentes de datastore con el nombre del datastore |
 | `flat_datastore_agents` | `0` | Ponlo a `1` para agrupar todos los datastores del datacenter en un único agente |
 | `discard_empty_adapters` | `0` | Ponlo a `1` para omitir los adaptadores HBA de ESXi sin targets, dispositivos ni rutas |
+| `disable_non_explicit_monitoring` | `0` | Ponlo a `1` para crear solo los módulos habilitados o configurados explícitamente en los bloques de entidad; no genera el set por defecto automáticamente. Los módulos existentes no se eliminan |
 
 #### Bloques de módulos por entidad
 
@@ -336,7 +348,7 @@ En los nombres de módulo, `<id>` es el identificador de objeto gestionado del d
 
 #### Hosts ESXi
 
-Estos módulos se generan siempre para un host ESXi conectado y encendido:
+Estos módulos se generan por defecto para un host ESXi conectado y encendido. Pertenecen al set por defecto no explícito, por lo que **Disable non-explicit monitoring** impide que se generen salvo que los declares explícitamente:
 
 | Nombre del módulo | Tipo | Unidad |
 | --- | --- | --- |
