@@ -1,6 +1,6 @@
 # Microsoft SQL Server Discovery
 
-*Article last updated: 2026-09-08.*
+*Article last updated: 2026-09-21.*
 
 ## What it monitors
 
@@ -14,7 +14,7 @@ A Discovery task creates one agent per target instance by default, and one agent
 
 | Scope | State | Evidence |
 | --- | --- | --- |
-| Plugin version `1.13` (`pandorafms.mssql`) | Documented target | The version this page describes, as identified by the package definition. See [Plugin identity](#plugin-identity). |
+| Plugin version `1.16` (`pandorafms.mssql`) | Documented target | The version this page describes, as identified by the package definition. See [Plugin identity](#plugin-identity). |
 | A reachable Microsoft SQL Server instance | `Required` | The plugin establishes remote connections to each monitored instance. Prerequisite, not a compatibility statement. |
 | A SQL Server login with **VIEW SERVER STATE** | `Required` | Needed to read the instance system views and execution requests. Prerequisite, not a compatibility statement. See [Prepare SQL Server access](#prepare-sql-server-access). |
 | A SQL Server login with **SELECT** | `Required` | Needed to run the custom queries against tables and views. Prerequisite, not a compatibility statement. |
@@ -56,8 +56,10 @@ Create the task from **Management → Discovery → Applications → Microsoft S
 - **Microsoft SQL Server target strings** is the list of instances to monitor, comma-separated or one per line. Each target is `SERVER`, `SERVER:PORT`, `SERVER\INSTANCE` or `SERVER:PORT\INSTANCE`. Lines starting with `#` are comments. To monitor specific databases of an instance, append `|db1;db2`; to monitor every database except a set, append `!` before the `|`. See [Target databases](#target-databases).
 - **User** and **Password** are the SQL Server login used to connect.
 - **ODBC mode** connects through the ODBC driver instead of the native `pymssql` driver.
+- **Connection timeout** and **Query timeout** are the maximum seconds allowed to establish the connection and to run each query. Both default to `5`.
+- **Enable debug** writes execution traces of the task, and **Debug log directory** (default `/tmp`) is where they are stored; the directory is shown only when debug is enabled.
 
-![Microsoft SQL Server Discovery task Base step: target strings, User and Password.](../assets/images/discovery/mssql-discovery/base-step.png)
+![Microsoft SQL Server Discovery task Base step: target strings, User and Password, ODBC mode, connection and query timeouts and the debug options.](../assets/images/discovery/mssql-discovery/base-step.png)
 
 **Step 3 — Microsoft SQL Server Detailed.** Execution, agent layout and which metrics to collect:
 
@@ -66,6 +68,7 @@ Create the task from **Management → Discovery → Applications → Microsoft S
 - **Custom module prefix** is prepended to every generated module name.
 - **Scan databases** enumerates the databases of each instance automatically.
 - **Create agent per database** creates one agent per database, with **Custom database agent prefix** naming them.
+- **Autodisabled agents** creates the generated agents in disabled mode, so they stay idle until you enable them in the console.
 - **Enable entities file re-scan interval** and **Re-scan entities file interval** control how often the discovered-database cache is rebuilt.
 - The **Database monitoring modules** and **Instance monitoring modules** toggles select which metric groups are collected.
 - **Rename default modules** and **Modules names** let you replace the default module labels, and **Execute custom queries** and **Custom queries** define the custom queries.
@@ -96,7 +99,7 @@ Targets that cannot be reached are counted in **Targets down** and do not produc
 
 ### Agents and identity
 
-The plugin creates one agent per target instance by default. The agent name is the value from the **Target agent** list that matches the target position, or the target string itself when none is given. Each generated agent reports `MSSQL` as its operating system, its `os_version` is the SQL Server version returned by `SELECT @@VERSION` (or `Discovery` when it cannot be read), its `address` is the instance host, and it belongs to the task's group (by ID) with the task interval.
+The plugin creates one agent per target instance by default. The agent name is the value from the **Target agent** list that matches the target position, or the target string itself when none is given. Each generated agent reports `MSSQL` as its operating system, its `os_version` is the SQL Server version returned by `SELECT @@VERSION` (or `Discovery` when it cannot be read), its `address` is the instance host, and it belongs to the task's group (by ID) with the task interval. With **Autodisabled agents** enabled, every generated agent is created in disabled mode and stays idle until you enable it.
 
 With **Create agent per database**, the plugin also creates one agent per database, named `<Custom database agent prefix><instance> <database>`, and counts them in **Databases agents**. The database modules are then placed on those agents.
 
@@ -125,6 +128,14 @@ Only `--conf` and `--target_databases` are required; `--target_agents` and `--cu
 
 The configuration file and the target lists hold the SQL Server password in plain text. Restrict them to the account that runs the plugin and keep them out of shared directories, logs and version control. Following the Discovery workflow for task runs means the console builds these files for you.
 
+### Timeouts and connection recovery
+
+Every target is subject to **Connection timeout** and **Query timeout**, both `5` seconds by default. When a query fails because the session was dropped or timed out, the plugin closes that session, reconnects and continues with the remaining checks, so one slow or interrupted query does not stop the rest of the task. A non-positive or non-numeric timeout falls back to `5`.
+
+### Debug logs
+
+With **Enable debug** on, the plugin writes JSON traces into **Debug log directory** (default `/tmp`), one file per agent and module. Each record is timestamped and carries the plugin execution ID, and covers the plugin lifecycle, every connection and query (the query text is truncated), the value and description returned by each generated module, and the final Discovery JSON. Trace files rotate once they reach 2 MB, keeping three backups. Debug logging is a diagnostic aid; leave it off for normal runs.
+
 ## Troubleshoot
 
 | Symptom | Check |
@@ -137,6 +148,9 @@ The configuration file and the target lists hold the SQL Server password in plai
 | ODBC mode fails to connect | Install the Microsoft ODBC Driver 17 for SQL Server and unixODBC on the machine that runs the plugin. The connection uses that driver name. |
 | A custom query is rejected | Only `SELECT` statements are allowed; other statements are removed and reported in the execution information. |
 | Expected modules are missing | Review the **Database monitoring modules** and **Instance monitoring modules** toggles: a disabled group produces no modules. |
+| A target is slow or the task hangs | Lower **Connection timeout** and **Query timeout**, and confirm the instance responds on its port. The plugin reconnects after a dropped or timed-out session and continues with the remaining checks. |
+| You need to find which query or module failed | Enable **Enable debug**, set **Debug log directory**, and read the per-agent JSON traces; they include each query and the value and description returned by each generated module. |
+| Generated agents appear disabled | **Autodisabled agents** is enabled. Enable the agents in the console, or turn the option off and run the task again. |
 
 ## Reference
 
@@ -152,6 +166,10 @@ The console presents the task fields in two steps after the generic task definit
 | User | `_dbuser_` | string | — | SQL Server login. Required |
 | Password | `_dbpass_` | password | — | SQL Server password. Required |
 | ODBC mode | `_odbcMode_` | checkbox | off | Connects through the ODBC driver instead of the native driver |
+| Connection timeout | `_connectionTimeout_` | select | `5` | Maximum seconds allowed to establish the connection |
+| Query timeout | `_queryTimeout_` | select | `5` | Maximum seconds allowed for each query |
+| Enable debug | `_debug_` | checkbox | off | Writes execution traces of the task |
+| Debug log directory | `_debugDirectory_` | string | `/tmp` | Directory for the debug traces. Shown only when **Enable debug** is enabled |
 
 #### Microsoft SQL Server Detailed
 
@@ -163,6 +181,7 @@ The console presents the task fields in two steps after the generic task definit
 | Scan databases | `_scanDatabases_` | checkbox | off | Enumerates the databases of each instance |
 | Create agent per database | `_agentPerDatabase_` | checkbox | off | Creates one agent per database |
 | Custom database agent prefix | `_prefixAgent_` | string | — | Prefix for the database agents. Shown only when **Create agent per database** is enabled |
+| Autodisabled agents | `_autodisabledAgents_` | checkbox | off | Creates the generated agents in disabled mode |
 | Enable entities file re-scan interval | `_enableEntitiesInterval_` | checkbox | off | Rebuilds the discovered-database cache after the interval |
 | Re-scan entities file interval | `_entitiesInterval_` | select | `86400` | Seconds before the cache is rebuilt. Shown only when the previous option is enabled |
 | Retrieve logs statistics | `_checkLogs_` | checkbox | on | Log flush, growth, shrink, size, usage and cache modules per database |
@@ -208,10 +227,16 @@ Engine and monitoring preferences:
 | `entities_interval` | `300` | Seconds before the database cache is rebuilt |
 | `scan_databases` | `0` | Enumerates the databases of each instance |
 | `odbc_mode` | `0` | Connects through the ODBC driver |
+| `connection_timeout` | `5` | Maximum seconds allowed to establish the connection |
+| `query_timeout` | `5` | Maximum seconds allowed for each query |
+| `debug` | `0` | Writes execution traces of the task |
+| `debug_directory` | `/tmp` | Directory for the debug traces |
 | `agent_per_database` | `0` | Creates one agent per database |
 | `db_agent_prefix` | Empty | Prefix for the database agent names |
+| `autodisabled_agents` | `0` | Creates the generated agents in disabled mode |
 | `rename_modules` | `1` | Applies the `[MODULE_NAMES]` labels |
 | `execute_custom_queries` | `1` | Enables the custom queries |
+| `cron_state_dir` | `<entities_list>.cron_state` | Directory that persists the custom-query crontab state |
 
 Monitoring toggles (each `1` enables the group, each `0` disables it):
 
@@ -311,6 +336,11 @@ retrieve_transactions_statistics=1
 monitor_filegroups_space=1
 monitor_user_reserved_space=1
 monitor_backups=1
+connection_timeout=5
+query_timeout=5
+debug=0
+debug_directory=/tmp
+autodisabled_agents=0
 agent_per_database=0
 scan_databases=1
 
@@ -344,6 +374,8 @@ Each custom query creates one module per task agent and is defined between `chec
 | `ignore_databases` | Targets or databases where the module is not created |
 
 The `crontab` field follows the standard 5-field format (`minute hour day_of_month month day_of_week`) and supports `*`, exact values, ranges, steps and lists. On the first run after enabling a scheduled query only an occurrence inside the current interval is picked up, so a daily or monthly query does not run immediately.
+
+The schedule is persisted under `cron_state_dir` (by default next to the entities file), so consecutive Discovery executions keep the same schedule. Only successful executions advance it; a query that fails stays due and is retried on the next execution.
 
 ```text
 check_begin
@@ -412,6 +444,6 @@ Created when the matching toggle is enabled:
 | Field | Value |
 | --- | --- |
 | App short name | `pandorafms.mssql` |
-| Plugin version | `1.13` |
+| Plugin version | `1.16` |
 | Type | Discovery application (`.disco`) |
 | Section | Discovery → Applications |

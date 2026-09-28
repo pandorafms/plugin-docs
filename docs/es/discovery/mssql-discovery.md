@@ -1,6 +1,6 @@
 # Microsoft SQL Server Discovery
 
-*Última actualización del artículo: 2026-09-08.*
+*Última actualización del artículo: 2026-09-21.*
 
 ## Qué monitoriza
 
@@ -14,7 +14,7 @@ Una tarea de Discovery crea un agente por instancia objetivo por defecto, y un a
 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
-| Versión del plugin `1.13` (`pandorafms.mssql`) | Objetivo documentado | La versión que describe esta página, identificada en la definición del paquete. Consulte [Identidad del plugin](#identidad-del-plugin). |
+| Versión del plugin `1.16` (`pandorafms.mssql`) | Objetivo documentado | La versión que describe esta página, identificada en la definición del paquete. Consulte [Identidad del plugin](#identidad-del-plugin). |
 | Una instancia de Microsoft SQL Server alcanzable | `Requerido` | El plugin establece conexiones remotas con cada instancia monitorizada. Prerrequisito, no una declaración de compatibilidad. |
 | Un login de SQL Server con **VIEW SERVER STATE** | `Requerido` | Necesario para leer las vistas del sistema y las peticiones en ejecución de la instancia. Prerrequisito, no una declaración de compatibilidad. Consulte [Preparar el acceso a SQL Server](#preparar-el-acceso-a-sql-server). |
 | Un login de SQL Server con **SELECT** | `Requerido` | Necesario para ejecutar las consultas personalizadas sobre tablas y vistas. Prerrequisito, no una declaración de compatibilidad. |
@@ -56,8 +56,10 @@ Cree la tarea desde **Management → Discovery → Applications → Microsoft SQ
 - **Microsoft SQL Server target strings** es la lista de instancias a monitorizar, separadas por comas o una por línea. Cada objetivo es `SERVER`, `SERVER:PORT`, `SERVER\INSTANCE` o `SERVER:PORT\INSTANCE`. Las líneas que empiezan por `#` son comentarios. Para monitorizar bases de datos concretas de una instancia, añada `|db1;db2`; para monitorizar todas menos un conjunto, añada `!` antes de la `|`. Consulte [Bases de datos objetivo](#bases-de-datos-objetivo).
 - **User** y **Password** son el login de SQL Server usado para conectarse.
 - **ODBC mode** se conecta mediante el controlador ODBC en lugar del controlador nativo `pymssql`.
+- **Connection timeout** y **Query timeout** son los segundos máximos permitidos para establecer la conexión y para ejecutar cada consulta. Ambos usan `5` por defecto.
+- **Enable debug** escribe trazas de ejecución de la tarea, y **Debug log directory** (por defecto `/tmp`) es donde se guardan; el directorio solo se muestra cuando la depuración está habilitada.
 
-![Paso Base de la tarea de Discovery de Microsoft SQL Server: target strings, User y Password.](../assets/images/discovery/mssql-discovery/base-step.png)
+![Paso Base de la tarea de Discovery de Microsoft SQL Server: target strings, User y Password, ODBC mode, tiempos de espera de conexión y consulta y las opciones de depuración.](../assets/images/discovery/mssql-discovery/base-step.png)
 
 **Paso 3 — Microsoft SQL Server Detailed.** Ejecución, distribución de agentes y qué métricas se recogen:
 
@@ -66,6 +68,7 @@ Cree la tarea desde **Management → Discovery → Applications → Microsoft SQ
 - **Custom module prefix** se antepone a todos los nombres de módulo generados.
 - **Scan databases** enumera las bases de datos de cada instancia automáticamente.
 - **Create agent per database** crea un agente por base de datos, con **Custom database agent prefix** para nombrarlos.
+- **Autodisabled agents** crea los agentes generados en modo deshabilitado, de modo que permanecen inactivos hasta que los habilite en la consola.
 - **Enable entities file re-scan interval** y **Re-scan entities file interval** controlan cada cuánto se reconstruye la caché de bases de datos descubiertas.
 - Los conmutadores **Database monitoring modules** e **Instance monitoring modules** seleccionan qué grupos de métricas se recogen.
 - **Rename default modules** y **Modules names** permiten reemplazar las etiquetas por defecto de los módulos, y **Execute custom queries** y **Custom queries** definen las consultas personalizadas.
@@ -96,7 +99,7 @@ Los objetivos a los que no se puede llegar se cuentan en **Targets down** y no g
 
 ### Agentes e identidad
 
-El plugin crea un agente por instancia objetivo por defecto. El nombre del agente es el valor de la lista **Target agent** que coincide con la posición del objetivo, o la propia cadena del objetivo cuando no se indica ninguno. Cada agente generado informa de `MSSQL` como sistema operativo, su `os_version` es la versión de SQL Server devuelta por `SELECT @@VERSION` (o `Discovery` cuando no se puede leer), su `address` es el host de la instancia, y pertenece al grupo de la tarea (por ID) con el intervalo de la tarea.
+El plugin crea un agente por instancia objetivo por defecto. El nombre del agente es el valor de la lista **Target agent** que coincide con la posición del objetivo, o la propia cadena del objetivo cuando no se indica ninguno. Cada agente generado informa de `MSSQL` como sistema operativo, su `os_version` es la versión de SQL Server devuelta por `SELECT @@VERSION` (o `Discovery` cuando no se puede leer), su `address` es el host de la instancia, y pertenece al grupo de la tarea (por ID) con el intervalo de la tarea. Con **Autodisabled agents** habilitado, todos los agentes generados se crean en modo deshabilitado y permanecen inactivos hasta que los habilite.
 
 Con **Create agent per database**, el plugin crea además un agente por base de datos, llamado `<Custom database agent prefix><instancia> <base de datos>`, y los cuenta en **Databases agents**. Los módulos de base de datos se colocan entonces en esos agentes.
 
@@ -125,6 +128,14 @@ Solo `--conf` y `--target_databases` son obligatorios; `--target_agents` y `--cu
 
 El archivo de configuración y las listas de objetivos contienen la contraseña de SQL Server en texto plano. Restrinja su acceso a la cuenta que ejecuta el plugin y manténgalos fuera de directorios compartidos, registros y control de versiones. Seguir el flujo de Discovery para las ejecuciones de tarea significa que la consola construye estos archivos por usted.
 
+### Tiempos de espera y recuperación de conexión
+
+Todos los objetivos están sujetos a **Connection timeout** y **Query timeout**, `5` segundos por defecto. Cuando una consulta falla porque la sesión se ha caído o ha superado el tiempo de espera, el plugin cierra esa sesión, se reconecta y continúa con las comprobaciones restantes, de modo que una consulta lenta o interrumpida no detiene el resto de la tarea. Un tiempo de espera no positivo o no numérico vuelve a `5`.
+
+### Registros de depuración
+
+Con **Enable debug** habilitado, el plugin escribe trazas JSON en **Debug log directory** (por defecto `/tmp`), un archivo por agente y módulo. Cada registro lleva marca de tiempo y el ID de ejecución del plugin, y cubre el ciclo de vida del plugin, cada conexión y consulta (el texto de la consulta se trunca), el valor y la descripción devueltos por cada módulo generado, y el JSON final de Discovery. Los archivos de traza rotan al alcanzar 2 MB, conservando tres copias de seguridad. La depuración es una ayuda de diagnóstico; déjela desactivada en ejecuciones normales.
+
 ## Solución de problemas
 
 | Síntoma | Comprobación |
@@ -137,6 +148,9 @@ El archivo de configuración y las listas de objetivos contienen la contraseña 
 | El modo ODBC no conecta | Instale el controlador ODBC 17 para SQL Server de Microsoft y unixODBC en la máquina que ejecuta el plugin. La conexión usa ese nombre de controlador. |
 | Una consulta personalizada es rechazada | Solo se permiten sentencias `SELECT`; el resto se elimina y se informa en la información de ejecución. |
 | Faltan módulos esperados | Revise los conmutadores **Database monitoring modules** e **Instance monitoring modules**: un grupo deshabilitado no produce módulos. |
+| Un objetivo va lento o la tarea se queda bloqueada | Reduzca **Connection timeout** y **Query timeout**, y confirme que la instancia responde en su puerto. El plugin se reconecta tras una sesión caída o agotada y continúa con las comprobaciones restantes. |
+| Necesita averiguar qué consulta o módulo ha fallado | Habilite **Enable debug**, configure **Debug log directory** y lea las trazas JSON por agente; incluyen cada consulta y el valor y la descripción devueltos por cada módulo generado. |
+| Los agentes generados aparecen deshabilitados | **Autodisabled agents** está habilitado. Habilite los agentes en la consola, o desactive la opción y vuelva a ejecutar la tarea. |
 
 ## Referencia
 
@@ -152,6 +166,10 @@ La consola presenta los campos de la tarea en dos pasos después de la definici�
 | User | `_dbuser_` | string | — | Login de SQL Server. Obligatorio |
 | Password | `_dbpass_` | password | — | Contraseña de SQL Server. Obligatorio |
 | ODBC mode | `_odbcMode_` | checkbox | off | Se conecta mediante el controlador ODBC en lugar del controlador nativo |
+| Connection timeout | `_connectionTimeout_` | select | `5` | Segundos máximos permitidos para establecer la conexión |
+| Query timeout | `_queryTimeout_` | select | `5` | Segundos máximos permitidos para cada consulta |
+| Enable debug | `_debug_` | checkbox | off | Escribe trazas de ejecución de la tarea |
+| Debug log directory | `_debugDirectory_` | string | `/tmp` | Directorio de las trazas de depuración. Solo se muestra cuando **Enable debug** está habilitado |
 
 #### Microsoft SQL Server Detailed
 
@@ -163,6 +181,7 @@ La consola presenta los campos de la tarea en dos pasos después de la definici�
 | Scan databases | `_scanDatabases_` | checkbox | off | Enumera las bases de datos de cada instancia |
 | Create agent per database | `_agentPerDatabase_` | checkbox | off | Crea un agente por base de datos |
 | Custom database agent prefix | `_prefixAgent_` | string | — | Prefijo de los agentes de base de datos. Solo se muestra cuando **Create agent per database** está habilitado |
+| Autodisabled agents | `_autodisabledAgents_` | checkbox | off | Crea los agentes generados en modo deshabilitado |
 | Enable entities file re-scan interval | `_enableEntitiesInterval_` | checkbox | off | Reconstruye la caché de bases de datos descubiertas tras el intervalo |
 | Re-scan entities file interval | `_entitiesInterval_` | select | `86400` | Segundos antes de reconstruir la caché. Solo se muestra cuando la opción anterior está habilitada |
 | Retrieve logs statistics | `_checkLogs_` | checkbox | on | Módulos de registro por base de datos: flush, crecimiento, reducción, tamaño, uso y caché |
@@ -208,10 +227,16 @@ Preferencias de motor y monitorización:
 | `entities_interval` | `300` | Segundos antes de reconstruir la caché de bases de datos |
 | `scan_databases` | `0` | Enumera las bases de datos de cada instancia |
 | `odbc_mode` | `0` | Se conecta mediante el controlador ODBC |
+| `connection_timeout` | `5` | Segundos máximos permitidos para establecer la conexión |
+| `query_timeout` | `5` | Segundos máximos permitidos para cada consulta |
+| `debug` | `0` | Escribe trazas de ejecución de la tarea |
+| `debug_directory` | `/tmp` | Directorio de las trazas de depuración |
 | `agent_per_database` | `0` | Crea un agente por base de datos |
 | `db_agent_prefix` | Vacío | Prefijo de los nombres de los agentes de base de datos |
+| `autodisabled_agents` | `0` | Crea los agentes generados en modo deshabilitado |
 | `rename_modules` | `1` | Aplica las etiquetas de `[MODULE_NAMES]` |
 | `execute_custom_queries` | `1` | Habilita las consultas personalizadas |
+| `cron_state_dir` | `<entities_list>.cron_state` | Directorio que persiste el estado crontab de las consultas personalizadas |
 
 Conmutadores de monitorización (cada `1` habilita el grupo, cada `0` lo deshabilita):
 
@@ -311,6 +336,11 @@ retrieve_transactions_statistics=1
 monitor_filegroups_space=1
 monitor_user_reserved_space=1
 monitor_backups=1
+connection_timeout=5
+query_timeout=5
+debug=0
+debug_directory=/tmp
+autodisabled_agents=0
 agent_per_database=0
 scan_databases=1
 
@@ -344,6 +374,8 @@ Cada consulta personalizada crea un módulo por agente de tarea y se define entr
 | `ignore_databases` | Objetivos o bases de datos donde no se crea el módulo |
 
 El campo `crontab` sigue el formato estándar de 5 campos (`minuto hora día_del_mes mes día_de_la_semana`) y admite `*`, valores exactos, rangos, pasos y listas. En la primera ejecución tras habilitar una consulta programada solo se recoge una ocurrencia dentro del intervalo actual, de modo que una consulta diaria o mensual no se ejecuta de inmediato.
+
+La programación se persiste en `cron_state_dir` (por defecto junto al archivo de entidades), de modo que ejecuciones consecutivas de Discovery mantienen la misma planificación. Solo las ejecuciones correctas la avanzan; una consulta que falla queda pendiente y se reintenta en la siguiente ejecución.
 
 ```text
 check_begin
@@ -412,6 +444,6 @@ Se crean cuando el conmutador correspondiente está habilitado:
 | Campo | Valor |
 | --- | --- |
 | App short name | `pandorafms.mssql` |
-| Versión del plugin | `1.13` |
+| Versión del plugin | `1.16` |
 | Tipo | Aplicación de Discovery (`.disco`) |
 | Sección | Discovery → Applications |
