@@ -1,0 +1,2362 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/plugins/dynamic-snmp/">
+      
+      
+        <link rel="prev" href="../advanced-log-parser/">
+      
+      
+        <link rel="next" href="../kvm/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../../es/plugins/dynamic-snmp/" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Dynamic SNMP plugin - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dynamic-snmp-plugin" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Dynamic SNMP plugin
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/plugins/dynamic-snmp/" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Chat integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft Teams integration (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegram integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic SNMP plugin
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic SNMP plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#run-as-an-agent-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run as an agent plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register-as-a-server-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Register as a server plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate-and-troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate and troubleshoot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snmp-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-and-filtering-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring and filtering parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threshold-and-alert-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threshold and alert parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-transfer-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data transfer parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-oid-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default OID tree
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to document
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#run-as-an-agent-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run as an agent plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register-as-a-server-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Register as a server plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate-and-troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate and troubleshoot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snmp-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-and-filtering-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring and filtering parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threshold-and-alert-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threshold and alert parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-transfer-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data transfer parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-oid-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default OID tree
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="dynamic-snmp-plugin">Dynamic SNMP plugin<a class="headerlink" href="#dynamic-snmp-plugin" title="Permanent link">¶</a></h1>
+<p><em>Article last updated: 2026-09-23.</em></p>
+<h2 id="what-it-does">What it does<a class="headerlink" href="#what-it-does" title="Permanent link">¶</a></h2>
+<p>The Dynamic SNMP plugin performs an SNMP scan of a target device and generates Pandora FMS modules dynamically. Instead of predefining the OID of each interface, the plugin walks the interface table, uses the interface name (<code>ifName</code>) to identify each one, and builds one module per interface and metric. Monitoring therefore survives OID changes that happen between device reboots.</p>
+<p>By default, for every interface the plugin monitors:</p>
+<ul>
+<li><code>ifOperStatus</code>.</li>
+<li>Inbound and outbound traffic: <code>ifHCInOctets</code> and <code>ifHCOutOctets</code> when the device exposes 64-bit counters, or <code>ifInOctets</code> and <code>ifOutOctets</code> otherwise.</li>
+</ul>
+<p>It can filter interfaces by name, assign numeric and string thresholds to the generated modules, and attach alert templates to them.</p>
+<p>The plugin runs in two modes:</p>
+<ul>
+<li><strong>Agent plugin</strong> — without <code>-agent</code>, it prints the generated modules as XML on standard output, and the Pandora FMS agent that runs it ingests them.</li>
+<li><strong>Server plugin</strong> — with <code>-agent &lt;name&gt;</code>, it builds the agent report and transfers it to the Pandora FMS server, creating the agent and its modules when that agent does not exist yet.</li>
+</ul>
+<h2 id="prepare">Prepare<a class="headerlink" href="#prepare" title="Permanent link">¶</a></h2>
+<h3 id="compatibility">Compatibility<a class="headerlink" href="#compatibility" title="Permanent link">¶</a></h3>
+<p>The plugin has been developed and tested on Rocky Linux and Fedora 34, and it is expected to work on any Linux system.</p>
+<h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>A Pandora FMS deployment</strong> with the server or agent that will run the plugin.</li>
+<li><strong>Perl 5.x.</strong></li>
+<li><strong>The <code>snmpget</code> and <code>snmpwalk</code> commands</strong> from the net-snmp package, available in <code>PATH</code>.</li>
+<li><strong>The <code>PandoraFMS::PluginTools</code> Perl library.</strong></li>
+<li><strong>Network connectivity to the target device</strong>, plus its SNMP community (v1/v2c) or SNMPv3 user and keys.</li>
+<li><strong>For server plugin mode</strong>, a reachable <code>tentacle_client</code> (tentacle transfer) or write access to the <code>data_in</code> directory (localcopy transfer).</li>
+</ol>
+<h3 id="install-the-plugin">Install the plugin<a class="headerlink" href="#install-the-plugin" title="Permanent link">¶</a></h3>
+<p>The plugin is distributed as the <code>dynamic_snmp</code> script. Upload it to the machine that will run it:</p>
+<ul>
+<li><strong>Server plugin</strong> — <code>/usr/share/pandora_server/util/plugin/</code>.</li>
+<li><strong>Agent plugin</strong> — the plugin directory of the endpoint.</li>
+</ul>
+<p>Give the file execution permissions and make sure <code>snmpwalk</code> and <code>snmpget</code> are installed there.</p>
+<h2 id="configure">Configure<a class="headerlink" href="#configure" title="Permanent link">¶</a></h2>
+<p>The plugin has no configuration file: every option is passed on the command line. Choose the mode according to where the plugin runs.</p>
+<h3 id="run-as-an-agent-plugin">Run as an agent plugin<a class="headerlink" href="#run-as-an-agent-plugin" title="Permanent link">¶</a></h3>
+<p>Register the plugin as an agent plugin in the endpoint, with the command and its parameters, and <strong>do not</strong> use <code>-agent</code>. On every execution the plugin prints the module XML on standard output and the agent stores the modules under its own agent.</p>
+<h3 id="register-as-a-server-plugin">Register as a server plugin<a class="headerlink" href="#register-as-a-server-plugin" title="Permanent link">¶</a></h3>
+<p>To let the plugin create and feed a different agent, register it in the console as a server plugin and pass <code>-agent</code> on every execution:</p>
+<ol>
+<li>Upload the plugin script to <code>/usr/share/pandora_server/util/plugin/</code> on the Pandora FMS server.</li>
+<li>Go to <strong>Servers → Plugins</strong> and click <strong>Add plugin</strong>:</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/add-plugin.png" data-desc-position="bottom"><img alt="Add plugin button in Servers &gt; Plugins" src="../../assets/images/plugins/dynamic-snmp/add-plugin.png"></a></p>
+<ol>
+<li>Set a <strong>Name</strong>, keep <strong>Plugin type</strong> as <code>Standard</code>, and set <strong>Max timeout</strong>. SNMP scans can take a while, so a timeout of at least 20 seconds is recommended; the global <code>plugin_timeout</code> of <code>pandora_server.conf</code> may also need to be raised.</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/plugin-general.png" data-desc-position="bottom"><img alt="General plugin settings with name, type, timeout and description" src="../../assets/images/plugins/dynamic-snmp/plugin-general.png"></a></p>
+<p>Example description:</p>
+<div class="highlight"><pre><span></span><code>This plugin generates modules dynamically in the agent it's created in.
+Based on the ifName, it generates modules for:
+- ifOperStatus
+- ifInOctets (ifHCInOctets, if available)
+- ifOutOctets (ifHCOutOctets, if available)
+The value returned by the module represents the number of modules generated.
+</code></pre></div>
+<ol>
+<li>Set the <strong>Plugin command</strong> and the <strong>Plugin parameters</strong>. Each parameter is written as a macro <code>_fieldX_</code>, where <code>X</code> is the positional number of the parameter:</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/plugin-command.png" data-desc-position="bottom"><img alt="Plugin command and parameters with macros" src="../../assets/images/plugins/dynamic-snmp/plugin-command.png"></a></p>
+<p>The <code>_agentname_</code> and <code>_address_</code> server macros fill in the agent name and the device address automatically, so the example parameters are:</p>
+<div class="highlight"><pre><span></span><code>-agent "_agentname_" -h "_address_" -v "_field1_" -c "_field2_" -only "_field3_" -reject "_field4_" -wmin "_field5_" -wmax "_field6_" -cmin "_field7_" -cmax "_field8_"
+</code></pre></div>
+<ol>
+<li>Define each macro under <strong>Macro parameters</strong>, giving a description, a default value and, optionally, a help text:</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/plugin-macros.png" data-desc-position="bottom"><img alt="Macro parameters with description, default value and help" src="../../assets/images/plugins/dynamic-snmp/plugin-macros.png"></a></p>
+<ol>
+<li>In the target agent, create a new module and choose <strong>Create a new plugin server module</strong>:</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/create-module.png" data-desc-position="bottom"><img alt="Create module dialog for a plugin server module" src="../../assets/images/plugins/dynamic-snmp/create-module.png"></a></p>
+<ol>
+<li>In the module configuration, select the <strong>Dynamic SNMP</strong> plugin and fill in the macro fields:</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/configure-module.png" data-desc-position="bottom"><img alt="Plugin server module configuration with the Dynamic SNMP plugin" src="../../assets/images/plugins/dynamic-snmp/configure-module.png"></a></p>
+<p>On each execution the server plugin transfers the report using the selected transfer mode and prints the number of generated modules. If the agent named by <code>-agent</code> does not exist, it is created automatically.</p>
+<h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">¶</a></h2>
+<p>Run the plugin manually on the host that will execute it. This example scans a device over SNMPv2c in agent plugin mode:</p>
+<div class="highlight"><pre><span></span><code>./dynamic_snmp<span class="w"> </span>-h<span class="w"> </span><span class="s2">"192.168.51.1"</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">"2c"</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">"mycommunity"</span>
+</code></pre></div>
+<p>A successful agent-plugin run prints one <code>&lt;module&gt;</code> XML block per generated module on standard output. A successful server-plugin run transfers the report and prints the number of generated modules instead.</p>
+<p>The generated modules then appear in the target agent:</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/generated-modules.png" data-desc-position="bottom"><img alt="Default modules generated for each interface" src="../../assets/images/plugins/dynamic-snmp/generated-modules.png"></a></p>
+<p>With filters and thresholds applied, only the matching interfaces are generated and the thresholds are attached to their modules:</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/filtered-modules.png" data-desc-position="bottom"><img alt="Filtered modules with warning and critical thresholds" src="../../assets/images/plugins/dynamic-snmp/filtered-modules.png"></a></p>
+<h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
+<p>The plugin walks the interface name branch first, and for every interface name it queries each configured branch. The module name is the interface name followed by the branch name, separated by an underscore, for example <code>ge-0/0/0_ifHCInOctets</code> or <code>FastEthernet0/0_OperStatus</code>.</p>
+<ul>
+<li><strong>Interface status.</strong> <code>ifOperStatus</code> is generated as a <code>generic_proc</code> module: <code>1</code> while the interface is operational. Values greater than <code>1</code> are forced to <code>0</code> for Pandora FMS compatibility.</li>
+<li><strong>Traffic.</strong> <code>ifHCInOctets</code>, <code>ifHCOutOctets</code>, <code>ifInOctets</code> and <code>ifOutOctets</code> are generated as incremental modules (<code>generic_data_inc</code>).</li>
+<li><strong>64-bit counters.</strong> When the device answers the walk of the 64-bit counter branch (<code>.1.3.6.1.2.1.31.1.1.1.6</code>), the plugin uses the HC branches; otherwise it falls back to the 32-bit branches.</li>
+<li><strong>Automatic typing.</strong> For custom branches the plugin detects the module type from the SNMP data type of the returned value; the type is not predefined.</li>
+<li><strong>Filters.</strong> <code>-only</code> keeps only the interfaces whose name matches any of its regular expressions, and <code>-reject</code> drops the interfaces whose name matches any of them.</li>
+</ul>
+<h2 id="operate-and-troubleshoot">Operate and troubleshoot<a class="headerlink" href="#operate-and-troubleshoot" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>Enable debug output.</strong> Add <code>-debug 1</code> to print diagnostic messages, prefixed with a timestamp, on standard error.</li>
+<li><strong>No modules are generated.</strong> Check connectivity to the device, the SNMP version, the community or SNMPv3 credentials, and that <code>snmpwalk</code> and <code>snmpget</code> are installed and reachable in <code>PATH</code>.</li>
+<li><strong>Some interfaces are missing.</strong> Review the <code>-only</code> and <code>-reject</code> regular expressions; they are matched against the interface name, so a value such as <code>0/0/5</code> excludes every interface whose name contains that string.</li>
+<li><strong>The execution times out.</strong> Large interface tables take longer to scan. Raise the module or plugin timeout and keep the interval (<code>-interval</code>) matched to the expected execution time.</li>
+<li><strong>A server plugin run reports no modules.</strong> Verify that the console can receive from the server: the <code>tentacle_client</code> address and port for tentacle mode, or the <code>data_in</code> path for localcopy mode.</li>
+</ul>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">¶</a></h2>
+<h3 id="general-parameters">General parameters<a class="headerlink" href="#general-parameters" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-agent &lt;name&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Target agent name. When set, the plugin runs as a server plugin and transfers the report; when omitted, it runs as an agent plugin and prints the modules on standard output</td>
+</tr>
+<tr>
+<td><code>-interval &lt;seconds&gt;</code></td>
+<td>No</td>
+<td><code>300</code></td>
+<td>Agent interval written in the generated report (server plugin mode). A non-numeric value or <code>0</code> falls back to <code>300</code></td>
+</tr>
+<tr>
+<td><code>-group &lt;name&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Module group assigned to every generated module</td>
+</tr>
+<tr>
+<td><code>-debug 0\|1</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td>When <code>1</code>, prints timestamped diagnostic messages on standard error</td>
+</tr>
+</tbody>
+</table>
+<h3 id="snmp-parameters">SNMP parameters<a class="headerlink" href="#snmp-parameters" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-v &lt;version&gt;</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>SNMP version: <code>1</code>, <code>2</code>, <code>2c</code> or <code>3</code></td>
+</tr>
+<tr>
+<td><code>-h &lt;host&gt;</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>IP address or host name of the device to scan</td>
+</tr>
+<tr>
+<td><code>-c &lt;community&gt;</code></td>
+<td>For <code>1</code>, <code>2</code> and <code>2c</code></td>
+<td>—</td>
+<td>SNMP community</td>
+</tr>
+<tr>
+<td><code>-p &lt;port&gt;</code></td>
+<td>No</td>
+<td><code>161</code></td>
+<td>SNMP port of the device</td>
+</tr>
+<tr>
+<td><code>-d &lt;type&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Data type. The plugin determines each module type automatically, so this value is accepted but not applied</td>
+</tr>
+</tbody>
+</table>
+<p>SNMPv3 parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-n &lt;context&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>SNMPv3 context</td>
+</tr>
+<tr>
+<td><code>-l &lt;level&gt;</code></td>
+<td>For <code>3</code></td>
+<td>—</td>
+<td>Security level: <code>noAuthNoPriv</code>, <code>authNoPriv</code> or <code>authPriv</code></td>
+</tr>
+<tr>
+<td><code>-u &lt;name&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>SNMPv3 security name (user)</td>
+</tr>
+<tr>
+<td><code>-a &lt;protocol&gt;</code></td>
+<td>With <code>authNoPriv</code> and <code>authPriv</code></td>
+<td>—</td>
+<td>Authentication protocol, such as <code>MD5</code> or <code>SHA</code></td>
+</tr>
+<tr>
+<td><code>-A &lt;key&gt;</code></td>
+<td>With <code>authNoPriv</code> and <code>authPriv</code></td>
+<td>—</td>
+<td>Authentication key</td>
+</tr>
+<tr>
+<td><code>-x &lt;protocol&gt;</code></td>
+<td>With <code>authPriv</code></td>
+<td>—</td>
+<td>Privacy protocol, such as <code>DES</code> or <code>AES</code></td>
+</tr>
+<tr>
+<td><code>-X &lt;key&gt;</code></td>
+<td>With <code>authPriv</code></td>
+<td>—</td>
+<td>Privacy key</td>
+</tr>
+</tbody>
+</table>
+<h3 id="monitoring-and-filtering-parameters">Monitoring and filtering parameters<a class="headerlink" href="#monitoring-and-filtering-parameters" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-o &lt;oid&gt;</code></td>
+<td>No</td>
+<td><code>.1.3.6.1.2.1</code></td>
+<td>Base OID that the branch subtrees are appended to</td>
+</tr>
+<tr>
+<td><code>-names &lt;subtree&gt;</code></td>
+<td>No</td>
+<td>Automatic</td>
+<td>Subtree under <code>-o</code> used as the source of interface names</td>
+</tr>
+<tr>
+<td><code>-branches &lt;name:subtree,...&gt;</code></td>
+<td>No</td>
+<td>Automatic</td>
+<td>Branches to retrieve, in the form <code>Branch1:SubTree1,Branch2:SubTree2</code>. The subtree is appended to <code>-o</code></td>
+</tr>
+<tr>
+<td><code>-nodefaults 1</code></td>
+<td>No</td>
+<td>—</td>
+<td>Disables the default branches, so only <code>-names</code> and <code>-branches</code> are used</td>
+</tr>
+<tr>
+<td><code>-only &lt;regex,...&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Comma-separated list of regular expressions. Only interfaces whose name matches any of them are monitored</td>
+</tr>
+<tr>
+<td><code>-reject &lt;regex,...&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Comma-separated list of regular expressions. Interfaces whose name matches any of them are excluded</td>
+</tr>
+</tbody>
+</table>
+<h3 id="threshold-and-alert-parameters">Threshold and alert parameters<a class="headerlink" href="#threshold-and-alert-parameters" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-wmin &lt;value&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Minimum warning threshold for the generated modules</td>
+</tr>
+<tr>
+<td><code>-wmax &lt;value&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Maximum warning threshold for the generated modules</td>
+</tr>
+<tr>
+<td><code>-cmin &lt;value&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Minimum critical threshold for the generated modules</td>
+</tr>
+<tr>
+<td><code>-cmax &lt;value&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Maximum critical threshold for the generated modules</td>
+</tr>
+<tr>
+<td><code>-string_warning &lt;string&gt;</code> (<code>-wstr</code>)</td>
+<td>No</td>
+<td>—</td>
+<td>String warning threshold for the generated modules</td>
+</tr>
+<tr>
+<td><code>-string_critical &lt;string&gt;</code> (<code>-cstr</code>)</td>
+<td>No</td>
+<td>—</td>
+<td>String critical threshold for the generated modules</td>
+</tr>
+<tr>
+<td><code>-warning_inverse 0\|1</code> (<code>-winv</code>)</td>
+<td>No</td>
+<td>—</td>
+<td>Inverts the warning threshold comparison</td>
+</tr>
+<tr>
+<td><code>-critical_inverse 0\|1</code> (<code>-cinv</code>)</td>
+<td>No</td>
+<td>—</td>
+<td>Inverts the critical threshold comparison</td>
+</tr>
+<tr>
+<td><code>-alrt &lt;name,...&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Comma-separated list of alert templates applied to every generated module</td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-transfer-parameters">Data transfer parameters<a class="headerlink" href="#data-transfer-parameters" title="Permanent link">¶</a></h3>
+<p>Used only in server plugin mode.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-m &lt;mode&gt;</code></td>
+<td>No</td>
+<td><code>tentacle</code></td>
+<td>Transfer mode: <code>tentacle</code> or <code>localcopy</code></td>
+</tr>
+<tr>
+<td><code>-t_ip &lt;ip&gt;</code></td>
+<td>No</td>
+<td><code>127.0.0.1</code></td>
+<td>Target Pandora FMS address for tentacle transfer</td>
+</tr>
+<tr>
+<td><code>-t_port &lt;port&gt;</code></td>
+<td>No</td>
+<td><code>41121</code></td>
+<td>Tentacle port</td>
+</tr>
+<tr>
+<td><code>-t_opts &lt;options&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Extra tentacle options</td>
+</tr>
+<tr>
+<td><code>-t_file_path &lt;path&gt;</code></td>
+<td>No</td>
+<td><code>/var/spool/pandora/data_in/</code></td>
+<td>Destination directory for localcopy transfer</td>
+</tr>
+</tbody>
+</table>
+<h3 id="generated-modules">Generated modules<a class="headerlink" href="#generated-modules" title="Permanent link">¶</a></h3>
+<p>For every interface and branch, the module name is <code>&lt;ifName&gt;_&lt;branch&gt;</code>. The default branches are:</p>
+<table>
+<thead>
+<tr>
+<th>Module name</th>
+<th>Meaning</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;ifName&gt;_ifOperStatus</code></td>
+<td>Operational status of the interface: <code>1</code> when operational, <code>0</code> otherwise (values greater than <code>1</code> are forced to <code>0</code>)</td>
+<td><code>generic_proc</code></td>
+</tr>
+<tr>
+<td><code>&lt;ifName&gt;_ifHCInOctets</code></td>
+<td>Inbound octets, 64-bit counter</td>
+<td><code>generic_data_inc</code></td>
+</tr>
+<tr>
+<td><code>&lt;ifName&gt;_ifHCOutOctets</code></td>
+<td>Outbound octets, 64-bit counter</td>
+<td><code>generic_data_inc</code></td>
+</tr>
+<tr>
+<td><code>&lt;ifName&gt;_ifInOctets</code></td>
+<td>Inbound octets, 32-bit counter</td>
+<td><code>generic_data_inc</code></td>
+</tr>
+<tr>
+<td><code>&lt;ifName&gt;_ifOutOctets</code></td>
+<td>Outbound octets, 32-bit counter</td>
+<td><code>generic_data_inc</code></td>
+</tr>
+</tbody>
+</table>
+<p>Custom branches are generated with the same <code>&lt;ifName&gt;_&lt;branch&gt;</code> naming and their type detected from the SNMP data type.</p>
+<h3 id="default-oid-tree">Default OID tree<a class="headerlink" href="#default-oid-tree" title="Permanent link">¶</a></h3>
+<p>The subtrees below are appended to the base OID (<code>-o</code>, <code>.1.3.6.1.2.1</code> by default).</p>
+<table>
+<thead>
+<tr>
+<th>Branch</th>
+<th>32-bit tree</th>
+<th>64-bit tree</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Interface names (<code>__names__</code>)</td>
+<td><code>.2.2.1.2</code></td>
+<td><code>.31.1.1.1.1</code></td>
+</tr>
+<tr>
+<td><code>ifInOctets</code> / <code>ifHCInOctets</code></td>
+<td><code>.2.2.1.16</code></td>
+<td><code>.31.1.1.1.6</code></td>
+</tr>
+<tr>
+<td><code>ifOutOctets</code> / <code>ifHCOutOctets</code></td>
+<td><code>.2.2.1.10</code></td>
+<td><code>.31.1.1.1.10</code></td>
+</tr>
+<tr>
+<td><code>ifOperStatus</code></td>
+<td><code>.2.2.1.8</code></td>
+<td><code>.2.2.1.8</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">¶</a></h3>
+<p>Basic SNMPv2c scan in agent plugin mode, with all defaults:</p>
+<div class="highlight"><pre><span></span><code>./dynamic_snmp<span class="w"> </span>-h<span class="w"> </span><span class="s2">"192.168.51.1"</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">"2c"</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">"mycommunity"</span>
+</code></pre></div>
+<p>Server plugin mode with inclusion and exclusion filters. Only interfaces whose name contains <code>Ge</code> are monitored, and those containing <code>0/3</code> are excluded:</p>
+<div class="highlight"><pre><span></span><code>./dynamic_snmp<span class="w"> </span>-agent<span class="w"> </span><span class="s2">"Test-agentname"</span><span class="w"> </span>-h<span class="w"> </span><span class="s2">"192.168.51.1"</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">"2c"</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">"mycommunity"</span><span class="w"> </span>-only<span class="w"> </span><span class="s2">"Ge"</span><span class="w"> </span>-reject<span class="w"> </span><span class="s2">"0/3"</span>
+</code></pre></div>
+<p>The same example over SNMPv3:</p>
+<div class="highlight"><pre><span></span><code>./dynamic_snmp<span class="w"> </span>-agent<span class="w"> </span><span class="s2">"Test-agentname"</span><span class="w"> </span>-h<span class="w"> </span><span class="s2">"192.168.51.1"</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">"3"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-l<span class="w"> </span><span class="s2">"authPriv"</span><span class="w"> </span>-u<span class="w"> </span><span class="s2">"snmpv3user"</span><span class="w"> </span>-a<span class="w"> </span><span class="s2">"SHA"</span><span class="w"> </span>-A<span class="w"> </span><span class="s2">"PASSWORD1"</span><span class="w"> </span>-x<span class="w"> </span><span class="s2">"AES"</span><span class="w"> </span>-X<span class="w"> </span><span class="s2">"PASSWORD2"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-only<span class="w"> </span><span class="s2">"Ge"</span><span class="w"> </span>-reject<span class="w"> </span><span class="s2">"0/3"</span>
+</code></pre></div>
+<p>Custom branches with the default monitoring disabled:</p>
+<div class="highlight"><pre><span></span><code>./dynamic_snmp<span class="w"> </span>-agent<span class="w"> </span><span class="s2">"Test-agentname"</span><span class="w"> </span>-h<span class="w"> </span><span class="s2">"192.168.51.1"</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">"2c"</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">"mycommunity"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="s2">".1.3.6.1.2.1"</span><span class="w"> </span>-names<span class="w"> </span><span class="s2">".2.2.1.2"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-branches<span class="w"> </span><span class="s2">"OperStatus:.2.2.1.8,AdminStatus:.2.2.1.7"</span><span class="w"> </span>-nodefaults<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p>Quotes are not mandatory in the examples, but they prevent shell interpretation issues.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

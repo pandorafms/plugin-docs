@@ -1,0 +1,2362 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/plugins/dynamic-snmp/">
+      
+      
+        <link rel="prev" href="../advanced-log-parser/">
+      
+      
+        <link rel="next" href="../kvm/">
+      
+      
+        
+          <link rel="alternate" href="../../../plugins/dynamic-snmp/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Plugin Dynamic SNMP - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#plugin-dynamic-snmp" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Plugin Dynamic SNMP
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../plugins/dynamic-snmp/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de VMware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Dynamic SNMP
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Dynamic SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-como-plugin-de-agente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución como plugin de agente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registrar-como-plugin-de-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registrar como plugin de servidor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operacion-y-resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operación y resolución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametros-generales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros generales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametros-snmp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros SNMP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-monitorizacion-y-filtrado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de monitorización y filtrado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-umbrales-y-alertas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de umbrales y alertas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-transferencia-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de transferencia de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arbol-de-oid-por-defecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Árbol de OID por defecto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejemplos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-como-plugin-de-agente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución como plugin de agente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registrar-como-plugin-de-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registrar como plugin de servidor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operacion-y-resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operación y resolución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametros-generales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros generales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametros-snmp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros SNMP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-monitorizacion-y-filtrado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de monitorización y filtrado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-umbrales-y-alertas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de umbrales y alertas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-transferencia-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de transferencia de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arbol-de-oid-por-defecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Árbol de OID por defecto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejemplos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="plugin-dynamic-snmp">Plugin Dynamic SNMP<a class="headerlink" href="#plugin-dynamic-snmp" title="Permanent link">¶</a></h1>
+<p><em>Última actualización del artículo: 2026-09-23.</em></p>
+<h2 id="que-hace">Qué hace<a class="headerlink" href="#que-hace" title="Permanent link">¶</a></h2>
+<p>El plugin Dynamic SNMP realiza un escaneo SNMP de un dispositivo objetivo y genera módulos de Pandora FMS de forma dinámica. En lugar de predefinir la OID de cada interfaz, el plugin recorre la tabla de interfaces, utiliza el nombre de la interfaz (<code>ifName</code>) para identificar cada una y crea un módulo por interfaz y métrica. De este modo la monitorización sobrevive a los cambios de OID que se producen entre reinicios del dispositivo.</p>
+<p>Por defecto, para cada interfaz el plugin monitoriza:</p>
+<ul>
+<li><code>ifOperStatus</code>.</li>
+<li>El tráfico de entrada y salida: <code>ifHCInOctets</code> e <code>ifHCOutOctets</code> cuando el dispositivo expone contadores de 64 bits, o <code>ifInOctets</code> e <code>ifOutOctets</code> en caso contrario.</li>
+</ul>
+<p>Permite filtrar interfaces por nombre, asignar umbrales numéricos y de cadena a los módulos generados y adjuntar plantillas de alerta a dichos módulos.</p>
+<p>El plugin se ejecuta de dos formas:</p>
+<ul>
+<li><strong>Plugin de agente</strong> — sin <code>-agent</code>, imprime los módulos generados como XML en la salida estándar y el agente de Pandora FMS que lo ejecuta los recoge.</li>
+<li><strong>Plugin de servidor</strong> — con <code>-agent &lt;name&gt;</code>, construye el informe del agente y lo transfiere al servidor de Pandora FMS, creando el agente y sus módulos cuando ese agente todavía no existe.</li>
+</ul>
+<h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
+<h3 id="compatibilidad">Compatibilidad<a class="headerlink" href="#compatibilidad" title="Permanent link">¶</a></h3>
+<p>El plugin se ha desarrollado y probado en Rocky Linux y Fedora 34, y se espera que funcione en cualquier sistema Linux.</p>
+<h3 id="requisitos">Requisitos<a class="headerlink" href="#requisitos" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Un despliegue de Pandora FMS</strong> con el servidor o el agente que ejecutará el plugin.</li>
+<li><strong>Perl 5.x.</strong></li>
+<li><strong>Los comandos <code>snmpget</code> y <code>snmpwalk</code></strong> del paquete net-snmp, disponibles en el <code>PATH</code>.</li>
+<li><strong>La librería Perl <code>PandoraFMS::PluginTools</code>.</strong></li>
+<li><strong>Conectividad de red hacia el dispositivo objetivo</strong>, además de su comunidad SNMP (v1/v2c) o su usuario y claves SNMPv3.</li>
+<li><strong>Para el modo plugin de servidor</strong>, un <code>tentacle_client</code> accesible (transferencia tentacle) o permiso de escritura en el directorio <code>data_in</code> (transferencia localcopy).</li>
+</ol>
+<h3 id="instalar-el-plugin">Instalar el plugin<a class="headerlink" href="#instalar-el-plugin" title="Permanent link">¶</a></h3>
+<p>El plugin se distribuye como el script <code>dynamic_snmp</code>. Súbalo a la máquina que lo vaya a ejecutar:</p>
+<ul>
+<li><strong>Plugin de servidor</strong> — <code>/usr/share/pandora_server/util/plugin/</code>.</li>
+<li><strong>Plugin de agente</strong> — el directorio de plugins del endpoint.</li>
+</ul>
+<p>Dele permisos de ejecución al archivo y compruebe que <code>snmpwalk</code> y <code>snmpget</code> están instalados en esa máquina.</p>
+<h2 id="configuracion">Configuración<a class="headerlink" href="#configuracion" title="Permanent link">¶</a></h2>
+<p>El plugin no tiene archivo de configuración: todas las opciones se pasan por línea de comandos. Elija el modo según dónde se ejecute el plugin.</p>
+<h3 id="ejecucion-como-plugin-de-agente">Ejecución como plugin de agente<a class="headerlink" href="#ejecucion-como-plugin-de-agente" title="Permanent link">¶</a></h3>
+<p>Registre el plugin como plugin de agente en el endpoint, con su comando y sus parámetros, y <strong>no</strong> utilice <code>-agent</code>. En cada ejecución el plugin imprime el XML de los módulos en la salida estándar y el agente los almacena bajo su propio agente.</p>
+<h3 id="registrar-como-plugin-de-servidor">Registrar como plugin de servidor<a class="headerlink" href="#registrar-como-plugin-de-servidor" title="Permanent link">¶</a></h3>
+<p>Para que el plugin cree y alimente otro agente, regístrelo en la consola como plugin de servidor y pase <code>-agent</code> en cada ejecución:</p>
+<ol>
+<li>Suba el script del plugin a <code>/usr/share/pandora_server/util/plugin/</code> en el servidor de Pandora FMS.</li>
+<li>Vaya a <strong>Servers → Plugins</strong> y haga clic en <strong>Add plugin</strong>:</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/add-plugin.png" data-desc-position="bottom"><img alt="Botón Add plugin en Servers &gt; Plugins" src="../../../assets/images/plugins/dynamic-snmp/add-plugin.png"></a></p>
+<ol>
+<li>Indique un <strong>Name</strong>, deje <strong>Plugin type</strong> en <code>Standard</code> y configure el <strong>Max timeout</strong>. Los escaneos SNMP pueden tardar, por lo que se recomienda un timeout de al menos 20 segundos; también puede ser necesario subir el <code>plugin_timeout</code> global de <code>pandora_server.conf</code>.</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/plugin-general.png" data-desc-position="bottom"><img alt="Configuración general del plugin con nombre, tipo, timeout y descripción" src="../../../assets/images/plugins/dynamic-snmp/plugin-general.png"></a></p>
+<p>Descripción de ejemplo:</p>
+<div class="highlight"><pre><span></span><code>This plugin generates modules dynamically in the agent it's created in.
+Based on the ifName, it generates modules for:
+- ifOperStatus
+- ifInOctets (ifHCInOctets, if available)
+- ifOutOctets (ifHCOutOctets, if available)
+The value returned by the module represents the number of modules generated.
+</code></pre></div>
+<ol>
+<li>Configure el <strong>Plugin command</strong> y los <strong>Plugin parameters</strong>. Cada parámetro se escribe como una macro <code>_fieldX_</code>, donde <code>X</code> es el número posicional del parámetro:</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/plugin-command.png" data-desc-position="bottom"><img alt="Comando y parámetros del plugin con macros" src="../../../assets/images/plugins/dynamic-snmp/plugin-command.png"></a></p>
+<p>Las macros de servidor <code>_agentname_</code> y <code>_address_</code> rellenan automáticamente el nombre del agente y la dirección del dispositivo, por lo que los parámetros del ejemplo son:</p>
+<div class="highlight"><pre><span></span><code>-agent "_agentname_" -h "_address_" -v "_field1_" -c "_field2_" -only "_field3_" -reject "_field4_" -wmin "_field5_" -wmax "_field6_" -cmin "_field7_" -cmax "_field8_"
+</code></pre></div>
+<ol>
+<li>Defina cada macro en <strong>Macro parameters</strong>, con una descripción, un valor por defecto y, opcionalmente, un texto de ayuda:</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/plugin-macros.png" data-desc-position="bottom"><img alt="Parámetros de macro con descripción, valor por defecto y ayuda" src="../../../assets/images/plugins/dynamic-snmp/plugin-macros.png"></a></p>
+<ol>
+<li>En el agente de destino, cree un módulo nuevo y elija <strong>Create a new plugin server module</strong>:</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/create-module.png" data-desc-position="bottom"><img alt="Diálogo de creación de un módulo plugin de servidor" src="../../../assets/images/plugins/dynamic-snmp/create-module.png"></a></p>
+<ol>
+<li>En la configuración del módulo, seleccione el plugin <strong>Dynamic SNMP</strong> y rellene los campos de las macros:</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/configure-module.png" data-desc-position="bottom"><img alt="Configuración del módulo plugin de servidor con el plugin Dynamic SNMP" src="../../../assets/images/plugins/dynamic-snmp/configure-module.png"></a></p>
+<p>En cada ejecución el plugin de servidor transfiere el informe con el modo de transferencia seleccionado e imprime el número de módulos generados. Si el agente indicado en <code>-agent</code> no existe, se crea automáticamente.</p>
+<h2 id="verificacion">Verificación<a class="headerlink" href="#verificacion" title="Permanent link">¶</a></h2>
+<p>Ejecute el plugin manualmente en el host donde se vaya a lanzar. Este ejemplo escanea un dispositivo por SNMPv2c en modo plugin de agente:</p>
+<div class="highlight"><pre><span></span><code>./dynamic_snmp<span class="w"> </span>-h<span class="w"> </span><span class="s2">"192.168.51.1"</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">"2c"</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">"mycommunity"</span>
+</code></pre></div>
+<p>Una ejecución correcta como plugin de agente imprime un bloque XML <code>&lt;module&gt;</code> por cada módulo generado en la salida estándar. Una ejecución correcta como plugin de servidor transfiere el informe e imprime en su lugar el número de módulos generados.</p>
+<p>Los módulos generados aparecen entonces en el agente de destino:</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/generated-modules.png" data-desc-position="bottom"><img alt="Módulos por defecto generados para cada interfaz" src="../../../assets/images/plugins/dynamic-snmp/generated-modules.png"></a></p>
+<p>Con filtros y umbrales aplicados solo se generan las interfaces que coinciden y los umbrales se adjuntan a sus módulos:</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/filtered-modules.png" data-desc-position="bottom"><img alt="Módulos filtrados con umbrales de warning y critical" src="../../../assets/images/plugins/dynamic-snmp/filtered-modules.png"></a></p>
+<h2 id="entender-los-resultados">Entender los resultados<a class="headerlink" href="#entender-los-resultados" title="Permanent link">¶</a></h2>
+<p>El plugin recorre primero la rama de nombres de interfaz y, para cada nombre, consulta cada rama configurada. El nombre del módulo es el nombre de la interfaz seguido del nombre de la rama, separados por un guion bajo, por ejemplo <code>ge-0/0/0_ifHCInOctets</code> o <code>FastEthernet0/0_OperStatus</code>.</p>
+<ul>
+<li><strong>Estado de la interfaz.</strong> <code>ifOperStatus</code> se genera como un módulo <code>generic_proc</code>: vale <code>1</code> mientras la interfaz está operativa. Los valores mayores que <code>1</code> se fuerzan a <code>0</code> por compatibilidad con Pandora FMS.</li>
+<li><strong>Tráfico.</strong> <code>ifHCInOctets</code>, <code>ifHCOutOctets</code>, <code>ifInOctets</code> y <code>ifOutOctets</code> se generan como módulos incrementales (<code>generic_data_inc</code>).</li>
+<li><strong>Contadores de 64 bits.</strong> Cuando el dispositivo responde al recorrido de la rama de contadores de 64 bits (<code>.1.3.6.1.2.1.31.1.1.1.6</code>), el plugin usa las ramas HC; en caso contrario recurre a las ramas de 32 bits.</li>
+<li><strong>Tipado automático.</strong> Para ramas personalizadas el plugin detecta el tipo del módulo a partir del tipo de dato SNMP del valor devuelto; el tipo no se predefine.</li>
+<li><strong>Filtros.</strong> <code>-only</code> conserva únicamente las interfaces cuyo nombre coincide con alguna de sus expresiones regulares, y <code>-reject</code> descarta las interfaces cuyo nombre coincide con alguna de ellas.</li>
+</ul>
+<h2 id="operacion-y-resolucion-de-problemas">Operación y resolución de problemas<a class="headerlink" href="#operacion-y-resolucion-de-problemas" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>Activar la salida de depuración.</strong> Añada <code>-debug 1</code> para imprimir mensajes de diagnóstico, precedidos por una marca de tiempo, en la salida de error estándar.</li>
+<li><strong>No se genera ningún módulo.</strong> Compruebe la conectividad con el dispositivo, la versión de SNMP, la comunidad o las credenciales SNMPv3, y que <code>snmpwalk</code> y <code>snmpget</code> están instalados y accesibles en el <code>PATH</code>.</li>
+<li><strong>Faltan algunas interfaces.</strong> Revise las expresiones regulares de <code>-only</code> y <code>-reject</code>; se comparan contra el nombre de la interfaz, por lo que un valor como <code>0/0/5</code> excluye toda interfaz cuyo nombre contenga esa cadena.</li>
+<li><strong>La ejecución agota el tiempo de espera.</strong> Las tablas de interfaces grandes tardan más en recorrerse. Suba el timeout del módulo o del plugin y ajuste el intervalo (<code>-interval</code>) al tiempo de ejecución esperado.</li>
+<li><strong>Una ejecución como plugin de servidor no informa de módulos.</strong> Verifique que la consola puede recibir desde el servidor: la dirección y el puerto de <code>tentacle_client</code> en modo tentacle, o la ruta <code>data_in</code> en modo localcopy.</li>
+</ul>
+<h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
+<h3 id="parametros-generales">Parámetros generales<a class="headerlink" href="#parametros-generales" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Requerido</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-agent &lt;name&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Nombre del agente de destino. Si se indica, el plugin se ejecuta como plugin de servidor y transfiere el informe; si se omite, se ejecuta como plugin de agente e imprime los módulos en la salida estándar</td>
+</tr>
+<tr>
+<td><code>-interval &lt;seconds&gt;</code></td>
+<td>No</td>
+<td><code>300</code></td>
+<td>Intervalo del agente escrito en el informe generado (modo plugin de servidor). Un valor no numérico o <code>0</code> vuelve a <code>300</code></td>
+</tr>
+<tr>
+<td><code>-group &lt;name&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Grupo de módulos asignado a cada módulo generado</td>
+</tr>
+<tr>
+<td><code>-debug 0\|1</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Si vale <code>1</code>, imprime mensajes de diagnóstico con marca de tiempo en la salida de error estándar</td>
+</tr>
+</tbody>
+</table>
+<h3 id="parametros-snmp">Parámetros SNMP<a class="headerlink" href="#parametros-snmp" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Requerido</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-v &lt;version&gt;</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Versión de SNMP: <code>1</code>, <code>2</code>, <code>2c</code> o <code>3</code></td>
+</tr>
+<tr>
+<td><code>-h &lt;host&gt;</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Dirección IP o nombre del dispositivo que se va a escanear</td>
+</tr>
+<tr>
+<td><code>-c &lt;community&gt;</code></td>
+<td>Para <code>1</code>, <code>2</code> y <code>2c</code></td>
+<td>—</td>
+<td>Comunidad SNMP</td>
+</tr>
+<tr>
+<td><code>-p &lt;port&gt;</code></td>
+<td>No</td>
+<td><code>161</code></td>
+<td>Puerto SNMP del dispositivo</td>
+</tr>
+<tr>
+<td><code>-d &lt;type&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Tipo de dato. El plugin determina automáticamente el tipo de cada módulo, por lo que este valor se acepta pero no se aplica</td>
+</tr>
+</tbody>
+</table>
+<p>Parámetros de SNMPv3:</p>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Requerido</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-n &lt;context&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Contexto SNMPv3</td>
+</tr>
+<tr>
+<td><code>-l &lt;level&gt;</code></td>
+<td>Para <code>3</code></td>
+<td>—</td>
+<td>Nivel de seguridad: <code>noAuthNoPriv</code>, <code>authNoPriv</code> o <code>authPriv</code></td>
+</tr>
+<tr>
+<td><code>-u &lt;name&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Nombre de seguridad (usuario) SNMPv3</td>
+</tr>
+<tr>
+<td><code>-a &lt;protocol&gt;</code></td>
+<td>Con <code>authNoPriv</code> y <code>authPriv</code></td>
+<td>—</td>
+<td>Protocolo de autenticación, como <code>MD5</code> o <code>SHA</code></td>
+</tr>
+<tr>
+<td><code>-A &lt;key&gt;</code></td>
+<td>Con <code>authNoPriv</code> y <code>authPriv</code></td>
+<td>—</td>
+<td>Clave de autenticación</td>
+</tr>
+<tr>
+<td><code>-x &lt;protocol&gt;</code></td>
+<td>Con <code>authPriv</code></td>
+<td>—</td>
+<td>Protocolo de privacidad, como <code>DES</code> o <code>AES</code></td>
+</tr>
+<tr>
+<td><code>-X &lt;key&gt;</code></td>
+<td>Con <code>authPriv</code></td>
+<td>—</td>
+<td>Clave de privacidad</td>
+</tr>
+</tbody>
+</table>
+<h3 id="parametros-de-monitorizacion-y-filtrado">Parámetros de monitorización y filtrado<a class="headerlink" href="#parametros-de-monitorizacion-y-filtrado" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Requerido</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-o &lt;oid&gt;</code></td>
+<td>No</td>
+<td><code>.1.3.6.1.2.1</code></td>
+<td>OID base a la que se añaden las subramas de las ramas</td>
+</tr>
+<tr>
+<td><code>-names &lt;subtree&gt;</code></td>
+<td>No</td>
+<td>Automático</td>
+<td>Subrama bajo <code>-o</code> utilizada como origen de los nombres de interfaz</td>
+</tr>
+<tr>
+<td><code>-branches &lt;name:subtree,...&gt;</code></td>
+<td>No</td>
+<td>Automático</td>
+<td>Ramas que se deben recuperar, con el formato <code>Rama1:SubOID1,Rama2:SubOID2</code>. La subrama se añade a <code>-o</code></td>
+</tr>
+<tr>
+<td><code>-nodefaults 1</code></td>
+<td>No</td>
+<td>—</td>
+<td>Desactiva las ramas por defecto, de modo que solo se usan <code>-names</code> y <code>-branches</code></td>
+</tr>
+<tr>
+<td><code>-only &lt;regex,...&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Lista de expresiones regulares separadas por comas. Solo se monitorizan las interfaces cuyo nombre coincide con alguna de ellas</td>
+</tr>
+<tr>
+<td><code>-reject &lt;regex,...&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Lista de expresiones regulares separadas por comas. Se excluyen las interfaces cuyo nombre coincide con alguna de ellas</td>
+</tr>
+</tbody>
+</table>
+<h3 id="parametros-de-umbrales-y-alertas">Parámetros de umbrales y alertas<a class="headerlink" href="#parametros-de-umbrales-y-alertas" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Requerido</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-wmin &lt;value&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Umbral mínimo de warning para los módulos generados</td>
+</tr>
+<tr>
+<td><code>-wmax &lt;value&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Umbral máximo de warning para los módulos generados</td>
+</tr>
+<tr>
+<td><code>-cmin &lt;value&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Umbral mínimo de critical para los módulos generados</td>
+</tr>
+<tr>
+<td><code>-cmax &lt;value&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Umbral máximo de critical para los módulos generados</td>
+</tr>
+<tr>
+<td><code>-string_warning &lt;string&gt;</code> (<code>-wstr</code>)</td>
+<td>No</td>
+<td>—</td>
+<td>Umbral de warning de tipo cadena para los módulos generados</td>
+</tr>
+<tr>
+<td><code>-string_critical &lt;string&gt;</code> (<code>-cstr</code>)</td>
+<td>No</td>
+<td>—</td>
+<td>Umbral de critical de tipo cadena para los módulos generados</td>
+</tr>
+<tr>
+<td><code>-warning_inverse 0\|1</code> (<code>-winv</code>)</td>
+<td>No</td>
+<td>—</td>
+<td>Invierte la comparación del umbral de warning</td>
+</tr>
+<tr>
+<td><code>-critical_inverse 0\|1</code> (<code>-cinv</code>)</td>
+<td>No</td>
+<td>—</td>
+<td>Invierte la comparación del umbral de critical</td>
+</tr>
+<tr>
+<td><code>-alrt &lt;name,...&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Lista de plantillas de alerta separadas por comas, aplicadas a cada módulo generado</td>
+</tr>
+</tbody>
+</table>
+<h3 id="parametros-de-transferencia-de-datos">Parámetros de transferencia de datos<a class="headerlink" href="#parametros-de-transferencia-de-datos" title="Permanent link">¶</a></h3>
+<p>Se usan únicamente en modo plugin de servidor.</p>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Requerido</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-m &lt;mode&gt;</code></td>
+<td>No</td>
+<td><code>tentacle</code></td>
+<td>Modo de transferencia: <code>tentacle</code> o <code>localcopy</code></td>
+</tr>
+<tr>
+<td><code>-t_ip &lt;ip&gt;</code></td>
+<td>No</td>
+<td><code>127.0.0.1</code></td>
+<td>Dirección del servidor de Pandora FMS de destino para la transferencia tentacle</td>
+</tr>
+<tr>
+<td><code>-t_port &lt;port&gt;</code></td>
+<td>No</td>
+<td><code>41121</code></td>
+<td>Puerto de Tentacle</td>
+</tr>
+<tr>
+<td><code>-t_opts &lt;options&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Opciones adicionales de Tentacle</td>
+</tr>
+<tr>
+<td><code>-t_file_path &lt;path&gt;</code></td>
+<td>No</td>
+<td><code>/var/spool/pandora/data_in/</code></td>
+<td>Directorio de destino para la transferencia localcopy</td>
+</tr>
+</tbody>
+</table>
+<h3 id="modulos-generados">Módulos generados<a class="headerlink" href="#modulos-generados" title="Permanent link">¶</a></h3>
+<p>Para cada interfaz y cada rama, el nombre del módulo es <code>&lt;ifName&gt;_&lt;rama&gt;</code>. Las ramas por defecto son:</p>
+<table>
+<thead>
+<tr>
+<th>Nombre del módulo</th>
+<th>Significado</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;ifName&gt;_ifOperStatus</code></td>
+<td>Estado operativo de la interfaz: <code>1</code> cuando está operativa, <code>0</code> en caso contrario (los valores mayores que <code>1</code> se fuerzan a <code>0</code>)</td>
+<td><code>generic_proc</code></td>
+</tr>
+<tr>
+<td><code>&lt;ifName&gt;_ifHCInOctets</code></td>
+<td>Octetos de entrada, contador de 64 bits</td>
+<td><code>generic_data_inc</code></td>
+</tr>
+<tr>
+<td><code>&lt;ifName&gt;_ifHCOutOctets</code></td>
+<td>Octetos de salida, contador de 64 bits</td>
+<td><code>generic_data_inc</code></td>
+</tr>
+<tr>
+<td><code>&lt;ifName&gt;_ifInOctets</code></td>
+<td>Octetos de entrada, contador de 32 bits</td>
+<td><code>generic_data_inc</code></td>
+</tr>
+<tr>
+<td><code>&lt;ifName&gt;_ifOutOctets</code></td>
+<td>Octetos de salida, contador de 32 bits</td>
+<td><code>generic_data_inc</code></td>
+</tr>
+</tbody>
+</table>
+<p>Las ramas personalizadas se generan con el mismo nombrado <code>&lt;ifName&gt;_&lt;rama&gt;</code> y su tipo se detecta a partir del tipo de dato SNMP.</p>
+<h3 id="arbol-de-oid-por-defecto">Árbol de OID por defecto<a class="headerlink" href="#arbol-de-oid-por-defecto" title="Permanent link">¶</a></h3>
+<p>Las subramas siguientes se añaden a la OID base (<code>-o</code>, <code>.1.3.6.1.2.1</code> por defecto).</p>
+<table>
+<thead>
+<tr>
+<th>Rama</th>
+<th>Árbol de 32 bits</th>
+<th>Árbol de 64 bits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombres de interfaz (<code>__names__</code>)</td>
+<td><code>.2.2.1.2</code></td>
+<td><code>.31.1.1.1.1</code></td>
+</tr>
+<tr>
+<td><code>ifInOctets</code> / <code>ifHCInOctets</code></td>
+<td><code>.2.2.1.16</code></td>
+<td><code>.31.1.1.1.6</code></td>
+</tr>
+<tr>
+<td><code>ifOutOctets</code> / <code>ifHCOutOctets</code></td>
+<td><code>.2.2.1.10</code></td>
+<td><code>.31.1.1.1.10</code></td>
+</tr>
+<tr>
+<td><code>ifOperStatus</code></td>
+<td><code>.2.2.1.8</code></td>
+<td><code>.2.2.1.8</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="ejemplos">Ejemplos<a class="headerlink" href="#ejemplos" title="Permanent link">¶</a></h3>
+<p>Escaneo básico por SNMPv2c en modo plugin de agente, con todos los valores por defecto:</p>
+<div class="highlight"><pre><span></span><code>./dynamic_snmp<span class="w"> </span>-h<span class="w"> </span><span class="s2">"192.168.51.1"</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">"2c"</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">"mycommunity"</span>
+</code></pre></div>
+<p>Modo plugin de servidor con filtros de inclusión y exclusión. Solo se monitorizan las interfaces cuyo nombre contiene <code>Ge</code>, y se excluyen las que contienen <code>0/3</code>:</p>
+<div class="highlight"><pre><span></span><code>./dynamic_snmp<span class="w"> </span>-agent<span class="w"> </span><span class="s2">"Test-agentname"</span><span class="w"> </span>-h<span class="w"> </span><span class="s2">"192.168.51.1"</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">"2c"</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">"mycommunity"</span><span class="w"> </span>-only<span class="w"> </span><span class="s2">"Ge"</span><span class="w"> </span>-reject<span class="w"> </span><span class="s2">"0/3"</span>
+</code></pre></div>
+<p>El mismo ejemplo por SNMPv3:</p>
+<div class="highlight"><pre><span></span><code>./dynamic_snmp<span class="w"> </span>-agent<span class="w"> </span><span class="s2">"Test-agentname"</span><span class="w"> </span>-h<span class="w"> </span><span class="s2">"192.168.51.1"</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">"3"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-l<span class="w"> </span><span class="s2">"authPriv"</span><span class="w"> </span>-u<span class="w"> </span><span class="s2">"snmpv3user"</span><span class="w"> </span>-a<span class="w"> </span><span class="s2">"SHA"</span><span class="w"> </span>-A<span class="w"> </span><span class="s2">"PASSWORD1"</span><span class="w"> </span>-x<span class="w"> </span><span class="s2">"AES"</span><span class="w"> </span>-X<span class="w"> </span><span class="s2">"PASSWORD2"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-only<span class="w"> </span><span class="s2">"Ge"</span><span class="w"> </span>-reject<span class="w"> </span><span class="s2">"0/3"</span>
+</code></pre></div>
+<p>Ramas personalizadas con la monitorización por defecto desactivada:</p>
+<div class="highlight"><pre><span></span><code>./dynamic_snmp<span class="w"> </span>-agent<span class="w"> </span><span class="s2">"Test-agentname"</span><span class="w"> </span>-h<span class="w"> </span><span class="s2">"192.168.51.1"</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">"2c"</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">"mycommunity"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="s2">".1.3.6.1.2.1"</span><span class="w"> </span>-names<span class="w"> </span><span class="s2">".2.2.1.2"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-branches<span class="w"> </span><span class="s2">"OperStatus:.2.2.1.8,AdminStatus:.2.2.1.7"</span><span class="w"> </span>-nodefaults<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p>Las comillas de los ejemplos no son obligatorias, pero evitan problemas de interpretación del shell.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
