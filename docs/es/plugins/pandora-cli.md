@@ -1,8 +1,8 @@
 # Pandora CLI
 
-## Introducción
+*Última actualización del artículo: 2026-10-06.*
 
-**Ver**. 22-09-2026
+## Introducción
 
 `pandora-cli` es un cliente de línea de comandos para la **API v2** de Pandora FMS. Permite consultar
 y modificar los datos de la consola desde un terminal o un script, sin pasar por la interfaz web.
@@ -88,6 +88,49 @@ pandora-cli user list --context lab      # un comando contra otra consola
 `--token` y `--url` también pueden pasarse directamente a cualquier comando. Usados así, el token no
 se escribe nunca en disco, lo que resulta adecuado para un trabajo de integración continua que ya lo
 tiene en un secreto.
+
+### Correlación de sesiones de IA
+
+Use un ID de sesión de IA opcional para adjuntar metadatos de correlación a las peticiones de la
+API v2. Guárdelo en un contexto con nombre al iniciar sesión. Los tokens pasados como argumentos
+pueden aparecer en el historial del shell o en la lista de procesos del sistema operativo.
+
+```bash
+pandora-cli auth login --token '<API_TOKEN>' --url https://console.example.com/pandora_console/api/v2/ --context prod --ai-session-id ai-session-example-001
+pandora-cli user list --context prod
+```
+
+Tras un inicio de sesión correcto, el primer comando guarda `ai_session_id` en el contexto de
+destino en `~/.pandora-cli/config.json`. El comando posterior reutiliza ese ID sin repetir la
+opción.
+
+El orden de resolución es **`--ai-session-id` explícito (incluido un valor vacío) →
+`ai_session_id` del contexto seleccionado/actual → ausente**. Un ID no vacío envía
+`X-Pandora-AI-Session` en cada petición de la API v2, incluidas la autenticación y la consulta de la
+especificación de la consola. Un ID ausente o vacío omite la cabecera. Los caracteres de control se
+rechazan.
+
+El inicio de sesión y los demás comandos tratan las sustituciones de forma distinta:
+
+| Invocación | Efecto sobre el ID guardado |
+| --- | --- |
+| `auth login --ai-session-id <id>` correcto | Guarda el ID explícito en el contexto de destino. |
+| `auth login` correcto sin la opción | Conserva el ID previo de ese contexto. |
+| `auth login --ai-session-id=` correcto | Borra el ID guardado de ese contexto; el campo vacío se omite del JSON. |
+| Inicio de sesión fallido o ID no válido | No escribe nada; la configuración existente permanece sin cambios. |
+| Cualquier otro comando con `--ai-session-id <id>` o `--ai-session-id=` | Sustituye o desactiva la cabecera solo para esa invocación; nunca modifica el ID guardado. |
+
+Por ejemplo, desactive la cabecera para una consulta sin borrar el ID guardado, o bórrelo mediante
+un inicio de sesión correcto:
+
+```bash
+pandora-cli user list --context prod --ai-session-id=
+pandora-cli auth login --token '<API_TOKEN>' --url https://console.example.com/pandora_console/api/v2/ --context prod --ai-session-id=
+```
+
+El ID es un metadato de correlación, no una credencial: no autentica al solicitante ni concede
+permisos. El envío de la cabecera no demuestra que la consola la registre o la muestre en un
+registro de auditoría.
 
 ### Certificados autofirmados
 
@@ -400,6 +443,13 @@ pandora-cli skill install --force # sobrescribe una skill existente
 Vuelva a ejecutarlo tras una actualización para que la skill siga correspondiéndose con el
 ejecutable.
 
+Use un ID de correlación por sesión de IA y cámbielo al iniciar una sesión nueva. Guárdelo con
+`auth login --ai-session-id <id>` para reutilizarlo en el contexto de destino. En los demás comandos,
+`--ai-session-id <id>` es una sustitución temporal y `--ai-session-id=` desactiva la cabecera para
+esa invocación sin borrar el ID guardado. Las llamadas posteriores sin la opción reutilizan el ID
+guardado. Consulte la sección de correlación de sesiones de IA para conocer el comportamiento de
+guardado y borrado durante el inicio de sesión.
+
 ### Diagnosticar una llamada
 
 `--verbose` traza la línea de petición, el cuerpo enviado y el estado de la respuesta por la salida
@@ -442,6 +492,7 @@ puede emplearse directamente en el flujo de control de un script.
 | `--context <nombre>` | Contexto con nombre que se debe usar. Por defecto, el actual. |
 | `--url <url>` | URL base de la API, que prevalece sobre el contexto. |
 | `--token <token>` | Token solo para este comando. No se escribe nunca en disco. |
+| `--ai-session-id <id>` | ID de correlación opcional; prevalece sobre el contexto seleccionado/actual. Un `auth login` correcto lo guarda; los demás comandos lo usan de forma temporal. `--ai-session-id=` omite la cabecera y borra el ID guardado solo si el inicio de sesión es correcto. |
 | `--insecure` | Omite la verificación del certificado TLS. |
 | `-o, --output json\|table\|yaml` | Formato de salida. Tabla en terminal, JSON en el resto de casos. |
 | `-v, --verbose` | Traza las peticiones por la salida de error estándar. |
@@ -476,7 +527,7 @@ columna JSON, indique una ruta con `--where '<campo>:<rutaJson> <op> <valor>'`.
 
 | Comando | Efecto |
 | --- | --- |
-| `auth login` | Valida un token y lo guarda en un contexto. |
+| `auth login` | Valida un token y lo guarda en un contexto. Si tiene éxito, un `--ai-session-id` explícito guarda el ID en ese contexto, su omisión conserva el ID previo y `--ai-session-id=` lo borra. Un inicio de sesión fallido o un ID no válido no escribe nada. |
 | `auth status` | Muestra el contexto activo, verifica el token e informa de la especificación publicada por la consola. Con `--refresh` vuelve a leer esa especificación. |
 | `auth context list` | Enumera los contextos guardados. |
 | `auth context use <nombre>` | Selecciona el contexto actual. |
@@ -548,3 +599,9 @@ que publica la propia consola.
 | `~/.pandora-cli/schema-<contexto>.json` | Descripción almacenada de la API de esa consola. |
 | `PANDORA_CLI_HOME` | Cambia el directorio de configuración. |
 | `CLAUDE_CONFIG_DIR` | Cambia dónde escribe `skill install`. |
+
+Campo opcional en cada contexto de `config.json`:
+
+| Nombre | Obligatorio | Por defecto | Descripción |
+| --- | --- | --- | --- |
+| `ai_session_id` | No | Ausente | ID de correlación reutilizado cuando se omite `--ai-session-id`. Un valor no vacío envía `X-Pandora-AI-Session`; un valor vacío omite la cabecera. Un inicio de sesión correcto puede guardarlo o borrarlo; un campo vacío se omite del JSON guardado. Los contextos existentes sin este campo no necesitan cambios. |

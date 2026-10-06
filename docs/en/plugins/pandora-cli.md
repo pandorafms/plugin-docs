@@ -1,8 +1,8 @@
 # Pandora CLI
 
-## Introduction
+*Article last updated: 2026-10-06.*
 
-**Ver**. 22-09-2026
+## Introduction
 
 `pandora-cli` is a command-line client for the Pandora FMS **API v2**. It lets you read and change
 console data from a terminal or a script, without going through the web interface.
@@ -86,6 +86,47 @@ pandora-cli user list --context lab      # one command against another console
 
 `--token` and `--url` can also be passed to any command directly. Used that way the token is never
 written to disk, which suits a CI job that already holds it in a secret.
+
+### AI session correlation
+
+Use an optional AI session ID to attach correlation metadata to API v2 requests. Save it in a
+named context when logging in. Tokens passed as command arguments may appear in shell history or
+the operating system process list.
+
+```bash
+pandora-cli auth login --token '<API_TOKEN>' --url https://console.example.com/pandora_console/api/v2/ --context prod --ai-session-id ai-session-example-001
+pandora-cli user list --context prod
+```
+
+After a successful login, the first command stores `ai_session_id` in the destination context in
+`~/.pandora-cli/config.json`. The later command reuses that ID without repeating the flag.
+
+Resolution order is **explicit `--ai-session-id` (including an empty value) → selected/current
+context `ai_session_id` → absent**. A nonempty ID sends `X-Pandora-AI-Session` on every API v2
+request, including authentication and the console specification fetch. An absent or empty ID omits
+the header. Control characters are rejected.
+
+Login and other commands treat overrides differently:
+
+| Invocation | Effect on the stored ID |
+| --- | --- |
+| Successful `auth login --ai-session-id <id>` | Saves the explicit ID in the destination context. |
+| Successful `auth login` without the flag | Preserves that context's prior ID. |
+| Successful `auth login --ai-session-id=` | Clears that context's stored ID; the empty field is omitted from JSON. |
+| Failed login or invalid ID | Writes nothing; the existing configuration remains unchanged. |
+| Any other command with `--ai-session-id <id>` or `--ai-session-id=` | Overrides or disables the header for that invocation only; never changes the stored ID. |
+
+For example, disable the header for one read without clearing the saved ID, or clear it with a
+successful login:
+
+```bash
+pandora-cli user list --context prod --ai-session-id=
+pandora-cli auth login --token '<API_TOKEN>' --url https://console.example.com/pandora_console/api/v2/ --context prod --ai-session-id=
+```
+
+The ID is correlation metadata, not a credential: it does not authenticate the caller or grant
+permissions. Sending the header does not establish that the console records or displays it in an
+audit log.
 
 ### Self-signed certificates
 
@@ -382,6 +423,12 @@ pandora-cli skill install --force # overwrite an existing one
 
 Re-run it after upgrading so the skill keeps matching the executable.
 
+Use one correlation ID per AI session and rotate it when starting a new session. Save it with
+`auth login --ai-session-id <id>` for reuse in the destination context. On other commands,
+`--ai-session-id <id>` is a transient override and `--ai-session-id=` disables the header for that
+invocation without clearing the stored ID. Later calls without the flag reuse the saved ID. See
+the AI session correlation section for login save and clear behavior.
+
 ### Diagnosing a call
 
 `--verbose` traces the request line, the request body and the response status to standard error,
@@ -424,6 +471,7 @@ control flow.
 | `--context <name>` | Named context to use. Defaults to the current one. |
 | `--url <url>` | API base URL, overriding the context. |
 | `--token <token>` | Token for this command only. Never written to disk. |
+| `--ai-session-id <id>` | Optional correlation ID; overrides the selected/current context. Successful `auth login` saves it; other commands use it transiently. `--ai-session-id=` omits the header and clears the stored ID only on successful login. |
 | `--insecure` | Skip TLS certificate verification. |
 | `-o, --output json\|table\|yaml` | Output format. Table on a terminal, JSON otherwise. |
 | `-v, --verbose` | Trace requests to standard error. |
@@ -458,7 +506,7 @@ column, address a path with `--where '<field>:<jsonPath> <op> <value>'`.
 
 | Command | Effect |
 | --- | --- |
-| `auth login` | Validate a token and store it in a context. |
+| `auth login` | Validate a token and store it in a context. On success, an explicit `--ai-session-id` saves the ID in that context, omission preserves the prior ID, and `--ai-session-id=` clears it. Failed login or an invalid ID writes nothing. |
 | `auth status` | Show the active context, verify the token and report the console's published specification. `--refresh` re-reads that specification. |
 | `auth context list` | List stored contexts. |
 | `auth context use <name>` | Select the current context. |
@@ -529,3 +577,9 @@ publishes.
 | `~/.pandora-cli/schema-<context>.json` | Cached description of that console's API. |
 | `PANDORA_CLI_HOME` | Overrides the configuration directory. |
 | `CLAUDE_CONFIG_DIR` | Overrides where `skill install` writes. |
+
+Optional field in each context in `config.json`:
+
+| Name | Required | Default | Description |
+| --- | --- | --- | --- |
+| `ai_session_id` | No | Absent | Correlation ID reused when `--ai-session-id` is omitted. A nonempty value sends `X-Pandora-AI-Session`; an empty value omits the header. Successful login can save or clear it; an empty field is omitted from the saved JSON. Existing contexts without this field need no change. |
