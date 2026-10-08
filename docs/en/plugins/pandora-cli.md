@@ -1,6 +1,6 @@
 # Pandora CLI
 
-*Article last updated: 2026-10-06.*
+*Article last updated: 2026-10-08.*
 
 ## Introduction
 
@@ -246,6 +246,15 @@ rather than guessing again. Several entities — including `group`, `tag`, `prof
 pandora-cli agent list --fields idAgent,alias,criticalCount,totalCount
 ```
 
+The new entities follow the same rule. `policy` accepts `applyToSecondaryGroups`,
+`createLinkedModules`, `description`, `forceApply`, `idGroup`, `idPolicy`, `name` and `status`;
+`collection` accepts `description`, `idCollection`, `idGroup`, `name`, `shortName` and `status`;
+`service` accepts `asynchronous`, `autoCalculate`, `cascadeProtection`, `cpsInhibit`, `critical`,
+`description`, `evaluateSla`, `idGroup`, `idService`, `isFavourite`, `name`, `quiet`,
+`serviceInterval`, `slaInterval`, `status`, `unknownAsCritical`, `utimestamp` and `warning`. The
+`token` set now includes `isPandoraAi`, next to `idToken`, `idUser`, `label`, `lastUsage` and
+`validity`. `--filter` still accepts every other field of each entity.
+
 `module-alert list` takes an optional `idAgentModule`. With it, it lists that module's alerts, as
 before. Without it, it lists every module alert on the console:
 
@@ -304,6 +313,15 @@ cat user.json | pandora-cli user create --from-file -
 ```
 
 `--set` and `--from-file` cannot be combined.
+
+`--set` values are converted to their JSON type exactly like filter values. A string field whose
+value looks like a number is therefore sent as a number: `--set permissions=0755` sends the number `755`.
+Quote the value to force a string, or send the payload with
+`--from-file`:
+
+```bash
+pandora-cli <entity> <verb> --set permissions='"0755"'
+```
 
 When the schema declares a field as an **array** — for example `severity` on `event-filter` or
 `wildcardAgents` on `report-datasource` — a `--set` value is serialized as an array with one
@@ -387,6 +405,138 @@ pandora-cli user profile remove operator1 3
 **Breaking change**: earlier builds took `idProfile` for `user profile get`. When the same profile
 is assigned to a user on more than one group, each assignment has its own `idUserProfile`.
 
+### Policies, collections and services
+
+`policy`, `collection` and `service` group part of their commands in **child groups**. The syntax is
+`<entity> <group> <verb> <ids...>`, and `pandora-cli <entity> --help` lists the groups of an entity:
+
+```bash
+pandora-cli policy module list 7
+pandora-cli collection file upload 3 --file ./a.conf
+pandora-cli service element add 2 --set description='Frontend CPU' --set idAgenteModulo=42
+```
+
+The groups are `policy agent`, `policy alert`, `policy alert-action`, `policy collection`,
+`policy group`, `policy log-module`, `policy module`, `policy plugin` and `policy queue`;
+`collection file`, `collection folder` and `collection agent`; and `service element`. Collections
+are also assigned from the agent side with `agent collection list`, `agent collection add` and
+`agent collection remove`.
+
+**Removing marks, it does not delete.** In a policy, `remove`, `delete` and `bulk-delete` on a child
+(agent, alert, collection, group, log module, module or plugin) only mark it `pendingDelete`. The
+removal takes effect when the policy queue is applied, and `restore` undoes the mark before that
+happens. `policy alert-action remove` and `policy queue delete` are not marked: they act at once.
+
+**Purging and the queue are asynchronous.** `policy purge` and the `policy queue` operations enqueue
+work and return without waiting. A policy cannot be deleted while queue entries are pending: check
+`policy queue list` (or `policy queue summary`) and use `policy queue clear`, or wait, before
+deleting it. Nor can it be deleted while it still has assigned agents: run `policy purge` and wait
+for the queue to finish first.
+
+**Bulk plugin operations need a JSON array.** `policy plugin bulk-delete`, `bulk-disable`,
+`bulk-enable` and `bulk-restore` take a top-level array of plugin ids, which `--set` cannot build.
+Send it from standard input or a file with `--from-file`; the result reports the successes and
+errors per plugin:
+
+```bash
+echo '[4,5]' | pandora-cli policy plugin bulk-enable 7 --from-file -
+```
+
+Policy children are identified by their own id, which follows the policy id on the command line
+(`<idPolicy> <idPolicyModule>`, `<idPolicy> <idPolicyAgent>`, and so on). The options a user needs
+most:
+
+| Group | Verbs | Main options |
+| --- | --- | --- |
+| `policy agent` | `list`, `get`, `add`, `remove`, `restore` | `add`: `--set idAgent=<id>`. |
+| `policy group` | `list`, `get`, `add`, `remove`, `restore` | `add`: `--set idGroup=<id>`. |
+| `policy collection` | `list`, `available`, `get`, `add`, `remove`, `restore` | `add`: `--set idCollection=<id>`. `available` lists the collections not linked yet. |
+| `policy module` | `list`, `get`, `create`, `update`, `delete`, `enable`, `disable`, `restore` | `create`: `--set name=...`, `--set moduleType=...`, `--set idModule=<id>` and `--set idModuleType=<id>`. |
+| `policy log-module` | `list`, `get`, `create`, `update`, `delete`, `enable`, `disable`, `restore` | `create`: `--set collectorMode=...`, `--set moduleName=...`, `--set source=...` and `--set sourceType=...`. |
+| `policy plugin` | `list`, `get`, `create`, `update`, `delete`, `enable`, `disable`, `restore`, `bulk-delete`, `bulk-disable`, `bulk-enable`, `bulk-restore` | `create`: `--set pluginExecution=<command>`. The `bulk-*` verbs take a JSON array (see above). |
+| `policy alert` | `list`, `get`, `create`, `update`, `delete`, `restore` | `create`: `--set idPolicyModule=<id>` and `--set idAlertTemplate=<id>`. `update`: `--set disabled=true`. |
+| `policy alert-action` | `list`, `add`, `remove` | Take `<idPolicy> <idPolicyAlert>`. `add`: `--set idAlertAction=<id>`, `--set firesMin=<n>` and `--set firesMax=<n>`. `remove` also takes `<idPolicyAlertAction>`. |
+| `policy queue` | `list`, `get`, `summary`, `add`, `apply-pending`, `clear`, `delete` | `add`: `--set operation=apply` and `--set idAgent=<id>`. `apply-pending` queues the pending changes. `clear` and `delete` ask for confirmation unless `--yes` is given. |
+
+`policy copy` takes `--set name=...` and `--set idGroup=<id>` for the new policy; `policy purge`
+takes no options.
+
+```bash
+pandora-cli policy agent add 7 --set idAgent=42
+pandora-cli policy queue apply-pending 7
+pandora-cli policy queue summary 7
+```
+
+**Fixed after creation.** The `moduleType`, `idModule` and `idModuleType` of a policy module cannot
+be changed once it exists; create a new policy module instead.
+
+**Collections need a remote agent.** Assigning a collection to an agent (`agent collection add`;
+`collection agent list` shows the result) requires an agent with remote configuration (`remote=1`)
+that is available on the console. Otherwise the console answers
+`Agent remote configuration is unavailable`, including for an agent that has `remote=1` but no
+remote configuration yet. The assignment is only recorded in the agent's remote configuration; run `collection apply` after changing the files of a collection so that agents pick
+up the new package.
+
+**`isPandoraAi` on `token`** can only be set when the token is created.
+
+### Transferring files
+
+Two commands of `collection` move file contents. They use their own flags, and `--from-file` does
+not apply to them.
+
+**Upload** (`collection file upload`) sends the request as `multipart/form-data`. Pass each file with
+`--file <path>`, or with `--file <field>=<path>` to name the form field; the flag is repeatable and at
+least one is required. The text form fields (`folder`, `decompress`, `overwrite` and `permissions`)
+go in `--set field=value` and are sent as strings, so no extra quoting is needed there. File
+contents are never printed by `-v`.
+
+```bash
+pandora-cli collection file upload 3 --file ./a.conf
+```
+
+**Download** (`collection file download`) returns raw bytes, so `--output-file <path>` is required;
+`--output-file -` writes to standard output. An existing file is replaced only with `--force`, and a
+failed download leaves no partial file. `--output-file` is the destination: `-o/--output` still
+selects the output format.
+
+```bash
+pandora-cli collection file download 3 --path a.conf --output-file ./a.conf
+pandora-cli collection file download 3 --path a.conf --output-file ./a.conf --force
+```
+
+The other commands of the `collection` file groups take the collection id and these options.
+`--path` is always relative to the collection, never an absolute server path.
+
+| Command | Options |
+| --- | --- |
+| `collection file list` | `--set folder=<path>` is optional; omitting it lists the root. |
+| `collection file read` | `--path <path>` (required). Prints the text content of the file. |
+| `collection file create` | `--set path=<path>` (required) and `--set content=<text>`; without `content` an empty file is created. |
+| `collection file update` | `--set path=<path>` and `--set content=<text>` replace the content of an existing file. |
+| `collection file delete` | `--path <path>` (required) and `--yes`. |
+| `collection folder create` | `--set path=<path>` (required); `--set recursive=true` also creates missing parent folders. |
+| `collection folder delete` | `--path <path>` (required) and `--yes`. The folder must be empty. |
+| `collection agent list` | No options. Lists the agents assigned to the collection. |
+| `collection apply` | No options. Generates the collection package again. |
+
+```bash
+pandora-cli collection folder create 3 --set path=scripts --set recursive=true
+pandora-cli collection file create 3 --set path=scripts/check.sh --set content='echo ok'
+pandora-cli collection file read 3 --path scripts/check.sh
+```
+
+### Module graphs
+
+`module graph` asks the console to render a graph of an agent module. The options (`period`,
+`graphType`, `width`, `height` and others) travel in the body as `--set` fields. The response is not
+a binary stream: it carries the image base64-encoded in its `graph` field, with its `mimeType`
+(`image/png` or `image/jpeg`) and `encoding` (`base64`) next to it. `period` is expressed in seconds
+(minimum 300; the default is one day).
+
+```bash
+pandora-cli module graph 12 --set period=3600 -o json | jq -r .graph | base64 -d > graph.png
+```
+
 ### Inspecting the console's API
 
 `spec` reads the API description the console publishes about itself, so you can see which fields an
@@ -457,7 +607,11 @@ pandora-cli user list --filter isAdmin=true -v -o json > users.json
 | `--fields ... is not available on this console` | The entity does not implement that filter parameter; the console rejected the request and the CLI named the flag that sent it. See [Filtering features by entity](#filtering-features-by-entity). |
 | `unknown field "..."` | The field does not exist on that entity. The message lists the valid names. |
 | `the "..." entity does not exist on this console` | The console does not publish that entity. Run `auth status --refresh` if it was upgraded. |
-| `--... is required by this endpoint` | A parameter the API declares as required was not supplied. |
+| `--... is required by this endpoint` | A parameter the API declares as required was not supplied (for example `--path` in `collection file download`). |
+| A policy cannot be deleted | The policy still has pending queue entries or assigned agents. Check `policy queue list` and use `policy queue clear` or wait; run `policy purge` to unassign its agents. |
+| A policy child still appears after `remove` | The removal only marks it `pendingDelete` until the policy queue is applied. Use `restore` to undo it. |
+| A collection cannot be assigned to an agent (`Agent remote configuration is unavailable`) | The agent needs remote configuration (`remote=1`) available on the console. |
+| A value such as `0755` arrives as `755` | `--set` converts numeric-looking values. Use `--set permissions='"0755"'` or `--from-file`. |
 
 A command exits `0` on success and non-zero on failure, so it can be used directly in a script's
 control flow.
@@ -502,6 +656,14 @@ column, address a path with `--where '<field>:<jsonPath> <op> <value>'`.
 | `--from-file <path>` | Read the whole JSON payload from a file, or `-` for standard input. |
 | `--yes` | Skip the confirmation prompt on a destructive command. |
 
+### File transfer flags
+
+| Flag | Effect |
+| --- | --- |
+| `--file <path>` or `--file <field>=<path>` | File to upload with a multipart command (`collection file upload`). Repeatable; at least one is required. |
+| `--output-file <path>` | Destination of a raw-bytes command (`collection file download`). Required; `-` writes to standard output. |
+| `--force` | Replace an existing `--output-file`. |
+
 ### Authentication commands
 
 | Command | Effect |
@@ -519,7 +681,7 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 
 | Entity | Covers | Verbs |
 | --- | --- | --- |
-| `agent` | Monitoring agents | `list`, `get`, `create`, `update`, `delete` + 1 more |
+| `agent` | Monitoring agents | `list`, `get`, `create`, `update`, `delete` + 4 more (`status` and the `collection` group) |
 | `agent-extended-data` | Extended data attached to agents | `list`, `get`, `create`, `update`, `delete` |
 | `agent-secondary-group` | Secondary groups of an agent | `list`, `create`, `delete` |
 | `alert-action` | Alert actions | `list`, `get`, `create`, `update`, `delete` + 1 more |
@@ -529,6 +691,7 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `alert-template` | Alert templates | `list`, `get`, `create`, `update`, `delete` + 1 more |
 | `bulk-draft` | Bulk operation drafts | `list`, `get`, `delete` + 1 more |
 | `bulk-queue` | Bulk operation queue | `list`, `get`, `delete` |
+| `collection` | File collections distributed to agents | `list`, `get`, `create`, `update`, `delete` + 11 more (`apply` and the `file`, `folder` and `agent` groups) |
 | `dashboard` | Dashboards | `list`, `get`, `create`, `update`, `delete` |
 | `dashboard-widget` | Widgets placed on a dashboard | `list`, `get`, `create`, `update`, `delete` |
 | `data-translation` | Data translation definitions | `list`, `get`, `create`, `update`, `delete` |
@@ -539,7 +702,7 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `event-filter` | Saved event filters | `list`, `get`, `create`, `update`, `delete` |
 | `event-tag` | Event tags | `list`, `get`, `create`, `update`, `delete` |
 | `group` | Agent groups | `list`, `get`, `create`, `update`, `delete` |
-| `module` (alias `agent-module`) | Agent modules | `list`, `get`, `create`, `update`, `delete` + 1 more |
+| `module` (alias `agent-module`) | Agent modules | `list`, `get`, `create`, `update`, `delete` + 2 more (`force-check`, `graph`) |
 | `module-alert` | Alerts assigned to an agent module | `list`, `get`, `create`, `update`, `delete` |
 | `module-alert-action` | Actions fired by an agent module alert | `list`, `get`, `create`, `update`, `delete` |
 | `module-data` | Historical data of an agent module | `list`, `get` + 1 more |
@@ -549,6 +712,7 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `module-type` | Module types | `list`, `get` |
 | `monitoring` | Push monitoring data | `create` |
 | `pandora-itsm-inventory` | Pandora ITSM inventory | `list`, `get` |
+| `policy` | Policies applied to agents | `list`, `get`, `create`, `update`, `delete` + 62 more (`copy`, `purge` and the `agent`, `alert`, `alert-action`, `collection`, `group`, `log-module`, `module`, `plugin` and `queue` groups) |
 | `profile` | ACL profiles | `list`, `get`, `create`, `update`, `delete` |
 | `report-datasource` | Report data sources | `list`, `get`, `create`, `update`, `delete` |
 | `report-datasource-agent` | Agents attached to a report data source | `list`, `get`, `create`, `update`, `delete` |
@@ -558,6 +722,7 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `report-design-page-widget` | Widgets on a report design page | `list`, `get`, `create`, `update`, `delete` |
 | `report-design-report` | Report entries of a report design | `list`, `get`, `create`, `update`, `delete` |
 | `report-design-template` | Templates of a report design | `list`, `get`, `create`, `update`, `delete` |
+| `service` | Services | `list`, `get`, `create`, `update`, `delete` + 5 more (the `element` group) |
 | `siem-group` | SIEM groups | `list`, `get`, `create`, `update`, `delete` |
 | `siem-rule` | SIEM rules | `list`, `get`, `create`, `update`, `delete` + 4 more |
 | `tag` | Module tags | `list`, `get`, `create`, `update`, `delete` |
