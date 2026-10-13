@@ -77,13 +77,13 @@ A successful run writes an `extended_data` document to standard output. When a p
 </extended_data>
 ```
 
-When event reporting is enabled and there is something to report, a sibling `events` block follows. When nothing is pending, only the empty `extended_data` root is printed. With the inventory disabled and no events, nothing is printed.
+When event reporting is enabled and there is something to report, a sibling `events` block follows. When nothing is pending, a `message` field reporting `No pending software updates` is printed instead. With the inventory disabled and no events, nothing is printed.
 
 ## Understand the results
 
 ### Pending software inventory
 
-The plugin always emits one `extended_data` document of category `software`; the `Software` module is omitted when nothing is pending. Each item exposes the following fields:
+The plugin always emits one `extended_data` document of category `software`. When there is something to update, each item exposes the following fields; when nothing is pending, the document carries a single `message` field (`No pending software updates`) so the category is always present:
 
 | Field | Content |
 | --- | --- |

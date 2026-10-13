@@ -77,13 +77,13 @@ Una ejecución correcta escribe un documento `extended_data` en la salida están
 </extended_data>
 ```
 
-Cuando el envío de eventos está activado y hay algo que informar, a continuación aparece un bloque hermano `events`. Cuando no hay nada pendiente solo se imprime la raíz `extended_data` vacía. Con el inventario desactivado y sin eventos no se imprime nada.
+Cuando el envío de eventos está activado y hay algo que informar, a continuación aparece un bloque hermano `events`. Cuando no hay nada pendiente se imprime un campo `message` con `No pending software updates`. Con el inventario desactivado y sin eventos no se imprime nada.
 
 ## Entender los resultados
 
 ### Inventario de software pendiente
 
-El plugin siempre emite un documento `extended_data` de categoría `software`; el módulo `Software` se omite cuando no hay nada pendiente. Cada elemento expone los siguientes campos:
+El plugin siempre emite un documento `extended_data` de categoría `software`. Cuando hay algo que actualizar, cada elemento expone los siguientes campos; cuando no hay nada pendiente, el documento incluye un único campo `message` (`No pending software updates`) para que la categoría siempre esté presente:
 
 | Campo | Contenido |
 | --- | --- |
