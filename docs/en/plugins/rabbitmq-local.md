@@ -1,6 +1,6 @@
 # RabbitMQ Local monitoring plugin
 
-*Article last updated: 2026-09-21.*
+*Article last updated: 2026-10-16.*
 
 ## What it does
 
@@ -110,6 +110,23 @@ file:
 ./rabbitmq-local -host <RABBITMQ_HOST>:<MANAGEMENT_PORT> -user <RABBITMQ_USER> -pass <RABBITMQ_PASSWORD> -as_agent_plugin 1
 ```
 
+The credentials can also be read from a separate file, so neither the user nor
+the password appears in the command line or in the operating system process
+list:
+
+```bash
+# Credentials read from a file (readable only by the plugin user).
+./rabbitmq-local -host <RABBITMQ_HOST>:<MANAGEMENT_PORT> \
+    -cred_file /etc/pandora/plugins/rabbitmq-local.creds -as_agent_plugin 1
+```
+
+The credentials file uses `key=value` lines:
+
+```ini
+user=<RABBITMQ_USER>
+pass=<RABBITMQ_PASSWORD>
+```
+
 `agent_name`, `interval`, `transfer_mode`, `local_folder` and the `tentacle_*`
 keys are server mode only: they are ignored while the plugin runs in agent
 plugin mode. The same server mode run with flags, overriding the file values:
@@ -127,6 +144,11 @@ Key points:
 - `ca_file` points to a PEM bundle with the CA that signs the management API
   certificate. It is only used with an `https` host; without it, HTTPS verifies
   against the system trust store.
+- The credentials can be set inline (`user` and `pass`) or in a separate
+  `key=value` file (`cred_file`) with the `user` and `pass` lines. When
+  `cred_file` is set — in the configuration file or as a flag — it takes
+  precedence over `user` and `pass`. An unreadable file, or a file without
+  `user` or `pass`, is an error.
 - In server mode, `agent_name` names the agent created in Pandora FMS, and
   `interval` is the agent interval in seconds.
 - The transfer mode is Tentacle only when `transfer_mode=tentacle`; any other
@@ -144,20 +166,64 @@ Key points:
   front of it.
 - HTTPS verifies the server certificate against the system trust store, or
   against the `ca_file` bundle when one is configured.
-- The password is stored in the configuration file in plain text. Restrict the
+- Inline `pass` is stored in the configuration file in plain text: restrict the
   file permissions to the user that runs the plugin.
-- Avoid passing `-pass` on the command line: the operating system process list
-  can expose it while the plugin runs.
+- Avoid `-pass` on the command line: the command is stored in the shell
+  history and the operating system process list can expose it while the plugin
+  runs. Use `-cred_file` with a credentials file readable only by the plugin
+  user (for example `chmod 600`).
+- The credentials file is stored in plain text as well: its protection is the
+  file system permission model, so keep it owned by the plugin user and
+  readable by nobody else.
+
+### Register the plugin in the console
+
+The plugin can also be registered in the Pandora FMS console, so its
+parameters are filled per agent as module fields instead of in a command line:
+
+1. Open **Servers → Plugins** and click **Add plugin**.
+2. Fill in the name, the path to the `rabbitmq-local` executable on the
+   Pandora FMS server and the command parameters, using the plugin macros
+   `_field1_`, `_field2_`, ... as placeholders:
+
+```text
+-as_agent_plugin 1 -host _field1_ -user _field2_ -pass _field3_
+```
+
+3. In **Macro parameters**, describe each field. The password field can be
+   marked with **Hide value**, so the console displays it as dots.
+
+![RabbitMQ Local plugin registration in the Pandora FMS console](../assets/images/plugins/rabbitmq-local/plugin-registration.png)
+
+Once registered, the plugin is available when creating plugin modules, and
+every module fills the fields individually: the same registered plugin serves
+several RabbitMQ instances without an extra configuration file for each one.
+
+![Plugin fields while creating a module](../assets/images/plugins/rabbitmq-local/module-plugin-fields.png)
+
+The field values can use the Pandora FMS macros documented in the console
+*Plug-in macros* help.
+
+The registered parameters can also include `-cred_file` — with a fixed path or
+as a field — so the modules read the credentials from a file on the Pandora FMS
+server instead of holding them in module fields. The parameters can also point
+to a configuration file on the server — a literal path or a `_fieldN_` field —
+so the file supplies the shared settings.
 
 ## Verify
 
-Run the plugin manually from the directory that contains it:
+Run the plugin manually from a terminal, passing the configuration file as
+its only positional argument:
 
 ```bash
-./rabbitmq-local rabbitmq-local.conf
+./rabbitmq-local /etc/pandora/plugins/rabbitmq-local.conf
 ```
 
-The plugin prints its usage summary (every parameter and four examples) with
+The relative form `./rabbitmq-local rabbitmq-local.conf` works when the
+terminal is already in the directory that contains both files. Each run
+executes once and exits.
+
+The plugin prints its usage summary (every parameter and five examples) with
 `./rabbitmq-local -h`.
 
 In agent plugin mode, a successful run prints one XML `<module>` block per
@@ -193,6 +259,8 @@ In server mode, a successful run prints `1 ` and the agent configured in
 `agent_name` appears in Pandora FMS with its modules. If the run does not
 generate modules, see [Operate and troubleshoot](#operate-and-troubleshoot).
 
+![The RabbitMQ agent modules in the Pandora FMS console](../assets/images/plugins/rabbitmq-local/console-modules.png)
+
 ## Understand the results
 
 The plugin generates the same module catalog in both execution models. The
@@ -203,9 +271,9 @@ modules cover five groups:
   `Queue deliver get rate` and `Queue deliver noack rate` modules report the
   totals and rates of the whole cluster.
 - **Node level.** For every cluster node, `Memory used - <node>` and
-  `Memory rate` report its memory consumption, `Proc used - <node>` and
-  `Proc details` its Erlang processes, and `Node status - <node>` whether the
-  node is running.
+  `Memory rate - <node>` report its memory consumption, `Proc used - <node>`
+  and `Proc details - <node>` its Erlang processes, and `Node status - <node>`
+  whether the node is running.
 - **Exchange level.** `Exchanges in rate` and `Exchanges out rate` report the
   publish-in and publish-out rate of the last exchange that reports activity;
   when no exchange reports a rate, both modules report `0`.
@@ -238,9 +306,14 @@ report `0`.
   `-h`/`--help`, prints the usage summary and stops instead of generating
   modules. Run the plugin with the configuration flags or with the path to an
   existing configuration file. When the configuration is missing a required
-  value (`host`, `user`, `pass`, `agent_name` in server mode, `tentacle_ip`
-  for Tentacle delivery or `local_folder` otherwise), the plugin prints the
-  error and a pointer to `-h` without generating modules.
+  value (`host`, `user`, the password from any of its sources, `agent_name` in
+  server mode, `tentacle_ip` for Tentacle delivery or `local_folder`
+  otherwise), the plugin prints the error and a pointer to `-h` without
+  generating modules.
+- **The plugin exits with `cannot read cred_file`, `cred_file ... is missing
+  user` or `cred_file ... is missing pass`** — the credentials file must exist,
+  be readable by the plugin user and define both `user` and `pass`. Fix the
+  file or fall back to inline `user` and `pass`.
 - **No per-node modules appear** while `Availability` reports `1` — the nodes
   request failed; the rest of the cluster modules are still generated. Repeat
   the run and check the broker node list.
@@ -262,8 +335,9 @@ defaults plus the flags.
 | --- | --- | --- | --- |
 | `host` | Yes | — | Management API host, in `host`, `host:port`, `http://host:port` or `https://host:port` form. HTTP is the default. |
 | `ca_file` | No | — | PEM bundle with the CA that signs the management API certificate (only used with an `https` host). |
-| `user` | Yes | — | RabbitMQ user allowed to query the management API. |
-| `pass` | Yes | — | Password for `user`. Stored in the file in plain text. |
+| `user` | Yes, unless `cred_file` is set | — | RabbitMQ user allowed to query the management API. |
+| `pass` | Yes, unless `cred_file` is set | — | Password for `user`. |
+| `cred_file` | No | — | File with the credentials as `key=value` lines (`user` and `pass`), with the same format as the configuration file. When set, it takes precedence over `user` and `pass`. Use an absolute path readable only by the plugin user. An unreadable file, or a file without `user` or `pass`, is an error. |
 | `agent_name` | Required in server mode | — | Server mode only. Name of the agent created in Pandora FMS. |
 | `interval` | No | `300` | Server mode only. Agent interval in seconds. |
 | `as_agent_plugin` | No | `0` (server plugin) | `1` (or any value other than `0`) prints the module XML on standard output; `0` (or an empty value) builds and delivers an agent. |
@@ -278,6 +352,9 @@ The file uses `key=value` lines. Blank lines and lines that start with `#` are
 skipped, keys and values are trimmed, and the last occurrence of a repeated
 key wins.
 
+When `cred_file` is set — in the configuration file or on the command line —
+the credentials are read from that file and used instead of `user` and `pass`.
+
 ### Command-line execution
 
 ```bash
@@ -289,7 +366,7 @@ key wins.
 | The command line is empty | The plugin prints the usage summary and stops |
 | No positional argument, but flags are present | The plugin runs from the defaults plus the flags |
 | The positional argument names an existing file | The plugin runs with the file configuration, overridden by the flags |
-| The positional argument names a file that does not exist | The plugin reports an error and stops without generating output |
+| The positional argument names a file that does not exist | The plugin reports the error on standard error and exits with status 1 |
 | `-key value`, `--key value`, `-key=value` or `--key=value` | Each flag replaces the value with the same key from the file or the defaults |
 | `-h` or `--help` anywhere in the command line | The plugin prints the usage summary and stops |
 | An unknown flag, a flag without a value, or a second positional argument | The plugin reports the error on standard error and exits with status 1 |
@@ -311,9 +388,9 @@ In the names below, `<node>` is a cluster node name:
 | `Queue deliver noack rate` | `generic_data` | Rate of messages delivered to consumers without acknowledgement |
 | `Availability` | `generic_proc` | `1` when the cluster overview request succeeds, `0` otherwise |
 | `Memory used - <node>` | `generic_data` | Memory used by the node, in bytes |
-| `Memory rate` | `generic_data` | Rate at which the node memory is consumed or released |
+| `Memory rate - <node>` | `generic_data` | Rate at which the node memory is consumed or released |
 | `Proc used - <node>` | `generic_data` | Erlang processes used by the node |
-| `Proc details` | `generic_data` | Rate at which the node Erlang processes are created or terminated |
+| `Proc details - <node>` | `generic_data` | Rate at which the node Erlang processes are created or terminated |
 | `Node status - <node>` | `generic_proc` | `1` while the node is running, `0` otherwise |
 | `Exchanges in rate` | `generic_data` | Publish-in rate of the last exchange that reports one; `0` when none reports activity |
 | `Exchanges out rate` | `generic_data` | Publish-out rate of the last exchange that reports one; `0` when none reports activity |

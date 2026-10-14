@@ -1,6 +1,6 @@
 # RabbitMQ Local monitoring plugin
 
-*Última actualización del artículo: 2026-09-21.*
+*Última actualización del artículo: 2026-10-16.*
 
 ## Qué hace
 
@@ -118,6 +118,23 @@ configuración:
 ./rabbitmq-local -host <RABBITMQ_HOST>:<MANAGEMENT_PORT> -user <RABBITMQ_USER> -pass <RABBITMQ_PASSWORD> -as_agent_plugin 1
 ```
 
+Las credenciales también pueden leerse de un archivo aparte, de modo que ni el
+usuario ni la contraseña aparecen en la línea de comandos ni en la lista de
+procesos del sistema operativo:
+
+```bash
+# Credenciales leídas de un archivo (legible solo por el usuario del plugin).
+./rabbitmq-local -host <RABBITMQ_HOST>:<MANAGEMENT_PORT> \
+    -cred_file /etc/pandora/plugins/rabbitmq-local.creds -as_agent_plugin 1
+```
+
+El archivo de credenciales usa líneas `key=value`:
+
+```ini
+user=<RABBITMQ_USER>
+pass=<RABBITMQ_PASSWORD>
+```
+
 Las claves `agent_name`, `interval`, `transfer_mode`, `local_folder` y
 `tentacle_*` son exclusivas del modo servidor: se ignoran mientras el plugin
 se ejecuta en modo plugin de agente. La misma ejecución en modo servidor con
@@ -136,6 +153,11 @@ Puntos clave:
 - `ca_file` apunta a un bundle PEM con la CA que firma el certificado de la API
   de gestión. Solo se usa con un host `https`; sin él, HTTPS verifica contra el
   almacén de confianza del sistema.
+- Las credenciales pueden indicarse en línea (`user` y `pass`) o en un archivo
+  `key=value` aparte (`cred_file`) con las líneas `user` y `pass`. Cuando
+  `cred_file` está definido — en el archivo de configuración o como opción —
+  tiene precedencia sobre `user` y `pass`. Un archivo ilegible, o un archivo
+  sin `user` o sin `pass`, es un error.
 - En modo servidor, `agent_name` da nombre al agente creado en Pandora FMS e
   `interval` es el intervalo del agente en segundos.
 - El modo de transferencia es Tentacle solo cuando
@@ -155,20 +177,69 @@ Puntos clave:
   por delante.
 - HTTPS verifica el certificado del servidor contra el almacén de confianza del
   sistema, o contra el bundle `ca_file` cuando se configura.
-- La contraseña se almacena en el archivo de configuración en texto plano.
-  Restrinja los permisos del archivo al usuario que ejecuta el plugin.
-- Evite pasar `-pass` en la línea de comandos: la lista de procesos del sistema
-  operativo puede exponerla mientras el plugin se ejecuta.
+- La contraseña en línea (`pass`) se almacena en el archivo de configuración en
+  texto plano: restrinja los permisos del archivo al usuario que ejecuta el
+  plugin.
+- Evite `-pass` en la línea de comandos: el comando queda en el historial del
+  shell y la lista de procesos del sistema operativo puede exponerla mientras
+  el plugin se ejecuta. Use `-cred_file` con un archivo de credenciales legible
+  solo por el usuario del plugin (por ejemplo `chmod 600`).
+- El archivo de credenciales también se guarda en texto plano: su protección es
+  el modelo de permisos del sistema de archivos, así que manténgalo propiedad
+  del usuario del plugin y sin acceso para nadie más.
+
+### Registrar el plugin en la consola
+
+El plugin también puede registrarse en la consola de Pandora FMS, de modo que
+sus parámetros se rellenen por agente como campos del módulo en lugar de en una
+línea de comandos:
+
+1. Abra **Servers → Plugins** y haga clic en **Add plugin**.
+2. Rellene el nombre, la ruta al ejecutable `rabbitmq-local` en el servidor de
+   Pandora FMS y los parámetros del comando, usando las macros del plugin
+   `_field1_`, `_field2_`, ... como marcadores:
+
+```text
+-as_agent_plugin 1 -host _field1_ -user _field2_ -pass _field3_
+```
+
+3. En **Macro parameters**, describa cada campo. El campo de la contraseña
+   puede marcarse con **Hide value**, de modo que la consola lo muestra como
+   puntos.
+
+![Registro del plugin RabbitMQ Local en la consola de Pandora FMS](../assets/images/plugins/rabbitmq-local/plugin-registration.png)
+
+Una vez registrado, el plugin está disponible al crear módulos de plugin, y
+cada módulo rellena sus campos de forma individual: el mismo plugin registrado
+sirve para varias instancias de RabbitMQ sin un archivo de configuración extra
+para cada una.
+
+![Campos del plugin al crear un módulo](../assets/images/plugins/rabbitmq-local/module-plugin-fields.png)
+
+Los valores de los campos pueden usar las macros de Pandora FMS documentadas en
+la ayuda *Plug-in macros* de la consola.
+
+Los parámetros registrados pueden incluir también `-cred_file` — con una ruta
+fija o como campo — para que los módulos lean las credenciales de un archivo en
+el servidor de Pandora FMS en lugar de guardarlas en los campos del módulo. Los
+parámetros también pueden apuntar a un archivo de configuración del servidor —
+una ruta literal o un campo `_fieldN_` — de modo que el archivo aporte la
+configuración compartida.
 
 ## Verificación
 
-Ejecute el plugin manualmente desde el directorio que lo contiene:
+Ejecute el plugin manualmente desde una terminal, pasando el archivo de
+configuración como su único argumento posicional:
 
 ```bash
-./rabbitmq-local rabbitmq-local.conf
+./rabbitmq-local /etc/pandora/plugins/rabbitmq-local.conf
 ```
 
-El plugin imprime su resumen de uso (todos los parámetros y cuatro ejemplos)
+La forma relativa `./rabbitmq-local rabbitmq-local.conf` funciona si la
+terminal ya está situada en el directorio que contiene ambos archivos. Cada
+ejecución se realiza una vez y termina.
+
+El plugin imprime su resumen de uso (todos los parámetros y cinco ejemplos)
 con `./rabbitmq-local -h`.
 
 En modo plugin de agente, una ejecución correcta imprime un bloque XML
@@ -205,6 +276,8 @@ en `agent_name` aparece en Pandora FMS con sus módulos. Si la ejecución no
 genera módulos, consulte
 [Operar y resolver problemas](#operar-y-resolver-problemas).
 
+![Los módulos del agente RabbitMQ en la consola de Pandora FMS](../assets/images/plugins/rabbitmq-local/console-modules.png)
+
 ## Entender los resultados
 
 El plugin genera el mismo catálogo de módulos en ambos modelos de ejecución.
@@ -216,9 +289,9 @@ Los módulos cubren cinco grupos:
   `Queue deliver noack rate` informan de los totales y las tasas de todo el
   clúster.
 - **Nivel de nodo.** Para cada nodo del clúster, `Memory used - <node>` y
-  `Memory rate` informan de su consumo de memoria, `Proc used - <node>` y
-  `Proc details` de sus procesos Erlang, y `Node status - <node>` de si el nodo
-  está en ejecución.
+  `Memory rate - <node>` informan de su consumo de memoria, `Proc used - <node>`
+  y `Proc details - <node>` de sus procesos Erlang, y `Node status - <node>` de
+  si el nodo está en ejecución.
 - **Nivel de exchange.** `Exchanges in rate` y `Exchanges out rate` informan de
   la tasa de publicación de entrada y de salida del último exchange que
   reporta actividad; cuando ningún exchange reporta una tasa, ambos módulos
@@ -254,10 +327,15 @@ conexión informan de `0`.
   `-h`/`--help`, imprime el resumen de uso y se detiene en lugar de generar
   módulos. Ejecute el plugin con las opciones de configuración o con la ruta
   de un archivo de configuración existente. Cuando a la configuración le falta
-  un valor obligatorio (`host`, `user`, `pass`, `agent_name` en modo servidor,
-  `tentacle_ip` para la entrega por Tentacle o `local_folder` en caso
-  contrario), el plugin imprime el error y un aviso que apunta a `-h` sin
-  generar módulos.
+  un valor obligatorio (`host`, `user`, la contraseña de cualquiera de sus
+  fuentes, `agent_name` en modo servidor, `tentacle_ip` para la entrega por
+  Tentacle o `local_folder` en caso contrario), el plugin imprime el error y un
+  aviso que apunta a `-h` sin generar módulos.
+- **El plugin termina con `cannot read cred_file`, `cred_file ... is missing
+  user` o `cred_file ... is missing pass`** — el archivo de credenciales debe
+  existir, ser legible por el usuario del plugin y definir tanto `user` como
+  `pass`. Corrija el archivo o vuelva a las credenciales en línea (`user` y
+  `pass`).
 - **No aparecen módulos de nodo** mientras `Availability` informa de `1` — la
   petición de nodos ha fallado; el resto de módulos del clúster se siguen
   generando. Repita la ejecución y compruebe la lista de nodos del bróker.
@@ -280,8 +358,9 @@ valores por defecto más las opciones.
 | --- | --- | --- | --- |
 | `host` | Sí | — | Host de la API de gestión, en forma `host`, `host:port`, `http://host:port` o `https://host:port`. HTTP es el valor por defecto. |
 | `ca_file` | No | — | Bundle PEM con la CA que firma el certificado de la API de gestión (solo se usa con un host `https`). |
-| `user` | Sí | — | Usuario de RabbitMQ con permiso para consultar la API de gestión. |
-| `pass` | Sí | — | Contraseña de `user`. Se almacena en el archivo en texto plano. |
+| `user` | Sí, salvo que se defina `cred_file` | — | Usuario de RabbitMQ con permiso para consultar la API de gestión. |
+| `pass` | Sí, salvo que se defina `cred_file` | — | Contraseña de `user`. |
+| `cred_file` | No | — | Archivo con las credenciales en líneas `key=value` (`user` y `pass`), con el mismo formato que el archivo de configuración. Cuando se define, tiene precedencia sobre `user` y `pass`. Use una ruta absoluta legible solo por el usuario del plugin. Un archivo ilegible, o un archivo sin `user` o sin `pass`, es un error. |
 | `agent_name` | Obligatorio en modo servidor | — | Exclusivo del modo servidor. Nombre del agente creado en Pandora FMS. |
 | `interval` | No | `300` | Exclusivo del modo servidor. Intervalo del agente en segundos. |
 | `as_agent_plugin` | No | `0` (plugin de servidor) | `1` (o cualquier valor distinto de `0`) imprime el XML de módulos en la salida estándar; `0` (o un valor vacío) construye y entrega un agente. |
@@ -296,6 +375,10 @@ El archivo usa líneas `key=value`. Las líneas en blanco y las que empiezan
 por `#` se omiten, las claves y los valores se recortan, y la última aparición
 de una clave repetida prevalece.
 
+Cuando `cred_file` está definido — en el archivo de configuración o en la línea
+de comandos — las credenciales se leen de ese archivo y se usan en lugar de
+`user` y `pass`.
+
 ### Ejecución por línea de comandos
 
 ```bash
@@ -307,7 +390,7 @@ de una clave repetida prevalece.
 | La línea de comandos está vacía | El plugin imprime el resumen de uso y se detiene |
 | No hay argumento posicional, pero sí opciones | El plugin se ejecuta con los valores por defecto más las opciones |
 | El argumento posicional nombra un archivo existente | El plugin se ejecuta con la configuración del archivo, sustituida por las opciones |
-| El argumento posicional nombra un archivo que no existe | El plugin informa de un error y se detiene sin generar salida |
+| El argumento posicional nombra un archivo que no existe | El plugin informa del error por la salida de error estándar y sale con estado 1 |
 | `-key value`, `--key value`, `-key=value` o `--key=value` | Cada opción sustituye el valor de la misma clave del archivo o de los valores por defecto |
 | `-h` o `--help` en cualquier posición de la línea de comandos | El plugin imprime el resumen de uso y se detiene |
 | Una opción desconocida, una opción sin valor o un segundo argumento posicional | El plugin informa del error por la salida de error estándar y sale con estado 1 |
@@ -330,9 +413,9 @@ En los nombres siguientes, `<node>` es el nombre de un nodo del clúster:
 | `Queue deliver noack rate` | `generic_data` | Tasa de mensajes entregados a consumidores sin confirmación |
 | `Availability` | `generic_proc` | `1` cuando la petición de resumen del clúster tiene éxito, `0` en caso contrario |
 | `Memory used - <node>` | `generic_data` | Memoria usada por el nodo, en bytes |
-| `Memory rate` | `generic_data` | Tasa a la que se consume o libera la memoria del nodo |
+| `Memory rate - <node>` | `generic_data` | Tasa a la que se consume o libera la memoria del nodo |
 | `Proc used - <node>` | `generic_data` | Procesos Erlang usados por el nodo |
-| `Proc details` | `generic_data` | Tasa a la que se crean o terminan los procesos Erlang del nodo |
+| `Proc details - <node>` | `generic_data` | Tasa a la que se crean o terminan los procesos Erlang del nodo |
 | `Node status - <node>` | `generic_proc` | `1` mientras el nodo está en ejecución, `0` en caso contrario |
 | `Exchanges in rate` | `generic_data` | Tasa de publicación de entrada del último exchange que la informa; `0` cuando ninguno reporta actividad |
 | `Exchanges out rate` | `generic_data` | Tasa de publicación de salida del último exchange que la informa; `0` cuando ninguno reporta actividad |
