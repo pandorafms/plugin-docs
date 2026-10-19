@@ -1,0 +1,2355 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/plugins/autodiscover/">
+      
+      
+        <link rel="prev" href="../advanced-log-parser/">
+      
+      
+        <link rel="next" href="../dynamic-snmp/">
+      
+      
+        
+          <link rel="alternate" href="../../../plugins/autodiscover/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Autodiscover - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#autodiscover" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Autodiscover
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../plugins/autodiscover/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de VMware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#elegir-que-monitorizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elegir qué monitorizar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acotar-y-depurar-la-seleccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acotar y depurar la selección
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combinar-y-ordenar-los-parametros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combinar y ordenar los parámetros
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpretar-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpretar los resultados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uso-diario-y-solucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uso diario y solución de problemas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Uso diario y solución de problemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diagnosticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnósticos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limites-de-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Límites de ejecución
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-linea-de-ordenes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de línea de órdenes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reglas-de-correspondencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reglas de correspondencia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lista-de-servicios-integrada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lista de servicios integrada
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codigos-de-salida-y-flujos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Códigos de salida y flujos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Dynamic SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#elegir-que-monitorizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elegir qué monitorizar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acotar-y-depurar-la-seleccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acotar y depurar la selección
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combinar-y-ordenar-los-parametros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combinar y ordenar los parámetros
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpretar-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpretar los resultados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uso-diario-y-solucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uso diario y solución de problemas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Uso diario y solución de problemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diagnosticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnósticos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limites-de-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Límites de ejecución
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-linea-de-ordenes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de línea de órdenes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reglas-de-correspondencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reglas de correspondencia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lista-de-servicios-integrada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lista de servicios integrada
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codigos-de-salida-y-flujos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Códigos de salida y flujos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="autodiscover">Autodiscover<a class="headerlink" href="#autodiscover" title="Permanent link">¶</a></h1>
+<p><em>Última actualización del artículo: 2026-10-05.</em></p>
+<h2 id="que-hace">Qué hace<a class="headerlink" href="#que-hace" title="Permanent link">¶</a></h2>
+<p>El plugin Autodiscover localiza los servicios del sistema de un endpoint y los convierte en módulos
+de Pandora FMS. Se ejecuta como <strong>plugin de agente</strong>: el agente lo lanza, el plugin escribe las
+definiciones de los módulos en formato XML en la salida estándar y el agente las incorpora.</p>
+<p>El plugin tiene dos modos de funcionamiento y necesita uno de ellos para hacer algo:</p>
+<ul>
+<li><strong>Lista integrada</strong> (<code>--default</code>): monitoriza una lista de servicios habituales (bases de datos,
+  servidores web, servidores de correo, contenedores...) incluida en el propio plugin. Cada entrada
+  se compara con el nombre completo del servicio, de modo que <code>ssh</code> nunca selecciona
+  <code>sshd-keygen@rsa</code>.</li>
+<li><strong>Lista propia</strong> (<code>--list</code>): monitoriza exactamente los servicios que se indiquen, como
+  subcadenas o como expresiones regulares.</li>
+</ul>
+<p>Un endpoint tiene muchas unidades que no están en ejecución y no tiene instalados todos los
+servicios de la lista integrada; el plugin informa solo de lo que coincide con la lista que recibe,
+por lo que una ejecución no es un informe sobre el estado de todo el endpoint.</p>
+<ul>
+<li><strong>Resultado.</strong> Un módulo de estado <code>generic_proc</code> por cada servicio que existe en el gestor de
+  servicios y coincide con la lista activa: <code>1</code> mientras el servicio está en ejecución y <code>0</code>
+  mientras está detenido o inactivo. Un nombre de la lista que no existe en el endpoint no genera
+  ningún módulo.</li>
+<li><strong>Uso de recursos opcional.</strong> Con <code>--usage</code> el plugin añade además un módulo de uso de CPU y otro
+  de uso de memoria por cada servicio en ejecución cuyo proceso se puede resolver y cuyo uso es
+  mayor que cero.</li>
+<li><strong>Alcance.</strong> El plugin consulta el gestor de servicios del endpoint: systemd en Linux, el comando
+  <code>service</code> y <code>/etc/init.d</code> cuando systemd no está disponible, y el Administrador de servicios
+  (Service Control Manager) en Windows.</li>
+<li><strong>Cobertura.</strong> Se informa de los servicios que coinciden; no se descubre nada fuera de la lista
+  elegida.</li>
+</ul>
+<h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
+<h3 id="compatibilidad">Compatibilidad<a class="headerlink" href="#compatibilidad" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Ámbito</th>
+<th>Estado</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Versión del plugin <code>2.1</code></td>
+<td>Objetivo documentado</td>
+<td>La versión que describe esta página</td>
+</tr>
+<tr>
+<td>Linux con systemd</td>
+<td><code>Tested</code></td>
+<td>Probado en Fedora 44 (systemd 259) y Rocky Linux 10.2 (systemd 257): lista integrada, listas propias, exclusiones, diagnósticos detallados y filtrado de <code>oneshot</code></td>
+</tr>
+<tr>
+<td>Linux sin systemd (SysV)</td>
+<td><code>Not validated</code></td>
+<td>No se ha registrado ningún equipo solo con SysV</td>
+</tr>
+<tr>
+<td>Windows (Administrador de servicios, amd64)</td>
+<td><code>Tested</code></td>
+<td>Probado en Windows 11: lista integrada, correspondencia por subcadena y exacta, exclusiones, sufijo <code>.service</code>, regla de tres caracteres y <code>--usage</code></td>
+</tr>
+<tr>
+<td>Nombres de servicio de Windows de menos de tres caracteres</td>
+<td><code>Required</code></td>
+<td>El plugin descarta en Windows las entradas de la lista de menos de tres caracteres, consulte <a href="#reglas-de-correspondencia">Reglas de correspondencia</a></td>
+</tr>
+<tr>
+<td>Un agente capaz de ejecutar entradas <code>module_plugin</code> en el endpoint</td>
+<td><code>Required</code></td>
+<td>Prerrequisito, consulte <a href="#requisitos">Requisitos</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="requisitos">Requisitos<a class="headerlink" href="#requisitos" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Un agente de Pandora FMS instalado en el endpoint.</strong> El plugin lo ejecuta el agente: no es un
+   plugin de servidor y no necesita el servidor de Pandora FMS.</li>
+<li><strong>Linux</strong>: systemd, o el comando <code>service</code> junto con los scripts de <code>/etc/init.d</code> cuando systemd
+   no está arrancado. El plugin detecta systemd en tiempo de ejecución y recurre a SysV
+   automáticamente.</li>
+<li><strong>Windows</strong>: ningún componente adicional. El plugin consulta el Administrador de servicios.</li>
+<li><strong>Permisos para consultar los servicios del endpoint.</strong> Leer el estado de todos los servicios y
+   el consumo de recursos de su proceso puede requerir privilegios elevados.</li>
+</ol>
+<h3 id="instalacion">Instalación<a class="headerlink" href="#instalacion" title="Permanent link">¶</a></h3>
+<p>El plugin se distribuye dentro del paquete del agente y no necesita una instalación aparte. El agente
+lo lanza mediante <code>module_plugin</code>, por lo que en Linux no hace falta la ruta completa:</p>
+<table>
+<thead>
+<tr>
+<th>Plataforma</th>
+<th>Ejecutable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux</td>
+<td><code>/usr/share/pandora_agent/plugins/autodiscover</code></td>
+</tr>
+<tr>
+<td>Windows</td>
+<td><code>%PROGRAMFILES%\Pandora_Agent\util\autodiscover.exe</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuracion">Configuración<a class="headerlink" href="#configuracion" title="Permanent link">¶</a></h2>
+<p>Toda la superficie de configuración del plugin es el fichero de configuración del agente: no tiene
+fichero de configuración propio. Añada una entrada <code>module_plugin</code> por cada ejecución que desee,
+usando el bloque <code>module_begin</code> / <code>module_end</code> para fijar un tiempo de espera.</p>
+<p>La configuración del agente que se distribuye con el agente ya incluye este bloque:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Service autodiscovery plugin</span>
+<span class="na">module_begin</span>
+<span class="na">module_plugin autodiscover --default</span>
+<span class="na">module_timeout 30</span>
+<span class="na">module_end</span>
+</code></pre></div>
+<p>En Windows el mismo bloque nombra el ejecutable de forma explícita:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Service autodiscovery plugin</span>
+<span class="na">module_begin</span>
+<span class="na">module_plugin "%PROGRAMFILES%\Pandora_Agent\util\autodiscover.exe" --default</span>
+<span class="na">module_timeout 30</span>
+<span class="na">module_end</span>
+</code></pre></div>
+<h3 id="elegir-que-monitorizar">Elegir qué monitorizar<a class="headerlink" href="#elegir-que-monitorizar" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Lista integrada.</strong> Mantenga <code>--default</code> para monitorizar los servicios habituales de la mayoría
+  de servidores. La lista de cada plataforma está en
+  <a href="#lista-de-servicios-integrada">Lista de servicios integrada</a>.</li>
+<li><strong>Lista propia.</strong> Sustitúyalo por <code>--list "&lt;servicio1,servicio2&gt;"</code>. Escriba el valor entre
+  comillas para que el intérprete de órdenes no lo expanda y separe las entradas con comas.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Monitorizar solo el servidor web y SSH, por su nombre</span>
+<span class="na">module_plugin autodiscover --list "httpd,sshd"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Monitorizar los servicios que coinciden con un patrón</span>
+<span class="na">module_plugin autodiscover --list "apache.*,php[0-9.]*-fpm" --exact-match</span>
+</code></pre></div>
+<h3 id="acotar-y-depurar-la-seleccion">Acotar y depurar la selección<a class="headerlink" href="#acotar-y-depurar-la-seleccion" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong><code>--exclude "&lt;servicio1,servicio2&gt;"</code></strong> elimina servicios de la lista activa, tanto si procede de
+  <code>--default</code> como de <code>--list</code>. No es una acción por sí misma: se puede repetir y sus valores se
+  acumulan. Una entrada que no coincide con nada es solo informativa.</li>
+<li><strong><code>--exact-match</code></strong> hace que cada entrada de <code>--list</code> se compare con el nombre completo del
+  servicio en lugar de con una subcadena. Úselo cuando un nombre como <code>cron</code> seleccione también
+  <code>cronie</code> o <code>crond</code>. La lista integrada siempre compara el nombre completo.</li>
+<li><strong><code>--skip-oneshot</code></strong> (solo Linux con systemd) ignora las unidades cuyo tipo es <code>oneshot</code>. Estas
+  unidades se ejecutan una vez y permanecen inactivas por diseño, por lo que su módulo de estado
+  estaría siempre a <code>0</code>.</li>
+<li><strong><code>-v</code>, <code>--verbose</code></strong> escribe en la salida de error los diagnósticos descritos en
+  <a href="#diagnosticos">Diagnósticos</a>. Nunca cambia el código de salida, por lo que es seguro dejarlo
+  activado mientras se ajusta una lista.</li>
+</ul>
+<h3 id="combinar-y-ordenar-los-parametros">Combinar y ordenar los parámetros<a class="headerlink" href="#combinar-y-ordenar-los-parametros" title="Permanent link">¶</a></h3>
+<ul>
+<li><code>--default</code>, <code>--list</code> y <code>--help</code> son acciones: <strong>gana la primera bien formada de la línea de
+  órdenes</strong> y las acciones posteriores no se ejecutan. El valor de <code>--list</code> y de <code>--exclude</code> se
+  valida aunque su acción no gane, por lo que <code>--default --list</code> falla en lugar de ejecutar
+  <code>--default</code>. Para acotar una selección añada <code>--exclude</code>, nunca una segunda acción.</li>
+<li><code>--usage</code>, <code>--exact-match</code>, <code>--skip-oneshot</code>, <code>-v</code> y <code>--exclude</code> no son acciones, por lo que
+  pueden aparecer en cualquier posición y combinarse libremente.</li>
+<li>Un <code>--list</code> o un <code>--exclude</code> sin valor, o con un valor que empieza por <code>-</code>, se rechaza: el plugin
+  escribe el error y la pantalla de ayuda.</li>
+<li>Un parámetro desconocido se informa y va seguido de la pantalla de ayuda. El código de salida se
+  mantiene en <code>0</code> ante cualquier problema de parámetros, porque el agente interpreta un código
+  distinto de cero como un fallo del plugin y no como un error de configuración. Un sistema
+  operativo no reconocido es el único caso con código distinto de cero. Consulte
+  <a href="#codigos-de-salida-y-flujos">Códigos de salida y flujos</a>.</li>
+</ul>
+<h2 id="verificar">Verificar<a class="headerlink" href="#verificar" title="Permanent link">¶</a></h2>
+<p>Ejecute el plugin manualmente en el endpoint con la misma lista que haya configurado y lea el XML de
+los módulos que escribe:</p>
+<div class="highlight"><pre><span></span><code>/usr/share/pandora_agent/plugins/autodiscover<span class="w"> </span>--default
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[Service sshd - Status]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>generic_proc<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[1]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+</code></pre></div>
+<ul>
+<li><strong>Un bloque <code>&lt;module&gt;</code> por cada servicio encontrado.</strong> Una ejecución que no encuentra nada no
+  escribe nada.</li>
+<li><strong>El código de salida es <code>0</code></strong> en todos los casos salvo un sistema operativo no reconocido. No lo
+  use para detectar una lista incorrecta: use <code>-v</code>.</li>
+<li><strong>En Pandora FMS</strong>, el agente incorpora los módulos escritos en su siguiente ejecución, por lo que
+  <code>Service sshd - Status</code> aparece en la lista de módulos del agente que ejecutó el plugin.</li>
+</ul>
+<h2 id="interpretar-los-resultados">Interpretar los resultados<a class="headerlink" href="#interpretar-los-resultados" title="Permanent link">¶</a></h2>
+<p>Cada servicio de la lista activa que existe en el gestor de servicios genera un módulo de estado;
+<code>--usage</code> añade hasta dos módulos más por cada servicio en ejecución.</p>
+<table>
+<thead>
+<tr>
+<th>Nombre del módulo</th>
+<th>Tipo</th>
+<th>Dato</th>
+<th>Unidad</th>
+<th>Padre</th>
+<th>Se genera cuando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Service &lt;nombre&gt; - Status</code></td>
+<td><code>generic_proc</code></td>
+<td><code>1</code> en ejecución, <code>0</code> detenido o inactivo</td>
+<td>—</td>
+<td>—</td>
+<td>El servicio existe en el gestor de servicios y coincide con la lista activa</td>
+</tr>
+<tr>
+<td><code>Service &lt;nombre&gt; - CPU usage</code></td>
+<td><code>generic_data</code></td>
+<td>Uso de CPU del proceso del servicio</td>
+<td><code>%</code></td>
+<td><code>Service &lt;nombre&gt; - Status</code></td>
+<td>Con <code>--usage</code>, servicio en ejecución y proceso localizado</td>
+</tr>
+<tr>
+<td><code>Service &lt;nombre&gt; - Memory usage</code></td>
+<td><code>generic_data</code></td>
+<td>Uso de memoria del proceso del servicio</td>
+<td><code>%</code></td>
+<td><code>Service &lt;nombre&gt; - Status</code></td>
+<td>Con <code>--usage</code>, servicio en ejecución y proceso localizado</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong><code>&lt;nombre&gt;</code> es el nombre del servicio sin el sufijo de la plataforma.</strong> En systemd, la unidad
+  <code>sshd.service</code> genera <code>Service sshd - Status</code>.</li>
+<li><strong>Un <code>0</code> no es necesariamente un problema.</strong> El estado es <code>1</code> solo mientras el servicio está en
+  ejecución. Un servicio detenido y una unidad inactiva generan <code>0</code>, y el módulo permanece en
+  Pandora FMS hasta que se elimine. Un servicio que no está instalado no genera ningún módulo, por
+  lo que un nombre de la lista sin módulo propio simplemente no existe en el endpoint.</li>
+<li><strong>Los módulos de uso son condicionales.</strong> Solo se generan para un servicio en ejecución cuyo
+  proceso se puede resolver y cuyo uso de CPU o de memoria es mayor que cero, por lo que una primera
+  ejecución puede generar únicamente el módulo de estado.</li>
+<li><strong>Cómo se lee el estado.</strong> En systemd la unidad está en ejecución cuando su estado <code>active</code> es
+  <code>active</code>; el plugin lista todas las unidades, incluidas las inactivas. Con SysV se lee la salida de
+  <code>service &lt;nombre&gt; status</code> buscando <code>is running</code> / <code>is stopped</code>. En Windows se usa el informe del
+  Administrador de servicios.</li>
+</ul>
+<h2 id="uso-diario-y-solucion-de-problemas">Uso diario y solución de problemas<a class="headerlink" href="#uso-diario-y-solucion-de-problemas" title="Permanent link">¶</a></h2>
+<h3 id="diagnosticos">Diagnósticos<a class="headerlink" href="#diagnosticos" title="Permanent link">¶</a></h3>
+<p>Con <code>-v</code> (o <code>--verbose</code>) el plugin escribe una línea por cada hallazgo en la salida de error, con el
+prefijo <code>autodiscover: warning:</code>. El código de salida nunca cambia.</p>
+<div class="highlight"><pre><span></span><code>/usr/share/pandora_agent/plugins/autodiscover<span class="w"> </span>--list<span class="w"> </span><span class="s2">"nope"</span><span class="w"> </span>-v
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>autodiscover: warning: entry "nope" matched no service
+</code></pre></div>
+<ul>
+<li>Se informa de cada entrada de <code>--list</code> o de <code>--exclude</code> que no ha coincidido con ningún servicio.
+  Con <code>--default</code> se informa igual de las entradas de servicios que no están instalados en el
+  endpoint, y por eso los diagnósticos son opcionales: de lo contrario, una ejecución con la lista
+  integrada informaría de todos los servicios que el endpoint no tiene.</li>
+<li>En Windows se informa de las entradas de la lista de menos de tres caracteres que se descartan.</li>
+<li>Una ejecución con <code>--skip-oneshot</code> que no haya podido leer los tipos de las unidades informa de
+  que el filtro se ha ignorado.</li>
+</ul>
+<h3 id="limites-de-ejecucion">Límites de ejecución<a class="headerlink" href="#limites-de-ejecucion" title="Permanent link">¶</a></h3>
+<ul>
+<li>Las unidades se listan, y su tipo se lee con <code>--skip-oneshot</code>, con un <strong>límite interno de 30
+  segundos</strong> por llamada a <code>systemctl</code>; la consulta del proceso por servicio que usa <code>--usage</code> tiene
+  un <strong>límite de 5 segundos</strong>, y una llamada a <code>service</code> tiene un <strong>límite de 10 segundos</strong>.</li>
+<li>El <code>module_timeout</code> del bloque distribuido es de <strong>30 segundos</strong>. Auméntelo si el endpoint tiene un
+  número muy elevado de unidades, porque el límite del agente se aplica a toda la ejecución y no a
+  una sola orden.</li>
+<li><code>--usage</code> añade una consulta de proceso por cada servicio en ejecución, por lo que es más lento
+  que una ejecución que solo obtiene estados.</li>
+<li>El plugin termina por sí mismo al acabar y atiende la señal <code>SIGTERM</code> escribiendo un mensaje en la
+  salida de error y terminando con código <code>0</code>.</li>
+</ul>
+<h3 id="solucion-de-problemas">Solución de problemas<a class="headerlink" href="#solucion-de-problemas" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>El plugin no escribe nada.</strong> Ningún servicio de la lista activa ha coincidido. Revise la lista
+  con <code>-v</code> y recuerde que <code>--default</code> compara el nombre completo del servicio.</li>
+<li><strong>Un servicio no se monitoriza.</strong> El nombre de la lista no coincide con el nombre de la unidad o
+  del servicio del endpoint, o el servicio no está instalado. Use el nombre exacto, o un patrón que
+  coincida con él, y confírmelo con <code>-v</code>.</li>
+<li><strong>Un módulo de estado está siempre a <code>0</code>.</strong> El servicio está detenido o inactivo, o la unidad es
+  de tipo <code>oneshot</code>. Use <code>--skip-oneshot</code> para descartar el último caso. Un servicio que no está
+  instalado no genera ningún módulo, por lo que la ausencia de módulo no es un estado <code>0</code>.</li>
+<li><strong>Aparecen servicios que no se han pedido.</strong> Una entrada de <code>--list</code> es una subcadena o una
+  expresión regular salvo que se use <code>--exact-match</code>, por lo que <code>httpd</code> selecciona también
+  <code>httpd-init</code> en un host Linux con systemd, y <code>Spool</code> selecciona también <code>Spooler</code> en Windows. Añada
+  <code>--exact-match</code> o acote el patrón.</li>
+<li><strong>No aparece módulo de uso para un servicio en ejecución.</strong> No se ha podido resolver el proceso
+  del servicio, o su uso de CPU y de memoria era cero en ambos casos.</li>
+<li><strong>Aparece una línea inesperada en la salida de error y los módulos son correctos.</strong> Un código de
+  salida distinto de cero de <code>systemctl</code> se informa como un fallo real y, en ese caso, la ejecución
+  no genera módulos. Los mensajes de <code>-v</code> son informativos y no afectan al resultado.</li>
+<li><strong>El agente informa de un tiempo de espera del plugin.</strong> Aumente <code>module_timeout</code>, reduzca la lista
+  o prescinda de <code>--usage</code>.</li>
+</ul>
+<h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
+<h3 id="parametros-de-linea-de-ordenes">Parámetros de línea de órdenes<a class="headerlink" href="#parametros-de-linea-de-ordenes" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Valor</th>
+<th>Obligatorio</th>
+<th>Valor por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--default</code></td>
+<td>—</td>
+<td>Se requiere una acción</td>
+<td>—</td>
+<td>Monitoriza la lista integrada de la plataforma, comparando el nombre completo</td>
+</tr>
+<tr>
+<td><code>--list</code></td>
+<td><code>&lt;nombre1,nombre2,...&gt;</code></td>
+<td>Se requiere una acción</td>
+<td>—</td>
+<td>Monitoriza la lista indicada, como subcadenas o expresiones regulares salvo que se use <code>--exact-match</code></td>
+</tr>
+<tr>
+<td><code>--exclude</code></td>
+<td><code>&lt;nombre1,nombre2,...&gt;</code></td>
+<td>No</td>
+<td>—</td>
+<td>Elimina de la lista activa los servicios que coinciden, con el mismo modo de correspondencia que la lista activa. Se puede repetir; los valores se acumulan</td>
+</tr>
+<tr>
+<td><code>--exact-match</code></td>
+<td>—</td>
+<td>No</td>
+<td>Desactivado</td>
+<td>Compara cada entrada de <code>--list</code> con el nombre completo del servicio, sin distinguir mayúsculas y minúsculas</td>
+</tr>
+<tr>
+<td><code>--skip-oneshot</code></td>
+<td>—</td>
+<td>No</td>
+<td>Desactivado</td>
+<td>Solo Linux con systemd: ignora las unidades cuyo tipo es <code>oneshot</code></td>
+</tr>
+<tr>
+<td><code>--usage</code></td>
+<td>—</td>
+<td>No</td>
+<td>Desactivado</td>
+<td>Añade un módulo de uso de CPU y otro de uso de memoria por cada servicio en ejecución</td>
+</tr>
+<tr>
+<td><code>-v</code>, <code>--verbose</code></td>
+<td>—</td>
+<td>No</td>
+<td>Desactivado</td>
+<td>Escribe diagnósticos en la salida de error; nunca cambia el código de salida</td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>—</td>
+<td>No</td>
+<td>—</td>
+<td>Escribe la pantalla de ayuda, incluida la lista integrada de la plataforma</td>
+</tr>
+</tbody>
+</table>
+<p>En la práctica una acción (<code>--default</code>, <code>--list</code>, <code>--help</code>) es obligatoria: sin argumentos, y sin
+ninguna acción reconocida, el plugin escribe la pantalla de ayuda y no monitoriza nada.</p>
+<h3 id="reglas-de-correspondencia">Reglas de correspondencia<a class="headerlink" href="#reglas-de-correspondencia" title="Permanent link">¶</a></h3>
+<ul>
+<li>Cada entrada de un valor de <code>--list</code> o de <code>--exclude</code> es un <strong>patrón que no distingue mayúsculas
+  y minúsculas</strong>.</li>
+<li>Con <code>--exact-match</code>, y siempre con <code>--default</code>, el patrón debe coincidir con el nombre <strong>completo</strong>
+  del servicio (<code>cron</code> no coincide con <code>cronie</code>). Sin esta opción, el patrón se busca en cualquier
+  parte del nombre (<code>cron</code> coincide con <code>cronie</code> y con <code>crond</code>) y se admiten expresiones regulares
+  como <code>php[0-9.]*-fpm</code>.</li>
+<li>Antes de comparar se elimina el sufijo <code>.service</code> de la entrada, de modo que <code>httpd.service</code> se
+  acepta como el servicio <code>httpd</code>. El sufijo se conserva cuando el resto de la entrada contiene
+  alguno de los caracteres <code>\ ^ $ * + ? ( ) [ ] { } |</code>, por lo que un patrón como <code>.*\.service</code> se
+  usa tal cual. El punto no se considera aquí un metacaracter, de modo que un nombre real como
+  <code>dbus-org.freedesktop.NetworkManager.service</code> sigue funcionando.</li>
+<li>En Windows se descartan las entradas de menos de tres caracteres.</li>
+<li>En Linux sin systemd, las entradas de <code>--list</code> se usan como nombres literales de scripts de
+  <code>/etc/init.d</code>, por lo que las expresiones regulares no se aplican en ese caso.</li>
+</ul>
+<h3 id="lista-de-servicios-integrada">Lista de servicios integrada<a class="headerlink" href="#lista-de-servicios-integrada" title="Permanent link">¶</a></h3>
+<p><code>--default</code> compara cada entrada con el nombre completo del servicio, sin distinguir mayúsculas y
+minúsculas. Las entradas son patrones, por lo que cubren nombres con versión o con instancia. Las
+entradas que no existen en el endpoint se ignoran.</p>
+<p><strong>Linux</strong></p>
+<div class="highlight"><pre><span></span><code>httpd, apache2, nginx, slapd, postfix, mysqld, mysql, mariadb, postgresql(-\d+)?, oracle,
+oracle(-\w+)*, mongod, mongodb, redis, redis-server, elasticsearch, rabbitmq-server, ssh, sshd,
+cron, crond, cronie, chronyd, chrony, ntpd, ntp, docker, containerd, php-fpm, php[\d.]*-fpm,
+haproxy, keepalived, tomcat, tomcat\d*
+</code></pre></div>
+<p><strong>Windows</strong></p>
+<div class="highlight"><pre><span></span><code>MySQL(\d+)?, postgresql(-x64-\d+)?, pgsql, OracleService\w*, Oracle\w*TNSListener, MSSQLSERVER,
+MSSQL\$\w+, SQLSERVERAGENT, IISADMIN, Apache2\.\d+, nginx, W3svc, NTDS, DNS,
+MSExchangeADTopology, MSExchangeServiceHost, MSExchangeSA, MSExchangeTransport, MSExchangeIS,
+Spooler, TermService, wuauserv, DHCP, TeamViewer, AnyDesk
+</code></pre></div>
+<h3 id="codigos-de-salida-y-flujos">Códigos de salida y flujos<a class="headerlink" href="#codigos-de-salida-y-flujos" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Flujo</th>
+<th>Contenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Salida estándar</td>
+<td>El XML de los módulos, un bloque <code>&lt;module&gt;</code> por módulo. También la pantalla de ayuda, que se escribe cuando no hay acción, con <code>--help</code> y después de un parámetro desconocido</td>
+</tr>
+<tr>
+<td>Salida de error</td>
+<td>El error de un parámetro desconocido o incompleto, los mensajes con el prefijo <code>autodiscover: warning:</code> cuando se usa <code>-v</code>, y los fallos reales, como una llamada a <code>systemctl</code> que no se ha podido ejecutar</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Código de salida</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>Ejecución normal, pantalla de ayuda, aviso, parámetro desconocido o error interno del plugin</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>El sistema operativo no se reconoce</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

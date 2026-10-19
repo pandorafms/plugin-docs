@@ -8,7 +8,7 @@
         <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/plugins/dynamic-snmp/">
       
       
-        <link rel="prev" href="../advanced-log-parser/">
+        <link rel="prev" href="../autodiscover/">
       
       
         <link rel="next" href="../kvm/">
@@ -992,6 +992,8 @@
       
         
       
+        
+      
     
     
     
@@ -1047,6 +1049,34 @@
     
   
     Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
   
 
     
@@ -1850,11 +1880,11 @@
 <li>Suba el script del plugin a <code>/usr/share/pandora_server/util/plugin/</code> en el servidor de Pandora FMS.</li>
 <li>Vaya a <strong>Servers → Plugins</strong> y haga clic en <strong>Add plugin</strong>:</li>
 </ol>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/add-plugin.png" data-desc-position="bottom"><img alt="Botón Add plugin en Servers &gt; Plugins" src="../../../assets/images/plugins/dynamic-snmp/add-plugin.png"></a></p>
+<p></p>
 <ol>
 <li>Indique un <strong>Name</strong>, deje <strong>Plugin type</strong> en <code>Standard</code> y configure el <strong>Max timeout</strong>. Los escaneos SNMP pueden tardar, por lo que se recomienda un timeout de al menos 20 segundos; también puede ser necesario subir el <code>plugin_timeout</code> global de <code>pandora_server.conf</code>.</li>
 </ol>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/plugin-general.png" data-desc-position="bottom"><img alt="Configuración general del plugin con nombre, tipo, timeout y descripción" src="../../../assets/images/plugins/dynamic-snmp/plugin-general.png"></a></p>
+<p></p>
 <p>Descripción de ejemplo:</p>
 <div class="highlight"><pre><span></span><code>This plugin generates modules dynamically in the agent it's created in.
 Based on the ifName, it generates modules for:
@@ -1866,22 +1896,22 @@ The value returned by the module represents the number of modules generated.
 <ol>
 <li>Configure el <strong>Plugin command</strong> y los <strong>Plugin parameters</strong>. Cada parámetro se escribe como una macro <code>_fieldX_</code>, donde <code>X</code> es el número posicional del parámetro:</li>
 </ol>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/plugin-command.png" data-desc-position="bottom"><img alt="Comando y parámetros del plugin con macros" src="../../../assets/images/plugins/dynamic-snmp/plugin-command.png"></a></p>
+<p></p>
 <p>Las macros de servidor <code>_agentname_</code> y <code>_address_</code> rellenan automáticamente el nombre del agente y la dirección del dispositivo, por lo que los parámetros del ejemplo son:</p>
 <div class="highlight"><pre><span></span><code>-agent "_agentname_" -h "_address_" -v "_field1_" -c "_field2_" -only "_field3_" -reject "_field4_" -wmin "_field5_" -wmax "_field6_" -cmin "_field7_" -cmax "_field8_"
 </code></pre></div>
 <ol>
 <li>Defina cada macro en <strong>Macro parameters</strong>, con una descripción, un valor por defecto y, opcionalmente, un texto de ayuda:</li>
 </ol>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/plugin-macros.png" data-desc-position="bottom"><img alt="Parámetros de macro con descripción, valor por defecto y ayuda" src="../../../assets/images/plugins/dynamic-snmp/plugin-macros.png"></a></p>
+<p></p>
 <ol>
 <li>En el agente de destino, cree un módulo nuevo y elija <strong>Create a new plugin server module</strong>:</li>
 </ol>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/create-module.png" data-desc-position="bottom"><img alt="Diálogo de creación de un módulo plugin de servidor" src="../../../assets/images/plugins/dynamic-snmp/create-module.png"></a></p>
+<p></p>
 <ol>
 <li>En la configuración del módulo, seleccione el plugin <strong>Dynamic SNMP</strong> y rellene los campos de las macros:</li>
 </ol>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/configure-module.png" data-desc-position="bottom"><img alt="Configuración del módulo plugin de servidor con el plugin Dynamic SNMP" src="../../../assets/images/plugins/dynamic-snmp/configure-module.png"></a></p>
+<p></p>
 <p>En cada ejecución el plugin de servidor transfiere el informe con el modo de transferencia seleccionado e imprime el número de módulos generados. Si el agente indicado en <code>-agent</code> no existe, se crea automáticamente.</p>
 <h2 id="verificacion">Verificación<a class="headerlink" href="#verificacion" title="Permanent link">¶</a></h2>
 <p>Ejecute el plugin manualmente en el host donde se vaya a lanzar. Este ejemplo escanea un dispositivo por SNMPv2c en modo plugin de agente:</p>
@@ -1889,9 +1919,9 @@ The value returned by the module represents the number of modules generated.
 </code></pre></div>
 <p>Una ejecución correcta como plugin de agente imprime un bloque XML <code>&lt;module&gt;</code> por cada módulo generado en la salida estándar. Una ejecución correcta como plugin de servidor transfiere el informe e imprime en su lugar el número de módulos generados.</p>
 <p>Los módulos generados aparecen entonces en el agente de destino:</p>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/generated-modules.png" data-desc-position="bottom"><img alt="Módulos por defecto generados para cada interfaz" src="../../../assets/images/plugins/dynamic-snmp/generated-modules.png"></a></p>
+<p></p>
 <p>Con filtros y umbrales aplicados solo se generan las interfaces que coinciden y los umbrales se adjuntan a sus módulos:</p>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/plugins/dynamic-snmp/filtered-modules.png" data-desc-position="bottom"><img alt="Módulos filtrados con umbrales de warning y critical" src="../../../assets/images/plugins/dynamic-snmp/filtered-modules.png"></a></p>
+<p></p>
 <h2 id="entender-los-resultados">Entender los resultados<a class="headerlink" href="#entender-los-resultados" title="Permanent link">¶</a></h2>
 <p>El plugin recorre primero la rama de nombres de interfaz y, para cada nombre, consulta cada rama configurada. El nombre del módulo es el nombre de la interfaz seguido del nombre de la rama, separados por un guion bajo, por ejemplo <code>ge-0/0/0_ifHCInOctets</code> o <code>FastEthernet0/0_OperStatus</code>.</p>
 <ul>
