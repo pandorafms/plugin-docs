@@ -1,0 +1,2423 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/plugins/rabbitmq-local/">
+      
+      
+        <link rel="prev" href="../oculix/">
+      
+      
+        <link rel="next" href="../../integrations/google-chat/">
+      
+      
+        
+          <link rel="alternate" href="../../../plugins/rabbitmq-local/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>RabbitMQ Local monitoring plugin - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rabbitmq-local-monitoring-plugin" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RabbitMQ Local monitoring plugin
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../plugins/rabbitmq-local/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de VMware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Dynamic SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad-y-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad y disponibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#credenciales-y-transporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credenciales y transporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registrar-el-plugin-en-la-consola" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registrar el plugin en la consola
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operar-y-resolver-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operar y resolver problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-por-linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución por línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad-y-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad y disponibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#credenciales-y-transporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credenciales y transporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registrar-el-plugin-en-la-consola" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registrar el plugin en la consola
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operar-y-resolver-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operar y resolver problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-por-linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución por línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="rabbitmq-local-monitoring-plugin">RabbitMQ Local monitoring plugin<a class="headerlink" href="#rabbitmq-local-monitoring-plugin" title="Permanent link">¶</a></h1>
+<p><em>Última actualización del artículo: 2026-10-19.</em></p>
+<h2 id="que-hace">Qué hace<a class="headerlink" href="#que-hace" title="Permanent link">¶</a></h2>
+<p>El plugin <code>rabbitmq-local</code> monitoriza el estado de un clúster de
+RabbitMQ desde Pandora FMS. Cada ejecución consulta la API HTTP de gestión de
+RabbitMQ y convierte el resultado en módulos de Pandora FMS: totales del
+clúster, métricas de recursos por nodo, actividad de los exchanges, contadores
+de conexiones y una comprobación de disponibilidad.</p>
+<p>El plugin admite dos modelos de ejecución:</p>
+<ul>
+<li><strong>Modo plugin de servidor</strong> (por defecto; se selecciona cuando
+  <code>as_agent_plugin</code> está ausente, es <code>0</code> o está vacío): cada ejecución
+  construye un documento <code>agent_data</code> y lo entrega a Pandora FMS mediante
+  Tentacle o mediante una carpeta de datos local.</li>
+<li><strong>Modo plugin de agente</strong> (requiere <code>as_agent_plugin=1</code> explícito): cada
+  ejecución imprime los módulos generados como XML en la salida estándar,
+  para que los ingiera el agente de Pandora FMS.</li>
+</ul>
+<h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
+<h3 id="compatibilidad-y-disponibilidad">Compatibilidad y disponibilidad<a class="headerlink" href="#compatibilidad-y-disponibilidad" title="Permanent link">¶</a></h3>
+<p>El plugin se ha validado en Rocky Linux 9 contra un bróker RabbitMQ 3.13.7 con
+el plugin de gestión habilitado. El bróker debe exponer su API HTTP de gestión
+en el puerto de gestión — <code>15672</code> por defecto en RabbitMQ — y la máquina que
+ejecuta el plugin debe poder alcanzarla. El plugin no añade ningún puerto por
+defecto: incluya el puerto de gestión en <code>host</code> (consulte
+<a href="#configuracion">Configuración</a>).</p>
+<h3 id="requisitos">Requisitos<a class="headerlink" href="#requisitos" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Un bróker RabbitMQ con el plugin de gestión habilitado.</strong></li>
+<li><strong>Un usuario de RabbitMQ con permiso para consultar la API de gestión.</strong></li>
+<li><strong>Una instalación de Pandora FMS</strong> que reciba la salida del plugin: el
+   servidor de Pandora FMS cuando se ejecuta en modo servidor, o el endpoint
+   monitorizado cuando se ejecuta en modo plugin de agente.</li>
+<li><strong>El cliente de Tentacle (<code>tentacle_client</code>) disponible en el <code>PATH</code></strong>, solo
+   cuando el modo servidor entrega mediante Tentacle.</li>
+</ol>
+<h3 id="instalar-el-plugin">Instalar el plugin<a class="headerlink" href="#instalar-el-plugin" title="Permanent link">¶</a></h3>
+<p>El plugin se distribuye como el ejecutable <code>rabbitmq-local</code> y su archivo de
+configuración <code>rabbitmq-local.conf</code>. Copie ambos archivos a la máquina que
+vaya a ejecutar el plugin. El archivo de configuración es opcional: cuando se
+usa, se pasa al ejecutable como su único argumento posicional.</p>
+<h2 id="configuracion">Configuración<a class="headerlink" href="#configuracion" title="Permanent link">¶</a></h2>
+<p>El plugin combina tres fuentes de configuración, en orden creciente de
+precedencia:</p>
+<div class="highlight"><pre><span></span><code>valores por defecto &lt; archivo de configuración &lt; opciones de línea de comandos
+</code></pre></div>
+<p>El archivo de configuración es opcional. Cuando se usa, debe ser el único
+argumento posicional: el primer argumento de la línea de comandos que no
+empieza por <code>-</code>, y ningún otro. Es un archivo de texto plano con líneas
+<code>key=value</code>. Cada clave puede pasarse también como opción de línea de
+comandos, en cualquiera de estas cuatro formas:</p>
+<div class="highlight"><pre><span></span><code>-key value    --key value    -key=value    --key=value
+</code></pre></div>
+<p>Las claves y las opciones son literales y se escriben siempre en inglés: se
+copian tal cual.</p>
+<p>Las opciones sustituyen los valores del archivo, de modo que un archivo
+compartido puede contener la configuración común y cada ejecución sustituir lo
+que necesite. La configuración se valida de forma estricta: una opción
+desconocida, una opción sin valor al final de la línea de comandos y un
+segundo argumento posicional son errores de configuración que se informan por
+la salida de error estándar con estado de salida 1.</p>
+<p>El modo plugin de servidor es el modo por defecto y necesita un nombre de
+agente y un destino de entrega. Esta es la configuración mínima para una
+ejecución como plugin de servidor con Tentacle:</p>
+<div class="highlight"><pre><span></span><code><span class="na">host</span><span class="o">=</span><span class="s">&lt;RABBITMQ_HOST&gt;:&lt;MANAGEMENT_PORT&gt;</span>
+<span class="na">user</span><span class="o">=</span><span class="s">&lt;RABBITMQ_USER&gt;</span>
+<span class="na">pass</span><span class="o">=</span><span class="s">&lt;RABBITMQ_PASSWORD&gt;</span>
+<span class="na">agent_name</span><span class="o">=</span><span class="s">rabbitmq-local</span>
+<span class="na">interval</span><span class="o">=</span><span class="s">300</span>
+<span class="na">transfer_mode</span><span class="o">=</span><span class="s">tentacle</span>
+<span class="na">tentacle_ip</span><span class="o">=</span><span class="s">&lt;PANDORA_FMS_SERVER&gt;</span>
+<span class="na">tentacle_port</span><span class="o">=</span><span class="s">41121</span>
+</code></pre></div>
+<p>O copie el XML generado a una carpeta de datos local:</p>
+<div class="highlight"><pre><span></span><code><span class="na">host</span><span class="o">=</span><span class="s">&lt;RABBITMQ_HOST&gt;:&lt;MANAGEMENT_PORT&gt;</span>
+<span class="na">user</span><span class="o">=</span><span class="s">&lt;RABBITMQ_USER&gt;</span>
+<span class="na">pass</span><span class="o">=</span><span class="s">&lt;RABBITMQ_PASSWORD&gt;</span>
+<span class="na">agent_name</span><span class="o">=</span><span class="s">rabbitmq-local</span>
+<span class="na">transfer_mode</span><span class="o">=</span><span class="s">local</span>
+<span class="na">local_folder</span><span class="o">=</span><span class="s">/var/spool/pandora/data_in</span>
+</code></pre></div>
+<p>El modo plugin de agente requiere <code>as_agent_plugin=1</code> explícito. Esta es la
+configuración mínima para una ejecución como plugin de agente:</p>
+<div class="highlight"><pre><span></span><code><span class="na">host</span><span class="o">=</span><span class="s">&lt;RABBITMQ_HOST&gt;:&lt;MANAGEMENT_PORT&gt;</span>
+<span class="na">user</span><span class="o">=</span><span class="s">&lt;RABBITMQ_USER&gt;</span>
+<span class="na">pass</span><span class="o">=</span><span class="s">&lt;RABBITMQ_PASSWORD&gt;</span>
+<span class="na">as_agent_plugin</span><span class="o">=</span><span class="s">1</span>
+</code></pre></div>
+<p>La misma configuración de plugin de agente solo con opciones, sin archivo de
+configuración:</p>
+<div class="highlight"><pre><span></span><code>./rabbitmq-local<span class="w"> </span>-host<span class="w"> </span>&lt;RABBITMQ_HOST&gt;:&lt;MANAGEMENT_PORT&gt;<span class="w"> </span>-user<span class="w"> </span>&lt;RABBITMQ_USER&gt;<span class="w"> </span>-pass<span class="w"> </span>&lt;RABBITMQ_PASSWORD&gt;<span class="w"> </span>-as_agent_plugin<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p>Las credenciales también pueden leerse de un archivo aparte, de modo que ni el
+usuario ni la contraseña aparecen en la línea de comandos ni en la lista de
+procesos del sistema operativo:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Credenciales leídas de un archivo (legible solo por el usuario del plugin).</span>
+./rabbitmq-local<span class="w"> </span>-host<span class="w"> </span>&lt;RABBITMQ_HOST&gt;:&lt;MANAGEMENT_PORT&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-cred_file<span class="w"> </span>/etc/pandora/plugins/rabbitmq-local.creds<span class="w"> </span>-as_agent_plugin<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p>El archivo de credenciales usa líneas <code>key=value</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="na">user</span><span class="o">=</span><span class="s">&lt;RABBITMQ_USER&gt;</span>
+<span class="na">pass</span><span class="o">=</span><span class="s">&lt;RABBITMQ_PASSWORD&gt;</span>
+</code></pre></div>
+<p>Las claves <code>agent_name</code>, <code>interval</code>, <code>transfer_mode</code>, <code>local_folder</code> y
+<code>tentacle_*</code> son exclusivas del modo servidor: se ignoran mientras el plugin
+se ejecuta en modo plugin de agente. La misma ejecución en modo servidor con
+opciones, sustituyendo los valores del archivo:</p>
+<div class="highlight"><pre><span></span><code>./rabbitmq-local<span class="w"> </span>rabbitmq-local.conf<span class="w"> </span>-agent_name<span class="w"> </span>rabbitmq-local<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-transfer_mode<span class="w"> </span>tentacle<span class="w"> </span>-tentacle_ip<span class="w"> </span>&lt;PANDORA_FMS_SERVER&gt;
+</code></pre></div>
+<p>Puntos clave:</p>
+<ul>
+<li><code>host</code> admite <code>host</code>, <code>host:port</code>, <code>http://host:port</code> o <code>https://host:port</code>;
+  cuando no se indica esquema, el plugin consulta <code>http://&lt;host&gt;</code>. El plugin no
+  añade ningún puerto por defecto: un <code>host</code> sin puerto usa el puerto por
+  defecto del esquema (<code>80</code> para HTTP, <code>443</code> para HTTPS), así que incluya el
+  puerto de gestión — <code>15672</code> es el valor por defecto de RabbitMQ — salvo que un
+  proxy sirva la API en el puerto por defecto del esquema.</li>
+<li><code>ca_file</code> apunta a un bundle PEM con la CA que firma el certificado de la API
+  de gestión. Solo se usa con un host <code>https</code>; sin él, HTTPS verifica contra el
+  almacén de confianza del sistema.</li>
+<li>Las credenciales pueden indicarse en línea (<code>user</code> y <code>pass</code>) o en un archivo
+  <code>key=value</code> aparte (<code>cred_file</code>) con las líneas <code>user</code> y <code>pass</code>. Cuando
+  <code>cred_file</code> está definido — en el archivo de configuración o como opción —
+  tiene precedencia sobre <code>user</code> y <code>pass</code>. Un archivo ilegible, o un archivo
+  sin <code>user</code> o sin <code>pass</code>, es un error.</li>
+<li>En modo servidor, <code>agent_name</code> da nombre al agente creado en Pandora FMS e
+  <code>interval</code> es el intervalo del agente en segundos.</li>
+<li>El modo de transferencia es Tentacle solo cuando
+  <code>transfer_mode=tentacle</code>; cualquier otro valor, incluido el valor por
+  defecto, copia el XML en <code>local_folder</code>.</li>
+<li>Las opciones de línea de comandos sustituyen los valores del archivo, por
+  ejemplo <code>./rabbitmq-local rabbitmq-local.conf -interval 60</code>.</li>
+<li>El archivo <code>rabbitmq-local.conf</code> distribuido activa <code>as_agent_plugin=1</code> y
+  deja las claves del modo servidor comentadas, por lo que arranca en modo
+  plugin de agente tal cual.</li>
+</ul>
+<h3 id="credenciales-y-transporte">Credenciales y transporte<a class="headerlink" href="#credenciales-y-transporte" title="Permanent link">¶</a></h3>
+<ul>
+<li>Prefiera HTTPS: con un host <code>https://</code> las credenciales y las métricas
+  recopiladas viajan cifradas. Con HTTP sin cifrar viajan sin protección, así
+  que restrinja la API de gestión a una red de confianza o sitúe un proxy TLS
+  por delante.</li>
+<li>HTTPS verifica el certificado del servidor contra el almacén de confianza del
+  sistema, o contra el bundle <code>ca_file</code> cuando se configura.</li>
+<li>La contraseña en línea (<code>pass</code>) se almacena en el archivo de configuración en
+  texto plano: restrinja los permisos del archivo al usuario que ejecuta el
+  plugin.</li>
+<li>Evite <code>-pass</code> en la línea de comandos: el comando queda en el historial del
+  shell y la lista de procesos del sistema operativo puede exponerla mientras
+  el plugin se ejecuta. Use <code>-cred_file</code> con un archivo de credenciales legible
+  solo por el usuario del plugin (por ejemplo <code>chmod 600</code>).</li>
+<li>El archivo de credenciales también se guarda en texto plano: su protección es
+  el modelo de permisos del sistema de archivos, así que manténgalo propiedad
+  del usuario del plugin y sin acceso para nadie más.</li>
+</ul>
+<h3 id="registrar-el-plugin-en-la-consola">Registrar el plugin en la consola<a class="headerlink" href="#registrar-el-plugin-en-la-consola" title="Permanent link">¶</a></h3>
+<p>El plugin también puede registrarse en la consola de Pandora FMS como plugin de
+servidor, de modo que Pandora FMS lo ejecute en el servidor que ejecuta los
+módulos — el servidor principal o un servidor remoto — en lugar de en una línea
+de comandos. Registrado así, el plugin mantiene su modo servidor: cada
+ejecución construye el XML del agente y lo entrega, y el agente con sus módulos
+aparece en la consola.</p>
+<ol>
+<li>Abra <strong>Servers → Plugins</strong> y haga clic en <strong>Register Plugin</strong>.</li>
+<li>Indique el nombre, el tipo de plugin <strong>Standard</strong>, un tiempo de espera
+   máximo opcional y una descripción.</li>
+<li>En <strong>Plugin command</strong>, escriba la ruta al ejecutable <code>rabbitmq-local</code> en el
+   servidor de Pandora FMS, por ejemplo
+   <code>/usr/share/pandora_server/util/plugin/rabbitmq-local</code>.</li>
+<li>En <strong>Plugin parameters</strong>, mantenga el modo servidor (sin la clave
+   <code>as_agent_plugin</code>) y use las macros del plugin <code>_field1_</code>, <code>_field2_</code>, ...
+   como marcadores:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>-host _field1_ -user _field2_ -pass _field3_ -agent_name _field4_ -transfer_mode tentacle -tentacle_ip 127.0.0.1
+</code></pre></div>
+<ol>
+<li>En <strong>Macro parameters</strong>, describa cada campo. El ejemplo usa estos valores:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Descripción</th>
+<th>Valor de ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_field1_</code></td>
+<td>Host de la API de gestión, incluido el puerto</td>
+<td><code>http://rabbit.example.com:15672</code></td>
+</tr>
+<tr>
+<td><code>_field2_</code></td>
+<td>Usuario de RabbitMQ con permiso para consultar la API de gestión</td>
+<td><code>monitoring</code></td>
+</tr>
+<tr>
+<td><code>_field3_</code></td>
+<td>Contraseña de ese usuario; marque <strong>Hide value</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>_field4_</code></td>
+<td>Nombre del agente que contendrá los módulos en la consola</td>
+<td><code>RabbitMQ-remote-agent</code></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><code>-transfer_mode tentacle -tentacle_ip 127.0.0.1</code> entrega el agente al servidor
+de Tentacle de la máquina que ejecuta el plugin, de modo que el agente llega al
+servidor de Pandora FMS que ejecuta el módulo. Para copiar el XML a una carpeta
+de datos local, sustituya esas opciones por
+<code>-transfer_mode local -local_folder /var/spool/pandora/data_in</code>.</p>
+<p>Una vez registrado, el plugin está disponible al crear módulos de plugin, y
+cada módulo rellena sus campos de forma individual. El módulo se ejecuta en el
+servidor seleccionado para él, incluido un servidor remoto de Pandora FMS, de
+modo que cada bróker se monitoriza desde el servidor de Pandora FMS más cercano
+sin instalar nada en la máquina del bróker. El mismo plugin registrado sirve
+para varias instancias de RabbitMQ, y los valores de los campos pueden usar las
+macros de Pandora FMS documentadas en la ayuda <em>Plug-in macros</em> de la consola.</p>
+<p></p>
+<p>Los parámetros registrados pueden incluir también <code>-cred_file</code> — con una ruta
+fija o como campo — para que los módulos lean las credenciales de un archivo en
+el servidor de Pandora FMS en lugar de guardarlas en los campos del módulo. Los
+parámetros también pueden apuntar a un archivo de configuración del servidor —
+una ruta literal o un campo <code>_fieldN_</code> — de modo que el archivo aporte la
+configuración compartida.</p>
+<h2 id="verificacion">Verificación<a class="headerlink" href="#verificacion" title="Permanent link">¶</a></h2>
+<p>Ejecute el plugin manualmente desde una terminal, pasando el archivo de
+configuración como su único argumento posicional:</p>
+<div class="highlight"><pre><span></span><code>./rabbitmq-local<span class="w"> </span>/etc/pandora/plugins/rabbitmq-local.conf
+</code></pre></div>
+<p>La forma relativa <code>./rabbitmq-local rabbitmq-local.conf</code> funciona si la
+terminal ya está situada en el directorio que contiene ambos archivos. Cada
+ejecución se realiza una vez y termina.</p>
+<p>El plugin imprime su resumen de uso (todos los parámetros y cinco ejemplos)
+con <code>./rabbitmq-local -h</code>.</p>
+<p>En modo plugin de agente, una ejecución correcta imprime un bloque XML
+<code>&lt;module&gt;</code> por cada módulo generado en la salida estándar. El ejemplo muestra
+un fragmento de una ejecución contra un clúster de un solo nodo:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;module&gt;</span>
+<span class="w">  </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[Cluster name]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">  </span><span class="nt">&lt;type&gt;</span>generic_data_string<span class="nt">&lt;/type&gt;</span>
+<span class="w">  </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[rabbit@node01]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+<span class="nt">&lt;module&gt;</span>
+<span class="w">  </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[Total queue messages]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">  </span><span class="nt">&lt;type&gt;</span>generic_data<span class="nt">&lt;/type&gt;</span>
+<span class="w">  </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[12]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+<span class="nt">&lt;module&gt;</span>
+<span class="w">  </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[Availability]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">  </span><span class="nt">&lt;type&gt;</span>generic_proc<span class="nt">&lt;/type&gt;</span>
+<span class="w">  </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[1]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="w">  </span><span class="nt">&lt;description&gt;</span><span class="cp">&lt;![CDATA[Rabbit MQ API availability]]&gt;</span><span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+<span class="nt">&lt;module&gt;</span>
+<span class="w">  </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[Memory used - rabbit@node01]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">  </span><span class="nt">&lt;type&gt;</span>generic_data<span class="nt">&lt;/type&gt;</span>
+<span class="w">  </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[174895104]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="w">  </span><span class="nt">&lt;description&gt;</span><span class="cp">&lt;![CDATA[Usually in bytes. Represents the total memory that the RabbitMQ node is using at that instant.]]&gt;</span><span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+</code></pre></div>
+<p>En modo servidor, una ejecución correcta imprime <code>1</code> y el agente configurado
+en <code>agent_name</code> aparece en Pandora FMS con sus módulos. Si la ejecución no
+genera módulos, consulte
+<a href="#operar-y-resolver-problemas">Operar y resolver problemas</a>.</p>
+<p></p>
+<h2 id="entender-los-resultados">Entender los resultados<a class="headerlink" href="#entender-los-resultados" title="Permanent link">¶</a></h2>
+<p>El plugin genera el mismo catálogo de módulos en ambos modelos de ejecución.
+Los módulos cubren cinco grupos:</p>
+<ul>
+<li><strong>Nivel de clúster.</strong> <code>Cluster name</code>, <code>Total queue messages</code>,
+  <code>Messages unacknowledged</code>, <code>Total exchanges</code> y los módulos
+  <code>Queue publish rate</code>, <code>Queue deliver get rate</code> y
+  <code>Queue deliver noack rate</code> informan de los totales y las tasas de todo el
+  clúster.</li>
+<li><strong>Nivel de nodo.</strong> Para cada nodo del clúster, <code>Memory used - &lt;node&gt;</code> y
+  <code>Memory rate - &lt;node&gt;</code> informan de su consumo de memoria, <code>Proc used - &lt;node&gt;</code>
+  y <code>Proc details - &lt;node&gt;</code> de sus procesos Erlang, y <code>Node status - &lt;node&gt;</code> de
+  si el nodo está en ejecución.</li>
+<li><strong>Nivel de exchange.</strong> <code>Exchanges in rate</code> y <code>Exchanges out rate</code> informan de
+  la tasa de publicación de entrada y de salida del último exchange que
+  reporta actividad; cuando ningún exchange reporta una tasa, ambos módulos
+  informan de <code>0</code>.</li>
+<li><strong>Nivel de conexión.</strong> <code>Total connections</code>, <code>Connections running</code> y
+  <code>Connections blocked</code> cuentan las conexiones abiertas, y
+  <code>Total received octets</code> y <code>Total sent octets</code> suman sus tasas de octetos
+  recibidos y enviados.</li>
+<li><strong>Disponibilidad.</strong> <code>Availability</code> vale <code>1</code> cuando la petición de resumen del
+  clúster tiene éxito y <code>0</code> en caso contrario.</li>
+</ul>
+<p>Cuando no se puede alcanzar la API de gestión — credenciales incorrectas,
+problema de red, plugin de gestión deshabilitado — <code>Availability</code> informa de
+<code>0</code>, los módulos de nodo se omiten de la salida y los módulos de exchange y de
+conexión informan de <code>0</code>.</p>
+<h2 id="operar-y-resolver-problemas">Operar y resolver problemas<a class="headerlink" href="#operar-y-resolver-problemas" title="Permanent link">¶</a></h2>
+<ul>
+<li>El plugin no guarda estado entre ejecuciones: cada ejecución consulta el
+  bróker en ese momento, por lo que puede ejecutarse manualmente en cualquier
+  instante.</li>
+<li>En modo servidor, programe el plugin desde Pandora FMS (por ejemplo, mediante
+  el planificador de plugins del servidor o <code>cron</code>) y use <code>interval</code> para
+  ajustar el intervalo del agente. En modo plugin de agente, el agente de
+  Pandora FMS lo ejecuta según la planificación configurada para el plugin.</li>
+<li><strong><code>Availability</code> informa de <code>0</code></strong> — la petición de resumen del clúster ha
+  fallado. Compruebe que el plugin de gestión está habilitado, que <code>host</code>
+  indica el puerto de gestión y que las credenciales pueden consultar la API de
+  gestión. Con un host <code>https</code>, compruebe además que el certificado del
+  servidor verifica: apunte <code>ca_file</code> al bundle de la CA cuando la API use un
+  certificado privado.</li>
+<li><strong>No se imprime XML de módulos</strong> — ejecutar sin ningún argumento, o con
+  <code>-h</code>/<code>--help</code>, imprime el resumen de uso y se detiene en lugar de generar
+  módulos. Ejecute el plugin con las opciones de configuración o con la ruta
+  de un archivo de configuración existente. Cuando a la configuración le falta
+  un valor obligatorio (<code>host</code>, <code>user</code>, la contraseña de cualquiera de sus
+  fuentes, <code>agent_name</code> en modo servidor, <code>tentacle_ip</code> para la entrega por
+  Tentacle o <code>local_folder</code> en caso contrario), el plugin imprime el error y un
+  aviso que apunta a <code>-h</code> sin generar módulos.</li>
+<li><strong>El plugin termina con <code>cannot read cred_file</code>, <code>cred_file ... is missing
+  user</code> o <code>cred_file ... is missing pass</code></strong> — el archivo de credenciales debe
+  existir, ser legible por el usuario del plugin y definir tanto <code>user</code> como
+  <code>pass</code>. Corrija el archivo o vuelva a las credenciales en línea (<code>user</code> y
+  <code>pass</code>).</li>
+<li><strong>No aparecen módulos de nodo</strong> mientras <code>Availability</code> informa de <code>1</code> — la
+  petición de nodos ha fallado; el resto de módulos del clúster se siguen
+  generando. Repita la ejecución y compruebe la lista de nodos del bróker.</li>
+<li><strong>El modo servidor no imprime <code>1</code></strong> — la entrega ha fallado. Compruebe que
+  <code>tentacle_client</code> está disponible y puede alcanzar
+  <code>tentacle_ip:tentacle_port</code>, o que <code>local_folder</code> existe y tiene permisos de
+  escritura.</li>
+<li><strong>Los datos parecen obsoletos en Pandora FMS</strong> — el plugin siempre informa de
+  los valores que el bróker devuelve en el momento de la ejecución; compruebe
+  el propio bróker y la planificación de ejecución.</li>
+</ul>
+<h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
+<h3 id="archivo-de-configuracion">Archivo de configuración<a class="headerlink" href="#archivo-de-configuracion" title="Permanent link">¶</a></h3>
+<p>El archivo de configuración es opcional: sin él, el plugin se ejecuta con los
+valores por defecto más las opciones.</p>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Obligatorio</th>
+<th>Valor por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>host</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Host de la API de gestión, en forma <code>host</code>, <code>host:port</code>, <code>http://host:port</code> o <code>https://host:port</code>. HTTP es el valor por defecto. Incluya el puerto de gestión: no se añade ningún puerto por defecto.</td>
+</tr>
+<tr>
+<td><code>ca_file</code></td>
+<td>No</td>
+<td>—</td>
+<td>Bundle PEM con la CA que firma el certificado de la API de gestión (solo se usa con un host <code>https</code>).</td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td>Sí, salvo que se defina <code>cred_file</code></td>
+<td>—</td>
+<td>Usuario de RabbitMQ con permiso para consultar la API de gestión.</td>
+</tr>
+<tr>
+<td><code>pass</code></td>
+<td>Sí, salvo que se defina <code>cred_file</code></td>
+<td>—</td>
+<td>Contraseña de <code>user</code>.</td>
+</tr>
+<tr>
+<td><code>cred_file</code></td>
+<td>No</td>
+<td>—</td>
+<td>Archivo con las credenciales en líneas <code>key=value</code> (<code>user</code> y <code>pass</code>), con el mismo formato que el archivo de configuración. Cuando se define, tiene precedencia sobre <code>user</code> y <code>pass</code>. Use una ruta absoluta legible solo por el usuario del plugin. Un archivo ilegible, o un archivo sin <code>user</code> o sin <code>pass</code>, es un error.</td>
+</tr>
+<tr>
+<td><code>agent_name</code></td>
+<td>Obligatorio en modo servidor</td>
+<td>—</td>
+<td>Exclusivo del modo servidor. Nombre del agente creado en Pandora FMS.</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>No</td>
+<td><code>300</code></td>
+<td>Exclusivo del modo servidor. Intervalo del agente en segundos.</td>
+</tr>
+<tr>
+<td><code>as_agent_plugin</code></td>
+<td>No</td>
+<td><code>0</code> (plugin de servidor)</td>
+<td><code>1</code> (o cualquier valor distinto de <code>0</code>) imprime el XML de módulos en la salida estándar; <code>0</code> (o un valor vacío) construye y entrega un agente.</td>
+</tr>
+<tr>
+<td><code>tmp</code></td>
+<td>No</td>
+<td>Carpeta temporal del sistema</td>
+<td>Carpeta donde se escribe el documento XML antes de la entrega.</td>
+</tr>
+<tr>
+<td><code>transfer_mode</code></td>
+<td>Condicional</td>
+<td>Vacío (copia local)</td>
+<td>Exclusivo del modo servidor. <code>tentacle</code> entrega con el cliente de Tentacle; cualquier otro valor, incluido el valor por defecto, copia el XML en <code>local_folder</code>.</td>
+</tr>
+<tr>
+<td><code>local_folder</code></td>
+<td>Obligatorio cuando no se usa Tentacle</td>
+<td>—</td>
+<td>Exclusivo del modo servidor. Carpeta de destino de la copia del XML.</td>
+</tr>
+<tr>
+<td><code>tentacle_ip</code></td>
+<td>Obligatorio cuando <code>transfer_mode=tentacle</code></td>
+<td>—</td>
+<td>Exclusivo del modo servidor. Dirección del servidor de Tentacle.</td>
+</tr>
+<tr>
+<td><code>tentacle_port</code></td>
+<td>No</td>
+<td><code>41121</code></td>
+<td>Exclusivo del modo servidor. Puerto del servidor de Tentacle.</td>
+</tr>
+<tr>
+<td><code>tentacle_opts</code></td>
+<td>No</td>
+<td>Vacío</td>
+<td>Exclusivo del modo servidor. Opciones adicionales que se pasan al cliente de Tentacle, separadas por espacios.</td>
+</tr>
+</tbody>
+</table>
+<p>El archivo usa líneas <code>key=value</code>. Las líneas en blanco y las que empiezan
+por <code>#</code> se omiten, las claves y los valores se recortan, y la última aparición
+de una clave repetida prevalece.</p>
+<p>Cuando <code>cred_file</code> está definido — en el archivo de configuración o en la línea
+de comandos — las credenciales se leen de ese archivo y se usan en lugar de
+<code>user</code> y <code>pass</code>.</p>
+<h3 id="ejecucion-por-linea-de-comandos">Ejecución por línea de comandos<a class="headerlink" href="#ejecucion-por-linea-de-comandos" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>./rabbitmq-local<span class="w"> </span><span class="o">[</span>archivo-de-configuración<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-key<span class="w"> </span>value<span class="w"> </span>...<span class="w"> </span><span class="o">]</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Condición</th>
+<th>Comportamiento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>La línea de comandos está vacía</td>
+<td>El plugin imprime el resumen de uso y se detiene</td>
+</tr>
+<tr>
+<td>No hay argumento posicional, pero sí opciones</td>
+<td>El plugin se ejecuta con los valores por defecto más las opciones</td>
+</tr>
+<tr>
+<td>El argumento posicional nombra un archivo existente</td>
+<td>El plugin se ejecuta con la configuración del archivo, sustituida por las opciones</td>
+</tr>
+<tr>
+<td>El argumento posicional nombra un archivo que no existe</td>
+<td>El plugin informa del error por la salida de error estándar y sale con estado 1</td>
+</tr>
+<tr>
+<td><code>-key value</code>, <code>--key value</code>, <code>-key=value</code> o <code>--key=value</code></td>
+<td>Cada opción sustituye el valor de la misma clave del archivo o de los valores por defecto</td>
+</tr>
+<tr>
+<td><code>-h</code> o <code>--help</code> en cualquier posición de la línea de comandos</td>
+<td>El plugin imprime el resumen de uso y se detiene</td>
+</tr>
+<tr>
+<td>Una opción desconocida, una opción sin valor o un segundo argumento posicional</td>
+<td>El plugin informa del error por la salida de error estándar y sale con estado 1</td>
+</tr>
+</tbody>
+</table>
+<p>Las opciones pueden aparecer antes o después de la ruta del archivo de
+configuración.</p>
+<h3 id="modulos-generados">Módulos generados<a class="headerlink" href="#modulos-generados" title="Permanent link">¶</a></h3>
+<p>En los nombres siguientes, <code>&lt;node&gt;</code> es el nombre de un nodo del clúster:</p>
+<table>
+<thead>
+<tr>
+<th>Nombre del módulo</th>
+<th>Tipo</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Cluster name</code></td>
+<td><code>generic_data_string</code></td>
+<td>Nombre del clúster informado por el bróker</td>
+</tr>
+<tr>
+<td><code>Total queue messages</code></td>
+<td><code>generic_data</code></td>
+<td>Total de mensajes en todas las colas</td>
+</tr>
+<tr>
+<td><code>Messages unacknowledged</code></td>
+<td><code>generic_data</code></td>
+<td>Total de mensajes entregados pero no confirmados</td>
+</tr>
+<tr>
+<td><code>Total exchanges</code></td>
+<td><code>generic_data</code></td>
+<td>Número total de exchanges</td>
+</tr>
+<tr>
+<td><code>Queue publish rate</code></td>
+<td><code>generic_data</code></td>
+<td>Tasa de publicación del clúster</td>
+</tr>
+<tr>
+<td><code>Queue deliver get rate</code></td>
+<td><code>generic_data</code></td>
+<td>Tasa de mensajes obtenidos directamente de las colas</td>
+</tr>
+<tr>
+<td><code>Queue deliver noack rate</code></td>
+<td><code>generic_data</code></td>
+<td>Tasa de mensajes entregados a consumidores sin confirmación</td>
+</tr>
+<tr>
+<td><code>Availability</code></td>
+<td><code>generic_proc</code></td>
+<td><code>1</code> cuando la petición de resumen del clúster tiene éxito, <code>0</code> en caso contrario</td>
+</tr>
+<tr>
+<td><code>Memory used - &lt;node&gt;</code></td>
+<td><code>generic_data</code></td>
+<td>Memoria usada por el nodo, en bytes</td>
+</tr>
+<tr>
+<td><code>Memory rate - &lt;node&gt;</code></td>
+<td><code>generic_data</code></td>
+<td>Tasa a la que se consume o libera la memoria del nodo</td>
+</tr>
+<tr>
+<td><code>Proc used - &lt;node&gt;</code></td>
+<td><code>generic_data</code></td>
+<td>Procesos Erlang usados por el nodo</td>
+</tr>
+<tr>
+<td><code>Proc details - &lt;node&gt;</code></td>
+<td><code>generic_data</code></td>
+<td>Tasa a la que se crean o terminan los procesos Erlang del nodo</td>
+</tr>
+<tr>
+<td><code>Node status - &lt;node&gt;</code></td>
+<td><code>generic_proc</code></td>
+<td><code>1</code> mientras el nodo está en ejecución, <code>0</code> en caso contrario</td>
+</tr>
+<tr>
+<td><code>Exchanges in rate</code></td>
+<td><code>generic_data</code></td>
+<td>Tasa de publicación de entrada del último exchange que la informa; <code>0</code> cuando ninguno reporta actividad</td>
+</tr>
+<tr>
+<td><code>Exchanges out rate</code></td>
+<td><code>generic_data</code></td>
+<td>Tasa de publicación de salida del último exchange que la informa; <code>0</code> cuando ninguno reporta actividad</td>
+</tr>
+<tr>
+<td><code>Total connections</code></td>
+<td><code>generic_data</code></td>
+<td>Número de conexiones de cliente abiertas</td>
+</tr>
+<tr>
+<td><code>Connections running</code></td>
+<td><code>generic_data</code></td>
+<td>Conexiones en estado running</td>
+</tr>
+<tr>
+<td><code>Connections blocked</code></td>
+<td><code>generic_data</code></td>
+<td>Conexiones que no están en estado running</td>
+</tr>
+<tr>
+<td><code>Total received octets</code></td>
+<td><code>generic_data</code></td>
+<td>Suma de la tasa de octetos recibidos de todas las conexiones</td>
+</tr>
+<tr>
+<td><code>Total sent octets</code></td>
+<td><code>generic_data</code></td>
+<td>Suma de la tasa de octetos enviados de todas las conexiones</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
