@@ -1,6 +1,6 @@
 # RabbitMQ Local monitoring plugin
 
-*Article last updated: 2026-10-16.*
+*Article last updated: 2026-10-19.*
 
 ## What it does
 
@@ -24,8 +24,10 @@ The plugin supports two execution models:
 
 The plugin has been validated on Rocky Linux 9 against a RabbitMQ broker
 running 3.13.7 with the management plugin enabled. The broker must expose its
-management HTTP API, by default on port `15672`, and the machine that runs the
-plugin must be able to reach it.
+management HTTP API on the management port — `15672` by default in RabbitMQ —
+and the machine that runs the plugin must be able to reach it. The plugin adds
+no default port: include the management port in `host` (see
+[Configure](#configure)).
 
 ### Requirements
 
@@ -140,7 +142,10 @@ Key points:
 
 - `host` accepts `host`, `host:port`, `http://host:port` or
   `https://host:port`; when no scheme is given the plugin queries
-  `http://<host>`. Include the management port when it is not `15672`.
+  `http://<host>`. The plugin adds no default port: a `host` without a port
+  uses the scheme default (`80` for HTTP, `443` for HTTPS), so include the
+  management port — `15672` is RabbitMQ's default — unless a proxy serves the
+  API on the scheme default port.
 - `ca_file` points to a PEM bundle with the CA that signs the management API
   certificate. It is only used with an `https` host; without it, HTTPS verifies
   against the system trust store.
@@ -178,31 +183,51 @@ Key points:
 
 ### Register the plugin in the console
 
-The plugin can also be registered in the Pandora FMS console, so its
-parameters are filled per agent as module fields instead of in a command line:
+The plugin can also be registered in the Pandora FMS console as a server
+plugin, so Pandora FMS executes it on the server that runs the modules — the
+main server or a remote server — instead of in a command line. Registered this
+way the plugin keeps its server mode: every run builds the agent XML and
+delivers it, and the agent with its modules appears in the console.
 
-1. Open **Servers → Plugins** and click **Add plugin**.
-2. Fill in the name, the path to the `rabbitmq-local` executable on the
-   Pandora FMS server and the command parameters, using the plugin macros
-   `_field1_`, `_field2_`, ... as placeholders:
+1. Open **Servers → Plugins** and click **Register Plugin**.
+2. Set the name, the plugin type **Standard**, an optional maximum timeout and
+   a description.
+3. In **Plugin command**, enter the path to the `rabbitmq-local` executable on
+   the Pandora FMS server, for example
+   `/usr/share/pandora_server/util/plugin/rabbitmq-local`.
+4. In **Plugin parameters**, keep server mode (no `as_agent_plugin` key) and
+   use the plugin macros `_field1_`, `_field2_`, ... as placeholders:
 
 ```text
--as_agent_plugin 1 -host _field1_ -user _field2_ -pass _field3_
+-host _field1_ -user _field2_ -pass _field3_ -agent_name _field4_ -transfer_mode tentacle -tentacle_ip 127.0.0.1
 ```
 
-3. In **Macro parameters**, describe each field. The password field can be
-   marked with **Hide value**, so the console displays it as dots.
+5. In **Macro parameters**, describe each field. The example uses these values:
 
-![RabbitMQ Local plugin registration in the Pandora FMS console](../assets/images/plugins/rabbitmq-local/plugin-registration.png)
+| Field | Description | Example value |
+| --- | --- | --- |
+| `_field1_` | Management API host, including the port | `http://rabbit.example.com:15672` |
+| `_field2_` | RabbitMQ user allowed to query the management API | `monitoring` |
+| `_field3_` | Password for that user; mark **Hide value** | — |
+| `_field4_` | Name of the agent that will hold the modules in the console | `RabbitMQ-remote-agent` |
+
+![RabbitMQ Local registered as a server plugin in the Pandora FMS console](../assets/images/plugins/rabbitmq-local/plugin-registration.png)
+
+`-transfer_mode tentacle -tentacle_ip 127.0.0.1` delivers the agent to the
+Tentacle server of the machine that runs the plugin, so the agent lands in the
+Pandora FMS server that executes the module. To copy the XML to a local data
+folder instead, replace those flags with
+`-transfer_mode local -local_folder /var/spool/pandora/data_in`.
 
 Once registered, the plugin is available when creating plugin modules, and
-every module fills the fields individually: the same registered plugin serves
-several RabbitMQ instances without an extra configuration file for each one.
+each module fills the fields individually. The module is executed on the
+server selected for it, including a remote Pandora FMS server, so each broker
+is monitored from the Pandora FMS server closest to it without installing
+anything on the broker host. The same registered plugin serves several
+RabbitMQ instances, and the field values can use the Pandora FMS macros
+documented in the console *Plug-in macros* help.
 
 ![Plugin fields while creating a module](../assets/images/plugins/rabbitmq-local/module-plugin-fields.png)
-
-The field values can use the Pandora FMS macros documented in the console
-*Plug-in macros* help.
 
 The registered parameters can also include `-cred_file` — with a fixed path or
 as a field — so the modules read the credentials from a file on the Pandora FMS
@@ -333,7 +358,7 @@ defaults plus the flags.
 
 | Name | Required | Default | Description |
 | --- | --- | --- | --- |
-| `host` | Yes | — | Management API host, in `host`, `host:port`, `http://host:port` or `https://host:port` form. HTTP is the default. |
+| `host` | Yes | — | Management API host, in `host`, `host:port`, `http://host:port` or `https://host:port` form. HTTP is the default. Include the management port: no default port is added. |
 | `ca_file` | No | — | PEM bundle with the CA that signs the management API certificate (only used with an `https` host). |
 | `user` | Yes, unless `cred_file` is set | — | RabbitMQ user allowed to query the management API. |
 | `pass` | Yes, unless `cred_file` is set | — | Password for `user`. |

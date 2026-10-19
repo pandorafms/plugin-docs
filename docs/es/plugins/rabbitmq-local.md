@@ -1,6 +1,6 @@
 # RabbitMQ Local monitoring plugin
 
-*Última actualización del artículo: 2026-10-16.*
+*Última actualización del artículo: 2026-10-19.*
 
 ## Qué hace
 
@@ -25,9 +25,11 @@ El plugin admite dos modelos de ejecución:
 ### Compatibilidad y disponibilidad
 
 El plugin se ha validado en Rocky Linux 9 contra un bróker RabbitMQ 3.13.7 con
-el plugin de gestión habilitado. El bróker debe exponer su API HTTP de gestión,
-por defecto en el puerto `15672`, y la máquina que ejecuta el plugin debe poder
-alcanzarla.
+el plugin de gestión habilitado. El bróker debe exponer su API HTTP de gestión
+en el puerto de gestión — `15672` por defecto en RabbitMQ — y la máquina que
+ejecuta el plugin debe poder alcanzarla. El plugin no añade ningún puerto por
+defecto: incluya el puerto de gestión en `host` (consulte
+[Configuración](#configuracion)).
 
 ### Requisitos
 
@@ -148,8 +150,11 @@ opciones, sustituyendo los valores del archivo:
 Puntos clave:
 
 - `host` admite `host`, `host:port`, `http://host:port` o `https://host:port`;
-  cuando no se indica esquema, el plugin consulta `http://<host>`. Incluya el
-  puerto de gestión cuando no sea `15672`.
+  cuando no se indica esquema, el plugin consulta `http://<host>`. El plugin no
+  añade ningún puerto por defecto: un `host` sin puerto usa el puerto por
+  defecto del esquema (`80` para HTTP, `443` para HTTPS), así que incluya el
+  puerto de gestión — `15672` es el valor por defecto de RabbitMQ — salvo que un
+  proxy sirva la API en el puerto por defecto del esquema.
 - `ca_file` apunta a un bundle PEM con la CA que firma el certificado de la API
   de gestión. Solo se usa con un host `https`; sin él, HTTPS verifica contra el
   almacén de confianza del sistema.
@@ -190,34 +195,53 @@ Puntos clave:
 
 ### Registrar el plugin en la consola
 
-El plugin también puede registrarse en la consola de Pandora FMS, de modo que
-sus parámetros se rellenen por agente como campos del módulo en lugar de en una
-línea de comandos:
+El plugin también puede registrarse en la consola de Pandora FMS como plugin de
+servidor, de modo que Pandora FMS lo ejecute en el servidor que ejecuta los
+módulos — el servidor principal o un servidor remoto — en lugar de en una línea
+de comandos. Registrado así, el plugin mantiene su modo servidor: cada
+ejecución construye el XML del agente y lo entrega, y el agente con sus módulos
+aparece en la consola.
 
-1. Abra **Servers → Plugins** y haga clic en **Add plugin**.
-2. Rellene el nombre, la ruta al ejecutable `rabbitmq-local` en el servidor de
-   Pandora FMS y los parámetros del comando, usando las macros del plugin
-   `_field1_`, `_field2_`, ... como marcadores:
+1. Abra **Servers → Plugins** y haga clic en **Register Plugin**.
+2. Indique el nombre, el tipo de plugin **Standard**, un tiempo de espera
+   máximo opcional y una descripción.
+3. En **Plugin command**, escriba la ruta al ejecutable `rabbitmq-local` en el
+   servidor de Pandora FMS, por ejemplo
+   `/usr/share/pandora_server/util/plugin/rabbitmq-local`.
+4. En **Plugin parameters**, mantenga el modo servidor (sin la clave
+   `as_agent_plugin`) y use las macros del plugin `_field1_`, `_field2_`, ...
+   como marcadores:
 
 ```text
--as_agent_plugin 1 -host _field1_ -user _field2_ -pass _field3_
+-host _field1_ -user _field2_ -pass _field3_ -agent_name _field4_ -transfer_mode tentacle -tentacle_ip 127.0.0.1
 ```
 
-3. En **Macro parameters**, describa cada campo. El campo de la contraseña
-   puede marcarse con **Hide value**, de modo que la consola lo muestra como
-   puntos.
+5. En **Macro parameters**, describa cada campo. El ejemplo usa estos valores:
 
-![Registro del plugin RabbitMQ Local en la consola de Pandora FMS](../assets/images/plugins/rabbitmq-local/plugin-registration.png)
+| Campo | Descripción | Valor de ejemplo |
+| --- | --- | --- |
+| `_field1_` | Host de la API de gestión, incluido el puerto | `http://rabbit.example.com:15672` |
+| `_field2_` | Usuario de RabbitMQ con permiso para consultar la API de gestión | `monitoring` |
+| `_field3_` | Contraseña de ese usuario; marque **Hide value** | — |
+| `_field4_` | Nombre del agente que contendrá los módulos en la consola | `RabbitMQ-remote-agent` |
+
+![Registro del plugin RabbitMQ Local como plugin de servidor en la consola de Pandora FMS](../assets/images/plugins/rabbitmq-local/plugin-registration.png)
+
+`-transfer_mode tentacle -tentacle_ip 127.0.0.1` entrega el agente al servidor
+de Tentacle de la máquina que ejecuta el plugin, de modo que el agente llega al
+servidor de Pandora FMS que ejecuta el módulo. Para copiar el XML a una carpeta
+de datos local, sustituya esas opciones por
+`-transfer_mode local -local_folder /var/spool/pandora/data_in`.
 
 Una vez registrado, el plugin está disponible al crear módulos de plugin, y
-cada módulo rellena sus campos de forma individual: el mismo plugin registrado
-sirve para varias instancias de RabbitMQ sin un archivo de configuración extra
-para cada una.
+cada módulo rellena sus campos de forma individual. El módulo se ejecuta en el
+servidor seleccionado para él, incluido un servidor remoto de Pandora FMS, de
+modo que cada bróker se monitoriza desde el servidor de Pandora FMS más cercano
+sin instalar nada en la máquina del bróker. El mismo plugin registrado sirve
+para varias instancias de RabbitMQ, y los valores de los campos pueden usar las
+macros de Pandora FMS documentadas en la ayuda *Plug-in macros* de la consola.
 
 ![Campos del plugin al crear un módulo](../assets/images/plugins/rabbitmq-local/module-plugin-fields.png)
-
-Los valores de los campos pueden usar las macros de Pandora FMS documentadas en
-la ayuda *Plug-in macros* de la consola.
 
 Los parámetros registrados pueden incluir también `-cred_file` — con una ruta
 fija o como campo — para que los módulos lean las credenciales de un archivo en
@@ -356,7 +380,7 @@ valores por defecto más las opciones.
 
 | Nombre | Obligatorio | Valor por defecto | Descripción |
 | --- | --- | --- | --- |
-| `host` | Sí | — | Host de la API de gestión, en forma `host`, `host:port`, `http://host:port` o `https://host:port`. HTTP es el valor por defecto. |
+| `host` | Sí | — | Host de la API de gestión, en forma `host`, `host:port`, `http://host:port` o `https://host:port`. HTTP es el valor por defecto. Incluya el puerto de gestión: no se añade ningún puerto por defecto. |
 | `ca_file` | No | — | Bundle PEM con la CA que firma el certificado de la API de gestión (solo se usa con un host `https`). |
 | `user` | Sí, salvo que se defina `cred_file` | — | Usuario de RabbitMQ con permiso para consultar la API de gestión. |
 | `pass` | Sí, salvo que se defina `cred_file` | — | Contraseña de `user`. |
