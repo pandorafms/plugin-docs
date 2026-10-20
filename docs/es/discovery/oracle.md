@@ -19,9 +19,11 @@ El plugin está pensado para usarse a través del sistema de **Discovery** de Pa
 | Ámbito | Estado | Evidencia |
 |-------|-------|----------|
 | Versión del plugin `1.12` (`pandorafms.oracle`) | Objetivo documentado | La versión que describe esta página, identificada en la definición del paquete. Consulte [Identidad del plugin](#identidad-del-plugin) |
+| CDB/PDB multitenant de Oracle cuyos servicios de PDB están registrados en el listener bajo un nombre con `db_domain` | `Probado` | Ejecución de verificación del ticket #24889: la tarea terminó con `Targets up` y generó el agente de PDB y sus módulos. Consulte [Conexión a PDB en multitenant y resolución del servicio](#conexion-a-pdb-en-multitenant-y-resolucion-del-servicio) |
 | Accesibilidad de red desde el servidor de Discovery a cada listener de base de datos objetivo | `Requerido` | El plugin abre una conexión remota de Oracle por objetivo |
 | Un usuario de base de datos capaz de conectarse y con `SELECT` sobre las vistas usadas por los módulos habilitados | `Requerido` | Prerrequisito, no una declaración de compatibilidad. Consulte [Conceder los privilegios necesarios](#conceder-los-privilegios-necesarios) |
 | Oracle Instant Client en el servidor de Discovery, cuando **Thick mode** está habilitado | `Requerido` | Prerrequisito, no una declaración de compatibilidad. Consulte [Requisitos](#requisitos) |
+| Oracle Database 11 o anterior | `Sin validar` | La guía rápida oficial indica que se necesita thick mode para Oracle 11 y anteriores |
 | Una versión concreta de Pandora FMS | `Sin validar` | Ningún registro de pruebas publicado demuestra compatibilidad con una versión de consola o de servidor |
 | Un sistema operativo concreto del host que ejecuta el plugin | `Sin validar` | No se ha registrado ningún sistema operativo del host |
 | Versiones del servidor de Oracle Database | `Sin validar` | La compatibilidad se estableció contra las consultas SQL y el contrato de conexión, no contra una matriz de versiones |
@@ -53,9 +55,11 @@ Cada módulo lee vistas concretas de Oracle. Conceda solo lo que necesiten los m
 | Tablespaces (`checkTablespaces`) | `DBA_TABLESPACE_USAGE_METRICS`, `DBA_TABLESPACES`, y `DBA_DATA_FILES` / `DBA_FREE_SPACE` para el método alternativo de Oracle 10 y anteriores | `GRANT SELECT ON DBA_TABLESPACE_USAGE_METRICS TO pandora;`<br>`GRANT SELECT ON DBA_TABLESPACES TO pandora;`<br>`GRANT SELECT ON DBA_DATA_FILES TO pandora;`<br>`GRANT SELECT ON DBA_FREE_SPACE TO pandora;` |
 | Fragmentación (`checkFragmentation`) | `DBA_TABLES` | `GRANT SELECT ON DBA_TABLES TO pandora;` |
 | Caché (`checkCache`) | `V$LIBRARYCACHE`, `V$ROWCACHE`, `V$SYSSTAT` | `GRANT SELECT ON V_$LIBRARYCACHE TO pandora;`<br>`GRANT SELECT ON V_$ROWCACHE TO pandora;`<br>`GRANT SELECT ON V_$SYSSTAT TO pandora;` |
-| Descubrimiento de PDB multitenant (`multitenant`) | `V$PDBS` | `GRANT SELECT ON V_$PDBS TO pandora;` |
+| Descubrimiento de PDB multitenant (`multitenant`) | `V$PDBS` y `V$ACTIVE_SERVICES` | `GRANT SELECT ON V_$PDBS TO pandora;`<br>`GRANT SELECT ON V_$ACTIVE_SERVICES TO pandora;` |
 | Versión de la base de datos | `PRODUCT_COMPONENT_VERSION` | `GRANT SELECT ON PRODUCT_COMPONENT_VERSION TO pandora;` |
 | Consultas personalizadas | Depende de la consulta | Conceda `SELECT` sobre cualquier tabla o vista a la que apunten las consultas personalizadas |
+
+> La versión `1.12` lee `V$ACTIVE_SERVICES` para resolver el nombre de servicio del listener de cada PDB. Sin esta concesión, la consulta de descubrimiento de PDB multitenant falla y no se monitoriza ninguna PDB.
 
 Por comodidad, `SELECT_CATALOG_ROLE` cubre la mayoría de vistas `V$` y `DBA_`:
 
@@ -159,14 +163,24 @@ Un objetivo alcanzable siempre produce el módulo de disponibilidad `<prefijo>Or
 
 El inventario exhaustivo, incluidos los prefijos de PDB y los umbrales por defecto, está en [Módulos generados](#modulos-generados).
 
-### Conexión a PDB en multitenant
+### Conexión a PDB en multitenant y resolución del servicio
 
-En Oracle multitenant, se llega a una PDB a través de su nombre de servicio. El plugin usa el propio nombre de la PDB como nombre de servicio al conectarse a ella, y lo adapta al formato del objetivo:
+En Oracle multitenant se llega a una PDB a través de su nombre de servicio, pero el nombre de la PDB no es necesariamente el servicio que expone el listener. Una PDB puede existir mientras su servicio de listener solo está registrado con un nombre cualificado, por ejemplo cuando la base de datos tiene configurado un `db_domain`. Conectarse solo con el nombre de la PDB falla entonces con `DPY-6001: Service "..." is not registered with the listener` (equivalente a `ORA-12514`).
 
-- **Objetivo simple** (`HOST:PORT/SERVICE`): el plugin se conecta a la PDB como `HOST:PORT/<nombre pdb>`.
-- **Objetivo DSN**: el plugin reescribe el descriptor, sustituyendo el valor de `SERVICE_NAME` por el nombre de la PDB y conservando las direcciones, los puertos y la configuración de failover. Si el descriptor identifica la conexión con un `SID`, el plugin sustituye esa cláusula `SID` por `SERVICE_NAME=<nombre pdb>`.
+El plugin resuelve el nombre de servicio de cada PDB y prueba estos candidatos en orden:
+
+1. Los nombres de servicio del listener registrados para esa PDB, incluidos los nombres leídos del archivo de entidades.
+2. Los mismos nombres de servicio cualificados con el dominio de la base de datos (`db_domain`) cuando el listener los expone como nombres totalmente cualificados.
+3. El propio nombre de la PDB, como último recurso.
+
+La forma de aplicar cada candidato depende del formato del objetivo:
+
+- **Objetivo simple** (`HOST:PORT/SERVICE`): el plugin se conecta a la PDB como `HOST:PORT/<nombre de servicio>`.
+- **Objetivo DSN**: el plugin reescribe el descriptor, sustituyendo el valor de `SERVICE_NAME` por el candidato y conservando las direcciones, los puertos y la configuración de failover. Si el descriptor identifica la conexión con un `SID`, el plugin sustituye esa cláusula `SID` por `SERVICE_NAME=<nombre de servicio>`.
 - Si el descriptor no contiene ni `SERVICE_NAME` ni `SID`, no se puede construir la conexión a la PDB y esta se notifica en la información de ejecución y se omite.
-- Un nombre de PDB que contenga caracteres fuera de letras, dígitos y `_ $ # . -` se rechaza como inválido.
+- Un nombre de PDB o de servicio que contenga caracteres fuera de letras, dígitos y `_ $ # . -` se rechaza como inválido.
+
+Solo cuando fallan todos los candidatos se informa de un aviso y, con **Create agent per PDB**, el agente de PDB se crea con su módulo de conexión a valor `0`.
 
 Durante el descubrimiento solo se monitorizan las PDB en modo abierto `READ WRITE`; las demás se nombran en la información de ejecución y se omiten. Las PDB recuperadas del archivo de entidades se monitorizan según la caché.
 
@@ -182,10 +196,10 @@ El plugin informa de su diagnóstico en el resumen JSON de ejecución impreso en
 
 - **Un objetivo DSN no se puede conectar** — el plugin no recurre a una conexión `HOST:PORT/SID` cuando el objetivo es un descriptor DSN. Compruebe la sintaxis del descriptor y que sea alcanzable.
 - **Una PDB se omite con `DSN contains no SERVICE_NAME or SID to replace`** — el objetivo DSN usado para alcanzar el contenedor no contiene un `SERVICE_NAME` ni un `SID` que sustituir por el nombre de la PDB. Use un descriptor que identifique la conexión con uno de ellos.
-- **Una PDB se omite por inválida** — el nombre de la PDB contiene caracteres fuera de letras, dígitos y `_ $ # . -`.
-- **`DPY-6001: Service "..." is not registered with the listener` (o `ORA-12514`)** — el servicio de la PDB no es alcanzable con el nombre que se probó. Verifique que el servicio de la PDB está registrado en el listener y que el plugin sustituye el nombre correcto.
+- **Una PDB se omite por inválida** — el nombre de la PDB o del servicio contiene caracteres fuera de letras, dígitos y `_ $ # . -`.
+- **`DPY-6001: Service "..." is not registered with the listener` (o `ORA-12514`)** — el servicio de la PDB no es alcanzable con el nombre que se probó. El plugin resuelve automáticamente los nombres de servicio registrados y la cualificación con `db_domain`; si aun así falla, verifique que el usuario tiene `SELECT` sobre `V$ACTIVE_SERVICES` y que el servicio de la PDB está realmente registrado en el listener.
 - **`Targets down` para un objetivo** — la conexión al contenedor falló. Compruebe el acceso de red desde el servidor de Discovery, el formato de la cadena objetivo y las credenciales.
-- **No se descubre ninguna PDB** — la consulta de descubrimiento falló (a menudo por falta de la concesión sobre `V$PDBS`), o ninguna PDB coincide con el filtro `|PDB` de la cadena objetivo.
+- **No se descubre ninguna PDB** — la consulta de descubrimiento falló (a menudo por falta de la concesión sobre `V$PDBS` o `V$ACTIVE_SERVICES`), o ninguna PDB coincide con el filtro `|PDB` de la cadena objetivo.
 - **Una PDB se omite** — solo se monitorizan las PDB en modo abierto `READ WRITE`; las omitidas se nombran en el resumen de ejecución.
 - **`ORA-00942: table or view does not exist`** — el usuario de monitorización carece de `SELECT` sobre una vista requerida. Conceda el privilegio para el grupo de módulos habilitado y vuelva a ejecutar.
 - **`agent_per_pdb` no tiene efecto** — solo se aplica cuando **Multitenant** está habilitado.

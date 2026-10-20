@@ -19,9 +19,11 @@ The plugin is designed for use through the Pandora FMS **Discovery** system. It 
 | Scope | State | Evidence |
 |-------|-------|----------|
 | Plugin version `1.12` (`pandorafms.oracle`) | Documented target | The version this page describes, identified by the package definition. See [Plugin identity](#plugin-identity) |
+| Oracle multitenant CDB/PDB whose PDB services are registered in the listener under a `db_domain` name | `Tested` | Ticket #24889 verification run: the task completed with `Targets up` and generated the PDB agent and its modules. See [Multitenant PDB connection and service resolution](#multitenant-pdb-connection-and-service-resolution) |
 | Network reachability from the Discovery server to every target database listener | `Required` | The plugin opens a remote Oracle connection per target |
 | A database user able to connect and with `SELECT` on the views used by the enabled modules | `Required` | Prerequisite, not a compatibility statement. See [Grant the required privileges](#grant-the-required-privileges) |
 | Oracle Instant Client on the Discovery server, when **Thick mode** is enabled | `Required` | Prerequisite, not a compatibility statement. See [Prerequisites](#prerequisites) |
+| Oracle Database 11 or earlier | `Not validated` | The official quick guide states thick mode is needed for Oracle 11 and earlier |
 | A specific Pandora FMS version | `Not validated` | No published test record establishes console or server version compatibility |
 | A specific host operating system for the machine that runs the plugin | `Not validated` | No host operating system has been recorded |
 | Oracle Database server versions | `Not validated` | Compatibility was established against the SQL queries and the connection contract, not a version matrix |
@@ -53,9 +55,11 @@ Each module reads specific Oracle views. Grant only what the enabled modules nee
 | Tablespaces (`checkTablespaces`) | `DBA_TABLESPACE_USAGE_METRICS`, `DBA_TABLESPACES`, and `DBA_DATA_FILES` / `DBA_FREE_SPACE` for the Oracle 10 and earlier fallback | `GRANT SELECT ON DBA_TABLESPACE_USAGE_METRICS TO pandora;`<br>`GRANT SELECT ON DBA_TABLESPACES TO pandora;`<br>`GRANT SELECT ON DBA_DATA_FILES TO pandora;`<br>`GRANT SELECT ON DBA_FREE_SPACE TO pandora;` |
 | Fragmentation (`checkFragmentation`) | `DBA_TABLES` | `GRANT SELECT ON DBA_TABLES TO pandora;` |
 | Cache (`checkCache`) | `V$LIBRARYCACHE`, `V$ROWCACHE`, `V$SYSSTAT` | `GRANT SELECT ON V_$LIBRARYCACHE TO pandora;`<br>`GRANT SELECT ON V_$ROWCACHE TO pandora;`<br>`GRANT SELECT ON V_$SYSSTAT TO pandora;` |
-| Multitenant PDB discovery (`multitenant`) | `V$PDBS` | `GRANT SELECT ON V_$PDBS TO pandora;` |
+| Multitenant PDB discovery (`multitenant`) | `V$PDBS` and `V$ACTIVE_SERVICES` | `GRANT SELECT ON V_$PDBS TO pandora;`<br>`GRANT SELECT ON V_$ACTIVE_SERVICES TO pandora;` |
 | Database version | `PRODUCT_COMPONENT_VERSION` | `GRANT SELECT ON PRODUCT_COMPONENT_VERSION TO pandora;` |
 | Custom queries | Depends on the query | Grant `SELECT` on any table or view the custom queries reference |
+
+> Version `1.12` reads `V$ACTIVE_SERVICES` to resolve the listener service name of each PDB. Without this grant the multitenant PDB discovery query fails and no PDB is monitored.
 
 For convenience, `SELECT_CATALOG_ROLE` covers most `V$` and `DBA_` views:
 
@@ -159,14 +163,24 @@ A reachable target always produces the availability module `<prefix>Oracle conne
 
 The exhaustive inventory, including PDB prefixes and default thresholds, is in [Generated modules](#generated-modules).
 
-### Multitenant PDB connection
+### Multitenant PDB connection and service resolution
 
-In Oracle multitenant, a PDB is reached through its service name. The plugin uses the PDB name itself as the service name when it connects to the PDB, and adapts it to the format of the target:
+In Oracle multitenant, a PDB is reached through its service name, but the PDB name is not necessarily the service the listener exposes. A PDB can exist while its listener service is only registered under a qualified name, for example when the database has a `db_domain` configured. Connecting to the PDB name alone then fails with `DPY-6001: Service "..." is not registered with the listener` (equivalent to `ORA-12514`).
 
-- **Plain target** (`HOST:PORT/SERVICE`): the plugin connects to the PDB as `HOST:PORT/<pdb name>`.
-- **DSN target**: the plugin rewrites the descriptor, replacing the value of `SERVICE_NAME` with the PDB name while keeping the addresses, ports and failover settings. If the descriptor identifies the connection with a `SID` instead, the plugin replaces that `SID` clause with `SERVICE_NAME=<pdb name>`.
+The plugin resolves the service name of each PDB and tries these candidates in order:
+
+1. The listener service names registered for that PDB, including the service names read from the entities file.
+2. The same service names qualified with the database domain (`db_domain`) when the listener exposes them as fully qualified names.
+3. The PDB name itself, as a last resort.
+
+How each candidate is applied depends on the target format:
+
+- **Plain target** (`HOST:PORT/SERVICE`): the plugin connects to the PDB as `HOST:PORT/<service name>`.
+- **DSN target**: the plugin rewrites the descriptor, replacing the value of `SERVICE_NAME` with the candidate while keeping the addresses, ports and failover settings. If the descriptor identifies the connection with a `SID` instead, the plugin replaces that `SID` clause with `SERVICE_NAME=<service name>`.
 - If the descriptor contains neither `SERVICE_NAME` nor `SID`, the PDB connection cannot be built and the PDB is reported in the execution information and skipped.
-- A PDB name that contains characters outside letters, digits and `_ $ # . -` is rejected as invalid.
+- A PDB or service name that contains characters outside letters, digits and `_ $ # . -` is rejected as invalid.
+
+Only when every candidate fails is a warning reported, and (with **Create agent per PDB**) the PDB agent is created with its connection module at value `0`.
 
 Only PDBs in `READ WRITE` open mode are monitored during discovery; the others are named in the execution information and skipped. PDBs restored from the entities file are monitored as cached.
 
@@ -182,10 +196,10 @@ The plugin reports its diagnostics in the JSON execution summary printed to stan
 
 - **A DSN target cannot connect** — the plugin does not fall back from a DSN descriptor to a `HOST:PORT/SID` connection. Check the descriptor syntax and that it is reachable.
 - **A PDB is skipped with `DSN contains no SERVICE_NAME or SID to replace`** — the DSN target used to reach the container does not contain a `SERVICE_NAME` or `SID` to substitute with the PDB name. Use a descriptor that identifies the connection with one of them.
-- **A PDB is skipped as invalid** — the PDB name contains characters outside letters, digits and `_ $ # . -`.
-- **`DPY-6001: Service "..." is not registered with the listener` (or `ORA-12514`)** — the PDB service is not reachable under the name that was tried. Verify that the PDB service is registered with the listener and that the plugin is substituting the correct name.
+- **A PDB is skipped as invalid** — the PDB or service name contains characters outside letters, digits and `_ $ # . -`.
+- **`DPY-6001: Service "..." is not registered with the listener` (or `ORA-12514`)** — the PDB service is not reachable under the name that was tried. The plugin resolves the registered service names and the `db_domain` qualification automatically; if it still fails, verify that the user has `SELECT` on `V$ACTIVE_SERVICES` and that the PDB service is actually registered with the listener.
 - **`Targets down` for a target** — the container connection failed. Check network access from the Discovery server, the target string format, and the credentials.
-- **No PDBs discovered** — the discovery query failed (often a missing grant on `V$PDBS`), or no PDB matches the `|PDB` filter in the target string.
+- **No PDBs discovered** — the discovery query failed (often a missing grant on `V$PDBS` or `V$ACTIVE_SERVICES`), or no PDB matches the `|PDB` filter in the target string.
 - **A PDB is skipped** — only PDBs in `READ WRITE` open mode are monitored; skipped PDBs are named in the execution summary.
 - **`ORA-00942: table or view does not exist`** — the monitoring user lacks `SELECT` on a required view. Grant the privilege for the enabled module group and re-run.
 - **`agent_per_pdb` has no effect** — it only applies when **Multitenant** is enabled.
