@@ -879,10 +879,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#multitenant-pdb-service-resolution" class="md-nav__link">
+  <a href="#multitenant-pdb-connection-and-service-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Multitenant PDB service resolution
+        Multitenant PDB connection and service resolution
       
     </span>
   </a>
@@ -1867,10 +1867,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#multitenant-pdb-service-resolution" class="md-nav__link">
+  <a href="#multitenant-pdb-connection-and-service-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Multitenant PDB service resolution
+        Multitenant PDB connection and service resolution
       
     </span>
   </a>
@@ -2097,10 +2097,11 @@
 
 
 <h1 id="oracle-discovery">Oracle Discovery<a class="headerlink" href="#oracle-discovery" title="Permanent link">¶</a></h1>
-<p><em>Article last updated: 2026-09-14.</em></p>
+<p><em>Article last updated: 2026-09-25.</em></p>
 <h2 id="what-it-monitors">What it monitors<a class="headerlink" href="#what-it-monitors" title="Permanent link">¶</a></h2>
-<p>The Oracle Discovery plugin monitors Oracle databases by running SQL queries against them and turning the results into Pandora FMS monitoring modules. It collects availability, session and connection usage, query counts, restart detection, tablespace usage and status, fragmentation, cache hit ratios, and any custom SQL query the operator defines.</p>
-<p>The plugin creates <strong>one agent per target database</strong>. When the target is an Oracle multitenant container database (CDB), it can additionally discover its pluggable databases (PDBs) and monitor them either inside the container agent or as <strong>one agent per PDB</strong>.</p>
+<p>The Oracle Discovery plugin monitors Oracle Database instances by running SQL queries against them and turning the results into Pandora FMS monitoring modules. It collects availability, session and connection usage, query counts, restart detection, tablespace usage and status, fragmentation, cache hit ratios, and any custom SQL query the operator defines.</p>
+<p>The plugin creates <strong>one agent per target database</strong>. When a target is an Oracle multitenant container database (CDB), it can additionally discover its pluggable databases (PDBs) and monitor them either inside the container agent or as <strong>one agent per PDB</strong>.</p>
+<p>A target can be written as a simple <code>HOST:PORT/SERVICE</code> string or as a full Oracle DSN descriptor. DSN descriptors keep multi-address failover and are also used to reach PDBs, whose name is substituted as the service name.</p>
 <p>The plugin is designed for use through the Pandora FMS <strong>Discovery</strong> system. It does not generate XML agent files: it returns the discovered agents and modules in the JSON output of the execution, and the Discovery task creates them.</p>
 <h2 id="prepare">Prepare<a class="headerlink" href="#prepare" title="Permanent link">¶</a></h2>
 <h3 id="compatibility">Compatibility<a class="headerlink" href="#compatibility" title="Permanent link">¶</a></h3>
@@ -2114,14 +2115,14 @@
 </thead>
 <tbody>
 <tr>
-<td>Plugin version <code>1.9</code> (<code>pandorafms.oracle</code>)</td>
+<td>Plugin version <code>1.12</code> (<code>pandorafms.oracle</code>)</td>
 <td>Documented target</td>
-<td>The version this page describes. See <a href="#plugin-identity">Plugin identity</a></td>
+<td>The version this page describes, identified by the package definition. See <a href="#plugin-identity">Plugin identity</a></td>
 </tr>
 <tr>
 <td>Oracle multitenant CDB/PDB whose PDB services are registered in the listener under a <code>db_domain</code> name</td>
 <td><code>Tested</code></td>
-<td>Ticket #24889 verification run: the task completed with <code>Targets up</code> and generated the PDB agent and its modules. See <a href="#multitenant-pdb-service-resolution">Multitenant PDB service resolution</a></td>
+<td>Ticket #24889 verification run: the task completed with <code>Targets up</code> and generated the PDB agent and its modules. See <a href="#multitenant-pdb-connection-and-service-resolution">Multitenant PDB connection and service resolution</a></td>
 </tr>
 <tr>
 <td>Network reachability from the Discovery server to every target database listener</td>
@@ -2129,7 +2130,12 @@
 <td>The plugin opens a remote Oracle connection per target</td>
 </tr>
 <tr>
-<td>Oracle Instant Client, when <strong>Thick mode</strong> is enabled</td>
+<td>A database user able to connect and with <code>SELECT</code> on the views used by the enabled modules</td>
+<td><code>Required</code></td>
+<td>Prerequisite, not a compatibility statement. See <a href="#grant-the-required-privileges">Grant the required privileges</a></td>
+</tr>
+<tr>
+<td>Oracle Instant Client on the Discovery server, when <strong>Thick mode</strong> is enabled</td>
 <td><code>Required</code></td>
 <td>Prerequisite, not a compatibility statement. See <a href="#prerequisites">Prerequisites</a></td>
 </tr>
@@ -2139,14 +2145,19 @@
 <td>The official quick guide states thick mode is needed for Oracle 11 and earlier</td>
 </tr>
 <tr>
-<td>Host operating system running the plugin</td>
+<td>A specific Pandora FMS version</td>
+<td><code>Not validated</code></td>
+<td>No published test record establishes console or server version compatibility</td>
+</tr>
+<tr>
+<td>A specific host operating system for the machine that runs the plugin</td>
 <td><code>Not validated</code></td>
 <td>No host operating system has been recorded</td>
 </tr>
 <tr>
 <td>Oracle Database server versions</td>
 <td><code>Not validated</code></td>
-<td>Compatibility was established against the SQL queries and connection contract, not a version matrix</td>
+<td>Compatibility was established against the SQL queries and the connection contract, not a version matrix</td>
 </tr>
 </tbody>
 </table>
@@ -2189,7 +2200,7 @@
 </tr>
 <tr>
 <td>Tablespaces (<code>checkTablespaces</code>)</td>
-<td><code>DBA_TABLESPACE_USAGE_METRICS</code>, <code>DBA_TABLESPACES</code>, and <code>DBA_DATA_FILES</code> / <code>DBA_FREE_SPACE</code> for the Oracle 10g and earlier fallback</td>
+<td><code>DBA_TABLESPACE_USAGE_METRICS</code>, <code>DBA_TABLESPACES</code>, and <code>DBA_DATA_FILES</code> / <code>DBA_FREE_SPACE</code> for the Oracle 10 and earlier fallback</td>
 <td><code>GRANT SELECT ON DBA_TABLESPACE_USAGE_METRICS TO pandora;</code><br><code>GRANT SELECT ON DBA_TABLESPACES TO pandora;</code><br><code>GRANT SELECT ON DBA_DATA_FILES TO pandora;</code><br><code>GRANT SELECT ON DBA_FREE_SPACE TO pandora;</code></td>
 </tr>
 <tr>
@@ -2220,7 +2231,7 @@
 </tbody>
 </table>
 <blockquote>
-<p>Version <code>1.9</code> reads <code>V$ACTIVE_SERVICES</code> to resolve the listener service name of each PDB. Without this grant the multitenant PDB discovery query fails and no PDB is monitored.</p>
+<p>Version <code>1.12</code> reads <code>V$ACTIVE_SERVICES</code> to resolve the listener service name of each PDB. Without this grant the multitenant PDB discovery query fails and no PDB is monitored.</p>
 </blockquote>
 <p>For convenience, <code>SELECT_CATALOG_ROLE</code> covers most <code>V$</code> and <code>DBA_</code> views:</p>
 <div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">pandora</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="o">&lt;</span><span class="n">PASSWORD</span><span class="o">&gt;</span><span class="p">;</span>
@@ -2284,7 +2295,7 @@
 <p></p>
 </li>
 <li>
-<p><strong>The modules on each agent.</strong> A reachable target produces the availability module and one module per enabled group and discovered resource. The module list of the PDB agent shows the resolved service in the connection module and the <code>PDB PKI</code> prefix on every PDB metric.</p>
+<p><strong>The modules on each agent.</strong> A reachable target produces the availability module and one module per enabled group and discovered resource. The module list of the PDB agent shows the <code>PDB PKI</code> prefix on every PDB metric.</p>
 <p></p>
 </li>
 </ol>
@@ -2292,8 +2303,8 @@
 <h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
 <h3 id="agents-and-cardinality">Agents and cardinality<a class="headerlink" href="#agents-and-cardinality" title="Permanent link">¶</a></h3>
 <ul>
-<li><strong>One agent per target string.</strong> The agent name is the target string, unless a <strong>Target agent</strong> name is given for that position. The agent's OS is reported as <code>Oracle</code> and its OS version as the connected database version.</li>
-<li><strong>One agent per PDB, optionally.</strong> When <strong>Create agent per PDB</strong> is enabled, each discovered PDB gets its own agent named <code>&lt;container agent&gt; - PDB &lt;pdb name&gt;</code> and addressed as <code>HOST:PORT/&lt;pdb name&gt;</code>. When it is disabled, each PDB's modules are added to the container agent with a <code>PDB &lt;pdb name&gt;</code> prefix.</li>
+<li><strong>One agent per target string.</strong> The agent name is the target string, unless a <strong>Target agent</strong> name is given for that position. For a plain target, the filter appended after <code>|</code> is not part of the agent name. For a DSN target, the name is a readable label derived from the descriptor (<code>Oracle &lt;HOST&gt;:&lt;PORT&gt;/&lt;SERVICE&gt;</code>), with a short hash appended when the descriptor contains several addresses or services. The agent's OS is reported as <code>Oracle</code> and its OS version as the connected database version (or <code>Discovery</code> when it cannot be read).</li>
+<li><strong>One agent per PDB, optionally.</strong> When <strong>Create agent per PDB</strong> is enabled, each discovered PDB gets its own agent named <code>&lt;container agent&gt; - PDB &lt;pdb name&gt;</code>. Its address is <code>HOST:PORT/&lt;pdb name&gt;</code>, or the same generated name when the target is a DSN descriptor. When the option is disabled, each PDB's modules are added to the container agent with a <code>PDB &lt;pdb name&gt;</code> prefix.</li>
 </ul>
 <h3 id="module-groups">Module groups<a class="headerlink" href="#module-groups" title="Permanent link">¶</a></h3>
 <p>A reachable target always produces the availability module <code>&lt;prefix&gt;Oracle connection</code>, with value <code>1</code> when the connection succeeded and <code>0</code> when it did not.</p>
@@ -2358,22 +2369,33 @@
 </tbody>
 </table>
 <p>The exhaustive inventory, including PDB prefixes and default thresholds, is in <a href="#generated-modules">Generated modules</a>.</p>
-<h3 id="multitenant-pdb-service-resolution">Multitenant PDB service resolution<a class="headerlink" href="#multitenant-pdb-service-resolution" title="Permanent link">¶</a></h3>
-<p>In Oracle multitenant, a PDB name is not necessarily the service name the listener exposes. A PDB can exist while its listener service is only registered under a qualified name, for example when the database has a <code>db_domain</code> configured. Connecting to the PDB name alone then fails with <code>DPY-6001: Service "..." is not registered with the listener</code> (equivalent to <code>ORA-12514</code>).</p>
-<p>Version <code>1.9</code> resolves this by discovering the real service names registered for each PDB and trying them in order:</p>
+<h3 id="multitenant-pdb-connection-and-service-resolution">Multitenant PDB connection and service resolution<a class="headerlink" href="#multitenant-pdb-connection-and-service-resolution" title="Permanent link">¶</a></h3>
+<p>In Oracle multitenant, a PDB is reached through its service name, but the PDB name is not necessarily the service the listener exposes. A PDB can exist while its listener service is only registered under a qualified name, for example when the database has a <code>db_domain</code> configured. Connecting to the PDB name alone then fails with <code>DPY-6001: Service "..." is not registered with the listener</code> (equivalent to <code>ORA-12514</code>).</p>
+<p>The plugin resolves the service name of each PDB and tries these candidates in order:</p>
 <ol>
-<li>The listener service names registered for that PDB.</li>
+<li>The listener service names registered for that PDB, including the service names read from the entities file.</li>
 <li>The same service names qualified with the database domain (<code>db_domain</code>) when the listener exposes them as fully qualified names.</li>
 <li>The PDB name itself, as a last resort.</li>
 </ol>
+<p>How each candidate is applied depends on the target format:</p>
+<ul>
+<li><strong>Plain target</strong> (<code>HOST:PORT/SERVICE</code>): the plugin connects to the PDB as <code>HOST:PORT/&lt;service name&gt;</code>.</li>
+<li><strong>DSN target</strong>: the plugin rewrites the descriptor, replacing the value of <code>SERVICE_NAME</code> with the candidate while keeping the addresses, ports and failover settings. If the descriptor identifies the connection with a <code>SID</code> instead, the plugin replaces that <code>SID</code> clause with <code>SERVICE_NAME=&lt;service name&gt;</code>.</li>
+<li>If the descriptor contains neither <code>SERVICE_NAME</code> nor <code>SID</code>, the PDB connection cannot be built and the PDB is reported in the execution information and skipped.</li>
+<li>A PDB or service name that contains characters outside letters, digits and <code>_ $ # . -</code> is rejected as invalid.</li>
+</ul>
 <p>Only when every candidate fails is a warning reported, and (with <strong>Create agent per PDB</strong>) the PDB agent is created with its connection module at value <code>0</code>.</p>
+<p>Only PDBs in <code>READ WRITE</code> open mode are monitored during discovery; the others are named in the execution information and skipped. PDBs restored from the entities file are monitored as cached.</p>
 <p>The <strong>Oracle target strings</strong> field can restrict which PDBs are monitored by appending <code>|&lt;pdb&gt;</code> or <code>|&lt;pdb1&gt;;&lt;pdb2&gt;;...</code> to a target, as shown in <a href="#configure-the-discovery-task">Configure the Discovery task</a>.</p>
 <h3 id="custom-queries">Custom queries<a class="headerlink" href="#custom-queries" title="Permanent link">¶</a></h3>
 <p>Each custom query generates one module on every agent the query applies to. A query can be limited to the container scope (<code>cdb</code>), to PDBs (<code>pdb</code>), or both (<code>all</code>), and can be scheduled with a five-field crontab expression. Scheduled queries keep their last successful execution, so an occurrence that was missed while the plugin was not running is executed on the next task run. See <a href="#custom-queries-reference">Custom queries reference</a>.</p>
 <h2 id="troubleshoot">Troubleshoot<a class="headerlink" href="#troubleshoot" title="Permanent link">¶</a></h2>
 <p>The plugin reports its diagnostics in the JSON execution summary printed to standard output: connection warnings, Oracle error codes, and skipped queries are added there.</p>
 <ul>
-<li><strong><code>DPY-6001: Service "..." is not registered with the listener</code> (or <code>ORA-12514</code>)</strong> — the PDB service is not reachable under the name that was tried. Version <code>1.9</code> resolves the registered service name and the <code>db_domain</code> qualification automatically; if it still fails, verify that the user has <code>SELECT</code> on <code>V$ACTIVE_SERVICES</code> and that the PDB service is actually registered with the listener.</li>
+<li><strong>A DSN target cannot connect</strong> — the plugin does not fall back from a DSN descriptor to a <code>HOST:PORT/SID</code> connection. Check the descriptor syntax and that it is reachable.</li>
+<li><strong>A PDB is skipped with <code>DSN contains no SERVICE_NAME or SID to replace</code></strong> — the DSN target used to reach the container does not contain a <code>SERVICE_NAME</code> or <code>SID</code> to substitute with the PDB name. Use a descriptor that identifies the connection with one of them.</li>
+<li><strong>A PDB is skipped as invalid</strong> — the PDB or service name contains characters outside letters, digits and <code>_ $ # . -</code>.</li>
+<li><strong><code>DPY-6001: Service "..." is not registered with the listener</code> (or <code>ORA-12514</code>)</strong> — the PDB service is not reachable under the name that was tried. The plugin resolves the registered service names and the <code>db_domain</code> qualification automatically; if it still fails, verify that the user has <code>SELECT</code> on <code>V$ACTIVE_SERVICES</code> and that the PDB service is actually registered with the listener.</li>
 <li><strong><code>Targets down</code> for a target</strong> — the container connection failed. Check network access from the Discovery server, the target string format, and the credentials.</li>
 <li><strong>No PDBs discovered</strong> — the discovery query failed (often a missing grant on <code>V$PDBS</code> or <code>V$ACTIVE_SERVICES</code>), or no PDB matches the <code>|PDB</code> filter in the target string.</li>
 <li><strong>A PDB is skipped</strong> — only PDBs in <code>READ WRITE</code> open mode are monitored; skipped PDBs are named in the execution summary.</li>
@@ -2561,15 +2583,17 @@
 </table>
 <h3 id="target-strings">Target strings<a class="headerlink" href="#target-strings" title="Permanent link">¶</a></h3>
 <p>The <strong>Oracle target strings</strong> field accepts one target per line or comma separated. Blank lines and lines starting with <code>#</code> are ignored. Each target can use any of these formats:</p>
-<div class="highlight"><pre><span></span><code>HOST/SID
+<div class="highlight"><pre><span></span><code>HOST
+HOST/SID
+HOST:PORT
 HOST:PORT/SID
 HOST:PORT/SERVICE_NAME
 dsn=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=&lt;HOST&gt;)(PORT=1521))(CONNECT_DATA=(SID=&lt;SID&gt;)))
 </code></pre></div>
-<p>When the port is omitted, <code>1521</code> is used.</p>
-<p>A full DSN string can also describe a failover configuration with several addresses:</p>
+<p>When the port is omitted, <code>1521</code> is used. A DSN descriptor can be written with or without the leading <code>dsn=</code> (the comparison is case-insensitive), and can describe a failover configuration with several addresses:</p>
 <div class="highlight"><pre><span></span><code>dsn=(DESCRIPTION=(FAILOVER=ON)(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=&lt;HOST_1&gt;)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=&lt;HOST_2&gt;)(PORT=1521)))(CONNECT_DATA=(SID=&lt;SID&gt;)))
 </code></pre></div>
+<p>For a DSN target the agent name is not the raw descriptor: the plugin builds a readable label from the first host, port and service (<code>Oracle &lt;HOST&gt;:&lt;PORT&gt;/&lt;SERVICE&gt;</code>), and appends a short hash when the descriptor contains several addresses or services.</p>
 <p>When the target is a multitenant container and <strong>Multitenant</strong> is enabled, a PDB filter can be appended with <code>|</code>:</p>
 <div class="highlight"><pre><span></span><code>HOST:PORT/SERVICE_NAME|PDB1
 HOST:PORT/SERVICE_NAME|PDB1;PDB2
@@ -2581,92 +2605,114 @@ HOST:PORT/SERVICE_NAME|PDB1;PDB2
 <thead>
 <tr>
 <th>Key</th>
+<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>agents_group_id</code></td>
+<td><code>10</code></td>
 <td>Group id assigned to the generated agents</td>
 </tr>
 <tr>
 <td><code>interval</code></td>
+<td><code>300</code></td>
 <td>Agent and module interval in seconds</td>
 </tr>
 <tr>
 <td><code>user</code></td>
-<td>Connection user</td>
+<td>Empty</td>
+<td>Connection user. Required</td>
 </tr>
 <tr>
 <td><code>password</code></td>
-<td>Connection password</td>
+<td>Empty</td>
+<td>Connection password. Required</td>
 </tr>
 <tr>
 <td><code>thick_mode</code></td>
+<td><code>0</code></td>
 <td><code>1</code> enables thick mode</td>
 </tr>
 <tr>
 <td><code>client_path</code></td>
+<td>Empty</td>
 <td>Path to the Oracle Instant Client libraries; used with thick mode</td>
 </tr>
 <tr>
 <td><code>threads</code></td>
+<td><code>1</code></td>
 <td>Number of concurrent monitoring threads</td>
 </tr>
 <tr>
 <td><code>modules_prefix</code></td>
+<td>Empty</td>
 <td>Prefix for generated module names</td>
 </tr>
 <tr>
 <td><code>multitenant</code></td>
+<td><code>0</code></td>
 <td><code>1</code> discovers and monitors PDBs</td>
 </tr>
 <tr>
 <td><code>agent_per_pdb</code></td>
+<td><code>0</code></td>
 <td><code>1</code> creates one agent per PDB; requires <code>multitenant=1</code></td>
 </tr>
 <tr>
 <td><code>execute_custom_queries</code></td>
+<td><code>1</code></td>
 <td><code>1</code> runs custom queries</td>
 </tr>
 <tr>
 <td><code>analyze_connections</code></td>
+<td><code>1</code></td>
 <td><code>1</code> creates the session usage module</td>
 </tr>
 <tr>
 <td><code>engine_uptime</code></td>
+<td><code>1</code></td>
 <td><code>1</code> creates the restart detection module</td>
 </tr>
 <tr>
 <td><code>query_stats</code></td>
+<td><code>1</code></td>
 <td><code>1</code> creates the query statistics modules</td>
 </tr>
 <tr>
 <td><code>cache_stats</code></td>
+<td><code>1</code></td>
 <td><code>1</code> creates the cache hit ratio modules</td>
 </tr>
 <tr>
 <td><code>fragmentation_ratio</code></td>
+<td><code>1</code></td>
 <td><code>1</code> creates the fragmentation ratio module</td>
 </tr>
 <tr>
 <td><code>check_tablescpaces</code></td>
-<td><code>1</code> creates the tablespace modules</td>
+<td><code>1</code></td>
+<td><code>1</code> creates the tablespace modules (the key keeps this spelling)</td>
 </tr>
 <tr>
 <td><code>entities_list</code></td>
+<td>Task temporary file</td>
 <td>Path of the file where discovered PDBs are stored</td>
 </tr>
 <tr>
 <td><code>enable_entities_interval</code></td>
+<td><code>0</code></td>
 <td><code>1</code> enables the PDB list re-scan</td>
 </tr>
 <tr>
 <td><code>entities_interval</code></td>
+<td><code>86400</code></td>
 <td>Re-scan interval in seconds</td>
 </tr>
 <tr>
 <td><code>cron_state_dir</code></td>
+<td>Task temporary file</td>
 <td>Directory where the last successful execution of scheduled custom queries is stored</td>
 </tr>
 </tbody>
@@ -2688,6 +2734,7 @@ HOST:PORT/SERVICE_NAME|PDB1;PDB2
 <span class="na">fragmentation_ratio</span><span class="o">=</span><span class="s">1</span>
 <span class="na">check_tablescpaces</span><span class="o">=</span><span class="s">1</span>
 </code></pre></div>
+<p>The configuration file and the target lists hold the database password in plain text. Restrict them to the account that runs the plugin and keep them out of shared directories, logs and version control.</p>
 <h3 id="command-line-execution">Command-line execution<a class="headerlink" href="#command-line-execution" title="Permanent link">¶</a></h3>
 <p>The plugin can be executed by hand, which is the fastest way to confirm a target and its credentials before wiring it into a task.</p>
 <div class="highlight"><pre><span></span><code>./pandora_oracle<span class="w"> </span><span class="se">\</span>
@@ -2751,15 +2798,15 @@ HOST:PORT/SERVICE_NAME|PDB1;PDB2
 </tr>
 <tr>
 <td><code>target_scope</code></td>
-<td><code>cdb</code>, <code>pdb</code> or <code>all</code>. Default <code>cdb</code>. <code>pdb</code> requires multitenant monitoring</td>
+<td><code>cdb</code>, <code>pdb</code> or <code>all</code>. Empty or <code>all</code> applies it to both scopes. <code>pdb</code> requires multitenant monitoring</td>
 </tr>
 <tr>
 <td><code>operation</code></td>
-<td><code>value</code> returns a single value; <code>full</code> returns all rows as a string</td>
+<td><code>value</code> returns a single value; <code>full</code> returns all rows as a string. Empty behaves as <code>full</code></td>
 </tr>
 <tr>
 <td><code>datatype</code></td>
-<td><code>generic_data</code>, <code>generic_data_string</code> or <code>generic_proc</code>. <code>full</code> operations are forced to <code>generic_data_string</code></td>
+<td><code>generic_data</code>, <code>generic_data_string</code> or <code>generic_proc</code>. A <code>full</code> operation is forced to <code>generic_data_string</code></td>
 </tr>
 <tr>
 <td><code>min_warning</code>, <code>max_warning</code></td>
@@ -2798,7 +2845,7 @@ target SELECT COUNT(*) FROM ALL_OBJECTS WHERE STATUS != 'VALID'
 target_scope all
 check_end
 </code></pre></div>
-<p>The console ships a commented guide with the field, and a set of example queries, as the default content of the <strong>Custom queries</strong> textarea.</p>
+<p>The console ships a commented guide with the field and a set of example queries as the default content of the <strong>Custom queries</strong> textarea.</p>
 <h3 id="thresholds">Thresholds<a class="headerlink" href="#thresholds" title="Permanent link">¶</a></h3>
 <p>The <strong>Define tresholds</strong> field applies thresholds to the generated modules by module name, except custom-query modules. One definition per line, with a regular expression matching the module name and the thresholds separated by <code>|</code>:</p>
 <div class="highlight"><pre><span></span><code>&lt;REGEX&gt; = &lt;threshold&gt;|&lt;threshold&gt;|...
@@ -2935,7 +2982,7 @@ check_end
 <h4 id="pdb-modules-create-agent-per-pdb-disabled">PDB modules (Create agent per PDB disabled)<a class="headerlink" href="#pdb-modules-create-agent-per-pdb-disabled" title="Permanent link">¶</a></h4>
 <p>The same modules as the container agent, with <code>PDB &lt;pdb name&gt;</code> inserted after the custom prefix, for example <code>&lt;prefix&gt;PDB &lt;pdb name&gt; tablespace &lt;name&gt; free</code>.</p>
 <h4 id="pdb-agent-create-agent-per-pdb-enabled">PDB agent (Create agent per PDB enabled)<a class="headerlink" href="#pdb-agent-create-agent-per-pdb-enabled" title="Permanent link">¶</a></h4>
-<p>Each PDB agent is named <code>&lt;container agent&gt; - PDB &lt;pdb name&gt;</code> and addressed as <code>HOST:PORT/&lt;pdb name&gt;</code>. It contains:</p>
+<p>Each PDB agent is named <code>&lt;container agent&gt; - PDB &lt;pdb name&gt;</code>. It contains:</p>
 <ul>
 <li><code>&lt;prefix&gt;Oracle PDB &lt;pdb name&gt; connection</code> (availability)</li>
 <li>Every enabled module group, prefixed with <code>PDB &lt;pdb name&gt;</code></li>
@@ -2956,7 +3003,7 @@ check_end
 </tr>
 <tr>
 <td>Plugin version</td>
-<td><code>1.9</code></td>
+<td><code>1.12</code></td>
 </tr>
 <tr>
 <td>Type</td>
