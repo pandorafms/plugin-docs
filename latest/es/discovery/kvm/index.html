@@ -1,0 +1,2933 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/discovery/kvm/">
+      
+      
+        <link rel="prev" href="../azure-storage/">
+      
+      
+        <link rel="next" href="../mongodb-discovery/">
+      
+      
+        
+          <link rel="alternate" href="../../../discovery/kvm/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Discovery de KVM - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#discovery-de-kvm" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Discovery de KVM
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../discovery/kvm/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de KVM
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de KVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-monitoriza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué monitoriza
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurar-la-tarea-de-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurar la tarea de Discovery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configurar la tarea de Discovery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-definicion-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 1 — Definición de la tarea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-kvm-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 2 — KVM Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 3 — Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-kvm-monitoring-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 4 — KVM Monitoring Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificar-la-primera-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar la primera ejecución
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entender los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agentes-e-identidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes e identidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-por-agente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos por agente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución manual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comportamiento-de-la-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comportamiento de la ejecución
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de la tarea
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parámetros de la tarea">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kvm-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KVM Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kvm-monitoring-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KVM Monitoring Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Módulos generados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agente-del-host-kvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente del host KVM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agente-de-maquina-virtual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente de máquina virtual
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comandos-ejecutados-en-el-destino" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comandos ejecutados en el destino
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de VMware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Dynamic SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-monitoriza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué monitoriza
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurar-la-tarea-de-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurar la tarea de Discovery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configurar la tarea de Discovery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-definicion-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 1 — Definición de la tarea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-kvm-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 2 — KVM Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 3 — Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-kvm-monitoring-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 4 — KVM Monitoring Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificar-la-primera-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar la primera ejecución
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entender los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agentes-e-identidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes e identidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-por-agente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos por agente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución manual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comportamiento-de-la-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comportamiento de la ejecución
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de la tarea
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parámetros de la tarea">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kvm-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KVM Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kvm-monitoring-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KVM Monitoring Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Módulos generados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agente-del-host-kvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente del host KVM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agente-de-maquina-virtual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente de máquina virtual
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comandos-ejecutados-en-el-destino" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comandos ejecutados en el destino
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="discovery-de-kvm">Discovery de KVM<a class="headerlink" href="#discovery-de-kvm" title="Permanent link">¶</a></h1>
+<p><em>Última actualización del artículo: 2026-10-19.</em></p>
+<h2 id="que-monitoriza">Qué monitoriza<a class="headerlink" href="#que-monitoriza" title="Permanent link">¶</a></h2>
+<p>El plugin de Discovery de KVM se conecta a hipervisores KVM y lee su inventario y su estado a través de <code>virsh</code> y <code>ps</code>, ya sea por SSH o localmente en la máquina que ejecuta la tarea. Crea una jerarquía de dos niveles de agentes en Pandora FMS:</p>
+<ul>
+<li>un agente por cada host KVM, con el nombre <code>KVM &lt;host&gt;</code>;</li>
+<li>un agente por cada máquina virtual, con el nombre <code>&lt;vm&gt; (&lt;host&gt;)</code> y creado como hijo de su agente del host.</li>
+</ul>
+<p>Los agentes del host llevan el estado de libvirtd y, cuando <strong>Monitor KVM server performance</strong> está activado, el uso de RAM y de CPU del servidor KVM, incluido su consumo de RAM en bytes. Los agentes de máquina virtual llevan el estado de encendido de la VM y, para las VM en ejecución, el número de vCPU asignadas, el uso de CPU por vCPU, el uso de memoria en porcentaje y el consumo de memoria en bytes. El uso de CPU es un valor instantáneo, no un contador acumulado: el plugin muestrea <code>virsh domstats --vcpu</code> dos veces alrededor de una ventana de un segundo y traduce el delta de tiempo de vCPU a un porcentaje por vCPU. Para las VM en ejecución, el plugin también resuelve la dirección IPv4 de la VM con <code>virsh domifaddr</code> y la usa como dirección del agente cuando está disponible. El plugin solo genera datos de Discovery; la tarea se vuelve a ejecutar en su intervalo configurado para refrescar el inventario y los valores de los módulos.</p>
+<p>El plugin se ejecuta como una tarea de Discovery: la consola crea la tarea, el servidor de Discovery ejecuta el plugin y los agentes y módulos generados se crean automáticamente.</p>
+<h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
+<h3 id="compatibilidad">Compatibilidad<a class="headerlink" href="#compatibilidad" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Ámbito</th>
+<th>Estado</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Versión del plugin <code>1.0</code> (<code>pandorafms.kvm</code>)</td>
+<td>Objetivo documentado</td>
+<td>Versión descrita en esta página, identificada por la definición del paquete.</td>
+</tr>
+<tr>
+<td>Un servidor Pandora FMS con Discovery habilitado</td>
+<td><code>Requerido</code></td>
+<td>La integración se ejecuta como una tarea de Discovery creada desde la consola.</td>
+</tr>
+<tr>
+<td>libvirt con <code>virsh</code> en cada host monitorizado</td>
+<td><code>Requerido</code></td>
+<td>Todas las métricas se leen a través de <code>virsh</code>, y la comprobación del proceso libvirtd decide si un host está activo.</td>
+</tr>
+<tr>
+<td>Acceso SSH a cada destino remoto</td>
+<td><code>Requerido</code></td>
+<td>Los destinos remotos se monitorizan por SSH en el puerto configurado; solo los destinos <code>local</code> se ejecutan sin él.</td>
+</tr>
+<tr>
+<td>Una distribución Linux, una versión de KVM o de libvirt de los hosts monitorizados</td>
+<td><code>Sin validar</code></td>
+<td>Ningún registro de pruebas publicado establece compatibilidad con una distribución o una versión de libvirt concretas.</td>
+</tr>
+<tr>
+<td>Sistema operativo del servidor que ejecuta la tarea</td>
+<td><code>Sin validar</code></td>
+<td>Ningún registro de pruebas publicado establece compatibilidad con sistemas operativos.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="requisitos">Requisitos<a class="headerlink" href="#requisitos" title="Permanent link">¶</a></h3>
+<ul>
+<li>Un servidor Pandora FMS con Discovery habilitado para ejecutar la tarea y una consola para definirla.</li>
+<li>En cada host KVM monitorizado: libvirt instalado con el comando <code>virsh</code> disponible y el demonio <strong>libvirtd</strong> en ejecución. Un host sin libvirtd se genera igualmente, con <code>KVM Server status = 0</code> y sin módulos de rendimiento ni de máquinas virtuales.</li>
+<li>Una cuenta SSH en cada host remoto con permiso para ejecutar <code>ps</code> y <code>virsh</code>. La lectura de libvirt requiere normalmente pertenecer al grupo <code>libvirt</code> o ser <code>root</code>.</li>
+<li>Para la autenticación <strong>SSH key</strong>: una clave privada legible por el usuario que ejecuta la tarea de Discovery, con su clave pública instalada en cada host monitorizado. Opcionalmente, un archivo <code>known_hosts</code> con las claves de host de esos hosts para habilitar la verificación de claves de host.</li>
+<li>Para la autenticación <strong>Pandora credentials</strong>: una credencial personalizada en el gestor de credenciales de Pandora que almacene el usuario y la contraseña de SSH.</li>
+<li>Un grupo de agentes de destino y un intervalo de monitorización para los agentes generados. Ambos proceden de la tarea de Discovery y los hereda cada agente generado.</li>
+<li>Un destino <code>local</code> ejecuta <code>ps</code> y <code>virsh</code> en la máquina que ejecuta la tarea, así que úsalo solo cuando la tarea se ejecute en el propio host KVM.</li>
+<li>Accesibilidad de red desde el servidor de Discovery a cada host remoto en el puerto SSH. Con <strong>Transfer mode</strong> en <code>tentacle</code>, el destino de Tentacle configurado también debe ser accesible.</li>
+<li>El plugin se distribuye como una aplicación de Discovery de Pandora FMS (paquete <code>.disco</code>) que el servidor de Discovery ejecuta en el servidor Pandora FMS.</li>
+</ul>
+<h3 id="instalar-el-plugin">Instalar el plugin<a class="headerlink" href="#instalar-el-plugin" title="Permanent link">¶</a></h3>
+<p><strong>Desde el Marketplace.</strong> Abre <strong>Marketplace → Search</strong> en la consola, localiza la entrada de KVM Discovery y haz clic en <strong>Install</strong>. La instalación requiere un usuario administrador. El paquete se instala directamente y <strong>KVM</strong> aparece en la sección <strong>Applications</strong> del asistente de Discovery.</p>
+<!-- SCREENSHOT NEEDED: la entrada de KVM Discovery en el Marketplace de la consola (vista Search y botón Install), a capturar cuando el plugin se publique en el Marketplace -->
+
+<p><strong>Instalación manual.</strong> Carga el paquete <code>.disco</code> desde <strong>Management → Discovery → Manage disco packages</strong>: elige <strong>Select a file</strong>, selecciona el paquete y haz clic en <strong>Upload DISCO</strong>. Una vez cargado, <strong>KVM</strong> aparece en la lista de paquetes y en la sección <strong>Applications</strong> del asistente de Discovery.</p>
+<p></p>
+<p></p>
+<h2 id="configurar-la-tarea-de-discovery">Configurar la tarea de Discovery<a class="headerlink" href="#configurar-la-tarea-de-discovery" title="Permanent link">¶</a></h2>
+<p>Crea la tarea desde <strong>Management → Discovery → Applications → KVM</strong>. El asistente recorre la definición genérica de la tarea y tres pasos del plugin: <strong>KVM Connection</strong>, <strong>Authentication</strong> y <strong>KVM Monitoring Options</strong>. Todos los campos se documentan en <a href="#parametros-de-la-tarea">Parámetros de la tarea</a>.</p>
+<h3 id="paso-1-definicion-de-la-tarea">Paso 1 — Definición de la tarea<a class="headerlink" href="#paso-1-definicion-de-la-tarea" title="Permanent link">¶</a></h3>
+<p>El paso genérico solicita el <strong>nombre</strong> de la tarea, el <strong>grupo de agentes</strong> y el <strong>servidor</strong> en el que se ejecuta, y el <strong>intervalo</strong>. El grupo y el intervalo se pasan al plugin y los hereda cada agente generado.</p>
+<h3 id="paso-2-kvm-connection">Paso 2 — KVM Connection<a class="headerlink" href="#paso-2-kvm-connection" title="Permanent link">¶</a></h3>
+<p>La lista de destinos y los datos de conexión:</p>
+<ul>
+<li><strong>KVM hosts</strong> es la lista de destinos, con una entrada por línea; también se aceptan valores separados por comas dentro de una línea. Se requiere al menos una entrada. Cada entrada es <code>user@host</code>, <code>host</code> o <code>local</code>:</li>
+<li><code>user@host</code> conecta con <code>host</code> por SSH como <code>user</code>, lo que tiene prioridad sobre el usuario de autenticación configurado;</li>
+<li><code>host</code> conecta con <code>host</code> por SSH con el usuario SSH por defecto (modo de clave) o con el usuario de la credencial (modo de credenciales);</li>
+<li><code>local</code> ejecuta <code>ps</code> y <code>virsh</code> en la máquina que ejecuta la tarea y no usa autenticación.</li>
+<li><strong>SSH port</strong> es el puerto SSH usado para conectar con los hosts remotos. Por defecto <code>22</code>.</li>
+<li><strong>Command timeout</strong> es el tiempo de espera de la conexión SSH y de los comandos, en segundos. Por defecto <code>10</code>.</li>
+<li><strong>Authentication mode</strong> selecciona cómo se autentica el plugin: <strong>SSH key</strong> o <strong>Pandora credentials</strong>. El paso siguiente muestra los campos del modo seleccionado.</li>
+</ul>
+<p></p>
+<h3 id="paso-3-authentication">Paso 3 — Authentication<a class="headerlink" href="#paso-3-authentication" title="Permanent link">¶</a></h3>
+<p>Los campos de este paso dependen del <strong>Authentication mode</strong> seleccionado en el paso anterior.</p>
+<p>En modo <strong>SSH key</strong>:</p>
+<ul>
+<li><strong>SSH private key path</strong> es la ruta de la clave privada SSH en el servidor Pandora, legible por el usuario que ejecuta la tarea de Discovery. Obligatorio en este modo.</li>
+<li><strong>Default SSH user</strong> es el usuario usado para los destinos sin un prefijo <code>user@</code> explícito. La parte <code>user@</code> de un destino tiene prioridad sobre él.</li>
+<li><strong>SSH known_hosts file</strong>: cuando se establece, la clave de host de cada destino se verifica contra este archivo y los hosts desconocidos se rechazan. Cuando está vacío, se aceptan las claves de host desconocidas.</li>
+</ul>
+<p></p>
+<p>En modo <strong>Pandora credentials</strong>:</p>
+<ul>
+<li><strong>Pandora credentials</strong> es la credencial personalizada seleccionada del gestor de credenciales de Pandora. Obligatoria en este modo.</li>
+<li><strong>SSH known_hosts file</strong> se comporta igual que en el modo de clave.</li>
+</ul>
+<p></p>
+<h3 id="paso-4-kvm-monitoring-options">Paso 4 — KVM Monitoring Options<a class="headerlink" href="#paso-4-kvm-monitoring-options" title="Permanent link">¶</a></h3>
+<p>Qué monitoriza la tarea y cómo se entregan los datos:</p>
+<ul>
+<li><strong>Monitor KVM server performance</strong>, cuando está activado, añade los módulos <code>KVM Server RAM usage (%)</code>, <code>KVM Server RAM consumption (bytes)</code> y <code>KVM Server CPU usage (%)</code> al agente del host. El módulo <code>KVM Server status</code> se crea siempre.</li>
+<li><strong>Monitor virtual machines</strong>, cuando está activado, crea un agente por cada máquina virtual y el módulo <code>Number of VMs</code> en el agente del host.</li>
+<li><strong>Allow list</strong> es una expresión regular aplicada a los nombres de las VM: solo las VM que coinciden reciben un agente. Vacío permite todas las VM.</li>
+<li><strong>Deny list</strong> es una expresión regular aplicada a los nombres de las VM después de la allow list: las VM que coinciden se excluyen. Vacío no excluye ninguna VM.</li>
+<li><strong>Transfer mode</strong> selecciona cómo llegan los datos generados a Pandora FMS. <code>native</code> permite que el servidor de Discovery lea directamente los datos de los agentes; <code>tentacle</code> envía los archivos de agente generados a <strong>Tentacle IP</strong> en <strong>Tentacle port</strong> con el cliente de Tentacle.</li>
+<li><strong>Tentacle IP</strong> y <strong>Tentacle port</strong> son el destino de Tentacle usado en el modo <code>tentacle</code>. Por defecto <code>127.0.0.1</code> y <code>41121</code>.</li>
+</ul>
+<p></p>
+<h2 id="verificar-la-primera-ejecucion">Verificar la primera ejecución<a class="headerlink" href="#verificar-la-primera-ejecucion" title="Permanent link">¶</a></h2>
+<p>Ejecuta la tarea desde <strong>Management → Discovery → Task list</strong> y comprueba el resultado en este orden.</p>
+<ol>
+<li><strong>El resumen de la tarea</strong> muestra el progreso general y un resumen con <code>Total Targets</code>, <code>Total Agents</code> y <code>Total Modules</code>.</li>
+<li><strong>Los agentes.</strong> Espera un agente del host (<code>KVM &lt;host&gt;</code>) por cada destino accesible, más un agente por cada máquina virtual monitorizada, creado como hijo de su agente del host.</li>
+<li><strong>Los módulos.</strong> Un host con libvirtd en ejecución incorpora <code>KVM Server status</code> y, según las opciones activadas, los módulos de rendimiento del servidor y <code>Number of VMs</code>. Cada agente de máquina virtual incorpora <code>Status of &lt;vm&gt;</code>; una VM en ejecución incorpora además sus módulos de vCPU y de memoria.</li>
+<li><strong>La información de ejecución.</strong> Una ejecución correcta no registra errores; los fallos de conexión o de comando, y el motivo por el que se omitió un módulo, se registran ahí.</li>
+</ol>
+<p></p>
+<p>El ejemplo anterior informa de un destino, dos agentes y diez módulos: el agente del host KVM con cinco módulos y una de sus máquinas virtuales con los otros cinco. Si la tarea falla antes de generar nada, lo primero que hay que revisar es la lista de destinos, la conectividad SSH y las credenciales seleccionadas.</p>
+<h2 id="entender-los-resultados">Entender los resultados<a class="headerlink" href="#entender-los-resultados" title="Permanent link">¶</a></h2>
+<h3 id="agentes-e-identidad">Agentes e identidad<a class="headerlink" href="#agentes-e-identidad" title="Permanent link">¶</a></h3>
+<p>El plugin crea un agente por cada host KVM y un agente por cada máquina virtual, con el agente del host como padre de cada uno de sus agentes de VM. Todos los agentes generados pertenecen al grupo de la tarea, heredan su intervalo y llevan uno de los siguientes alias. Con <strong>Transfer mode</strong> <code>native</code>, los agentes generados informan además de <code>KVM</code> como sistema operativo.</p>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Alias del agente</th>
+<th>Agente padre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host KVM</td>
+<td><code>KVM &lt;host&gt;</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Máquina virtual</td>
+<td><code>&lt;vm&gt; (&lt;host&gt;)</code></td>
+<td>El agente del host</td>
+</tr>
+</tbody>
+</table>
+<p><code>&lt;host&gt;</code> es la parte de host del destino tal como se escribe en <strong>KVM hosts</strong>. El agente del host informa de ese host como su dirección (sin dirección en los destinos <code>local</code>), y un agente de VM en ejecución usa la dirección IPv4 de la VM cuando se puede resolver.</p>
+<p>Los datos generados llevan además marcadores <code>extra_data</code> estables que identifican el origen de cada elemento. Los nombres se normalizan a minúsculas y los caracteres que no son letras, dígitos, puntos, guiones o guiones bajos se sustituyen por guiones bajos:</p>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Marcador</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agente del host</td>
+<td><code>kvm:host:&lt;host&gt;</code></td>
+</tr>
+<tr>
+<td>Agente de VM</td>
+<td><code>kvm:vm:&lt;host&gt;:&lt;vm&gt;</code></td>
+</tr>
+<tr>
+<td>Módulo del host</td>
+<td><code>kvm:metric:&lt;host&gt;:&lt;metric&gt;</code></td>
+</tr>
+<tr>
+<td>Módulo de VM</td>
+<td><code>kvm:metric:&lt;host&gt;:&lt;vm&gt;:&lt;metric&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h3 id="modulos-por-agente">Módulos por agente<a class="headerlink" href="#modulos-por-agente" title="Permanent link">¶</a></h3>
+<p>Los valores de los módulos se leen de cada destino en cada ejecución de la tarea; el nombre exacto y la condición de creación de cada módulo se listan en <a href="#modulos-generados">Módulos generados</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Agente</th>
+<th>Módulos que incorpora</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host KVM</td>
+<td>Estado de libvirtd; con <strong>Monitor KVM server performance</strong>: uso de RAM, consumo de RAM y uso de CPU del servidor KVM; con <strong>Monitor virtual machines</strong>: el número de máquinas virtuales definidas</td>
+</tr>
+<tr>
+<td>Máquina virtual</td>
+<td>Estado de encendido de la VM; para las VM en ejecución: vCPU asignadas, uso de CPU por vCPU, uso de memoria en porcentaje y consumo de memoria en bytes</td>
+</tr>
+</tbody>
+</table>
+<p>Un host sin libvirtd conserva su agente con <code>KVM Server status = 0</code> y ningún otro módulo, y no genera agentes de VM.</p>
+<p>El uso de memoria de una VM en ejecución se mide en el host como la memoria residente del dominio frente a su asignación de memoria actual, por lo que informa de lo que la VM consume en el host y no de la memoria que tiene asignada, y puede superar el 100%.</p>
+<p></p>
+<p></p>
+<h2 id="operacion">Operación<a class="headerlink" href="#operacion" title="Permanent link">¶</a></h2>
+<h3 id="ejecucion-manual">Ejecución manual<a class="headerlink" href="#ejecucion-manual" title="Permanent link">¶</a></h3>
+<p>El plugin también se puede ejecutar fuera del asistente de Discovery con un archivo de configuración y un archivo de destinos. Es útil para probar la conectividad, para una ejecución puntual o para una planificación propia.</p>
+<p>Escribe un archivo de configuración <code>[CONF]</code> con al menos el modo de autenticación y sus valores, y un archivo de destinos con una entrada por línea en los mismos formatos que <strong>KVM hosts</strong>. Después ejecuta <code>pandora_kvm --conf &lt;config_file&gt; --targets_file &lt;targets_file&gt;</code>. Todos los parámetros se documentan en <a href="#archivo-de-configuracion">Archivo de configuración</a>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">[CONF]</span>
+<span class="na">auth_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">key</span>
+<span class="na">ssh_key_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;PATH_TO_SSH_KEY&gt;</span>
+<span class="na">ssh_user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;USER&gt;</span>
+<span class="na">ssh_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">22</span>
+<span class="na">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
+<span class="na">transfer_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">native</span>
+<span class="na">interval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">300</span>
+<span class="na">agents_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;GROUP_ID&gt;</span>
+<span class="na">monitor_host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">monitor_vms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+</code></pre></div>
+<p>En el modo de credenciales usa <code>auth_mode = credentials</code> y <code>credentials = &lt;BASE64_CREDENTIAL&gt;</code> en lugar de <code>ssh_key_path</code>. El valor de la credencial es un usuario y una contraseña codificados, no cifrados, así que protege el archivo de configuración como un secreto.</p>
+<h3 id="comportamiento-de-la-ejecucion">Comportamiento de la ejecución<a class="headerlink" href="#comportamiento-de-la-ejecucion" title="Permanent link">¶</a></h3>
+<ul>
+<li>Los destinos se procesan de forma secuencial, en el orden en el que se listan. Un error de conexión o de comando en un destino se registra en la información de ejecución y el resto de destinos se siguen procesando.</li>
+<li>El uso de CPU de las VM se muestrea por host, no por VM: cuando al menos una VM está en ejecución, el plugin lee <code>virsh domstats --vcpu</code> dos veces, con un segundo de separación, y usa la ventana medida para el porcentaje. Una ejecución tarda aproximadamente un segundo extra por host con VM en ejecución, y la ventana de muestreo no es configurable.</li>
+<li>Cuando el listado por defecto de <code>virsh list --all</code> no devuelve máquinas virtuales, el plugin reintenta el listado con <code>/usr/bin/virsh -r -c qemu:///system</code> y usa esa conexión para las métricas de VM del host.</li>
+<li>Cuando la consola deja un marcador de macro sin resolver en la configuración generada, por ejemplo <code>credentials</code> en modo <strong>SSH key</strong>, el plugin trata el valor como vacío.</li>
+<li>Una máquina virtual que no está en ejecución recibe igualmente su agente con su módulo de estado; sus módulos de rendimiento no se crean.</li>
+</ul>
+<h2 id="resolucion-de-problemas">Resolución de problemas<a class="headerlink" href="#resolucion-de-problemas" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Comprobación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>La tarea informa de <code>Error connecting to &lt;host&gt;</code></td>
+<td>Confirma la accesibilidad SSH y el puerto. En modo de clave revisa <strong>SSH private key path</strong> y <strong>Default SSH user</strong>; en modo de credenciales revisa la credencial seleccionada.</td>
+</tr>
+<tr>
+<td>La tarea informa de <code>SSH key authentication requires a key path</code></td>
+<td>La tarea se ejecuta en modo <strong>SSH key</strong> pero <strong>SSH private key path</strong> está vacío. Establece la ruta o cambia a <strong>Pandora credentials</strong>.</td>
+</tr>
+<tr>
+<td>La tarea informa de <code>Invalid Pandora credentials</code></td>
+<td>Falta la credencial, no es una credencial personalizada válida o tiene la contraseña vacía. Selecciona una credencial personalizada en el paso Authentication.</td>
+</tr>
+<tr>
+<td>La conexión se rechaza y <strong>SSH known_hosts file</strong> está establecido</td>
+<td>Falta la clave de host del destino o ha cambiado. Actualiza el archivo (<code>ssh-keyscan -p &lt;port&gt; &lt;host&gt;</code>) o vacía el campo.</td>
+</tr>
+<tr>
+<td>La tarea informa de <code>No agents were created for any target</code></td>
+<td>Han fallado todos los destinos. Revisa los errores por destino en la información de ejecución, empezando por la conectividad y las credenciales.</td>
+</tr>
+<tr>
+<td>La tarea informa de <code>Error listing VMs on &lt;host&gt;</code></td>
+<td>Ejecuta <code>virsh list --all</code> en el host con el mismo usuario y confirma los permisos de libvirt.</td>
+</tr>
+<tr>
+<td>El agente del host tiene <code>KVM Server status = 0</code></td>
+<td>libvirtd no está en ejecución en ese host, o el usuario SSH no puede ver sus procesos.</td>
+</tr>
+<tr>
+<td>No hay agentes de VM aunque el host esté activo</td>
+<td>Confirma que <strong>Monitor virtual machines</strong> está activado y revisa las expresiones <strong>Allow list</strong> y <strong>Deny list</strong>. Una expresión regular no válida se ignora: no permite ni deniega nada.</td>
+</tr>
+<tr>
+<td>El módulo <code>Number of VMs</code> no se crea</td>
+<td><strong>Monitor virtual machines</strong> está desactivado.</td>
+</tr>
+<tr>
+<td>Falta <code>Assigned vCPUs of &lt;vm&gt;</code> o <code>Virtual CPU usage of &lt;vm&gt; (%)</code></td>
+<td>Faltó una muestra de <code>virsh domstats --vcpu</code> en alguna de las dos lecturas, el delta de tiempo de vCPU fue negativo (la VM se reinició entre muestras) o el comando falló. El motivo se registra en la información de ejecución.</td>
+</tr>
+<tr>
+<td>Falta <code>Virtual memory consumption of &lt;vm&gt; (bytes)</code></td>
+<td><code>virsh dommemstat</code> falló y el respaldo con <code>virsh dominfo</code> no pudo leer la memoria usada. <code>Virtual memory usage of &lt;vm&gt; (%)</code> se sigue creando e informa de <code>0</code>. El motivo se registra en la información de ejecución.</td>
+</tr>
+<tr>
+<td>No se crean los módulos <code>KVM Server RAM</code> o <code>KVM Server CPU</code></td>
+<td><strong>Monitor KVM server performance</strong> está desactivado, libvirtd no está en ejecución, o <code>virsh nodememstats</code> / <code>virsh nodecpustats --percent</code> fallaron. Los dos módulos de RAM se omiten juntos.</td>
+</tr>
+<tr>
+<td>Un agente de VM no tiene dirección</td>
+<td><code>virsh domifaddr</code> no devolvió ninguna dirección IPv4 utilizable (sin NIC, sin concesión DHCP todavía o solo IPv6). Se trata de un intento de mejor esfuerzo y no de un error.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
+<h3 id="parametros-de-la-tarea">Parámetros de la tarea<a class="headerlink" href="#parametros-de-la-tarea" title="Permanent link">¶</a></h3>
+<p>La consola presenta estos campos después de la definición genérica de la tarea. La columna de macro es el identificador que se usa en la configuración generada de la tarea.</p>
+<h4 id="kvm-connection">KVM Connection<a class="headerlink" href="#kvm-connection" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Macro</th>
+<th>Tipo</th>
+<th>Por defecto</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KVM hosts</td>
+<td><code>_pluginTargets_</code></td>
+<td>textarea</td>
+<td>—</td>
+<td>Destinos, uno por línea: <code>user@host</code>, <code>host</code> o <code>local</code>. También se aceptan valores separados por comas. Obligatorio</td>
+</tr>
+<tr>
+<td>SSH port</td>
+<td><code>_sshPort_</code></td>
+<td>number</td>
+<td><code>22</code></td>
+<td>Puerto SSH usado para conectar con los hosts KVM</td>
+</tr>
+<tr>
+<td>Command timeout</td>
+<td><code>_timeout_</code></td>
+<td>number</td>
+<td><code>10</code></td>
+<td>Tiempo de espera de la conexión SSH y de los comandos, en segundos</td>
+</tr>
+<tr>
+<td>Authentication mode</td>
+<td><code>_authMode_</code></td>
+<td>select</td>
+<td><code>SSH key</code></td>
+<td><code>SSH key</code> o <code>Pandora credentials</code>. Obligatorio</td>
+</tr>
+</tbody>
+</table>
+<h4 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Macro</th>
+<th>Tipo</th>
+<th>Por defecto</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSH private key path</td>
+<td><code>_sshKeyPath_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Solo modo de clave. Ruta de la clave privada SSH en el servidor Pandora. Obligatorio en modo de clave</td>
+</tr>
+<tr>
+<td>Default SSH user</td>
+<td><code>_sshUser_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Solo modo de clave. Se usa en los destinos sin un prefijo <code>user@</code> explícito</td>
+</tr>
+<tr>
+<td>Pandora credentials</td>
+<td><code>_credentials_</code></td>
+<td>select</td>
+<td>—</td>
+<td>Solo modo de credenciales. Credencial personalizada del gestor de credenciales de Pandora. Obligatoria en modo de credenciales</td>
+</tr>
+<tr>
+<td>SSH known_hosts file</td>
+<td><code>_knownHosts_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Ambos modos. Cuando se establece, las claves de host se verifican contra este archivo y los hosts desconocidos se rechazan</td>
+</tr>
+</tbody>
+</table>
+<p>El paso muestra únicamente los campos del <strong>Authentication mode</strong> seleccionado.</p>
+<h4 id="kvm-monitoring-options">KVM Monitoring Options<a class="headerlink" href="#kvm-monitoring-options" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Macro</th>
+<th>Tipo</th>
+<th>Por defecto</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Monitor KVM server performance</td>
+<td><code>_monitorHost_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Añade los módulos de RAM y CPU del servidor KVM al agente del host</td>
+</tr>
+<tr>
+<td>Monitor virtual machines</td>
+<td><code>_monitorVms_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Crea un agente por máquina virtual y el módulo <code>Number of VMs</code> en el agente del host</td>
+</tr>
+<tr>
+<td>Allow list</td>
+<td><code>_allowList_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Expresión regular para los nombres de las VM. Vacío permite todas</td>
+</tr>
+<tr>
+<td>Deny list</td>
+<td><code>_denyList_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Expresión regular para los nombres de las VM, aplicada después de la allow list. Vacío no deniega ninguna</td>
+</tr>
+<tr>
+<td>Transfer mode</td>
+<td><code>_transferMode_</code></td>
+<td>select</td>
+<td><code>native</code></td>
+<td><code>native</code> o <code>tentacle</code></td>
+</tr>
+<tr>
+<td>Tentacle IP</td>
+<td><code>_tentacleIp_</code></td>
+<td>string</td>
+<td><code>127.0.0.1</code></td>
+<td>Destino de Tentacle usado en el modo <code>tentacle</code></td>
+</tr>
+<tr>
+<td>Tentacle port</td>
+<td><code>_tentaclePort_</code></td>
+<td>number</td>
+<td><code>41121</code></td>
+<td>Puerto de destino de Tentacle usado en el modo <code>tentacle</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="archivo-de-configuracion">Archivo de configuración<a class="headerlink" href="#archivo-de-configuracion" title="Permanent link">¶</a></h3>
+<p>La tarea de Discovery construye un archivo de configuración para el plugin, y una ejecución manual usa el mismo formato. Es un archivo de texto plano con una sección <code>[CONF]</code> de líneas <code>clave = valor</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>auth_mode</code></td>
+<td><code>key</code></td>
+<td><code>key</code> o <code>credentials</code>. Un valor vacío recae en <code>credentials</code> cuando <code>credentials</code> tiene un valor, y en <code>key</code> en caso contrario</td>
+</tr>
+<tr>
+<td><code>ssh_key_path</code></td>
+<td>—</td>
+<td>Ruta de la clave privada SSH. Obligatoria en el modo <code>key</code></td>
+</tr>
+<tr>
+<td><code>ssh_user</code></td>
+<td>—</td>
+<td>Usuario SSH por defecto para los destinos sin un prefijo <code>user@</code> explícito</td>
+</tr>
+<tr>
+<td><code>known_hosts</code></td>
+<td>—</td>
+<td>Archivo known_hosts de SSH. Cuando se establece, las claves de host se verifican y los hosts desconocidos se rechazan</td>
+</tr>
+<tr>
+<td><code>credentials</code></td>
+<td>—</td>
+<td>Credencial producida por el gestor de credenciales de Pandora: un valor JSON en base64 con <code>user</code> y <code>password</code></td>
+</tr>
+<tr>
+<td><code>ssh_port</code></td>
+<td><code>22</code></td>
+<td>Puerto SSH usado para conectar con los hosts KVM</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td><code>10</code></td>
+<td>Tiempo de espera de la conexión SSH y de los comandos, en segundos</td>
+</tr>
+<tr>
+<td><code>transfer_mode</code></td>
+<td><code>native</code></td>
+<td><code>native</code> o <code>tentacle</code></td>
+</tr>
+<tr>
+<td><code>tentacle_ip</code></td>
+<td><code>127.0.0.1</code></td>
+<td>Destino de Tentacle</td>
+</tr>
+<tr>
+<td><code>tentacle_port</code></td>
+<td><code>41121</code></td>
+<td>Puerto de destino de Tentacle</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>Intervalo de la tarea (<code>300</code> desde la línea de comandos)</td>
+<td>Intervalo asignado a los agentes generados</td>
+</tr>
+<tr>
+<td><code>agents_group</code></td>
+<td>Grupo de la tarea</td>
+<td>Nombre del grupo de agentes usado en el modo <code>tentacle</code></td>
+</tr>
+<tr>
+<td><code>agents_group_id</code></td>
+<td>ID del grupo de la tarea</td>
+<td>Grupo de agentes numérico usado en el modo <code>native</code></td>
+</tr>
+<tr>
+<td><code>allow_list</code></td>
+<td>—</td>
+<td>Lista de permitidos (expresión regular) para los nombres de las VM</td>
+</tr>
+<tr>
+<td><code>deny_list</code></td>
+<td>—</td>
+<td>Lista de denegados (expresión regular) para los nombres de las VM</td>
+</tr>
+<tr>
+<td><code>monitor_host</code></td>
+<td><code>1</code></td>
+<td>Ponlo a <code>0</code> para desactivar los módulos de rendimiento del servidor KVM</td>
+</tr>
+<tr>
+<td><code>monitor_vms</code></td>
+<td><code>1</code></td>
+<td>Ponlo a <code>0</code> para desactivar el descubrimiento de máquinas virtuales</td>
+</tr>
+<tr>
+<td><code>prefix</code></td>
+<td>—</td>
+<td>Prefijo que se añade a los alias de los agentes generados y a los nombres de los módulos. La tarea de Discovery nunca lo establece</td>
+</tr>
+</tbody>
+</table>
+<p>Los valores de la línea de comandos actúan como valores por defecto de este archivo; un parámetro presente en el archivo de configuración tiene prioridad sobre su equivalente en la línea de comandos.</p>
+<p>En el modo <code>credentials</code> la credencial seleccionada se almacena como valor JSON en base64 en la configuración de la tarea o en <code>credentials</code> en un archivo de configuración manual. Es una codificación, no un cifrado: protege la consola de Pandora FMS, el archivo de configuración y los permisos de cualquier archivo que la almacene. La clave privada SSH permanece en el servidor y se referencia por ruta.</p>
+<h3 id="modulos-generados">Módulos generados<a class="headerlink" href="#modulos-generados" title="Permanent link">¶</a></h3>
+<p>El plugin genera los siguientes módulos por agente. <strong>Se crea cuando</strong> es la condición en la que aparece el módulo.</p>
+<h4 id="agente-del-host-kvm">Agente del host KVM<a class="headerlink" href="#agente-del-host-kvm" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Se crea cuando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KVM Server status</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td>Siempre. <code>1</code> cuando hay al menos un proceso libvirtd en el host, <code>0</code> en caso contrario</td>
+</tr>
+<tr>
+<td><code>KVM Server RAM usage (%)</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td><strong>Monitor KVM server performance</strong> activado y libvirtd en ejecución</td>
+</tr>
+<tr>
+<td><code>KVM Server RAM consumption (bytes)</code></td>
+<td>generic_data</td>
+<td>bytes</td>
+<td>La misma condición que el módulo de uso de RAM</td>
+</tr>
+<tr>
+<td><code>KVM Server CPU usage (%)</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td><strong>Monitor KVM server performance</strong> activado y libvirtd en ejecución</td>
+</tr>
+<tr>
+<td><code>Number of VMs</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td><strong>Monitor virtual machines</strong> activado y libvirtd en ejecución. Cuenta las entradas devueltas por <code>virsh list --all</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="agente-de-maquina-virtual">Agente de máquina virtual<a class="headerlink" href="#agente-de-maquina-virtual" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Se crea cuando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Status of &lt;vm&gt;</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td>Siempre. <code>1</code> cuando la VM está en ejecución, <code>0</code> en caso contrario</td>
+</tr>
+<tr>
+<td><code>Assigned vCPUs of &lt;vm&gt;</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>VM en ejecución con una muestra de CPU completa</td>
+</tr>
+<tr>
+<td><code>Virtual CPU usage of &lt;vm&gt; (%)</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>VM en ejecución con una muestra de CPU completa</td>
+</tr>
+<tr>
+<td><code>Virtual memory usage of &lt;vm&gt; (%)</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>VM en ejecución</td>
+</tr>
+<tr>
+<td><code>Virtual memory consumption of &lt;vm&gt; (bytes)</code></td>
+<td>generic_data</td>
+<td>bytes</td>
+<td>VM en ejecución cuyo uso de memoria se puede determinar</td>
+</tr>
+</tbody>
+</table>
+<p>Un módulo que depende de una medición que no se ha podido leer se omite y el motivo se registra en la información de ejecución de la tarea; el resto de módulos del agente se siguen creando. <code>Virtual memory usage of &lt;vm&gt; (%)</code> se crea siempre para una VM en ejecución e informa de <code>0</code> cuando su medición falla.</p>
+<h3 id="comandos-ejecutados-en-el-destino">Comandos ejecutados en el destino<a class="headerlink" href="#comandos-ejecutados-en-el-destino" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th>Comando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estado de libvirtd</td>
+<td><code>ps aux \| grep libvirtd \| grep -v grep \| wc -l</code></td>
+</tr>
+<tr>
+<td>Listado de VM</td>
+<td><code>virsh list --all</code> (respaldo: <code>/usr/bin/virsh -r -c qemu:///system list --all</code>)</td>
+</tr>
+<tr>
+<td>RAM del servidor KVM</td>
+<td><code>virsh nodememstats</code></td>
+</tr>
+<tr>
+<td>CPU del servidor KVM</td>
+<td><code>virsh nodecpustats --percent</code></td>
+</tr>
+<tr>
+<td>vCPU y uso de CPU de las VM</td>
+<td><code>virsh domstats --vcpu</code>, dos veces alrededor de una ventana de un segundo</td>
+</tr>
+<tr>
+<td>Memoria de las VM</td>
+<td><code>virsh dommemstat &lt;vm&gt;</code> (respaldo: <code>virsh dominfo &lt;vm&gt;</code>)</td>
+</tr>
+<tr>
+<td>Dirección IP de las VM</td>
+<td><code>virsh domifaddr &lt;vm&gt;</code> (VM en ejecución, mejor esfuerzo)</td>
+</tr>
+</tbody>
+</table>
+<p>El binario <code>virsh</code> se resuelve con <code>whereis virsh | cut -f2 -d' '</code> y recae en <code>/usr/bin/virsh</code>.</p>
+<h3 id="linea-de-comandos">Línea de comandos<a class="headerlink" href="#linea-de-comandos" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pandora_kvm --conf &lt;config_file&gt; --targets_file &lt;targets_file&gt;</code></td>
+<td>Ejecuta el plugin con un archivo de configuración y un archivo de destinos</td>
+</tr>
+<tr>
+<td><code>pandora_kvm --conf &lt;config_file&gt; --targets_file &lt;targets_file&gt; --as_server_plugin true</code></td>
+<td>Modo de plugin de servidor: devuelve <code>1</code> cuando se creó al menos un agente y <code>0</code> en caso contrario</td>
+</tr>
+</tbody>
+</table>
+<p>Cada parámetro de configuración tiene su equivalente en la línea de comandos con el mismo significado (<code>--auth_mode</code>, <code>--ssh_key_path</code>, <code>--monitor_vms</code>, etcétera), salvo <code>agents_group</code>, <code>agents_group_id</code> y <code>prefix</code>, que solo existen en el archivo de configuración. <code>--as_server_plugin</code> solo existe en la línea de comandos.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
