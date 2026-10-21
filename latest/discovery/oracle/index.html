@@ -2127,7 +2127,7 @@
 
 
 <h1 id="oracle-discovery">Oracle Discovery<a class="headerlink" href="#oracle-discovery" title="Permanent link">¶</a></h1>
-<p><em>Article last updated: 2026-09-25.</em></p>
+<p><em>Article last updated: 2026-10-20.</em></p>
 <h2 id="what-it-monitors">What it monitors<a class="headerlink" href="#what-it-monitors" title="Permanent link">¶</a></h2>
 <p>The Oracle Discovery plugin monitors Oracle Database instances by running SQL queries against them and turning the results into Pandora FMS monitoring modules. It collects availability, session and connection usage, query counts, restart detection, tablespace usage and status, fragmentation, cache hit ratios, and any custom SQL query the operator defines.</p>
 <p>The plugin creates <strong>one agent per target database</strong>. When a target is an Oracle multitenant container database (CDB), it can additionally discover its pluggable databases (PDBs) and monitor them either inside the container agent or as <strong>one agent per PDB</strong>.</p>
@@ -2418,7 +2418,7 @@
 <p>Only PDBs in <code>READ WRITE</code> open mode are monitored during discovery; the others are named in the execution information and skipped. PDBs restored from the entities file are monitored as cached.</p>
 <p>The <strong>Oracle target strings</strong> field can restrict which PDBs are monitored by appending <code>|&lt;pdb&gt;</code> or <code>|&lt;pdb1&gt;;&lt;pdb2&gt;;...</code> to a target, as shown in <a href="#configure-the-discovery-task">Configure the Discovery task</a>.</p>
 <h3 id="custom-queries">Custom queries<a class="headerlink" href="#custom-queries" title="Permanent link">¶</a></h3>
-<p>Each custom query generates one module on every agent the query applies to. A query can be limited to the container scope (<code>cdb</code>), to PDBs (<code>pdb</code>), or both (<code>all</code>), and can be scheduled with a five-field crontab expression. Scheduled queries keep their last successful execution, so an occurrence that was missed while the plugin was not running is executed on the next task run. See <a href="#custom-queries-reference">Custom queries reference</a>.</p>
+<p>Each custom query generates one module on every agent the query applies to. A query can be limited to the container scope (<code>cdb</code>), to PDBs (<code>pdb</code>), or both (<code>all</code>), and can be scheduled with a five-field crontab expression. The <code>target_databases</code> key selects the agents the query applies to: matching ignores case and surrounding whitespace, and accepts the full target string, the SID, or the PDB name. <code>all</code> or an empty value applies the query everywhere. Scheduled queries keep their last successful execution, so an occurrence that was missed while the plugin was not running is executed on the next task run. See <a href="#custom-queries-reference">Custom queries reference</a>.</p>
 <h2 id="troubleshoot">Troubleshoot<a class="headerlink" href="#troubleshoot" title="Permanent link">¶</a></h2>
 <p>The plugin reports its diagnostics in the JSON execution summary printed to standard output: connection warnings, Oracle error codes, and skipped queries are added there.</p>
 <ul>
@@ -2431,6 +2431,7 @@
 <li><strong>A PDB is skipped</strong> — only PDBs in <code>READ WRITE</code> open mode are monitored; skipped PDBs are named in the execution summary.</li>
 <li><strong><code>ORA-00942: table or view does not exist</code></strong> — the monitoring user lacks <code>SELECT</code> on a required view. Grant the privilege for the enabled module group and re-run.</li>
 <li><strong><code>agent_per_pdb</code> has no effect</strong> — it only applies when <strong>Multitenant</strong> is enabled.</li>
+<li><strong>A custom query is missing from an agent</strong> — its <code>target_databases</code> value does not match that agent's target string, SID or PDB name. The execution summary names the skipped query and the identifiers it was compared with.</li>
 <li><strong>An invalid crontab expression is ignored</strong> — a custom query <code>crontab</code> must have five fields. An invalid expression produces a warning and the query is skipped.</li>
 <li><strong>Thick mode fails to start</strong> — <strong>Client path</strong> must point to the Oracle Instant Client libraries installed on the Discovery server.</li>
 </ul>
@@ -2824,7 +2825,7 @@ HOST:PORT/SERVICE_NAME|PDB1;PDB2
 </tr>
 <tr>
 <td><code>target_databases</code></td>
-<td>Comma-separated target strings (or PDB names) the query applies to. <code>all</code> or empty applies it everywhere</td>
+<td>Comma-separated target strings, SIDs or PDB names the query applies to. Matching ignores case and surrounding whitespace. <code>all</code> or empty applies it everywhere</td>
 </tr>
 <tr>
 <td><code>target_scope</code></td>

@@ -2127,7 +2127,7 @@
 
 
 <h1 id="oracle-discovery">Oracle Discovery<a class="headerlink" href="#oracle-discovery" title="Permanent link">¶</a></h1>
-<p><em>Última actualización del artículo: 2026-09-25.</em></p>
+<p><em>Última actualización del artículo: 2026-10-20.</em></p>
 <h2 id="que-monitoriza">Qué monitoriza<a class="headerlink" href="#que-monitoriza" title="Permanent link">¶</a></h2>
 <p>El plugin de Discovery de Oracle monitoriza instancias de Oracle Database ejecutando consultas SQL contra ellas y convirtiendo sus resultados en módulos de monitorización de Pandora FMS. Recoge disponibilidad, uso de sesiones y conexiones, número de consultas, detección de reinicios, uso y estado de los tablespaces, fragmentación, ratios de acierto de caché y cualquier consulta SQL personalizada que defina el operador.</p>
 <p>El plugin crea <strong>un agente por base de datos objetivo</strong>. Cuando un objetivo es una base de datos contenedora (CDB) de Oracle multitenant, además puede descubrir sus bases de datos conectables (PDB) y monitorizarlas dentro del agente contenedor o como <strong>un agente por PDB</strong>.</p>
@@ -2418,7 +2418,7 @@
 <p>Durante el descubrimiento solo se monitorizan las PDB en modo abierto <code>READ WRITE</code>; las demás se nombran en la información de ejecución y se omiten. Las PDB recuperadas del archivo de entidades se monitorizan según la caché.</p>
 <p>El campo <strong>Oracle target strings</strong> permite restringir qué PDB se monitorizan añadiendo <code>|&lt;pdb&gt;</code> o <code>|&lt;pdb1&gt;;&lt;pdb2&gt;;...</code> a un objetivo, como se muestra en <a href="#configurar-la-tarea-de-discovery">Configurar la tarea de Discovery</a>.</p>
 <h3 id="consultas-personalizadas">Consultas personalizadas<a class="headerlink" href="#consultas-personalizadas" title="Permanent link">¶</a></h3>
-<p>Cada consulta personalizada genera un módulo en cada agente al que se aplica. Una consulta puede limitarse al ámbito del contenedor (<code>cdb</code>), al de las PDB (<code>pdb</code>) o a ambos (<code>all</code>), y puede programarse con una expresión crontab de cinco campos. Las consultas programadas conservan su última ejecución correcta, de modo que una ocurrencia perdida mientras el plugin no se ejecutaba se ejecuta en la siguiente ejecución de la tarea. Consulte <a href="#referencia-de-consultas-personalizadas">Referencia de consultas personalizadas</a>.</p>
+<p>Cada consulta personalizada genera un módulo en cada agente al que se aplica. Una consulta puede limitarse al ámbito del contenedor (<code>cdb</code>), al de las PDB (<code>pdb</code>) o a ambos (<code>all</code>), y puede programarse con una expresión crontab de cinco campos. La clave <code>target_databases</code> selecciona los agentes a los que se aplica la consulta: la comparación no distingue mayúsculas de minúsculas ni espacios circundantes, y acepta la cadena objetivo completa, el SID o el nombre de la PDB. <code>all</code> o un valor vacío la aplica a todos los ámbitos. Las consultas programadas conservan su última ejecución correcta, de modo que una ocurrencia perdida mientras el plugin no se ejecutaba se ejecuta en la siguiente ejecución de la tarea. Consulte <a href="#referencia-de-consultas-personalizadas">Referencia de consultas personalizadas</a>.</p>
 <h2 id="solucion-de-problemas">Solución de problemas<a class="headerlink" href="#solucion-de-problemas" title="Permanent link">¶</a></h2>
 <p>El plugin informa de su diagnóstico en el resumen JSON de ejecución impreso en la salida estándar: avisos de conexión, códigos de error de Oracle y consultas omitidas se añaden allí.</p>
 <ul>
@@ -2431,6 +2431,7 @@
 <li><strong>Una PDB se omite</strong> — solo se monitorizan las PDB en modo abierto <code>READ WRITE</code>; las omitidas se nombran en el resumen de ejecución.</li>
 <li><strong><code>ORA-00942: table or view does not exist</code></strong> — el usuario de monitorización carece de <code>SELECT</code> sobre una vista requerida. Conceda el privilegio para el grupo de módulos habilitado y vuelva a ejecutar.</li>
 <li><strong><code>agent_per_pdb</code> no tiene efecto</strong> — solo se aplica cuando <strong>Multitenant</strong> está habilitado.</li>
+<li><strong>Falta una consulta personalizada en un agente</strong> — su valor <code>target_databases</code> no coincide con la cadena objetivo, el SID ni el nombre de la PDB de ese agente. El resumen de ejecución indica la consulta omitida y los identificadores con los que se comparó.</li>
 <li><strong>Una expresión crontab inválida se ignora</strong> — el <code>crontab</code> de una consulta personalizada debe tener cinco campos. Una expresión inválida produce un aviso y la consulta se omite.</li>
 <li><strong>El modo thick no arranca</strong> — <strong>Client path</strong> debe apuntar a las librerías del Oracle Instant Client instaladas en el servidor de Discovery.</li>
 </ul>
@@ -2824,7 +2825,7 @@ HOST:PORT/SERVICE_NAME|PDB1;PDB2
 </tr>
 <tr>
 <td><code>target_databases</code></td>
-<td>Cadenas objetivo (o nombres de PDB) separados por comas a los que se aplica la consulta. <code>all</code> o vacío la aplica en todas partes</td>
+<td>Cadenas objetivo, SID o nombres de PDB separados por comas a los que se aplica la consulta. La comparación no distingue mayúsculas de minúsculas ni espacios circundantes. <code>all</code> o vacío la aplica en todas partes</td>
 </tr>
 <tr>
 <td><code>target_scope</code></td>
