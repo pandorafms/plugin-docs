@@ -25,7 +25,7 @@ El plugin se ejecuta como una tarea de Discovery: la consola crea la tarea, el s
 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
-| Versión del plugin `1.21` (`pandorafms.vmware`) | Objetivo documentado | Versión descrita en esta página, identificada por la definición del paquete. |
+| Versión del plugin `1.24` (`pandorafms.vmware`) | Objetivo documentado | Versión descrita en esta página, identificada por la definición del paquete. |
 | VMware vCenter Server con al menos un datacenter | `Requerido` | El plugin resuelve todos los objetos gestionados a través de un contenedor de datacenter y se conecta a un endpoint de vCenter. |
 | Una cuenta de vCenter con acceso de lectura al datacenter objetivo | `Requerido` | El plugin se autentica y lee datos de recursos y de rendimiento. Nunca modifica la configuración de vCenter. |
 | Una versión concreta de vCenter o ESXi | `Sin validar` | Ningún registro de pruebas publicado establece compatibilidad con una versión concreta de VMware. |

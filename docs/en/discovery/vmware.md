@@ -25,7 +25,7 @@ The plugin runs as a Discovery task: the console creates the task, the Discovery
 
 | Scope | State | Evidence |
 | --- | --- | --- |
-| Plugin version `1.21` (`pandorafms.vmware`) | Documented target | The version this page describes, as identified by the package definition. |
+| Plugin version `1.24` (`pandorafms.vmware`) | Documented target | The version this page describes, as identified by the package definition. |
 | VMware vCenter Server with at least one datacenter | `Required` | The plugin resolves every managed object through a datacenter container and connects to a vCenter endpoint. |
 | A vCenter account with read access to the target datacenter | `Required` | The plugin authenticates and reads resource and performance data. It never changes vCenter configuration. |
 | A specific vCenter or ESXi version | `Not validated` | No published test record establishes compatibility with a concrete VMware release. |
