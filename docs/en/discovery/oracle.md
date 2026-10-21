@@ -1,6 +1,6 @@
 # Oracle Discovery
 
-*Article last updated: 2026-09-25.*
+*Article last updated: 2026-10-20.*
 
 ## What it monitors
 
@@ -188,7 +188,7 @@ The **Oracle target strings** field can restrict which PDBs are monitored by app
 
 ### Custom queries
 
-Each custom query generates one module on every agent the query applies to. A query can be limited to the container scope (`cdb`), to PDBs (`pdb`), or both (`all`), and can be scheduled with a five-field crontab expression. Scheduled queries keep their last successful execution, so an occurrence that was missed while the plugin was not running is executed on the next task run. See [Custom queries reference](#custom-queries-reference).
+Each custom query generates one module on every agent the query applies to. A query can be limited to the container scope (`cdb`), to PDBs (`pdb`), or both (`all`), and can be scheduled with a five-field crontab expression. The `target_databases` key selects the agents the query applies to: matching ignores case and surrounding whitespace, and accepts the full target string, the SID, or the PDB name. `all` or an empty value applies the query everywhere. Scheduled queries keep their last successful execution, so an occurrence that was missed while the plugin was not running is executed on the next task run. See [Custom queries reference](#custom-queries-reference).
 
 ## Troubleshoot
 
@@ -203,6 +203,7 @@ The plugin reports its diagnostics in the JSON execution summary printed to stan
 - **A PDB is skipped** — only PDBs in `READ WRITE` open mode are monitored; skipped PDBs are named in the execution summary.
 - **`ORA-00942: table or view does not exist`** — the monitoring user lacks `SELECT` on a required view. Grant the privilege for the enabled module group and re-run.
 - **`agent_per_pdb` has no effect** — it only applies when **Multitenant** is enabled.
+- **A custom query is missing from an agent** — its `target_databases` value does not match that agent's target string, SID or PDB name. The execution summary names the skipped query and the identifiers it was compared with.
 - **An invalid crontab expression is ignored** — a custom query `crontab` must have five fields. An invalid expression produces a warning and the query is skipped.
 - **Thick mode fails to start** — **Client path** must point to the Oracle Instant Client libraries installed on the Discovery server.
 
@@ -351,7 +352,7 @@ Each custom query is a block delimited by `check_begin` and `check_end`. Only `S
 | `name` | Module name. Mandatory |
 | `description` | Module description |
 | `target` | SQL query to execute. Mandatory. Only `SELECT` statements are accepted |
-| `target_databases` | Comma-separated target strings (or PDB names) the query applies to. `all` or empty applies it everywhere |
+| `target_databases` | Comma-separated target strings, SIDs or PDB names the query applies to. Matching ignores case and surrounding whitespace. `all` or empty applies it everywhere |
 | `target_scope` | `cdb`, `pdb` or `all`. Empty or `all` applies it to both scopes. `pdb` requires multitenant monitoring |
 | `operation` | `value` returns a single value; `full` returns all rows as a string. Empty behaves as `full` |
 | `datatype` | `generic_data`, `generic_data_string` or `generic_proc`. A `full` operation is forced to `generic_data_string` |

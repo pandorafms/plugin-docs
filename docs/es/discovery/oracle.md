@@ -1,6 +1,6 @@
 # Oracle Discovery
 
-*Última actualización del artículo: 2026-09-25.*
+*Última actualización del artículo: 2026-10-20.*
 
 ## Qué monitoriza
 
@@ -188,7 +188,7 @@ El campo **Oracle target strings** permite restringir qué PDB se monitorizan a�
 
 ### Consultas personalizadas
 
-Cada consulta personalizada genera un módulo en cada agente al que se aplica. Una consulta puede limitarse al ámbito del contenedor (`cdb`), al de las PDB (`pdb`) o a ambos (`all`), y puede programarse con una expresión crontab de cinco campos. Las consultas programadas conservan su última ejecución correcta, de modo que una ocurrencia perdida mientras el plugin no se ejecutaba se ejecuta en la siguiente ejecución de la tarea. Consulte [Referencia de consultas personalizadas](#referencia-de-consultas-personalizadas).
+Cada consulta personalizada genera un módulo en cada agente al que se aplica. Una consulta puede limitarse al ámbito del contenedor (`cdb`), al de las PDB (`pdb`) o a ambos (`all`), y puede programarse con una expresión crontab de cinco campos. La clave `target_databases` selecciona los agentes a los que se aplica la consulta: la comparación no distingue mayúsculas de minúsculas ni espacios circundantes, y acepta la cadena objetivo completa, el SID o el nombre de la PDB. `all` o un valor vacío la aplica a todos los ámbitos. Las consultas programadas conservan su última ejecución correcta, de modo que una ocurrencia perdida mientras el plugin no se ejecutaba se ejecuta en la siguiente ejecución de la tarea. Consulte [Referencia de consultas personalizadas](#referencia-de-consultas-personalizadas).
 
 ## Solución de problemas
 
@@ -203,6 +203,7 @@ El plugin informa de su diagnóstico en el resumen JSON de ejecución impreso en
 - **Una PDB se omite** — solo se monitorizan las PDB en modo abierto `READ WRITE`; las omitidas se nombran en el resumen de ejecución.
 - **`ORA-00942: table or view does not exist`** — el usuario de monitorización carece de `SELECT` sobre una vista requerida. Conceda el privilegio para el grupo de módulos habilitado y vuelva a ejecutar.
 - **`agent_per_pdb` no tiene efecto** — solo se aplica cuando **Multitenant** está habilitado.
+- **Falta una consulta personalizada en un agente** — su valor `target_databases` no coincide con la cadena objetivo, el SID ni el nombre de la PDB de ese agente. El resumen de ejecución indica la consulta omitida y los identificadores con los que se comparó.
 - **Una expresión crontab inválida se ignora** — el `crontab` de una consulta personalizada debe tener cinco campos. Una expresión inválida produce un aviso y la consulta se omite.
 - **El modo thick no arranca** — **Client path** debe apuntar a las librerías del Oracle Instant Client instaladas en el servidor de Discovery.
 
@@ -351,7 +352,7 @@ Cada consulta personalizada es un bloque delimitado por `check_begin` y `check_e
 | `name` | Nombre del módulo. Obligatorio |
 | `description` | Descripción del módulo |
 | `target` | Consulta SQL a ejecutar. Obligatoria. Solo se aceptan sentencias `SELECT` |
-| `target_databases` | Cadenas objetivo (o nombres de PDB) separados por comas a los que se aplica la consulta. `all` o vacío la aplica en todas partes |
+| `target_databases` | Cadenas objetivo, SID o nombres de PDB separados por comas a los que se aplica la consulta. La comparación no distingue mayúsculas de minúsculas ni espacios circundantes. `all` o vacío la aplica en todas partes |
 | `target_scope` | `cdb`, `pdb` o `all`. Vacío o `all` la aplica a ambos ámbitos. `pdb` requiere monitorización multitenant |
 | `operation` | `value` devuelve un único valor; `full` devuelve todas las filas como una cadena. Vacío se comporta como `full` |
 | `datatype` | `generic_data`, `generic_data_string` o `generic_proc`. Una operación `full` se fuerza a `generic_data_string` |
