@@ -1,0 +1,2856 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/plugins/snmp-bandwidth/">
+      
+      
+        <link rel="prev" href="../rabbitmq-local/">
+      
+      
+        <link rel="next" href="../../integrations/google-chat/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../../es/plugins/snmp-bandwidth/" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Network bandwidth SNMP - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#network-bandwidth-snmp" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Network bandwidth SNMP
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/plugins/snmp-bandwidth/" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Chat integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft Teams integration (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegram integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic SNMP plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-the-snmp-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose the SNMP version
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#snmpv3-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMPv3 settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options-not-available-in-the-console" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options not available in the console
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protect-the-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protect the credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understand the results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output-and-exit-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output and exit status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#meaning-of-the-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Meaning of the value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-execution-and-zero-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First execution and zero values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#counter-width" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Counter width
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interface-speed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interface speed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#duplex-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Duplex mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#duplicate-ifindex-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Duplicate ifIndex values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-a-configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use a configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debug log
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concurrency-and-timing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concurrency and timing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connectivity-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity check
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshoot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#console-fields-network-bandwidth-snmp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Console fields (Network bandwidth SNMP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-and-configuration-file-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command line and configuration file options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oids-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OIDs used
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to document
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-the-snmp-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose the SNMP version
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#snmpv3-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMPv3 settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options-not-available-in-the-console" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options not available in the console
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protect-the-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protect the credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understand the results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output-and-exit-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output and exit status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#meaning-of-the-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Meaning of the value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-execution-and-zero-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First execution and zero values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#counter-width" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Counter width
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interface-speed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interface speed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#duplex-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Duplex mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#duplicate-ifindex-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Duplicate ifIndex values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-a-configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use a configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debug log
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concurrency-and-timing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concurrency and timing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connectivity-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity check
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshoot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#console-fields-network-bandwidth-snmp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Console fields (Network bandwidth SNMP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-and-configuration-file-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command line and configuration file options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oids-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OIDs used
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="network-bandwidth-snmp">Network bandwidth SNMP<a class="headerlink" href="#network-bandwidth-snmp" title="Permanent link">¶</a></h1>
+<p><em>Article last updated: 2026-09-30.</em></p>
+<h2 id="what-it-does">What it does<a class="headerlink" href="#what-it-does" title="Permanent link">¶</a></h2>
+<p>The Network bandwidth SNMP plugin retrieves the bandwidth usage of a network device, as a percentage, using SNMP. It reports the amount of information sent and received over a particular time, either for the whole device or for a single interface selected by its index.</p>
+<p>The plugin runs as a Pandora FMS server plugin: each execution queries the device, prints one numeric value on standard output, and Pandora FMS stores that value in the module.</p>
+<ul>
+<li><strong>Result.</strong> A single number, the bandwidth usage as a percentage, formatted with 9 decimals (for example <code>12.345678901</code>).</li>
+<li><strong>What is measured.</strong> By default, the overall bandwidth usage. With <code>-inUsage 1</code> it reports the input usage only, and with <code>-outUsage 1</code> the output usage only. If both are enabled, the input usage is reported.</li>
+<li><strong>Scope.</strong> With <code>-ifIndex &lt;n&gt;</code> the plugin measures that interface. Without it, the plugin measures every interface of the device and prints the average of the per-interface percentages, computed over the interfaces that have a usable speed.</li>
+<li><strong>Measurement window.</strong> The value is computed from the difference between the counters read in the current execution and the counters stored by the previous execution. The module interval is therefore the measurement window.</li>
+</ul>
+<h2 id="prepare">Prepare<a class="headerlink" href="#prepare" title="Permanent link">¶</a></h2>
+<h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>SNMP read access to the device</strong> from the machine that runs the plugin, normally the Pandora FMS server. The default SNMP port is UDP 161.</li>
+<li><strong>A device that exposes the IF-MIB objects</strong> <code>ifIndex</code>, <code>ifInOctets</code>, <code>ifOutOctets</code>, <code>ifHighSpeed</code> and <code>ifSpeed</code>, and preferably the 64-bit counters <code>ifHCInOctets</code> and <code>ifHCOutOctets</code>. The <code>dot3StatsDuplexStatus</code> object of EtherLike-MIB is optional and is used to detect the duplex mode.</li>
+<li><strong>Write permission in the temporary directory</strong> (<code>/tmp</code> by default) for the user that runs the plugin. The plugin stores the counters of each execution there to compute the next one.</li>
+</ol>
+<h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">¶</a></h3>
+<p>The plugin is distributed with the Pandora FMS server and needs no separate installation. Its executable is:</p>
+<div class="highlight"><pre><span></span><code>/usr/share/pandora_server/util/plugin/pandora_snmp_bandwidth
+</code></pre></div>
+<p>It is registered in Pandora FMS as the server plugin <strong>Network bandwidth SNMP</strong>, with a maximum timeout of 300 seconds.</p>
+<h3 id="choose-the-snmp-version">Choose the SNMP version<a class="headerlink" href="#choose-the-snmp-version" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>SNMP v1</strong> always uses 32-bit counters, because 64-bit counters do not exist in SNMP v1.</li>
+<li><strong>SNMP v2c and v3</strong> use 64-bit counters when the device provides them.</li>
+</ul>
+<p>On fast links, prefer SNMP v2c or v3. A 32-bit octet counter wraps after 4,294,967,295 octets, which takes about 34 seconds at 1 Gbit/s. The plugin corrects at most one wrap per interval, so long intervals on fast links with 32-bit counters report values lower than the real ones.</p>
+<h2 id="configure">Configure<a class="headerlink" href="#configure" title="Permanent link">¶</a></h2>
+<p>Create one module for each metric and each interface that you want to monitor, using the <strong>Network bandwidth SNMP</strong> server plugin, and fill in the plugin fields. The plugin returns a numeric percentage; choose the thresholds that fit your environment.</p>
+<ol>
+<li>Set <strong>SNMP Version(1,2c,3)</strong> (<code>1</code>, <code>2c</code> or <code>3</code>) and the credentials for that version.</li>
+<li>For SNMP v1 and v2c, fill in <strong>Community</strong>.</li>
+<li>For SNMP v3, fill in <strong>securityName</strong> and, depending on <strong>securityLevel</strong>, the authentication and privacy fields. See <a href="#snmpv3-settings">SNMPv3 settings</a>.</li>
+<li>Leave <strong>Host</strong> at its default value <code>_address_</code>, which is the address of the agent, or enter the address of the device.</li>
+<li>Set <strong>Port</strong> if the device does not use the default port 161.</li>
+<li>Fill in <strong>Interface Index (filter)</strong> with the <code>ifIndex</code> of the interface to measure. Leave it empty to measure all the interfaces and obtain their average.</li>
+<li>Select the metric:</li>
+<li>Overall bandwidth usage: leave <strong>inUsage</strong> and <strong>outUsage</strong> empty.</li>
+<li>Input usage: set <strong>inUsage</strong> to <code>1</code>.</li>
+<li>Output usage: set <strong>outUsage</strong> to <code>1</code>.</li>
+<li>Set <strong>UniqId</strong> to an identifier that is unique for each module, with no spaces or symbols.</li>
+<li>Adjust <strong>timeout</strong> (seconds per attempt) and <strong>retries</strong> if the device answers slowly.</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Every module needs its own UniqId</p>
+<p>The plugin stores the counters of the previous execution in a state file named after the host, or after the <strong>UniqId</strong> when one is set. Every module that uses the plugin against the same host must have a different <strong>UniqId</strong>. Otherwise the modules overwrite each other's previous samples and report <code>0</code> or wrong values.</p>
+</div>
+<h3 id="snmpv3-settings">SNMPv3 settings<a class="headerlink" href="#snmpv3-settings" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>securityName</strong></td>
+<td>Required for SNMP v3.</td>
+</tr>
+<tr>
+<td><strong>securityLevel</strong></td>
+<td><code>noAuthNoPriv</code> (default), <code>authNoPriv</code> or <code>authPriv</code>. Case-insensitive.</td>
+</tr>
+<tr>
+<td><strong>authProtocol</strong>, <strong>authKey</strong></td>
+<td>Required with <code>authNoPriv</code> and <code>authPriv</code>.</td>
+</tr>
+<tr>
+<td><strong>privProtocol</strong>, <strong>privKey</strong></td>
+<td>Required with <code>authPriv</code>.</td>
+</tr>
+<tr>
+<td><strong>context</strong></td>
+<td>Optional SNMPv3 context name. Leave it empty to use no context.</td>
+</tr>
+</tbody>
+</table>
+<p>An invalid combination or value makes the plugin print nothing.</p>
+<p>For the 192-bit and 256-bit AES protocols, choose the one that matches the key localization variant that the device implements: <code>AES192</code> and <code>AES256</code> use the Blumenthal extension (Net-SNMP style), while <code>AES192C</code> and <code>AES256C</code> use the Reeder extension (Cisco style).</p>
+<h3 id="options-not-available-in-the-console">Options not available in the console<a class="headerlink" href="#options-not-available-in-the-console" title="Permanent link">¶</a></h3>
+<p>The options <code>-max</code>, <code>-f</code>, <code>-debug</code>, <code>-parallel</code>, <code>-tmp</code>, <code>-tmp_file</code>, <code>-tmp_separator</code> and <code>-log</code> are not fields of the plugin registration. They can be used only from the command line or from a configuration file. See <a href="#operate">Operate</a> and <a href="#reference">Reference</a>.</p>
+<h3 id="protect-the-credentials">Protect the credentials<a class="headerlink" href="#protect-the-credentials" title="Permanent link">¶</a></h3>
+<p>The community and the SNMPv3 passwords passed as command-line options can be visible in the operating system process list. To keep them out of the command line, store them in a configuration file and pass its path as the first argument. See <a href="#use-a-configuration-file">Use a configuration file</a>.</p>
+<h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">¶</a></h2>
+<p>Run the plugin manually with a <code>-uniqid</code> different from the one used by any production module, so that the test does not alter the samples of that module:</p>
+<div class="highlight"><pre><span></span><code>/usr/share/pandora_server/util/plugin/pandora_snmp_bandwidth<span class="w"> </span>-version<span class="w"> </span>2c<span class="w"> </span>-community<span class="w"> </span>&lt;COMMUNITY&gt;<span class="w"> </span>-host<span class="w"> </span>&lt;TARGET_HOST&gt;<span class="w"> </span>-ifIndex<span class="w"> </span>&lt;IFINDEX&gt;<span class="w"> </span>-uniqid<span class="w"> </span>&lt;UNIQUE_ID&gt;
+</code></pre></div>
+<ol>
+<li>The first run prints <code>0.000000000</code>, because there is no previous data yet.</li>
+<li>Wait some seconds while the interface carries traffic and run the same command again. The second run prints the real value, for example <code>12.345678901</code>.</li>
+</ol>
+<p>An empty output means that the plugin failed. Run the command again with <code>-debug 1</code> and read the log file, as described in <a href="#debug-log">Debug log</a>.</p>
+<h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
+<h3 id="output-and-exit-status">Output and exit status<a class="headerlink" href="#output-and-exit-status" title="Permanent link">¶</a></h3>
+<ul>
+<li>The plugin always exits with status 0.</li>
+<li>On a failure (no SNMP answer, invalid parameters, unreachable device) it prints nothing.</li>
+<li>Running it without arguments prints the help text.</li>
+</ul>
+<h3 id="meaning-of-the-value">Meaning of the value<a class="headerlink" href="#meaning-of-the-value" title="Permanent link">¶</a></h3>
+<p>For each interface the plugin computes a percentage from the octet counter differences (<code>Δin</code>, <code>Δout</code>), the seconds between executions (<code>Δt</code>) and the interface speed in bit/s:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Formula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bandwidth, half duplex or unknown duplex</td>
+<td><code>(Δin + Δout) × 8 / (Δt × speed) × 100</code></td>
+</tr>
+<tr>
+<td>Bandwidth, full duplex</td>
+<td><code>(Δin × 8 / (Δt × speed) + Δout × 8 / (Δt × speed)) / 2 × 100</code></td>
+</tr>
+<tr>
+<td>Input usage</td>
+<td><code>Δin × 8 / (Δt × speed) × 100</code>, capped at 100</td>
+</tr>
+<tr>
+<td>Output usage</td>
+<td><code>Δout × 8 / (Δt × speed) × 100</code>, capped at 100</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>If the speed or <code>Δt</code> is 0, the value of the interface is 0.</li>
+<li>If a counter is lower than in the previous execution, the plugin treats it as a wrap and computes the difference as <code>max − previous + current + 1</code>, where <code>max</code> is 4,294,967,295 for 32-bit counters and 18,446,744,073,709,551,615 for 64-bit counters.</li>
+<li>Without <code>-ifIndex</code>, the result is the arithmetic mean of the per-interface values.</li>
+</ul>
+<h3 id="first-execution-and-zero-values">First execution and zero values<a class="headerlink" href="#first-execution-and-zero-values" title="Permanent link">¶</a></h3>
+<p>The plugin prints <code>0.000000000</code> when it has no previous data for the counters. This happens on the first execution, after the counter width changes (for example, when the device stops returning 64-bit values), and the first time the plugin runs over a state file written by an earlier version of the plugin.</p>
+<h3 id="counter-width">Counter width<a class="headerlink" href="#counter-width" title="Permanent link">¶</a></h3>
+<ul>
+<li>Without <code>-ifIndex</code>, the plugin reads the interface table and uses the 64-bit counters <code>ifHCInOctets</code> and <code>ifHCOutOctets</code> when the device returns numeric values for <code>ifHCInOctets</code>. Otherwise it uses the 32-bit counters <code>ifInOctets</code> and <code>ifOutOctets</code>.</li>
+<li>With <code>-ifIndex &lt;n&gt;</code>, it uses the 64-bit counters when <code>ifHCInOctets.&lt;n&gt;</code> returns a number, and the 32-bit counters otherwise.</li>
+<li>With SNMP v1 it always uses the 32-bit counters.</li>
+</ul>
+<h3 id="interface-speed">Interface speed<a class="headerlink" href="#interface-speed" title="Permanent link">¶</a></h3>
+<p>The speed, in bit/s, is selected in this order:</p>
+<ol>
+<li>The value of <code>-max</code>, when it is set. It overrides the speed reported by the device for every measured interface and is intended for port channels and aggregated links, where the reported speed is not the real one.</li>
+<li><code>ifHighSpeed</code> (in Mbit/s) multiplied by 1,000,000, when it is greater than 0.</li>
+<li><code>ifSpeed</code> (in bit/s), when it is greater than 0.</li>
+</ol>
+<p>An interface without a usable speed is skipped: it is not measured and it is not included in the average. With <code>-ifIndex</code>, the plugin prints <code>0.000000000</code> in that case.</p>
+<div class="admonition warning">
+<p class="admonition-title">The value of -max is in bit/s</p>
+<p><code>-max</code> is expressed in bit/s, not in Mbit/s, even though <code>ifHighSpeed</code> is reported in Mbit/s. For a port channel of 2 × 1 Gbit/s, use <code>-max 2000000000</code>. The value <code>-max 2000</code> means 2 kbit/s: the input and output usage saturate at 100 % and the overall bandwidth reports values far above 100.</p>
+</div>
+<h3 id="duplex-mode">Duplex mode<a class="headerlink" href="#duplex-mode" title="Permanent link">¶</a></h3>
+<p>The plugin reads the duplex mode from <code>dot3StatsDuplexStatus</code>: the value <code>2</code> means half duplex and <code>3</code> means full duplex. Any other value, or no answer, is an unknown duplex mode, which is handled as half duplex. Use <code>-f 1</code> to handle an unknown duplex mode as full duplex.</p>
+<h3 id="duplicate-ifindex-values">Duplicate ifIndex values<a class="headerlink" href="#duplicate-ifindex-values" title="Permanent link">¶</a></h3>
+<p>When the plugin measures all the interfaces, it identifies each interface by the value of <code>ifIndex</code>. If the device reports the same value in several rows, the plugin keeps a single entry for that value:</p>
+<ul>
+<li>The last row that has a usable speed replaces the earlier ones.</li>
+<li>A later row without a usable speed does not remove an earlier valid one.</li>
+<li>The state file has one line per distinct value, and the average divides by the number of distinct values.</li>
+</ul>
+<h2 id="operate">Operate<a class="headerlink" href="#operate" title="Permanent link">¶</a></h2>
+<h3 id="use-a-configuration-file">Use a configuration file<a class="headerlink" href="#use-a-configuration-file" title="Permanent link">¶</a></h3>
+<p>If the first argument is an existing file, the plugin reads it as a configuration file. Use it to keep credentials out of the command line:</p>
+<div class="highlight"><pre><span></span><code>/usr/share/pandora_server/util/plugin/pandora_snmp_bandwidth<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span>-ifIndex<span class="w"> </span><span class="m">5</span>
+</code></pre></div>
+<ul>
+<li>Each line has the form <code>key=value</code>. The keys are the option names without the leading dash.</li>
+<li>Lines that start with <code>#</code> are comments.</li>
+<li>The directive <code>include=&lt;file&gt;</code> includes another file.</li>
+<li>Options given on the command line override the values of the file.</li>
+</ul>
+<h3 id="debug-log">Debug log<a class="headerlink" href="#debug-log" title="Permanent link">¶</a></h3>
+<p>With <code>-debug 1</code> the plugin writes a log file while it runs. The value printed on standard output does not change.</p>
+<ul>
+<li>The file is <code>&lt;tmp&gt;/pandora_bandwidth_&lt;host or uniqid&gt;.log</code>, with the same character replacement as the state file (see <a href="#state-file">State file</a>). Use <code>-log</code> to write it to another path.</li>
+<li>Each line has the form <code>&lt;date&gt; - [info] &lt;message&gt;</code>. The first message of an execution truncates the file.</li>
+<li>The log records the target, the SNMP version, the timeout and retries, the state file, every SNMP request and answer with its timing, the counter width selected and the reason, the speed source and the duplex mode of each interface, the skipped interfaces and the reason, the previous and saved state, the formulas with their values substituted, the averages and the printed value.</li>
+<li>The community, the authentication and privacy passwords and the SNMPv3 user are never written to the log. Secret values are masked as <code>***</code> if they appear.</li>
+</ul>
+<h3 id="concurrency-and-timing">Concurrency and timing<a class="headerlink" href="#concurrency-and-timing" title="Permanent link">¶</a></h3>
+<ul>
+<li><code>-parallel &lt;N&gt;</code> sets the maximum number of concurrent SNMP requests when all the interfaces are measured. The default is 8. A value that is not a positive integer keeps the default.</li>
+<li><code>-timeout</code> sets the seconds to wait for each attempt and <code>-retries</code> the number of retries. Values out of range make the plugin print nothing.</li>
+<li>Keep the module interval short enough that a 32-bit counter cannot wrap more than once between executions.</li>
+</ul>
+<h3 id="command-line-syntax">Command-line syntax<a class="headerlink" href="#command-line-syntax" title="Permanent link">¶</a></h3>
+<ul>
+<li>Options are <code>-name value</code> pairs. A trailing option without a value is ignored.</li>
+<li>Boolean options (<code>-inUsage</code>, <code>-outUsage</code>, <code>-f</code>, <code>-debug</code>) are enabled with a number greater than 0, for example <code>1</code>.</li>
+<li>Short aliases exist for the connection options. See <a href="#command-line-and-configuration-file-options">Command line and configuration file options</a>.</li>
+<li>The option <code>-extra</code> is accepted and ignored.</li>
+</ul>
+<h3 id="connectivity-check">Connectivity check<a class="headerlink" href="#connectivity-check" title="Permanent link">¶</a></h3>
+<p>Before it measures anything, the plugin reads <code>sysObjectID</code> (<code>.1.3.6.1.2.1.1.2.0</code>) from the device. If the device gives no answer, the plugin stops without printing anything.</p>
+<h2 id="troubleshoot">Troubleshoot<a class="headerlink" href="#troubleshoot" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>The plugin prints nothing.</strong> The device did not answer the <code>sysObjectID</code> request, a parameter is invalid, <code>-timeout</code> or <code>-retries</code> is out of range, or the SNMPv3 settings are incomplete. Run the plugin with <code>-debug 1</code> and read the <a href="#debug-log">debug log</a>.</li>
+<li><strong>The value is always 0.</strong></li>
+<li>It is the first execution, and the second one has not run yet.</li>
+<li>Another module uses the same <strong>UniqId</strong> (or the same host without a <strong>UniqId</strong>), and both overwrite the previous samples. Give each module its own <strong>UniqId</strong>.</li>
+<li>The interface has no usable speed. See "The interface is not measured" below.</li>
+<li>The time between executions is 0.</li>
+<li>The counter width changed since the previous execution.</li>
+<li><strong>The input or output usage is stuck at 100 %, or the bandwidth exceeds 100 %.</strong> The speed used is too low. Check that <code>-max</code> is expressed in bit/s and not in Mbit/s, and check the <code>ifHighSpeed</code> and <code>ifSpeed</code> values that the device reports.</li>
+<li><strong>The values are lower than expected on a fast link.</strong> The plugin is using 32-bit counters that wrap more than once per interval. Use SNMP v2c or v3 so that 64-bit counters are used, or shorten the module interval.</li>
+<li><strong>The interface is not measured.</strong> Neither <code>ifHighSpeed</code> nor <code>ifSpeed</code> is greater than 0. Set the speed with <code>-max</code>.</li>
+<li><strong>The duplex mode is unknown.</strong> If the link is full duplex, use <code>-f 1</code>.</li>
+</ul>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">¶</a></h2>
+<h3 id="console-fields-network-bandwidth-snmp">Console fields (Network bandwidth SNMP)<a class="headerlink" href="#console-fields-network-bandwidth-snmp" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SNMP Version(1,2c,3)</td>
+<td>No</td>
+<td><code>2c</code></td>
+<td>SNMP version: <code>1</code>, <code>2c</code> or <code>3</code>. Passed as <code>-version</code>.</td>
+</tr>
+<tr>
+<td>Community</td>
+<td>Yes for v1 and v2c</td>
+<td>—</td>
+<td>SNMP community. It may be empty. Passed as <code>-community</code>.</td>
+</tr>
+<tr>
+<td>Host</td>
+<td>No</td>
+<td><code>_address_</code></td>
+<td>Address of the device. The default is the address of the agent. Passed as <code>-host</code>.</td>
+</tr>
+<tr>
+<td>Port</td>
+<td>No</td>
+<td><code>161</code></td>
+<td>UDP port of the SNMP service. Passed as <code>-port</code>.</td>
+</tr>
+<tr>
+<td>Interface Index (filter)</td>
+<td>No</td>
+<td>Empty</td>
+<td><code>ifIndex</code> of the interface to measure. Empty measures all the interfaces. Passed as <code>-ifIndex</code>.</td>
+</tr>
+<tr>
+<td>securityName</td>
+<td>Yes for v3</td>
+<td>—</td>
+<td>SNMPv3 user name. Passed as <code>-securityName</code>.</td>
+</tr>
+<tr>
+<td>context</td>
+<td>No</td>
+<td>Empty</td>
+<td>SNMPv3 context name. Empty means no context. Passed as <code>-context</code>.</td>
+</tr>
+<tr>
+<td>securityLevel</td>
+<td>No</td>
+<td><code>noAuthNoPriv</code></td>
+<td><code>noAuthNoPriv</code>, <code>authNoPriv</code> or <code>authPriv</code>. Passed as <code>-securityLevel</code>.</td>
+</tr>
+<tr>
+<td>authProtocol</td>
+<td>Yes with <code>authNoPriv</code> and <code>authPriv</code></td>
+<td>—</td>
+<td><code>MD5</code>, <code>SHA</code> (or <code>SHA1</code>), <code>SHA224</code>, <code>SHA256</code>, <code>SHA384</code> or <code>SHA512</code>. Passed as <code>-authProtocol</code>.</td>
+</tr>
+<tr>
+<td>authKey</td>
+<td>Yes with <code>authNoPriv</code> and <code>authPriv</code></td>
+<td>—</td>
+<td>Authentication password. Passed as <code>-authKey</code>.</td>
+</tr>
+<tr>
+<td>privProtocol</td>
+<td>Yes with <code>authPriv</code></td>
+<td>—</td>
+<td><code>DES</code>, <code>AES</code> (or <code>AES128</code>), <code>AES192</code>, <code>AES256</code>, <code>AES192C</code> or <code>AES256C</code>. Passed as <code>-privProtocol</code>.</td>
+</tr>
+<tr>
+<td>privKey</td>
+<td>Yes with <code>authPriv</code></td>
+<td>—</td>
+<td>Privacy password. Passed as <code>-privKey</code>.</td>
+</tr>
+<tr>
+<td>UniqId</td>
+<td>Yes, one per module</td>
+<td>—</td>
+<td>Unique identifier of the module, with no spaces or symbols. The plugin needs to store information in the temporary directory to calculate the bandwidth. Passed as <code>-uniqid</code>.</td>
+</tr>
+<tr>
+<td>inUsage</td>
+<td>No</td>
+<td>Empty</td>
+<td>Set to <code>1</code> to retrieve the input usage (%). Passed as <code>-inUsage</code>.</td>
+</tr>
+<tr>
+<td>outUsage</td>
+<td>No</td>
+<td>Empty</td>
+<td>Set to <code>1</code> to retrieve the output usage (%). Passed as <code>-outUsage</code>.</td>
+</tr>
+<tr>
+<td>timeout</td>
+<td>No</td>
+<td><code>2</code></td>
+<td>Seconds to wait for each attempt. Passed as <code>-timeout</code>.</td>
+</tr>
+<tr>
+<td>retries</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Number of retries. Passed as <code>-retries</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The plugin registration builds this parameter line:</p>
+<div class="highlight"><pre><span></span><code>-version '_field1_' -community '_field2_' -host '_field3_' -port '_field4_' -ifIndex '_field5_' -securityName '_field6_' -context '_field7_' -securityLevel '_field8_' -authProtocol '_field9_' -authKey '_field10_' -privProtocol '_field11_' -privKey '_field12_' -uniqid '_field13_' -inUsage '_field14_' -outUsage '_field15_' -timeout '_field16_' -retries '_field17_'
+</code></pre></div>
+<h3 id="command-line-and-configuration-file-options">Command line and configuration file options<a class="headerlink" href="#command-line-and-configuration-file-options" title="Permanent link">¶</a></h3>
+<p>The same names are valid as keys of the configuration file, without the leading dash.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Alias</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-version</code></td>
+<td><code>-v</code></td>
+<td>No</td>
+<td><code>2c</code></td>
+<td>SNMP version: <code>1</code>, <code>2</code>, <code>2c</code> or <code>3</code>.</td>
+</tr>
+<tr>
+<td><code>-community</code></td>
+<td><code>-c</code></td>
+<td>Yes for v1 and v2c</td>
+<td>—</td>
+<td>SNMP community. It may be empty.</td>
+</tr>
+<tr>
+<td><code>-host</code></td>
+<td><code>-h</code></td>
+<td>No</td>
+<td><code>127.0.0.1</code></td>
+<td>Address of the device.</td>
+</tr>
+<tr>
+<td><code>-port</code></td>
+<td><code>-p</code></td>
+<td>No</td>
+<td><code>161</code></td>
+<td>UDP port, from 0 to 65535.</td>
+</tr>
+<tr>
+<td><code>-timeout</code></td>
+<td>—</td>
+<td>No</td>
+<td><code>2</code></td>
+<td>Seconds per attempt, from 1 to 60. Decimals are allowed.</td>
+</tr>
+<tr>
+<td><code>-retries</code></td>
+<td>—</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Retries, from 0 to 20.</td>
+</tr>
+<tr>
+<td><code>-securityName</code></td>
+<td><code>-u</code></td>
+<td>Yes for v3</td>
+<td>—</td>
+<td>SNMPv3 user name.</td>
+</tr>
+<tr>
+<td><code>-context</code></td>
+<td><code>-n</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>SNMPv3 context name.</td>
+</tr>
+<tr>
+<td><code>-securityLevel</code></td>
+<td><code>-l</code></td>
+<td>No</td>
+<td><code>noAuthNoPriv</code></td>
+<td><code>noAuthNoPriv</code>, <code>authNoPriv</code> or <code>authPriv</code> (case-insensitive).</td>
+</tr>
+<tr>
+<td><code>-authProtocol</code></td>
+<td><code>-a</code></td>
+<td>Yes with <code>authNoPriv</code> and <code>authPriv</code></td>
+<td>—</td>
+<td><code>MD5</code>, <code>SHA</code> (or <code>SHA1</code>), <code>SHA224</code>, <code>SHA256</code>, <code>SHA384</code> or <code>SHA512</code>.</td>
+</tr>
+<tr>
+<td><code>-authKey</code></td>
+<td><code>-A</code></td>
+<td>Yes with <code>authNoPriv</code> and <code>authPriv</code></td>
+<td>—</td>
+<td>Authentication password.</td>
+</tr>
+<tr>
+<td><code>-privProtocol</code></td>
+<td><code>-x</code></td>
+<td>Yes with <code>authPriv</code></td>
+<td>—</td>
+<td><code>DES</code>, <code>AES</code> (or <code>AES128</code>), <code>AES192</code>, <code>AES256</code>, <code>AES192C</code> or <code>AES256C</code> (case-insensitive).</td>
+</tr>
+<tr>
+<td><code>-privKey</code></td>
+<td><code>-X</code></td>
+<td>Yes with <code>authPriv</code></td>
+<td>—</td>
+<td>Privacy password.</td>
+</tr>
+<tr>
+<td><code>-ifIndex</code></td>
+<td>—</td>
+<td>No</td>
+<td>Empty</td>
+<td><code>ifIndex</code> of the interface to measure. Without it, all the interfaces are measured and averaged.</td>
+</tr>
+<tr>
+<td><code>-inUsage</code></td>
+<td>—</td>
+<td>No</td>
+<td>Disabled</td>
+<td>A number greater than 0 reports the input usage only.</td>
+</tr>
+<tr>
+<td><code>-outUsage</code></td>
+<td>—</td>
+<td>No</td>
+<td>Disabled</td>
+<td>A number greater than 0 reports the output usage only. If <code>-inUsage</code> is also enabled, the input usage is reported.</td>
+</tr>
+<tr>
+<td><code>-max</code></td>
+<td>—</td>
+<td>No</td>
+<td>Not set</td>
+<td>Interface speed in bit/s, used for every measured interface instead of the speed reported by the device.</td>
+</tr>
+<tr>
+<td><code>-f</code></td>
+<td>—</td>
+<td>No</td>
+<td>Disabled</td>
+<td>A number greater than 0 handles an unknown duplex mode as full duplex.</td>
+</tr>
+<tr>
+<td><code>-uniqid</code></td>
+<td>—</td>
+<td>No</td>
+<td>Not set</td>
+<td>Identifier used to name the state file and the log instead of the host. Required in practice when several modules query the same host.</td>
+</tr>
+<tr>
+<td><code>-parallel</code></td>
+<td>—</td>
+<td>No</td>
+<td><code>8</code></td>
+<td>Maximum concurrent SNMP requests when all the interfaces are measured.</td>
+</tr>
+<tr>
+<td><code>-tmp</code></td>
+<td>—</td>
+<td>No</td>
+<td><code>/tmp</code></td>
+<td>Directory of the state file and the log.</td>
+</tr>
+<tr>
+<td><code>-tmp_file</code></td>
+<td>—</td>
+<td>No</td>
+<td>Not set</td>
+<td>Full path of the state file.</td>
+</tr>
+<tr>
+<td><code>-tmp_separator</code></td>
+<td>—</td>
+<td>No</td>
+<td><code>;</code></td>
+<td>Field separator of the state file.</td>
+</tr>
+<tr>
+<td><code>-debug</code></td>
+<td>—</td>
+<td>No</td>
+<td>Disabled</td>
+<td>A number greater than 0 writes the debug log.</td>
+</tr>
+<tr>
+<td><code>-log</code></td>
+<td>—</td>
+<td>No</td>
+<td>Not set</td>
+<td>Path of the debug log file.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="state-file">State file<a class="headerlink" href="#state-file" title="Permanent link">¶</a></h3>
+<p>The plugin stores the counters of each execution in a state file:</p>
+<ul>
+<li>Default path: <code>&lt;tmp&gt;/pandora_bandwidth_&lt;host&gt;.idx</code>, or <code>&lt;tmp&gt;/pandora_bandwidth_&lt;uniqid&gt;.idx</code> when <code>-uniqid</code> is set.</li>
+<li>Every <code>.</code> in the whole path is replaced with <code>_</code>. For host <code>192.0.2.10</code>, the file is <code>/tmp/pandora_bandwidth_192_0_2_10.idx</code>.</li>
+<li><code>-tmp</code> changes the directory, <code>-tmp_file</code> sets the full path and <code>-tmp_separator</code> sets the field separator.</li>
+</ul>
+<p>The file has one line per interface, in this format:</p>
+<div class="highlight"><pre><span></span><code>timestamp;ifIndex;inOctets;outOctets;width;
+</code></pre></div>
+<p><code>width</code> is <code>32</code> or <code>64</code>. Lines with a missing or different width are ignored, which is treated as having no previous data. Each execution rewrites the file with only the interfaces measured in that execution.</p>
+<h3 id="oids-used">OIDs used<a class="headerlink" href="#oids-used" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>OID</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sysObjectID</code></td>
+<td><code>.1.3.6.1.2.1.1.2.0</code></td>
+<td>Connectivity check</td>
+</tr>
+<tr>
+<td><code>ifIndex</code></td>
+<td><code>.1.3.6.1.2.1.2.2.1.1</code></td>
+<td>List of interfaces</td>
+</tr>
+<tr>
+<td><code>ifInOctets</code></td>
+<td><code>.1.3.6.1.2.1.2.2.1.10</code></td>
+<td>32-bit input counter</td>
+</tr>
+<tr>
+<td><code>ifOutOctets</code></td>
+<td><code>.1.3.6.1.2.1.2.2.1.16</code></td>
+<td>32-bit output counter</td>
+</tr>
+<tr>
+<td><code>ifHCInOctets</code></td>
+<td><code>.1.3.6.1.2.1.31.1.1.1.6</code></td>
+<td>64-bit input counter</td>
+</tr>
+<tr>
+<td><code>ifHCOutOctets</code></td>
+<td><code>.1.3.6.1.2.1.31.1.1.1.10</code></td>
+<td>64-bit output counter</td>
+</tr>
+<tr>
+<td><code>ifHighSpeed</code></td>
+<td><code>.1.3.6.1.2.1.31.1.1.1.15</code></td>
+<td>Speed in Mbit/s</td>
+</tr>
+<tr>
+<td><code>ifSpeed</code></td>
+<td><code>.1.3.6.1.2.1.2.2.1.5</code></td>
+<td>Speed in bit/s</td>
+</tr>
+<tr>
+<td><code>dot3StatsDuplexStatus</code></td>
+<td><code>.1.3.6.1.2.1.10.7.2.1.19</code></td>
+<td>Duplex mode (<code>2</code> half, <code>3</code> full)</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
