@@ -8,7 +8,7 @@
         <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/plugins/dynamic-snmp/">
       
       
-        <link rel="prev" href="../autodiscover/">
+        <link rel="prev" href="../docker/">
       
       
         <link rel="next" href="../kvm/">
@@ -364,6 +364,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -579,6 +583,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../discovery/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../discovery/kvm/" class="md-nav__link">
         
   
@@ -699,6 +731,34 @@
     
   
     NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
   
 
     
@@ -1058,6 +1118,8 @@
       
         
       
+        
+      
     
     
     
@@ -1141,6 +1203,34 @@
     
   
     Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
   
 
     
@@ -2000,11 +2090,11 @@
 <li>Upload the plugin script to <code>/usr/share/pandora_server/util/plugin/</code> on the Pandora FMS server.</li>
 <li>Go to <strong>Servers → Plugins</strong> and click <strong>Add plugin</strong>:</li>
 </ol>
-<p></p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/add-plugin.png" data-desc-position="bottom"><img alt="Add plugin button in Servers &gt; Plugins" src="../../assets/images/plugins/dynamic-snmp/add-plugin.png"></a></p>
 <ol>
 <li>Set a <strong>Name</strong>, keep <strong>Plugin type</strong> as <code>Standard</code>, and set <strong>Max timeout</strong>. SNMP scans can take a while, so a timeout of at least 20 seconds is recommended; the global <code>plugin_timeout</code> of <code>pandora_server.conf</code> may also need to be raised.</li>
 </ol>
-<p></p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/plugin-general.png" data-desc-position="bottom"><img alt="General plugin settings with name, type, timeout and description" src="../../assets/images/plugins/dynamic-snmp/plugin-general.png"></a></p>
 <p>Example description:</p>
 <div class="highlight"><pre><span></span><code>This plugin generates modules dynamically in the agent it's created in.
 Based on the ifName, it generates modules for:
@@ -2016,22 +2106,22 @@ The value returned by the module represents the number of modules generated.
 <ol>
 <li>Set the <strong>Plugin command</strong> and the <strong>Plugin parameters</strong>. Each parameter is written as a macro <code>_fieldX_</code>, where <code>X</code> is the positional number of the parameter:</li>
 </ol>
-<p></p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/plugin-command.png" data-desc-position="bottom"><img alt="Plugin command and parameters with macros" src="../../assets/images/plugins/dynamic-snmp/plugin-command.png"></a></p>
 <p>The <code>_agentname_</code> and <code>_address_</code> server macros fill in the agent name and the device address automatically, so the example parameters are:</p>
 <div class="highlight"><pre><span></span><code>-agent "_agentname_" -h "_address_" -v "_field1_" -c "_field2_" -only "_field3_" -reject "_field4_" -wmin "_field5_" -wmax "_field6_" -cmin "_field7_" -cmax "_field8_"
 </code></pre></div>
 <ol>
 <li>Define each macro under <strong>Macro parameters</strong>, giving a description, a default value and, optionally, a help text:</li>
 </ol>
-<p></p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/plugin-macros.png" data-desc-position="bottom"><img alt="Macro parameters with description, default value and help" src="../../assets/images/plugins/dynamic-snmp/plugin-macros.png"></a></p>
 <ol>
 <li>In the target agent, create a new module and choose <strong>Create a new plugin server module</strong>:</li>
 </ol>
-<p></p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/create-module.png" data-desc-position="bottom"><img alt="Create module dialog for a plugin server module" src="../../assets/images/plugins/dynamic-snmp/create-module.png"></a></p>
 <ol>
 <li>In the module configuration, select the <strong>Dynamic SNMP</strong> plugin and fill in the macro fields:</li>
 </ol>
-<p></p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/configure-module.png" data-desc-position="bottom"><img alt="Plugin server module configuration with the Dynamic SNMP plugin" src="../../assets/images/plugins/dynamic-snmp/configure-module.png"></a></p>
 <p>On each execution the server plugin transfers the report using the selected transfer mode and prints the number of generated modules. If the agent named by <code>-agent</code> does not exist, it is created automatically.</p>
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">¶</a></h2>
 <p>Run the plugin manually on the host that will execute it. This example scans a device over SNMPv2c in agent plugin mode:</p>
@@ -2039,9 +2129,9 @@ The value returned by the module represents the number of modules generated.
 </code></pre></div>
 <p>A successful agent-plugin run prints one <code>&lt;module&gt;</code> XML block per generated module on standard output. A successful server-plugin run transfers the report and prints the number of generated modules instead.</p>
 <p>The generated modules then appear in the target agent:</p>
-<p></p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/generated-modules.png" data-desc-position="bottom"><img alt="Default modules generated for each interface" src="../../assets/images/plugins/dynamic-snmp/generated-modules.png"></a></p>
 <p>With filters and thresholds applied, only the matching interfaces are generated and the thresholds are attached to their modules:</p>
-<p></p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/dynamic-snmp/filtered-modules.png" data-desc-position="bottom"><img alt="Filtered modules with warning and critical thresholds" src="../../assets/images/plugins/dynamic-snmp/filtered-modules.png"></a></p>
 <h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
 <p>The plugin walks the interface name branch first, and for every interface name it queries each configured branch. The module name is the interface name followed by the branch name, separated by an underscore, for example <code>ge-0/0/0_ifHCInOctets</code> or <code>FastEthernet0/0_OperStatus</code>.</p>
 <ul>

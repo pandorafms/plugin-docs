@@ -1,0 +1,3251 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/discovery/kubernetes/">
+      
+      
+        <link rel="prev" href="../azure-storage/">
+      
+      
+        <link rel="next" href="../kvm/">
+      
+      
+        
+          <link rel="alternate" href="../../../discovery/kubernetes/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Kubernetes Discovery - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kubernetes-discovery" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Kubernetes Discovery
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../discovery/kubernetes/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-monitoriza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué monitoriza
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comprobar-el-acceso-al-destino" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comprobar el acceso al destino
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurar-la-tarea-de-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurar la tarea de Discovery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configurar la tarea de Discovery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-task-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 1 — Task definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-kubernetes-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 2 — Kubernetes base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-kubernetes-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 3 — Kubernetes detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificar-la-primera-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar la primera ejecución
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpretar-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpretar los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interpretar los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agentes-e-identidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes e identidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-por-agente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos por agente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operar
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución manual
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de la tarea
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parámetros de la tarea">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#claves-del-archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claves del archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Módulos generados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agente-global" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente global
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agentes-de-nodo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes de nodo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agentes-de-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes de deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agentes-de-pod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes de pod
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#peticiones-a-la-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Peticiones a la API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de KVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de VMware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Dynamic SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-monitoriza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué monitoriza
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comprobar-el-acceso-al-destino" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comprobar el acceso al destino
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurar-la-tarea-de-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurar la tarea de Discovery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configurar la tarea de Discovery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-task-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 1 — Task definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-kubernetes-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 2 — Kubernetes base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-kubernetes-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 3 — Kubernetes detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificar-la-primera-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar la primera ejecución
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpretar-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpretar los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interpretar los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agentes-e-identidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes e identidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-por-agente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos por agente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operar
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución manual
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de la tarea
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parámetros de la tarea">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#claves-del-archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claves del archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Módulos generados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agente-global" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente global
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agentes-de-nodo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes de nodo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agentes-de-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes de deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agentes-de-pod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes de pod
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#peticiones-a-la-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Peticiones a la API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="kubernetes-discovery">Kubernetes Discovery<a class="headerlink" href="#kubernetes-discovery" title="Permanent link">¶</a></h1>
+<p><em>Última actualización del artículo: 2026-10-23.</em></p>
+<!-- DRAFT: Verificado contra las fuentes del paquete 1.2; faltan validar la instalación del paquete distribuido y la recopilación en un entorno real. -->
+
+<h2 id="que-monitoriza">Qué monitoriza<a class="headerlink" href="#que-monitoriza" title="Permanent link">¶</a></h2>
+<p>El plugin de Discovery de Kubernetes se conecta al servidor de API del clúster y descubre sus cargas de trabajo e infraestructura: nodos, pods, deployments, namespaces, servicios, estados de componentes y endpoints de salud de la API. Genera un agente de Pandora FMS por recurso descubierto con módulos de disponibilidad, capacidad y rendimiento leídos de la API.</p>
+<p>El plugin genera agentes para:</p>
+<ul>
+<li>el propio clúster, mediante un agente global <strong>Kubernetes</strong>;</li>
+<li>cada nodo, cuando <strong>Scan Nodes</strong> está habilitado;</li>
+<li>cada deployment, cuando <strong>Scan Deployments</strong> está habilitado;</li>
+<li>los pods con métricas y datos completos de nodo e IP, cuando <strong>Scan Pods</strong> está habilitado.</li>
+</ul>
+<p>El agente global también incluye el estado de la API, los endpoints de salud, el número de servicios, el número de namespaces y los estados de componentes del clúster.</p>
+<p>El plugin se ejecuta como tarea de Discovery: la consola define la tarea, el servidor de Discovery ejecuta el plugin y los agentes y módulos se crean automáticamente. Los datos generados se envían mediante Tentacle.</p>
+<h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
+<h3 id="compatibilidad">Compatibilidad<a class="headerlink" href="#compatibilidad" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Ámbito</th>
+<th>Estado</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Versión del plugin <code>1.2</code> (<code>pandorafms.kubernetes</code>)</td>
+<td>Objetivo documentado</td>
+<td>Identidad del paquete; consulte <a href="#identidad-del-plugin">Identidad del plugin</a></td>
+</tr>
+<tr>
+<td>Clúster de Kubernetes con API accesible por HTTPS</td>
+<td><code>Requerido</code></td>
+<td>El plugin consulta <code>https://&lt;host&gt;:&lt;port&gt;</code>. Es un requisito, no una declaración de compatibilidad</td>
+</tr>
+<tr>
+<td>Token Bearer con acceso de lectura a los recursos consultados</td>
+<td><code>Requerido</code></td>
+<td>Autenticación con <code>Authorization: Bearer &lt;token&gt;</code> para nodos, pods, deployments, servicios, namespaces y estados de componentes</td>
+</tr>
+<tr>
+<td>API de métricas de Kubernetes (<code>metrics.k8s.io</code>)</td>
+<td><code>Requerido</code> para descubrir nodos y pods</td>
+<td>Los datos parten de <code>/apis/metrics.k8s.io/v1beta1</code>; su ausencia puede impedir generar agentes, no solo omitir CPU y memoria</td>
+</tr>
+<tr>
+<td>Versión concreta de Kubernetes</td>
+<td><code>Sin validar</code></td>
+<td>No hay un registro de pruebas publicado que establezca compatibilidad con una versión concreta</td>
+</tr>
+<tr>
+<td>Sistema operativo del host del plugin</td>
+<td><code>Sin validar</code></td>
+<td>No hay un registro de pruebas publicado que establezca compatibilidad con sistemas operativos</td>
+</tr>
+</tbody>
+</table>
+<h3 id="requisitos">Requisitos<a class="headerlink" href="#requisitos" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Un servidor de Pandora FMS con Discovery habilitado</strong> para ejecutar la tarea y una consola para definirla.</li>
+<li><strong>Acceso al servidor de API desde el servidor de Discovery</strong>, por host y puerto. La conexión directa usa HTTPS; introduzca el host sin esquema.</li>
+<li><strong>Un token Bearer</strong> con acceso de lectura a nodos, pods, deployments, namespaces, servicios, estados de componentes, métricas de nodos y pods y los endpoints de salud de <a href="#peticiones-a-la-api">Peticiones a la API</a>. La tarea no define un rol concreto. Las peticiones de salud y componentes siempre se intentan; esta versión no tiene interruptores para ellas.</li>
+<li><strong>Un grupo de agentes y un intervalo de monitorización</strong>. Todos los agentes generados heredan ambos valores de la tarea.</li>
+<li><strong>Conectividad al destino de Tentacle</strong> para enviar los datos generados.</li>
+<li>El plugin se distribuye como aplicación de Discovery de Pandora FMS (paquete <code>.disco</code>), ejecutada por el servidor de Discovery.</li>
+</ol>
+<p>Las conexiones directas usan HTTPS sin verificar el certificado: la identidad del servidor no queda autenticada. Restrinja el acceso de red. En modo proxy se utiliza la URL indicada sin añadir la cabecera Bearer. El token se introduce en la tarea y se escribe en su configuración; restrinja el acceso a ambos. En ejecuciones manuales, guarde el token en un archivo protegido, no en comandos del shell.</p>
+<h3 id="comprobar-el-acceso-al-destino">Comprobar el acceso al destino<a class="headerlink" href="#comprobar-el-acceso-al-destino" title="Permanent link">¶</a></h3>
+<p>Antes de crear la tarea, compruebe la API de métricas y las métricas de nodos y pods con una cuenta autorizada para el clúster:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>--raw<span class="w"> </span>/apis/metrics.k8s.io/v1beta1/
+kubectl<span class="w"> </span>top<span class="w"> </span>node
+kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </span>--all-namespaces
+</code></pre></div>
+<p>Si el clúster no expone la API de métricas, su administrador debe configurarla antes de verificar el descubrimiento de nodos y pods. Estos comandos de diagnóstico no conceden permisos al token del plugin.</p>
+<h3 id="instalar-el-plugin">Instalar el plugin<a class="headerlink" href="#instalar-el-plugin" title="Permanent link">¶</a></h3>
+<p>Obtenga el paquete <code>.disco</code> en la <a href="https://marketplace.pandorafms.com/entries/pandorafms.kubernetes">entrada de Kubernetes del Marketplace</a> y cárguelo en Discovery. Seleccione <strong>Kubernetes</strong> al crear una tarea de aplicación. Esta página corresponde al paquete <code>1.2</code>, no a una interfaz <code>1.3</code>.</p>
+<h2 id="configurar-la-tarea-de-discovery">Configurar la tarea de Discovery<a class="headerlink" href="#configurar-la-tarea-de-discovery" title="Permanent link">¶</a></h2>
+<p>Cree la tarea desde <strong>Management → Discovery → Applications → Kubernetes</strong>. El asistente contiene la definición genérica y dos pasos del plugin: <strong>Kubernetes base</strong> y <strong>Kubernetes detailed</strong>. Todos los campos están en <a href="#parametros-de-la-tarea">Parámetros de la tarea</a>.</p>
+<h3 id="paso-1-task-definition">Paso 1 — Task definition<a class="headerlink" href="#paso-1-task-definition" title="Permanent link">¶</a></h3>
+<p>El paso genérico solicita el <strong>nombre</strong> de la tarea, el <strong>grupo de agentes</strong>, el <strong>servidor</strong> de ejecución y el <strong>intervalo</strong>. Todos los agentes generados heredan el grupo y el intervalo.</p>
+<h3 id="paso-2-kubernetes-base">Paso 2 — Kubernetes base<a class="headerlink" href="#paso-2-kubernetes-base" title="Permanent link">¶</a></h3>
+<p>Conexión y destino de Tentacle:</p>
+<ul>
+<li><strong>Kubernetes host</strong> es la dirección o el nombre del servidor de API.</li>
+<li><strong>Kubernetes port</strong> es el puerto del servidor de API.</li>
+<li><strong>Kubernetes token</strong> es el token Bearer de autenticación.</li>
+<li><strong>Use prefix</strong> muestra <strong>Prefix</strong>, el texto que se antepone a las identidades de agentes. Vacíe <strong>Prefix</strong> al desactivar la opción: esta versión sigue aplicando un prefijo que conserve contenido.</li>
+<li><strong>Filter namespace</strong> restringe el descubrimiento a los namespaces indicados en <strong>Namespace</strong>.</li>
+<li><strong>Use proxy</strong> dirige las peticiones a <strong>Proxy url</strong>.</li>
+<li><strong>Tentacle IP</strong> y <strong>Tentacle port</strong> indican el destino de los datos. Mantenga los valores predeterminados salvo que necesite otro destino.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/kubernetes/kubernetes-base.png" data-desc-position="bottom"><img alt="Paso Kubernetes base" src="../../../assets/images/discovery/kubernetes/kubernetes-base.png"></a></p>
+<h3 id="paso-3-kubernetes-detailed">Paso 3 — Kubernetes detailed<a class="headerlink" href="#paso-3-kubernetes-detailed" title="Permanent link">¶</a></h3>
+<p>Selección de recursos:</p>
+<ul>
+<li><strong>Scan Deployments</strong>, <strong>Scan Nodes</strong> y <strong>Scan Pods</strong> activan o desactivan la generación de agentes por categoría. Las peticiones de recopilación se ejecutan aunque estas opciones estén desactivadas.</li>
+<li>El paquete <code>1.2</code> no tiene interruptores para los endpoints de salud ni los estados de componentes.</li>
+</ul>
+<!-- SCREENSHOT NEEDED: Paso Kubernetes detailed de la versión 1.2 con solo los tres interruptores de recursos; la imagen heredada de 1.3 no corresponde. -->
+
+<h2 id="verificar-la-primera-ejecucion">Verificar la primera ejecución<a class="headerlink" href="#verificar-la-primera-ejecucion" title="Permanent link">¶</a></h2>
+<p>Ejecute la tarea desde <strong>Management → Discovery → Task list</strong> y compruebe:</p>
+<ol>
+<li><strong>El resumen de la tarea</strong>: progreso, agentes de nodo, pod y deployment generados y total de agentes.</li>
+<li><strong>Los agentes</strong>: el global <strong>Kubernetes</strong> y las categorías habilitadas. Los nodos y pods dependen de las métricas; los deployments requieren datos de condiciones.</li>
+<li><strong>Los módulos</strong>: contraste valores representativos de CPU y memoria y condiciones de pods con el clúster. Los contadores del resumen no demuestran que los datos se hayan recibido correctamente.</li>
+<li><strong>La información de ejecución</strong>: una ejecución correcta no informa de errores; los fallos de peticiones se registran ahí.</li>
+</ol>
+<p>Si no se genera nada, revise primero host, puerto, conectividad y token.</p>
+<h2 id="interpretar-los-resultados">Interpretar los resultados<a class="headerlink" href="#interpretar-los-resultados" title="Permanent link">¶</a></h2>
+<h3 id="agentes-e-identidad">Agentes e identidad<a class="headerlink" href="#agentes-e-identidad" title="Permanent link">¶</a></h3>
+<p>El plugin crea un agente por recurso descubierto. Los nombres se forman con el nombre original del recurso y el prefijo opcional.</p>
+<table>
+<thead>
+<tr>
+<th>Agente</th>
+<th>Nombre</th>
+<th>Agente padre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Global</td>
+<td><code>[Prefix]Kubernetes</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Nodo</td>
+<td><code>[Prefix]&lt;node&gt;</code></td>
+<td>El agente global</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td><code>[Prefix]&lt;deployment&gt;</code></td>
+<td><code>Kubernetes</code> (sin prefijo)</td>
+</tr>
+<tr>
+<td>Pod</td>
+<td><code>[Prefix]&lt;pod&gt;</code></td>
+<td>El agente del nodo que lo ejecuta</td>
+</tr>
+</tbody>
+</table>
+<p>Los nodos apuntan al global con prefijo; los deployments apuntan al padre <code>Kubernetes</code> sin prefijo aunque haya uno configurado. Los pods apuntan al nodo con prefijo y usan la IP del pod como dirección. Las descripciones son <code>Kubernetes global agent</code>, <code>Kubernetes node</code>, <code>Kubernetes deployment</code> y <code>Kubernetes pod</code>.</p>
+<p>El descubrimiento de nodos y pods parte de la API de métricas. Las métricas incompletas, la ausencia de nodo asignado o de IP del pod pueden interrumpir el procesamiento y dejar resultados parciales. Las identidades de pods y deployments no incluyen el namespace: nombres iguales en namespaces distintos pueden colisionar. Use prefijos distintos para clústeres diferentes; filtrar namespaces no añade el namespace a la identidad.</p>
+<p>Cambiar <strong>Prefix</strong> cambia la identidad de todos los agentes generados. <strong>Filter namespace</strong> solo afecta a deployments y pods; los nodos tienen ámbito de clúster. La comparación es exacta y distingue mayúsculas. La lista es un array JSON, por ejemplo <code>["default","kube-system"]</code>. Con el filtro activado, incluya al menos un namespace: una lista vacía no genera agentes de deployment ni de pod.</p>
+<h3 id="modulos-por-agente">Módulos por agente<a class="headerlink" href="#modulos-por-agente" title="Permanent link">¶</a></h3>
+<p>Los valores se leen en cada ejecución. Los nombres, tipos y unidades están en <a href="#modulos-generados">Módulos generados</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Agente</th>
+<th>Módulos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Global</td>
+<td>Estado de la API, endpoints de salud, número de servicios, namespaces, estados de componentes y deployments</td>
+</tr>
+<tr>
+<td>Nodo</td>
+<td>Pods frente a capacidad asignable, condiciones, CPU y memoria; depende de la API de métricas</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Recuentos de réplicas, preparación y disponibilidad</td>
+</tr>
+<tr>
+<td>Pod</td>
+<td>Fase, condiciones, número de contenedores y CPU/memoria por contenedor; depende de la API de métricas</td>
+</tr>
+</tbody>
+</table>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/kubernetes/pod-modules.png" data-desc-position="bottom"><img alt="Módulos de un agente de pod generado" src="../../../assets/images/discovery/kubernetes/pod-modules.png"></a></p>
+<h2 id="operar">Operar<a class="headerlink" href="#operar" title="Permanent link">¶</a></h2>
+<h3 id="ejecucion-manual">Ejecución manual<a class="headerlink" href="#ejecucion-manual" title="Permanent link">¶</a></h3>
+<p>Para probar la conectividad o realizar una ejecución puntual fuera del asistente, escriba los pares <code>key=value</code> de <a href="#claves-del-archivo-de-configuracion">Claves del archivo de configuración</a> y ejecute:</p>
+<div class="highlight"><pre><span></span><code>pandora_kubernetes<span class="w"> </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;
+</code></pre></div>
+<p>Este ejemplo de configuración directa habilita las tres categorías de recursos. Sustituya todos los marcadores antes de usarlo; el ejemplo no se ha ejecutado:</p>
+<div class="highlight"><pre><span></span><code><span class="na">ip</span><span class="o">=</span><span class="s">&lt;TARGET_HOST&gt;</span>
+<span class="na">port</span><span class="o">=</span><span class="s">&lt;API_PORT&gt;</span>
+<span class="na">token</span><span class="o">=</span><span class="s">&lt;API_TOKEN&gt;</span>
+<span class="na">agents_group_name</span><span class="o">=</span><span class="s">&lt;AGENT_GROUP&gt;</span>
+<span class="na">interval</span><span class="o">=</span><span class="s">300</span>
+<span class="na">transfer_mode</span><span class="o">=</span><span class="s">tentacle</span>
+<span class="na">tentacle_ip</span><span class="o">=</span><span class="s">&lt;TENTACLE_HOST&gt;</span>
+<span class="na">tentacle_port</span><span class="o">=</span><span class="s">41121</span>
+<span class="na">prefix</span><span class="o">=</span><span class="s">&lt;CLUSTER_PREFIX&gt;</span>
+<span class="na">use_prefix</span><span class="o">=</span><span class="s">1</span>
+<span class="na">use_namespace</span><span class="o">=</span><span class="s">1</span>
+<span class="na">filter_namespace</span><span class="o">=</span><span class="s">["default","kube-system"]</span>
+<span class="na">use_proxy</span><span class="o">=</span><span class="s">0</span>
+<span class="na">deployments</span><span class="o">=</span><span class="s">1</span>
+<span class="na">nodes</span><span class="o">=</span><span class="s">1</span>
+<span class="na">pods</span><span class="o">=</span><span class="s">1</span>
+</code></pre></div>
+<p>La ejecución devuelve un resumen JSON de Discovery y genera XML por agente. Un resumen ilustrativo es <code>{"summary":{"Total agents":4,"Nodes agents":1,"Pods agents":1,"Deployments agents":1}}</code>; los contadores describen la generación, no la entrega confirmada.</p>
+<p>La entrada operativa de la CLI es <code>--conf</code> (<code>-h</code>/<code>--help</code> muestra ayuda). En una tarea de Discovery, el servidor construye el archivo a partir de los campos. Los ejemplos manuales no se han ejecutado contra un entorno real.</p>
+<h2 id="solucion-de-problemas">Solución de problemas<a class="headerlink" href="#solucion-de-problemas" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Comprobación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Error de petición</td>
+<td>Confirme <strong>Kubernetes host</strong>, <strong>Kubernetes port</strong> y conectividad desde Discovery. El host no debe incluir esquema.</td>
+</tr>
+<tr>
+<td>Respuestas <code>401</code> o <code>403</code></td>
+<td>El token falta, no es válido o no permite leer el recurso. Compruebe el acceso a las rutas exactas de la referencia de API; esta página no proporciona un rol validado.</td>
+</tr>
+<tr>
+<td>Se generan nodos, pero no deployments ni pods</td>
+<td>Revise <strong>Filter namespace</strong>: coincidencia exacta con las mismas mayúsculas; una lista vacía no coincide con nada.</td>
+</tr>
+<tr>
+<td>Faltan pods esperados</td>
+<td>Compruebe métricas, nodo asignado e IP. Los datos incompletos pueden interrumpir la generación; no presuponga que todos los pods pendientes se omiten sin errores.</td>
+</tr>
+<tr>
+<td>Faltan agentes o módulos de nodo/pod</td>
+<td>Revise la API de métricas, los recursos asignables y los datos de nodo/IP del pod. Consulte <code>Can't get metrics</code>, <code>Error: Nodes</code> y <code>Error: Pods</code>: los datos incompletos pueden detener el procesamiento.</td>
+</tr>
+<tr>
+<td>Faltan módulos globales, de salud o componentes</td>
+<td>Revise errores de peticiones, incluidos <code>401</code>, <code>403</code> y <code>404</code>. Los fallos de endpoints de salud omiten sus módulos; los fallos al consultar servicios, namespaces o componentes pueden impedir enviar el global. No hay interruptor para omitir estas peticiones.</td>
+</tr>
+<tr>
+<td><code>Could not connect to the API</code> o <strong>API status</strong> a <code>0</code></td>
+<td><code>/healthz</code> no devuelve exactamente <code>ok</code>. Revise acceso y salud de la API; también es la comprobación inicial de conexión.</td>
+</tr>
+<tr>
+<td>Falta un agente de deployment</td>
+<td>Revise <strong>Scan Deployments</strong>, filtro de namespaces y condiciones devueltas.</td>
+</tr>
+<tr>
+<td><strong>Available</strong> parece correcto con una condición fallida</td>
+<td>Refleja el tipo de la primera condición, no su estado booleano. Contraste réplicas y condiciones con el clúster.</td>
+</tr>
+<tr>
+<td>Las peticiones agotan el tiempo</td>
+<td>El tiempo de espera es fijo de 5 segundos, no configurable. Revise la latencia.</td>
+</tr>
+<tr>
+<td>Falla Tentacle</td>
+<td>Compruebe acceso desde Discovery a <strong>Tentacle IP</strong> y <strong>Tentacle port</strong>.</td>
+</tr>
+<tr>
+<td>El modo proxy no se autentica</td>
+<td><strong>Use proxy</strong> envía las peticiones a <strong>Proxy url</strong> sin añadir el token Bearer.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
+<h3 id="parametros-de-la-tarea">Parámetros de la tarea<a class="headerlink" href="#parametros-de-la-tarea" title="Permanent link">¶</a></h3>
+<p>Estos campos siguen a la definición genérica. La macro identifica el valor en la configuración generada.</p>
+<h4 id="kubernetes-base">Kubernetes base<a class="headerlink" href="#kubernetes-base" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Macro</th>
+<th>Requerido</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kubernetes host</td>
+<td><code>_ip_</code></td>
+<td>Modo directo</td>
+<td>Vacío</td>
+<td>Dirección o nombre del servidor de API, sin esquema</td>
+</tr>
+<tr>
+<td>Kubernetes port</td>
+<td><code>_port_</code></td>
+<td>Modo directo</td>
+<td>Vacío</td>
+<td>Puerto numérico del servidor de API</td>
+</tr>
+<tr>
+<td>Kubernetes token</td>
+<td><code>_token_</code></td>
+<td>Endpoints directos protegidos</td>
+<td>Vacío</td>
+<td>Token Bearer; el asistente permite dejarlo vacío</td>
+</tr>
+<tr>
+<td>Use prefix</td>
+<td><code>_usePrefix_</code></td>
+<td>No</td>
+<td>off</td>
+<td>Muestra el campo de prefijo</td>
+</tr>
+<tr>
+<td>Prefix</td>
+<td><code>_prefix_</code></td>
+<td>No</td>
+<td>Vacío</td>
+<td>Visible con <strong>Use prefix</strong>; vacíelo para dejar de aplicar prefijo</td>
+</tr>
+<tr>
+<td>Filter namespace</td>
+<td><code>_filterNamespace_</code></td>
+<td>No</td>
+<td>off</td>
+<td>Limita agentes de deployment y pod a la lista indicada</td>
+</tr>
+<tr>
+<td>Namespace</td>
+<td><code>_namespace_</code></td>
+<td>Al filtrar</td>
+<td><code>[]</code></td>
+<td>Array JSON, por ejemplo <code>["default","kube-system"]</code>; comparación exacta con distinción de mayúsculas</td>
+</tr>
+<tr>
+<td>Use proxy</td>
+<td><code>_useProxy_</code></td>
+<td>No</td>
+<td>off</td>
+<td>Usa <strong>Proxy url</strong> en lugar de la dirección directa; omite autenticación Bearer</td>
+</tr>
+<tr>
+<td>Proxy url</td>
+<td><code>_proxyUrl_</code></td>
+<td>Modo proxy</td>
+<td>Vacío</td>
+<td>URL base con esquema; visible con <strong>Use proxy</strong></td>
+</tr>
+<tr>
+<td>Tentacle IP</td>
+<td><code>_tentacleIP_</code></td>
+<td>Sí</td>
+<td><code>127.0.0.1</code></td>
+<td>Destino de transferencia</td>
+</tr>
+<tr>
+<td>Tentacle port</td>
+<td><code>_tentaclePort_</code></td>
+<td>Sí</td>
+<td><code>41121</code></td>
+<td>Puerto numérico de transferencia</td>
+</tr>
+</tbody>
+</table>
+<h4 id="kubernetes-detailed">Kubernetes detailed<a class="headerlink" href="#kubernetes-detailed" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Macro</th>
+<th>Requerido</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scan Deployments</td>
+<td><code>_scanDeployments_</code></td>
+<td>No</td>
+<td>on</td>
+<td>Genera agentes de deployment cuando hay condiciones</td>
+</tr>
+<tr>
+<td>Scan Nodes</td>
+<td><code>_scanNodes_</code></td>
+<td>No</td>
+<td>on</td>
+<td>Genera agentes de nodo a partir de métricas disponibles</td>
+</tr>
+<tr>
+<td>Scan Pods</td>
+<td><code>_scanPods_</code></td>
+<td>No</td>
+<td>on</td>
+<td>Genera agentes de pod con datos completos de métricas, nodo e IP</td>
+</tr>
+</tbody>
+</table>
+<h3 id="claves-del-archivo-de-configuracion">Claves del archivo de configuración<a class="headerlink" href="#claves-del-archivo-de-configuracion" title="Permanent link">¶</a></h3>
+<p>La tarea construye este archivo a partir de sus campos; en modo manual se indica con <code>--conf</code>. Es texto plano con líneas <code>key=value</code>.</p>
+<p>En modo directo se requieren <code>ip</code>, <code>port</code> y, para endpoints protegidos, <code>token</code>; en modo proxy, <code>proxy_url</code>; para enviar datos, <code>transfer_mode=tentacle</code> y <code>tentacle_ip</code>. Las demás claves son opcionales con los valores siguientes. Proteja el archivo porque contiene el token.</p>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Requerido</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ip</code></td>
+<td>Modo directo</td>
+<td>Vacío</td>
+<td>Host de la API sin esquema</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td>Modo directo</td>
+<td>Vacío</td>
+<td>Puerto de la API</td>
+</tr>
+<tr>
+<td><code>token</code></td>
+<td>Endpoints directos protegidos</td>
+<td>Vacío</td>
+<td>Token Bearer</td>
+</tr>
+<tr>
+<td><code>agents_group_name</code></td>
+<td>No</td>
+<td>Vacío en manual; grupo de la tarea</td>
+<td>Grupo de destino</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>No</td>
+<td><code>300</code></td>
+<td>Intervalo de agentes en segundos; el de la tarea en Discovery</td>
+</tr>
+<tr>
+<td><code>transfer_mode</code></td>
+<td>Para enviar</td>
+<td>Vacío en manual; <code>tentacle</code> en tarea</td>
+<td>Use <code>tentacle</code> para la transferencia documentada</td>
+</tr>
+<tr>
+<td><code>tentacle_ip</code></td>
+<td>Para Tentacle</td>
+<td>Vacío en manual; <code>127.0.0.1</code> en tarea</td>
+<td>Destino de transferencia</td>
+</tr>
+<tr>
+<td><code>tentacle_port</code></td>
+<td>No</td>
+<td><code>41121</code></td>
+<td>Puerto de transferencia</td>
+</tr>
+<tr>
+<td><code>use_prefix</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Muestra el campo de la tarea; no anula un <code>prefix</code> con contenido</td>
+</tr>
+<tr>
+<td><code>prefix</code></td>
+<td>No</td>
+<td>Vacío</td>
+<td>Prefijo de identidades de agentes</td>
+</tr>
+<tr>
+<td><code>use_namespace</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td><code>1</code> habilita el filtro de namespaces de cargas de trabajo</td>
+</tr>
+<tr>
+<td><code>filter_namespace</code></td>
+<td>Al filtrar</td>
+<td><code>[]</code></td>
+<td>Array JSON; coincidencia exacta de namespaces</td>
+</tr>
+<tr>
+<td><code>use_proxy</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td><code>1</code> usa <code>proxy_url</code> sin cabecera Bearer</td>
+</tr>
+<tr>
+<td><code>proxy_url</code></td>
+<td>Modo proxy</td>
+<td>Vacío</td>
+<td>URL base con esquema</td>
+</tr>
+<tr>
+<td><code>deployments</code></td>
+<td>No</td>
+<td><code>1</code></td>
+<td><code>1</code> genera agentes de deployment</td>
+</tr>
+<tr>
+<td><code>nodes</code></td>
+<td>No</td>
+<td><code>1</code></td>
+<td><code>1</code> genera agentes de nodo</td>
+</tr>
+<tr>
+<td><code>pods</code></td>
+<td>No</td>
+<td><code>1</code></td>
+<td><code>1</code> genera agentes de pod</td>
+</tr>
+<tr>
+<td><code>data_dir</code></td>
+<td>No</td>
+<td>Vacío</td>
+<td>Aceptada, pero no selecciona el directorio de salida</td>
+</tr>
+</tbody>
+</table>
+<h3 id="linea-de-comandos">Línea de comandos<a class="headerlink" href="#linea-de-comandos" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pandora_kubernetes --conf &lt;PATH_TO_CONFIG&gt;</code></td>
+<td>Ejecuta el plugin con un archivo de configuración</td>
+</tr>
+</tbody>
+</table>
+<h3 id="modulos-generados">Módulos generados<a class="headerlink" href="#modulos-generados" title="Permanent link">¶</a></h3>
+<h4 id="agente-global">Agente global<a class="headerlink" href="#agente-global" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Tipo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>API status</code></td>
+<td>generic_proc</td>
+<td><code>1</code> si <code>/healthz</code> devuelve <code>ok</code>; <code>0</code> en caso contrario</td>
+</tr>
+<tr>
+<td>Un módulo por endpoint de salud</td>
+<td>generic_proc</td>
+<td><code>1</code> si devuelve <code>ok</code>; <code>0</code> en caso contrario; se omite si falla la petición</td>
+</tr>
+<tr>
+<td><code>Services</code></td>
+<td>generic_data</td>
+<td>Número de servicios</td>
+</tr>
+<tr>
+<td><code>Namespaces</code></td>
+<td>generic_data</td>
+<td>Número de namespaces</td>
+</tr>
+<tr>
+<td><code>Components</code></td>
+<td>generic_data</td>
+<td>Número de estados de componentes</td>
+</tr>
+<tr>
+<td><code>&lt;component&gt;.&lt;condition&gt;</code></td>
+<td>generic_data</td>
+<td><code>1</code> si el estado es <code>TRUE</code>; <code>0</code> en caso contrario</td>
+</tr>
+<tr>
+<td><code>Deployments</code></td>
+<td>generic_data</td>
+<td>Número de deployments</td>
+</tr>
+</tbody>
+</table>
+<p>Los nombres y rutas de salud están en <a href="#peticiones-a-la-api">Peticiones a la API</a>. El global se transfiere solo si termina su fase de recopilación.</p>
+<h4 id="agentes-de-nodo">Agentes de nodo<a class="headerlink" href="#agentes-de-nodo" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Pods</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Pods contados durante la recopilación en el nodo</td>
+</tr>
+<tr>
+<td><code>Pods (%)</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Pods recopilados frente a capacidad asignable del nodo; su ausencia puede detener la generación de nodos</td>
+</tr>
+<tr>
+<td><code>CPU (cores)</code></td>
+<td>generic_data</td>
+<td>cores</td>
+<td>CPU utilizada; requiere API de métricas</td>
+</tr>
+<tr>
+<td><code>CPU (%)</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>CPU utilizada frente a asignable; requiere API de métricas</td>
+</tr>
+<tr>
+<td><code>Memory (bytes)</code></td>
+<td>generic_data</td>
+<td>bytes</td>
+<td>Memoria utilizada; requiere API de métricas</td>
+</tr>
+<tr>
+<td><code>Memory (%)</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Memoria utilizada frente a asignable; requiere API de métricas</td>
+</tr>
+<tr>
+<td><code>NetworkUnavailable</code>, <code>MemoryPressure</code>, <code>DiskPressure</code>, <code>PIDPressure</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td><code>1</code> si la condición es <code>False</code>; <code>0</code> en caso contrario</td>
+</tr>
+<tr>
+<td><code>Ready</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td><code>1</code> si la condición es <code>True</code>; <code>0</code> en caso contrario</td>
+</tr>
+</tbody>
+</table>
+<p>La generación de nodos requiere métricas y datos asignables completos, incluida la capacidad de pods. La ausencia de campos puede detener la fase de nodos en lugar de generar agentes con menos módulos. <code>Pods</code> cuenta los pods procesados de los datos recibidos, no un recuento independiente validado de todos los pods del nodo.</p>
+<h4 id="agentes-de-deployment">Agentes de deployment<a class="headerlink" href="#agentes-de-deployment" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ready</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td><code>1</code> si las réplicas listas igualan las deseadas; <code>0</code> en caso contrario</td>
+</tr>
+<tr>
+<td><code>Age</code></td>
+<td>generic_data</td>
+<td><code>_timeticks_</code></td>
+<td>Fecha de creación en centésimas de segundo desde 1970, no edad transcurrida</td>
+</tr>
+<tr>
+<td><code>Replicas</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Réplicas deseadas</td>
+</tr>
+<tr>
+<td><code>Updated replicas</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Réplicas actualizadas a la plantilla deseada</td>
+</tr>
+<tr>
+<td><code>Ready replicas</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Réplicas listas</td>
+</tr>
+<tr>
+<td><code>Available replicas</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Réplicas disponibles</td>
+</tr>
+<tr>
+<td><code>Unavailable replicas</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Réplicas restantes para alcanzar disponibilidad completa</td>
+</tr>
+<tr>
+<td><code>Available</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td><code>1</code> si el tipo de la primera condición es <code>Available</code> o <code>Progressing</code>; <code>0</code> en otro caso. Ignora el estado de la condición. Umbral de aviso <code>2</code> y crítico <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="agentes-de-pod">Agentes de pod<a class="headerlink" href="#agentes-de-pod" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Pod status</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td><code>0</code> Failed, <code>1</code> Running, <code>2</code> Succeeded, <code>3</code> Pending, <code>4</code> Unknown u otro</td>
+</tr>
+<tr>
+<td><code>PodScheduled</code>, <code>Ready</code>, <code>Initialized</code>, <code>ContainersReady</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td><code>1</code> para condición <code>True</code>; <code>0</code> en otro caso</td>
+</tr>
+<tr>
+<td><code>Unschedulable</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td><code>1</code> para condición <code>False</code>; <code>0</code> en otro caso</td>
+</tr>
+<tr>
+<td><code>Containers</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Número de contenedores</td>
+</tr>
+<tr>
+<td><code>Container &lt;name&gt; CPU (cores)</code></td>
+<td>generic_data</td>
+<td>cores</td>
+<td>CPU del contenedor; requiere API de métricas</td>
+</tr>
+<tr>
+<td><code>Container &lt;name&gt; CPU (%)</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>CPU frente a la asignable del nodo; requiere API de métricas</td>
+</tr>
+<tr>
+<td><code>Container &lt;name&gt; memory (bytes)</code></td>
+<td>generic_data</td>
+<td>bytes</td>
+<td>Memoria del contenedor; requiere API de métricas</td>
+</tr>
+<tr>
+<td><code>Container &lt;name&gt; memory (%)</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Memoria frente a la asignable del nodo; requiere API de métricas</td>
+</tr>
+</tbody>
+</table>
+<p>Las métricas incompletas de contenedores pueden interrumpir la generación del agente. Los porcentajes usan los recursos asignables del nodo, no los requests ni límites del contenedor.</p>
+<h3 id="peticiones-a-la-api">Peticiones a la API<a class="headerlink" href="#peticiones-a-la-api" title="Permanent link">¶</a></h3>
+<p>El token necesita acceso a las siguientes peticiones. Los interruptores controlan la generación de agentes, no la recopilación. Esta lista describe las consultas, no un rol de mínimo privilegio validado.</p>
+<table>
+<thead>
+<tr>
+<th>Recurso</th>
+<th>Ruta GET</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nodos y detalles de nodo</td>
+<td><code>/api/v1/nodes</code>, <code>/api/v1/nodes/&lt;NODE_NAME&gt;</code></td>
+</tr>
+<tr>
+<td>Pods</td>
+<td><code>/api/v1/pods</code></td>
+</tr>
+<tr>
+<td>Métricas</td>
+<td><code>/apis/metrics.k8s.io/v1beta1/nodes</code>, <code>/apis/metrics.k8s.io/v1beta1/pods</code></td>
+</tr>
+<tr>
+<td>Deployments</td>
+<td><code>/apis/apps/v1/deployments</code></td>
+</tr>
+<tr>
+<td>Servicios</td>
+<td><code>/api/v1/services</code></td>
+</tr>
+<tr>
+<td>Namespaces</td>
+<td><code>/api/v1/namespaces</code></td>
+</tr>
+<tr>
+<td>Estados de componentes</td>
+<td><code>/api/v1/componentstatuses</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Módulo de salud</th>
+<th>Ruta GET</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>healthz</code></td>
+<td><code>/healthz</code></td>
+</tr>
+<tr>
+<td><code>healthzPing</code></td>
+<td><code>/healthz/ping</code></td>
+</tr>
+<tr>
+<td><code>healthzLog</code></td>
+<td><code>/healthz/log</code></td>
+</tr>
+<tr>
+<td><code>healthzEtcd</code></td>
+<td><code>/healthz/etcd</code></td>
+</tr>
+<tr>
+<td><code>healthzPoststarthook crd informer synced</code></td>
+<td><code>/healthz/poststarthook/crd-informer-synced</code></td>
+</tr>
+<tr>
+<td><code>healthzPoststarthook generic apiserver start informers</code></td>
+<td><code>/healthz/poststarthook/generic-apiserver-start-informers</code></td>
+</tr>
+<tr>
+<td><code>healthzPoststarthook start apiextensions controllers</code></td>
+<td><code>/healthz/poststarthook/start-apiextensions-controllers</code></td>
+</tr>
+<tr>
+<td><code>healthzPoststarthook start apiextensions informers</code></td>
+<td><code>/healthz/poststarthook/start-apiextensions-informers</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="identidad-del-plugin">Identidad del plugin<a class="headerlink" href="#identidad-del-plugin" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>App short name</td>
+<td><code>pandorafms.kubernetes</code></td>
+</tr>
+<tr>
+<td>Versión del plugin</td>
+<td><code>1.2</code></td>
+</tr>
+<tr>
+<td>Tipo</td>
+<td>Aplicación de Discovery (<code>.disco</code>)</td>
+</tr>
+<tr>
+<td>Sección</td>
+<td>Discovery → Applications</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

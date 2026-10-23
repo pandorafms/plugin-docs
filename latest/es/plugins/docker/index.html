@@ -1,0 +1,2370 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/plugins/docker/">
+      
+      
+        <link rel="prev" href="../autodiscover/">
+      
+      
+        <link rel="next" href="../dynamic-snmp/">
+      
+      
+        
+          <link rel="alternate" href="../../../plugins/docker/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Docker - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#docker" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Docker
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../plugins/docker/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de KVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de VMware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-monitoriza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué monitoriza
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-y-compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos y compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#escribir-la-configuracion-del-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escribir la configuración del plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registrar-la-ejecucion-en-el-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registrar la ejecución en el EndPoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpretar-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpretar los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interpretar los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#significado-de-los-valores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Significado de los valores
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operacion-y-solucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operación y solución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-globales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos globales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-de-contenedor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos de contenedor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Dynamic SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-monitoriza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué monitoriza
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-y-compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos y compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#escribir-la-configuracion-del-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escribir la configuración del plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registrar-la-ejecucion-en-el-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registrar la ejecución en el EndPoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpretar-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpretar los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interpretar los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#significado-de-los-valores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Significado de los valores
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operacion-y-solucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operación y solución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-globales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos globales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-de-contenedor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos de contenedor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="docker">Docker<a class="headerlink" href="#docker" title="Permanent link">¶</a></h1>
+<p><em>Última actualización del artículo: 2026-10-23.</em></p>
+<!-- DRAFT: Solo verificación estática del artefacto; faltan validar instalación del paquete distribuido, recopilación real de Docker e ingesta del EndPoint. -->
+
+<h2 id="que-monitoriza">Qué monitoriza<a class="headerlink" href="#que-monitoriza" title="Permanent link">¶</a></h2>
+<p>El plugin de Docker recopila estadísticas de contenedores en ejecución y escribe XML de módulos de Pandora FMS en la salida estándar. Ejecútelo como plugin de EndPoint mediante <code>module_plugin</code> para que este incluya los módulos en los datos de su agente. No es una aplicación de Discovery y no crea ni transfiere agentes separados.</p>
+<p>Seleccione el modo <strong>global</strong> para estadísticas agregadas del daemon o <strong>container</strong> para módulos individuales por nombre de contenedor. Ambos informan de CPU, memoria, red y E/S de bloques; solo el modo global incluye estado del daemon y número de contenedores en ejecución.</p>
+<h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
+<h3 id="requisitos-y-compatibilidad">Requisitos y compatibilidad<a class="headerlink" href="#requisitos-y-compatibilidad" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Ámbito</th>
+<th>Estado</th>
+<th>Requisito o limitación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Acceso al daemon de Docker</td>
+<td>Requerido</td>
+<td>La cuenta ejecutora debe poder conectar, comprobar el daemon, listar contenedores en ejecución y leer sus estadísticas</td>
+</tr>
+<tr>
+<td>EndPoint de Pandora FMS</td>
+<td>Requerido para la ingesta</td>
+<td>El EndPoint ejecuta <code>module_plugin</code> e incluye el XML devuelto en los datos de su propio agente</td>
+</tr>
+<tr>
+<td>Grupo de módulos</td>
+<td>Preparar antes de usar</td>
+<td>El valor predeterminado es <code>Docker</code>; cree o seleccione el grupo previsto en Pandora FMS</td>
+</tr>
+<tr>
+<td>Versiones concretas de Docker, EndPoint y sistema operativo</td>
+<td>Sin validar</td>
+<td>La referencia de desarrollo con Docker 18.03.1-ce de la guía antigua no establece compatibilidad para este artefacto</td>
+</tr>
+</tbody>
+</table>
+<p>Coloque el ejecutable distribuido <code>docker_stats</code> y su configuración en el equipo donde lo ejecutará el EndPoint. Elija rutas accesibles para la cuenta del EndPoint y compruebe que puede ejecutar el plugin y leer el archivo. Aún deben validarse la instalación y los requisitos de ejecución del paquete suministrado; esta página no prescribe un procedimiento de compilación ni instalación de dependencias.</p>
+<p>La conexión utiliza el entorno de conexión a Docker del proceso. La configuración del plugin no tiene campos de host del daemon, token, contraseña ni certificado. Compruebe el acceso con la <strong>cuenta y el entorno de ejecución del EndPoint</strong>, no solo desde una sesión interactiva de administrador. No se establece un procedimiento con <code>docker_machine</code> para este artefacto; <code>docker</code> no selecciona la conexión ni invoca un ejecutable Docker.</p>
+<p>No conceda acceso administrativo general solo para ejecutar el ejemplo. El administrador debe autorizar el acceso necesario al daemon según la política de seguridad del despliegue. Proteja las credenciales de conexión proporcionadas mediante el entorno; no incluya secretos en comandos, registros ni capturas.</p>
+<h2 id="configuracion">Configuración<a class="headerlink" href="#configuracion" title="Permanent link">¶</a></h2>
+<h3 id="escribir-la-configuracion-del-plugin">Escribir la configuración del plugin<a class="headerlink" href="#escribir-la-configuracion-del-plugin" title="Permanent link">¶</a></h3>
+<p>Use texto plano con líneas <code>key=value</code>, sin cabecera de sección. Este ejemplo conserva los valores predeterminados y no se ha ejecutado:</p>
+<div class="highlight"><pre><span></span><code><span class="na">docker</span><span class="o">=</span><span class="s">Docker</span>
+<span class="na">module_interval</span><span class="o">=</span><span class="s">1</span>
+<span class="na">module_group</span><span class="o">=</span><span class="s">Docker</span>
+<span class="na">mode</span><span class="o">=</span><span class="s">global</span>
+</code></pre></div>
+<ul>
+<li>Configure <code>mode=container</code> para obtener módulos por contenedor en ejecución en lugar de los globales.</li>
+<li>En modo container, <code>docker</code> es el <strong>prefijo del nombre de módulos</strong>. Por ejemplo, <code>docker=Docker</code> produce nombres como <code>Docker - &lt;CONTAINER_NAME&gt; - CPU Usage</code>. No es una ruta de ejecutable ni un precomando. Los nombres globales ignoran este ajuste.</li>
+<li><code>module_group</code> y <code>module_interval</code> se escriben en cada módulo de salida. <code>module_interval</code> es el multiplicador del intervalo de módulo respecto al intervalo del agente, no una pausa ni un planificador interno. Use el valor adecuado a la planificación del EndPoint; el plugin lo transmite sin validación numérica.</li>
+</ul>
+<h3 id="registrar-la-ejecucion-en-el-endpoint">Registrar la ejecución en el EndPoint<a class="headerlink" href="#registrar-la-ejecucion-en-el-endpoint" title="Permanent link">¶</a></h3>
+<p>Añada la siguiente línea a la configuración del EndPoint y sustituya ambos marcadores por las rutas instaladas:</p>
+<div class="highlight"><pre><span></span><code>module_plugin &lt;PATH_TO_PLUGIN&gt; --conf &lt;PATH_TO_CONFIG&gt;
+</code></pre></div>
+<p>Puede usar las rutas convencionales documentadas si instaló los archivos en ellas:</p>
+<div class="highlight"><pre><span></span><code>module_plugin /usr/share/pandora_agent/plugins/docker_stats --conf /usr/share/pandora_agent/plugins/docker_stats.conf
+</code></pre></div>
+<p>Aplique la configuración mediante el procedimiento habitual del EndPoint. Es un registro de plugin de agente, no una configuración de plugin de servidor ni una tarea de Discovery. Los ejemplos anteriores no se han ejecutado contra un EndPoint.</p>
+<h2 id="verificacion">Verificación<a class="headerlink" href="#verificacion" title="Permanent link">¶</a></h2>
+<ol>
+<li>Ejecute manualmente el ejecutable instalado con la misma cuenta y entorno de conexión que el EndPoint:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>&lt;PATH_TO_PLUGIN&gt;<span class="w"> </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;
+</code></pre></div>
+<ol>
+<li>Revise la salida estándar. Una ejecución global sin errores produce 11 fragmentos <code>&lt;module&gt;</code>; el modo container produce seis por contenedor cuyas estadísticas se recopilen. La salida no es un documento <code>&lt;agent_data&gt;</code> completo ni incluye resumen de Discovery o resultado de transferencia de agentes.</li>
+<li>Compruebe nombres, tipos, grupo e intervalo con la <a href="#referencia">referencia</a> y contraste valores representativos con las estadísticas del daemon. Un cero también puede deberse a datos ausentes o recopilación parcial; revise los errores.</li>
+<li>Tras un ciclo del EndPoint, confirme que los módulos esperados aparecen en <strong>el agente de ese EndPoint</strong>. La salida XML manual no verifica por sí sola la ingesta ni el transporte a Pandora FMS.</li>
+</ol>
+<p>No se ha ejecutado Docker en un entorno real, instalado el paquete ni probado la ingesta del EndPoint para esta documentación. Estos son pasos de verificación para el operador, no resultados correctos observados.</p>
+<h2 id="interpretar-los-resultados">Interpretar los resultados<a class="headerlink" href="#interpretar-los-resultados" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Modo</th>
+<th>Salida</th>
+<th>Interpretación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>global</code></td>
+<td>11 módulos de nombre fijo</td>
+<td>Estado, recuento, CPU media de contenedores, memoria total de contenedores frente al host, contadores de E/S y variantes incrementales</td>
+</tr>
+<tr>
+<td><code>container</code></td>
+<td>Seis módulos por nombre de contenedor recopilado</td>
+<td>CPU, memoria frente al límite del contenedor, entrada/salida de red y lectura/escritura de bloques; sin módulos globales de estado/recuento</td>
+</tr>
+</tbody>
+</table>
+<p>Solo se consideran contenedores listados como <code>running</code>. Los detenidos no reciben nuevos módulos. Sin contenedores en ejecución, el modo global produce estado y valores cero de recuento/uso/E/S; el modo container no produce módulos.</p>
+<h3 id="significado-de-los-valores">Significado de los valores<a class="headerlink" href="#significado-de-los-valores" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>CPU:</strong> se calcula con diferencias de contadores de CPU/sistema y el número de CPU indicado. La CPU global suma los porcentajes recopilados y divide por el número de contenedores en ejecución listados, incluidos aquellos cuya recopilación falló. No es la suma de porcentajes de contenedores ni un porcentaje de CPU de todo el host.</li>
+<li><strong>Memoria:</strong> el modo global divide la suma del uso de memoria indicado por los contenedores entre <code>MemTotal</code> del host obtenido del daemon. El modo container divide el uso indicado entre el límite de memoria del contenedor. Ambos multiplican por 100. Un denominador ausente/cero produce <code>0</code>; por ello, un fallo al leer información del host puede dar memoria global a <code>0</code> aunque haya contenedores en ejecución.</li>
+<li><strong>E/S:</strong> los bytes de red se suman entre interfaces devueltas del contenedor. Los bytes de bloques se suman de las entradas de lectura/escritura recibidas. Las estadísticas ausentes aportan <code>0</code>. El plugin emite contadores como <code>generic_data_inc</code>; no calcula por sí mismo una tasa por segundo.</li>
+<li><strong>CPU, memoria y recuento incrementales:</strong> el modo global también emite esos valores como <code>generic_data_inc</code>. Repiten las muestras correspondientes; no interprete sus tasas procesadas como porcentajes ordinarios de CPU/memoria ni como número de contenedores en ejecución.</li>
+</ul>
+<p>En modo container, los nombres dependen de <code>docker</code> y del nombre del contenedor, no de su ID corto. Cambiar cualquiera cambia los nombres de módulos; el ID corto aparece en descripciones. Use nombres sencillos de prefijo/contenedor sin caracteres especiales de XML: los valores se insertan en el XML sin escape, por lo que esos caracteres pueden invalidarlo.</p>
+<h2 id="operacion-y-solucion-de-problemas">Operación y solución de problemas<a class="headerlink" href="#operacion-y-solucion-de-problemas" title="Permanent link">¶</a></h2>
+<p>La ejecución manual realiza una única recopilación. El EndPoint proporciona la ejecución programada. Un planificador puede invocar el ejecutable, pero programarlo por sí solo no incorpora los fragmentos impresos a Pandora FMS; este artefacto no implementa transferencia XML autónoma.</p>
+<p>No hay opción debug/verbose, precomando, transferencia de agentes por contenedor ni modo de plugin de servidor. No reutilice <code>pre_command</code>, <code>metrics_per_container</code> ni <code>as_server_plugin</code> de otro artefacto Docker.</p>
+<table>
+<thead>
+<tr>
+<th>Señal</th>
+<th>Comprobación o limitación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error file: ... does not exist</code></td>
+<td>Indique una ruta de configuración existente, no vacía y legible para la cuenta ejecutora</td>
+</tr>
+<tr>
+<td><code>Error while reading configuration file: ...</code></td>
+<td>Revise acceso y sintaxis <code>key=value</code>; no añada cabecera de sección</td>
+</tr>
+<tr>
+<td><code>Could not connect to the Docker daemon...</code></td>
+<td>Revise disponibilidad y acceso al daemon con la cuenta/entorno del EndPoint. Las excepciones de conexión terminan con estado <code>1</code>, sin emitir un módulo <code>Docker state=0</code></td>
+</tr>
+<tr>
+<td><code>Warning: The information could not be obtained from the Docker system: ...</code></td>
+<td>No se pudo leer información del host; la memoria global usa <code>0</code> si no se obtiene la memoria del host</td>
+</tr>
+<tr>
+<td><code>Statistics could not be obtained for the container ...</code></td>
+<td>La recopilación global continúa; los totales pueden ser parciales mientras recuento y divisor de CPU incluyen el contenedor listado</td>
+</tr>
+<tr>
+<td><code>Detailed statistics for the container could not be obtained. ...</code></td>
+<td>Continúa con otros contenedores; el afectado puede no aparecer</td>
+</tr>
+<tr>
+<td><code>Invalid operating mode: ...</code></td>
+<td>Use <code>global</code> o <code>container</code>; no distingue mayúsculas</td>
+</tr>
+<tr>
+<td><code>Fatal error in plugin execution: ...</code></td>
+<td>Un error de recopilación/salida impidió terminar normalmente; revise el detalle</td>
+</tr>
+<tr>
+<td>Salida vacía en modo container</td>
+<td>Puede no haber contenedores en ejecución o haber fallado las estadísticas de todos</td>
+</tr>
+<tr>
+<td>Hay salida, pero no se incorporan módulos</td>
+<td>Revise rutas de <code>module_plugin</code>, cuenta ejecutora, configuración, entorno de conexión y recopilación/transporte del EndPoint. Los errores pueden mezclarse en la salida estándar e invalidar el XML</td>
+</tr>
+</tbody>
+</table>
+<p>Los fallos de configuración, conexión, modo no válido y ejecución fatal terminan con estado <code>1</code>. Los errores de argumentos los gestiona la ayuda/analizador de la CLI. Los fallos por contenedor y avisos de información del host pueden dejar una salida normal pero parcial: el estado de salida no demuestra recopilación completa. Revise la salida antes de compartirla, ya que errores/descripciones pueden incluir identificadores del daemon o de contenedores.</p>
+<h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
+<h3 id="linea-de-comandos">Línea de comandos<a class="headerlink" href="#linea-de-comandos" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Requerido</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--conf &lt;PATH_TO_CONFIG&gt;</code></td>
+<td>Sí</td>
+<td>Ninguno</td>
+<td>Ruta del archivo de configuración</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>No</td>
+<td>No aplicable</td>
+<td>Muestra ayuda de argumentos y termina</td>
+</tr>
+</tbody>
+</table>
+<h3 id="archivo-de-configuracion">Archivo de configuración<a class="headerlink" href="#archivo-de-configuracion" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Requerido</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>docker</code></td>
+<td>No</td>
+<td><code>Docker</code></td>
+<td>Prefijo de nombres en modo container; ignorado para nombres globales; no es ruta de ejecutable</td>
+</tr>
+<tr>
+<td><code>module_interval</code></td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Se escribe como <code>&lt;module_interval&gt;</code> en cada módulo; sin validación numérica en el plugin</td>
+</tr>
+<tr>
+<td><code>module_group</code></td>
+<td>No</td>
+<td><code>Docker</code></td>
+<td>Se escribe como <code>&lt;module_group&gt;</code> en cada módulo; prepare el grupo previsto en Pandora FMS</td>
+</tr>
+<tr>
+<td><code>mode</code></td>
+<td>No</td>
+<td><code>global</code></td>
+<td><code>global</code> o <code>container</code>, sin distinción de mayúsculas; otros valores causan error</td>
+</tr>
+</tbody>
+</table>
+<p>Son las cuatro claves de configuración consumidas por este artefacto. Una línea comentada <code>module_tags</code> de un ejemplo antiguo no define una entrada admitida aquí. El plugin no expone una referencia propia de variables de entorno de conexión; hereda la conexión del entorno de ejecución.</p>
+<h3 id="modulos-globales">Módulos globales<a class="headerlink" href="#modulos-globales" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Docker state</code></td>
+<td><code>generic_proc</code></td>
+<td>—</td>
+<td>Resultado del ping al daemon: <code>1</code> para verdadero, <code>0</code> para falso; las excepciones de conexión abortan antes de generar salida</td>
+</tr>
+<tr>
+<td><code>Docker containers running</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Número de contenedores en ejecución listados</td>
+</tr>
+<tr>
+<td><code>Docker CPU usage</code></td>
+<td><code>generic_data</code></td>
+<td><code>%</code></td>
+<td>CPU media de contenedores según lo explicado, con dos decimales</td>
+</tr>
+<tr>
+<td><code>Docker memory usage</code></td>
+<td><code>generic_data</code></td>
+<td><code>%</code></td>
+<td>Memoria total indicada por contenedores frente a memoria del host, con dos decimales</td>
+</tr>
+<tr>
+<td><code>Docker network input</code></td>
+<td><code>generic_data_inc</code></td>
+<td><code>B</code></td>
+<td>Suma de bytes recibidos</td>
+</tr>
+<tr>
+<td><code>Docker network output</code></td>
+<td><code>generic_data_inc</code></td>
+<td><code>B</code></td>
+<td>Suma de bytes transmitidos</td>
+</tr>
+<tr>
+<td><code>Docker blocks in</code></td>
+<td><code>generic_data_inc</code></td>
+<td><code>B</code></td>
+<td>Suma de bytes leídos de bloques, no escrituras ni número de bloques</td>
+</tr>
+<tr>
+<td><code>Docker blocks out</code></td>
+<td><code>generic_data_inc</code></td>
+<td><code>B</code></td>
+<td>Suma de bytes escritos en bloques, no lecturas ni número de bloques</td>
+</tr>
+<tr>
+<td><code>Docker containers running incremental</code></td>
+<td><code>generic_data_inc</code></td>
+<td>—</td>
+<td>Mismo recuento que el módulo de muestra</td>
+</tr>
+<tr>
+<td><code>Docker CPU usage incremental</code></td>
+<td><code>generic_data_inc</code></td>
+<td><code>%</code></td>
+<td>Mismo valor medio de CPU que el módulo de muestra</td>
+</tr>
+<tr>
+<td><code>Docker memory usage incremental</code></td>
+<td><code>generic_data_inc</code></td>
+<td><code>%</code></td>
+<td>Mismo porcentaje de memoria que el módulo de muestra</td>
+</tr>
+</tbody>
+</table>
+<h3 id="modulos-de-contenedor">Módulos de contenedor<a class="headerlink" href="#modulos-de-contenedor" title="Permanent link">¶</a></h3>
+<p>Cada nombre completo es <code>&lt;PREFIX&gt; - &lt;CONTAINER_NAME&gt; - &lt;SUFFIX&gt;</code>, donde <code>&lt;PREFIX&gt;</code> es <code>docker</code>. Se emiten los seis por contenedor recopilado correctamente; los porcentajes de CPU y memoria tienen dos decimales.</p>
+<table>
+<thead>
+<tr>
+<th>Sufijo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CPU Usage</code></td>
+<td><code>generic_data</code></td>
+<td><code>%</code></td>
+<td>Porcentaje de CPU del contenedor</td>
+</tr>
+<tr>
+<td><code>Memory Usage %</code></td>
+<td><code>generic_data</code></td>
+<td><code>%</code></td>
+<td>Uso indicado frente al límite de memoria del contenedor; la descripción incluye uso/límite</td>
+</tr>
+<tr>
+<td><code>Network Input</code></td>
+<td><code>generic_data_inc</code></td>
+<td><code>B</code></td>
+<td>Bytes recibidos sumados entre interfaces</td>
+</tr>
+<tr>
+<td><code>Network Output</code></td>
+<td><code>generic_data_inc</code></td>
+<td><code>B</code></td>
+<td>Bytes transmitidos sumados entre interfaces</td>
+</tr>
+<tr>
+<td><code>Block Read</code></td>
+<td><code>generic_data_inc</code></td>
+<td><code>B</code></td>
+<td>Bytes leídos de bloques</td>
+</tr>
+<tr>
+<td><code>Block Write</code></td>
+<td><code>generic_data_inc</code></td>
+<td><code>B</code></td>
+<td>Bytes escritos en bloques</td>
+</tr>
+</tbody>
+</table>
+<p>Cada módulo contiene nombre, tipo, dato, descripción, grupo, intervalo y unidad. En módulos globales sin unidad definida, este artefacto emite el texto literal <code>None</code> en ese campo; <code>—</code> en la tabla indica que no hay unidad significativa. Verifique cómo lo trata el EndPoint receptor en lugar de considerar esta página una prueba de ingesta.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
