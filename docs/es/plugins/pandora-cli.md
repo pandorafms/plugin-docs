@@ -1,6 +1,6 @@
 # Pandora CLI
 
-*Última actualización del artículo: 2026-10-08.*
+*Última actualización del artículo: 2026-10-23.*
 
 ## Introducción
 
@@ -28,7 +28,7 @@ consola.
 
 ## Matriz de compatibilidad
 
-| **Consolas donde se ha probado** | Pandora FMS v8.0NG.800.4 (LTS), v8.0NG.804 (RRR) |
+| **Consolas donde se ha probado** | Pandora FMS v8.0NG.800.4 (LTS), v8.0NG.804 (RRR), v8.0NG.805 |
 | --- | --- |
 | **Consolas donde funciona** | Consolas que publiquen la API v2. La aceptación de un parámetro de filtrado la decide la consola por entidad, en el momento de la petición; las consolas antiguas pueden rechazar más. Consulte [Funciones de filtrado por entidad](#funciones-de-filtrado-por-entidad). |
 | **Sistemas donde se ha probado** | Linux x86-64 |
@@ -150,13 +150,19 @@ URL:      https://consola.ejemplo.com/pandora_console/api/v2/
 Insecure: false
 Config:   /home/usuario/.pandora-cli/config.json
 Token:    valid
+Version:  v8.0NG.805 (build PC260915)
+MR:       805
+Package:  805
+LTS:      Feature Release
 
-Console specification: 282 operations, 46 entities (read 2026-09-22T09:12:37Z)
+Console specification: 519 operations, 69 entities (read 2026-10-23T09:12:37Z)
 ```
 
 `Token: valid` indica que la consola lo aceptó. El comando termina con un código distinto de cero si
-no fue así. Con `-o json` la salida son exactamente cinco valores — `context`, `url`, `insecure`,
-`config` y `token` — sin la línea informativa que se muestra arriba en formato tabla.
+no fue así. Las líneas `Version`, `MR`, `Package` y `LTS` informan de lo que la consola dice de sí
+misma, y solo aparecen cuando lo hace. Con `-o json` la salida incluye `context`, `url`, `insecure`,
+`config` y `token`, más un objeto `console` con los mismos datos de versión cuando la consola los
+informa, sin la línea informativa que se muestra arriba en formato tabla.
 
 Después, consulte datos reales:
 
@@ -192,6 +198,26 @@ cuántas existen; use `--page` y `--size` para recorrer un resultado extenso. La
 **basada en 1**: `--page 1` es la primera página. `--size` solo también devuelve la primera página,
 porque la consola ignora un tamaño de página sin número de página en algunos extremos; la
 herramienta envía ambos.
+
+`--limit <n>` y `--offset <n>` son una alternativa a `--page` y `--size`: devuelven como máximo `n`
+filas tras omitir `offset` filas (`--limit 0` no devuelve ninguna). Los dos modos son excluyentes, y
+la herramienta rechaza la mezcla antes de enviar nada. Un listado cuyo extremo no los admite, como
+`event list`, no los ofrece. Que un extremo concreto los acepte lo decide la consola; si responde
+`400`, use `--page` y `--size`.
+
+```bash
+pandora-cli tag list --limit 2 --offset 1
+```
+
+Los listados dentro de una entidad superior (`policy module list 7`, `user profile list admin`, etc.)
+aceptan las mismas opciones — entre ellas `--page`, `--size`, `--limit` y `--offset` — siempre que el
+comando las admita; `<comando> --help` indica cuáles. Su `--page` también es basada en 1. No los
+pagine con `--set page=...`: `--set` envía el valor bruto de la API, que es basado en 0, y la
+herramienta se niega a combinarlo con `--page`:
+
+```
+Error: --page conflicts with "page" already present in the payload: give it once
+```
 
 ### Funciones de filtrado por entidad
 
@@ -338,6 +364,11 @@ Cuando el esquema declara un campo como **array** — por ejemplo `severity` en 
 elemento, y repetir la opción acumula elementos en ese array. Igual que con `--filter`, un `null`
 explícito se envía como nulo plano y limpia el array acumulado.
 
+`--set` no interpreta literales de objeto ni de array: `--set rules='{"agentGroup":2}'` se envía como
+cadena de texto, y `--set files='["/a","/b"]'` como un array de un solo elemento con ese texto. Repita
+la opción para cada elemento de un array (`--set files=/a --set files=/b`) y use `--from-file` para
+los objetos y para campos como `rules`.
+
 `--from-file` acepta un **array** JSON como cuerpo completo, no solo un objeto. Los extremos cuyo
 cuerpo es una lista lo requieren, como `pandora-cli monitoring create` más abajo. Un BOM UTF-8 al
 principio del fichero es tolerado, de modo que los ficheros escritos por editores de Windows
@@ -401,12 +432,14 @@ pandora-cli report-design-page list 12
 pandora-cli report-design-page-widget list 12 3
 ```
 
-Los comandos `list` anidados que leen con un cuerpo de filtro también aceptan opciones de carga: sus
-campos `--set` se serializan del mismo modo, de manera que un campo que el extremo declara como
-array — como `requestedFields` — se acumula con flags repetidos:
+Los comandos `list` anidados aceptan las mismas opciones de listado que las entidades — `--page`,
+`--size`, `--limit`, `--offset`, `--search`, `--where`, `--fields` e `--in` —, cada una solo cuando el
+comando la admite (`<comando> --help` indica cuáles). `--set` y `--from-file` siguen transportando los
+campos propios del comando. Indicar la misma propiedad con una opción y con `--set` o `--from-file`
+falla localmente:
 
 ```bash
-pandora-cli user profile list admin --set requestedFields=idUserProfile
+pandora-cli user profile list admin --fields idUserProfile --size 2
 ```
 
 `user profile get` y `user profile remove` reciben ese mismo `idUserProfile` — el id propio de la
@@ -424,7 +457,8 @@ el mismo perfil está asignado a un usuario en varios grupos, cada asignación t
 
 ### Políticas, colecciones y servicios
 
-`policy`, `collection` y `service` agrupan parte de sus comandos en **grupos hijos**. La sintaxis es
+`policy`, `collection` y `service` agrupan parte de sus comandos en **grupos hijos**, y también lo
+hacen `agent`, `module`, `log`, `pandora-ai-audit` y `rmm`. La sintaxis es
 `<entidad> <grupo> <verbo> <ids...>`, y `pandora-cli <entidad> --help` enumera los grupos de una
 entidad:
 
@@ -432,17 +466,21 @@ entidad:
 pandora-cli policy module list 7
 pandora-cli collection file upload 3 --file ./a.conf
 pandora-cli service element add 2 --set description='Frontend CPU' --set idAgenteModulo=42
+pandora-cli agent policy list 7
 ```
 
 Los grupos son `policy agent`, `policy alert`, `policy alert-action`, `policy collection`,
-`policy group`, `policy log-module`, `policy module`, `policy plugin` y `policy queue`;
+`policy group`, `policy log-module`, `policy module`, `policy plugin`, `policy queue`,
+`policy external-alert`, `policy external-alert-action`, `policy fim` y `policy linking`;
 `collection file`, `collection folder` y `collection agent`; y `service element`. Las colecciones
 también se asignan desde el lado del agente con `agent collection list`, `agent collection add` y
-`agent collection remove`.
+`agent collection remove`. `agent public-ip list` lista los agentes que tienen una dirección IPv4
+pública, y `agent policy list <idAgent>` lista las políticas vinculadas a un agente. `module policy link`
+y `module policy unlink` cambian el vínculo entre un módulo y su política de origen (véase **Vínculos con la política** más abajo).
 
 **Quitar marca, no borra.** En una política, `remove`, `delete` y `bulk-delete` sobre un elemento
-hijo (agente, alerta, colección, grupo, módulo de log, módulo o plugin) solo lo marcan como
-`pendingDelete`. La eliminación se hace efectiva cuando se aplica la cola de la política, y
+hijo (agente, alerta, colección, alerta externa, grupo, módulo de log, módulo o plugin) solo lo
+marcan como `pendingDelete`. La eliminación se hace efectiva cuando se aplica la cola de la política, y
 `restore` deshace la marca antes de que eso ocurra. `policy alert-action remove` y
 `policy queue delete` no se marcan: actúan de inmediato.
 
@@ -451,6 +489,15 @@ trabajo y devuelven el control sin esperar. Una política no puede eliminarse mi
 pendientes en la cola: consulte `policy queue list` (o `policy queue summary`) y use
 `policy queue clear`, o espere, antes de eliminarla. Tampoco puede eliminarse mientras tenga agentes
 asignados: ejecute antes `policy purge` y espere a que la cola termine.
+
+**Quitar un agente requiere dos pasos.** `policy agent remove` solo marca al agente como
+`pendingDelete`, y `policy queue apply-pending` ignora los agentes en ese estado. Complete la
+eliminación encolando usted mismo la operación:
+
+```bash
+pandora-cli policy agent remove 7 25
+pandora-cli policy queue add 7 --set operation=delete --set idAgent=42
+```
 
 **Las operaciones masivas de plugins requieren un array JSON.** `policy plugin bulk-delete`,
 `bulk-disable`, `bulk-enable` y `bulk-restore` reciben un array de ids de plugin de nivel superior,
@@ -475,7 +522,11 @@ opciones que más se necesitan:
 | `policy plugin` | `list`, `get`, `create`, `update`, `delete`, `enable`, `disable`, `restore`, `bulk-delete`, `bulk-disable`, `bulk-enable`, `bulk-restore` | `create`: `--set pluginExecution=<comando>`. Los verbos `bulk-*` reciben un array JSON (véase arriba). |
 | `policy alert` | `list`, `get`, `create`, `update`, `delete`, `restore` | `create`: `--set idPolicyModule=<id>` y `--set idAlertTemplate=<id>`. `update`: `--set disabled=true`. |
 | `policy alert-action` | `list`, `add`, `remove` | Reciben `<idPolicy> <idPolicyAlert>`. `add`: `--set idAlertAction=<id>`, `--set firesMin=<n>` y `--set firesMax=<n>`. `remove` recibe además `<idPolicyAlertAction>`. |
-| `policy queue` | `list`, `get`, `summary`, `add`, `apply-pending`, `clear`, `delete` | `add`: `--set operation=apply` y `--set idAgent=<id>`. `apply-pending` encola los cambios pendientes. `clear` y `delete` piden confirmación salvo que se indique `--yes`. |
+| `policy queue` | `list`, `get`, `summary`, `add`, `apply-pending`, `clear`, `delete` | `add`: `--set operation=apply` (o `delete`) y `--set idAgent=<id>`. `apply-pending` encola los cambios pendientes. `clear` y `delete` piden confirmación salvo que se indique `--yes`. |
+| `policy external-alert` | `list`, `get`, `create`, `delete`, `restore` | `create`: `--set idAlertTemplate=<id>` y `--set nameExternModule=<nombre>`; `exactMatch` es opcional. `delete` solo marca la alerta. |
+| `policy external-alert-action` | `list`, `add`, `remove` | Reciben `<idPolicy> <idPolicyExternalAlert>`. `add`: `--set idAlertAction=<id>`; `firesMin`, `firesMax` y `moduleActionThreshold` son opcionales. `remove` recibe además `<idPolicyExternalAlertAction>`. |
+| `policy fim` | `get`, `update` | Reciben solo `<idPolicy>`. `update`: `--set enabled=true --set dirMaxDepth=3`; repita `--set files=/a --set files=/b` para los campos de tipo array, o use `--from-file`. |
+| `policy linking` | `list`, `link`, `bulk-link` | `list` muestra los módulos de la política que no están vinculados. `link` recibe `<idPolicy> <idAgentModule>`. `bulk-link` recibe un array JSON con `--from-file` (véase abajo). |
 
 `policy copy` recibe `--set name=...` y `--set idGroup=<id>` para la política nueva; `policy purge` no
 recibe opciones.
@@ -489,6 +540,24 @@ pandora-cli policy queue summary 7
 **Inmutables tras la creación.** `moduleType`, `idModule` e `idModuleType` de un módulo de política
 no pueden cambiarse una vez creado; cree un módulo de política nuevo.
 
+**Vínculos con la política.** `policyLinked` tiene cuatro estados: `0` desvinculado, `1` vinculado,
+`10` pendiente de desvincular y `11` pendiente de vincular. `module policy link <idAgentModule>` y
+`module policy unlink <idAgentModule>` no reciben cuerpo: link convierte `0` en `11` y `10` en `1`;
+unlink convierte `1` en `10` y `11` en `0`. Un módulo que no pertenece a ninguna política se rechaza
+con `400 Agent module does not belong to a policy`. `policy linking bulk-link` recibe un array JSON de
+nivel superior con objetos que llevan `idAgentModule` (obligatorio) y `serverId` (obligatorio en un
+metaconsole). Responde módulo a módulo con `successCount`, `errorCount` y una lista `results`, y su
+código de salida no refleja los fallos individuales, así que compruebe `errorCount`:
+
+```bash
+echo '[{"idAgentModule":42},{"idAgentModule":43}]' | pandora-cli policy linking bulk-link 7 --from-file -
+```
+
+**Los servicios calculan sus pesos.** En un servicio inteligente (`autoCalculate` activado, como en un
+servicio recién creado) la consola calcula los pesos de sus elementos. Indicarlos en
+`service element add` o `service element update` se rechaza con
+`400 Weights are automatically calculated on smart services and cannot be set`.
+
 **Las colecciones necesitan un agente remoto.** Asignar una colección a un agente
 (`agent collection add`; `collection agent list` muestra el resultado) requiere un agente con
 configuración remota (`remote=1`) disponible en la consola. En caso contrario, la consola responde
@@ -501,8 +570,9 @@ paquete nuevo.
 
 ### Transferir ficheros
 
-Dos comandos de `collection` mueven el contenido de ficheros. Usan sus propias opciones, y
-`--from-file` no se aplica a ellos.
+Estos comandos mueven el contenido de ficheros: `collection file upload` y `collection file download`,
+y en `rmm` los comandos `rmm resource create`, `rmm resource version create` y
+`rmm resource version download`. Usan sus propias opciones, y `--from-file` no se aplica a ellos.
 
 **Subida** (`collection file upload`) envía la petición como `multipart/form-data`. Indique cada
 fichero con `--file <ruta>`, o con `--file <campo>=<ruta>` para nombrar el campo del formulario; la
@@ -522,6 +592,18 @@ destino: `-o/--output` sigue seleccionando el formato de salida.
 ```bash
 pandora-cli collection file download 3 --path a.conf --output-file ./a.conf
 pandora-cli collection file download 3 --path a.conf --output-file ./a.conf --force
+```
+
+Los comandos de RMM funcionan igual: `rmm resource create` y `rmm resource version create` suben
+ficheros con `--file` y reciben sus campos de texto con `--set`, y `rmm resource version download`
+escribe con `--output-file`. `rmm resource create` necesita `--set shortName=<nombre>` y
+`--set name=<nombre de la versión>`; sin `shortName`, la consola responde
+`400 Short name cannot be generated`. Estos comandos se describen a partir de su `--help` (véase
+[Registros, auditoría de Pandora AI y RMM](#registros-auditoria-de-pandora-ai-y-rmm)).
+
+```bash
+pandora-cli rmm resource create --file ./agent.zip --set shortName=agentinstaller --set name='First version'
+pandora-cli rmm resource version download 4 2 --output-file ./agent.zip
 ```
 
 Los demás comandos de los grupos de ficheros de `collection` reciben el id de la colección y estas
@@ -551,11 +633,60 @@ pandora-cli collection file read 3 --path scripts/check.sh
 (`period`, `graphType`, `width`, `height` y otras) viajan en el cuerpo como campos `--set`. La
 respuesta no es un flujo binario: lleva la imagen codificada en base64 en su campo `graph`, junto con su `mimeType`
 (`image/png` o `image/jpeg`) y su `encoding` (`base64`). `period` se expresa en segundos
-(mínimo 300; por defecto, un día).
+(mínimo 300; por defecto, un día). `graphType` solo acepta `data` o `histogram`; los estilos de línea,
+área y barras pertenecen a `chartType`, y cualquier otro `graphType` se rechaza con
+`400 Invalid value for graphType`.
 
 ```bash
 pandora-cli module graph 12 --set period=3600 -o json | jq -r .graph | base64 -d > graph.png
 ```
+
+### Registros, auditoría de Pandora AI y RMM
+
+Tres entidades dependen de algo que debe proporcionar la consola. Sus comandos siguen la forma
+habitual, y las opciones de listado descritas arriba se aplican allí donde el comando las declara.
+
+- **`log`** lee las entradas de log retenidas para los agentes. Necesita un backend de logs
+  configurado en la consola; sin él, la consola responde `503 Invalid or missing log backend
+  configuration`. Sus listados admiten `--size`, pero no `--page`.
+- **`pandora-ai-audit`** es de solo lectura y audita las conversaciones de Pandora AI. Necesita un
+  servidor de Pandora AI configurado en la consola.
+- **`rmm`** gestiona la monitorización y gestión remotas: agentes, scripts, recursos, rutinas,
+  programaciones, trabajos por lotes y sus colas. Sus comandos se documentan a partir de su
+  `--help`; no se han verificado contra una consola en esta versión.
+
+```bash
+pandora-cli log agent list --period 7d --size 50
+pandora-cli log agent source list 7 --set period=all
+pandora-cli log agent entry list 7 --source /var/log/syslog --period 6h
+
+pandora-cli pandora-ai-audit user list
+pandora-cli pandora-ai-audit session list --set userId=admin
+pandora-cli pandora-ai-audit session get admin 5f2c1e
+pandora-cli pandora-ai-audit message list --set userId=admin --set role=assistant
+
+pandora-cli rmm queue list --size 20
+echo '{"idScriptRmm":2,"name":"Install updates","idAgentsRmm":[5,6]}' | pandora-cli rmm rule execute --from-file -
+```
+
+Los grupos de `rmm` y sus comandos:
+
+| Grupo | Comandos |
+| --- | --- |
+| `rmm agent` | `list`, `get`, `update`, `delete` |
+| `rmm batch` | `list`, `get`, `create`, `update`, `delete`; subgrupos `agent` (`list`, `get`, `add`, `remove`), `queue` (`list`, `get`, `create`, `update`, `delete`, `execute`) y `rule` (`list`, `get`, `create`, `update`, `delete`) |
+| `rmm pending-software` | `list`, `agents-with-pending list` |
+| `rmm queue` | `list`, `get`, `delete` |
+| `rmm resource` | `list`, `get`, `exist`, `create`, `delete`; subgrupo `version` (`list`, `get`, `create`, `update`, `delete`, `download`) |
+| `rmm routine` | `list`, `get`, `create`, `update`, `delete`; subgrupos `agent` (`list`, `get`, `add`, `update`), `queue` (`list`, `get`, `create`, `update`, `delete`, `execute`) y `schedule` (`list`, `get`, `create`, `update`) |
+| `rmm rule` | `execute` |
+| `rmm schedule` | `list`, `get`, `create`, `update`, `delete` |
+| `rmm script` | `list`, `get`, `create`, `update`, `delete` |
+| `rmm settings` | `list`, `get`, `create`, `update` |
+
+Los campos que contienen arrays, como `inputs` o `idAgentsRmm`, necesitan `--from-file`. Los agentes
+y las programaciones de una rutina no tienen `delete`: modifíquelos con `update` y
+`--set pendingDelete=true` para marcarlos para su eliminación.
 
 ### Inspeccionar la API de la consola
 
@@ -636,6 +767,14 @@ pandora-cli user list --filter isAdmin=true -v -o json > usuarios.json
 | Un elemento hijo de una política sigue apareciendo tras `remove` | La eliminación solo lo marca como `pendingDelete` hasta que se aplica la cola de la política. Use `restore` para deshacerla. |
 | Una colección no puede asignarse a un agente (`Agent remote configuration is unavailable`) | El agente necesita configuración remota (`remote=1`) disponible en la consola. |
 | Un valor como `0755` llega como `755` | `--set` convierte los valores de aspecto numérico. Use `--set permissions='"0755"'` o `--from-file`. |
+| Un objeto o array de `--set` llega como texto | `--set` no interpreta `{...}` ni `[...]`. Repita `--set clave=valor` para los elementos de un array y use `--from-file` para los objetos. |
+| `--limit/--offset cannot be combined with --page/--size: use one pagination mode` | Elija un único modo de paginación. |
+| `--page conflicts with "page" already present in the payload` | La misma propiedad se indicó con una opción y con `--set` o `--from-file`. Indíquela una sola vez; `--page` es basada en 1, `--set page=` es el valor bruto basado en 0. |
+| `unknown flag: --limit` | Ese listado no admite `--limit` ni `--offset` (por ejemplo `event list`). Use `--page` y `--size`. |
+| Un agente quitado de una política sigue asignado tras `policy queue apply-pending` | `apply-pending` ignora los agentes marcados como `pendingDelete`. Use `policy queue add <idPolicy> --set operation=delete --set idAgent=<id>`. |
+| `400 Invalid value for graphType` | `module graph` acepta `data` o `histogram` en `graphType`; línea, área y barras pertenecen a `chartType`. |
+| `400 Weights are automatically calculated on smart services and cannot be set` | El servicio calcula sus pesos. No envíe pesos en `service element add` ni en `update`. |
+| `503 Invalid or missing log backend configuration` | `log` necesita un backend de logs configurado en la consola. |
 
 Un comando termina con `0` si tiene éxito y con un valor distinto de cero si falla, de modo que
 puede emplearse directamente en el flujo de control de un script.
@@ -666,8 +805,14 @@ puede emplearse directamente en el flujo de control de un script.
 | `--fields <a,b,c>` | Limita los campos devueltos. | `--fields idUser,email` |
 | `--page <n>` | Número de página, basada en 1 (`--page 1` es la primera). | `--page 2` |
 | `--size <n>` | Filas por página. | `--size 50` |
+| `--limit <n>` | Máximo de filas que se devuelven; alternativa a `--page`/`--size`, no puede combinarse con ellas. | `--limit 20` |
+| `--offset <n>` | Filas que se omiten; alternativa a `--page`/`--size`, no puede combinarse con ellas. | `--offset 40` |
 | `--sort <campo>` | Campo por el que ordenar. | `--sort fullName` |
 | `--order asc\|desc` | Sentido de la ordenación. | `--order desc` |
+
+Los listados dentro de una entidad superior aceptan las opciones anteriores que su comando declara
+(`<comando> --help`). `--limit` y `--offset` no se ofrecen en los listados que no los admiten, como
+`event list`.
 
 Operadores admitidos por `--where`: `=`, `like`, `regex`, `in`, `between`, `is_not_empty`. Para una
 columna JSON, indique una ruta con `--where '<campo>:<rutaJson> <op> <valor>'`.
@@ -684,8 +829,8 @@ columna JSON, indique una ruta con `--where '<campo>:<rutaJson> <op> <valor>'`.
 
 | Opción | Efecto |
 | --- | --- |
-| `--file <ruta>` o `--file <campo>=<ruta>` | Fichero que se sube con un comando multipart (`collection file upload`). Repetible; se requiere al menos una. |
-| `--output-file <ruta>` | Destino de un comando de bytes sin procesar (`collection file download`). Obligatorio; `-` escribe en la salida estándar. |
+| `--file <ruta>` o `--file <campo>=<ruta>` | Fichero que se sube con un comando multipart (`collection file upload`, `rmm resource create`, `rmm resource version create`). Repetible; se requiere al menos una. |
+| `--output-file <ruta>` | Destino de un comando de bytes sin procesar (`collection file download`, `rmm resource version download`). Obligatorio; `-` escribe en la salida estándar. |
 | `--force` | Reemplaza un `--output-file` existente. |
 
 ### Comandos de autenticación
@@ -706,7 +851,7 @@ instalada.
 
 | Entidad | Contenido | Verbos |
 | --- | --- | --- |
-| `agent` | Agentes de monitorización | `list`, `get`, `create`, `update`, `delete` + 4 más (`status` y el grupo `collection`) |
+| `agent` | Agentes de monitorización | `list`, `get`, `create`, `update`, `delete` + 6 más (`status` y los grupos `collection`, `public-ip` y `policy`) |
 | `agent-extended-data` | Datos extendidos asociados a agentes | `list`, `get`, `create`, `update`, `delete` |
 | `agent-secondary-group` | Grupos secundarios de un agente | `list`, `create`, `delete` |
 | `alert-action` | Acciones de alerta | `list`, `get`, `create`, `update`, `delete` + 1 más |
@@ -727,7 +872,8 @@ instalada.
 | `event-filter` | Filtros de eventos guardados | `list`, `get`, `create`, `update`, `delete` |
 | `event-tag` | Etiquetas de eventos | `list`, `get`, `create`, `update`, `delete` |
 | `group` | Grupos de agentes | `list`, `get`, `create`, `update`, `delete` |
-| `module` (alias `agent-module`) | Módulos de agente | `list`, `get`, `create`, `update`, `delete` + 2 más (`force-check`, `graph`) |
+| `log` | Entradas de log retenidas para los agentes | `agent list`, `agent entry list`, `agent source list` |
+| `module` (alias `agent-module`) | Módulos de agente | `list`, `get`, `create`, `update`, `delete` + 4 más (`force-check`, `graph` y el grupo `policy`) |
 | `module-alert` | Alertas asignadas a un módulo de agente | `list`, `get`, `create`, `update`, `delete` |
 | `module-alert-action` | Acciones que dispara una alerta de módulo de agente | `list`, `get`, `create`, `update`, `delete` |
 | `module-data` | Datos históricos de un módulo de agente | `list`, `get` + 1 más |
@@ -736,8 +882,9 @@ instalada.
 | `module-tag` | Etiquetas asociadas a un módulo de agente | `list`, `get`, `create`, `delete` |
 | `module-type` | Tipos de módulo | `list`, `get` |
 | `monitoring` | Envío de datos de monitorización | `create` |
+| `pandora-ai-audit` | Auditoría de las conversaciones de Pandora AI (solo lectura) | `message list`, `session list`, `session get`, `user list` |
 | `pandora-itsm-inventory` | Inventario de Pandora ITSM | `list`, `get` |
-| `policy` | Políticas aplicadas a agentes | `list`, `get`, `create`, `update`, `delete` + 62 más (`copy`, `purge` y los grupos `agent`, `alert`, `alert-action`, `collection`, `group`, `log-module`, `module`, `plugin` y `queue`) |
+| `policy` | Políticas aplicadas a agentes | `list`, `get`, `create`, `update`, `delete` + 75 más (`copy`, `purge` y los grupos `agent`, `alert`, `alert-action`, `collection`, `group`, `log-module`, `module`, `plugin`, `queue`, `external-alert`, `external-alert-action`, `fim` y `linking`) |
 | `profile` | Perfiles ACL | `list`, `get`, `create`, `update`, `delete` |
 | `report-datasource` | Orígenes de datos de informes | `list`, `get`, `create`, `update`, `delete` |
 | `report-datasource-agent` | Agentes asociados a un origen de datos | `list`, `get`, `create`, `update`, `delete` |
@@ -747,6 +894,7 @@ instalada.
 | `report-design-page-widget` | Widgets de una página de diseño de informe | `list`, `get`, `create`, `update`, `delete` |
 | `report-design-report` | Informes de un diseño de informe | `list`, `get`, `create`, `update`, `delete` |
 | `report-design-template` | Plantillas de un diseño de informe | `list`, `get`, `create`, `update`, `delete` |
+| `rmm` | Agentes, trabajos por lotes y colas de monitorización y gestión remotas (RMM) | 74 comandos en los grupos `agent`, `batch`, `pending-software`, `queue`, `resource`, `routine`, `rule`, `schedule`, `script` y `settings` |
 | `service` | Servicios | `list`, `get`, `create`, `update`, `delete` + 5 más (el grupo `element`) |
 | `siem-group` | Grupos SIEM | `list`, `get`, `create`, `update`, `delete` |
 | `siem-rule` | Reglas SIEM | `list`, `get`, `create`, `update`, `delete` + 4 más |
