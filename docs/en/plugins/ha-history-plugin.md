@@ -1,17 +1,18 @@
 # HA History Plugin
 
-*Article last updated: 2026-10-22.*
+*Article last updated: 2026-10-23.*
 
 ## What it does
 
-`pandora_history_ha` is a standalone service that manages connectivity to a
-MySQL history database configured in high availability (HA). It runs on one
-host, probes every node of the cluster on each check cycle, decides which node
-is the active primary (master), and promotes a replica when no node is
-writable. It monitors replica health and, with `splitbrain_autofix` enabled,
-reconfigures replicas that are stopped or point to the wrong source. It can
-also update the main Pandora FMS database so its components read the active
-node as the history database host.
+`pandora_history_ha` is a standalone plugin for the high availability (HA) of
+the Pandora FMS history database on MySQL. It is a management plugin for an
+existing HA cluster; it does not provide the HA mechanism itself. It runs on
+one host, probes every node on each check cycle, decides which node is the
+active primary (master), and promotes a replica when no node is writable. It
+monitors replica health and, with `splitbrain_autofix` enabled, reconfigures
+replicas that are stopped or point to the wrong source. It can also update the
+main Pandora FMS database so its components read the active node as the history
+database host.
 
 The service works at server level: it inspects `read_only` and the replica
 status, and it issues administrative statements, but it never reads or writes
@@ -31,8 +32,7 @@ limited to licensed users.
    `/opt` and `/etc/systemd/system` and manages the service. The generated unit
    does not drop privileges: the service runs as root.
 2. **MySQL 8.0.22 or later on every node of the history database cluster.**
-   8.0.22 is the minimum version to prepare. The package declares compatibility
-   with MySQL 8.0.22 or later and with MySQL 8.4.
+   The package declares compatibility with MySQL 8.0.22 or later.
 3. **Network access from the service host to every cluster node**, on the
    database port configured with `dbport`. Access to the main Pandora FMS
    database is required only when the main database update is enabled.
@@ -129,38 +129,18 @@ This example describes a three-node cluster with the main database update
 enabled. Replace every placeholder.
 
 ```ini
-# History database cluster
-dbname              pandora
-dbport              3306
 dbuser              <DB_USER>
 dbpass              <DB_PASSWORD>
-
-# Replication credentials (only needed with splitbrain_autofix 1)
-repl_dbuser         <REPLICATION_USER>
-repl_dbpass         <REPLICATION_PASSWORD>
-
-# Cluster nodes; the order is the tie-breaker
 ha_hosts            <HOST_1>,<HOST_2>,<HOST_3>
 
-# Timing
 ha_interval         30
-ha_connect_retries  3
-ha_connect_delay    2
-
-# Behaviour
 splitbrain_autofix  0
-verbose             0
 
-# Files
-log_file            /opt/pandorafms/pandora_history_ha/bin/pandora_history_ha.log
-pid_file            /var/run/pandora_history_ha.pid
-
-# Main Pandora FMS database (optional)
 main_dbhost         <PANDORA_DB_HOST>
-main_dbport         3306
-main_dbname         pandora
 main_dbuser         <PANDORA_DB_USER>
 main_dbpass         <PANDORA_DB_PASSWORD>
+
+# See the configuration reference for the remaining tokens.
 ```
 
 ### Key settings
@@ -210,11 +190,7 @@ Representative startup sequence:
 
 ```text
 2026-06-24 10:00:00 [LOG] pandora_history_ha v1.0 starting
-2026-06-24 10:00:00 [LOG] Config : /opt/pandorafms/pandora_history_ha/pandora_history_ha.conf
 2026-06-24 10:00:00 [LOG] Hosts  : <HOST_1>, <HOST_2>, <HOST_3>
-2026-06-24 10:00:00 [LOG] DB     : pandora (port 3306)
-2026-06-24 10:00:00 [LOG] AutoFix: disabled
-2026-06-24 10:00:00 [LOG] Checking history DB cluster [<HOST_1>, <HOST_2>, <HOST_3>]
 2026-06-24 10:00:01 [LOG] Master established: <HOST_1>
 ```
 
@@ -237,9 +213,6 @@ failover. The host values are redacted as `<HOST_1>` (old master) and
 ![History database settings before failover, host redacted as <HOST_1>](../assets/images/plugins/ha-history-plugin/history-db-before-failover.png)
 
 ![History database settings after failover, host redacted as <HOST_2>](../assets/images/plugins/ha-history-plugin/history-db-after-failover.png)
-
-The failover, promotion and automatic replica reconfiguration described on this
-page were reproduced in a two-node MySQL 8.0.46 test cluster.
 
 ## Understand the HA behavior
 
@@ -390,37 +363,32 @@ answer no; do not run the uninstaller unattended.
 
 ### Troubleshooting
 
-- **The service is not running after installation.** The installer does not
-  verify that the service started. Check `systemctl status pandora_history_ha`
-  and `journalctl -u pandora_history_ha` for startup validation errors, confirm
-  that `dbuser`, `dbpass` and `ha_hosts` are present and non-empty, and confirm
-  that the directory of `log_file` exists and is writable.
+- **The service is not running after installation.** Check
+  `systemctl status pandora_history_ha` and `journalctl -u pandora_history_ha`
+  for startup validation errors, and confirm the required tokens and the
+  `log_file` directory.
 - **A host is unreachable.** The log shows
-  `Host '<host>' is unreachable, skipping` during the election, or
-  `Cannot reach replica host '<host>'` during the replica checks. Check the
-  network path, the port and the credentials for that node. Detailed connection
-  errors are written only with `verbose 1`.
+  `Host '<host>' is unreachable, skipping` or
+  `Cannot reach replica host '<host>'`. Check the network path, the port and the
+  credentials for that node.
 - **`Replication problem on '<host>' ... Set splitbrain_autofix=1 to
   auto-reconfigure.` repeats on every cycle.** The replica threads are stopped
   or point to a different source. Verify the replication credentials and the
-  cluster topology before enabling `splitbrain_autofix`; while it is `0`, the
-  service only reports the problem.
+  topology before enabling `splitbrain_autofix`.
 - **`Error configuring replica ... Access denied; you need (at least one of) the
   RELOAD privilege(s) for this operation`.** The monitoring user lacks `RELOAD`,
   which the service needs to reset replica metadata (`RESET REPLICA ALL`). Grant
   `RELOAD` to `dbuser` on the node that is reconfigured.
 - **`Split-brain detected! Writable hosts: ...` appears.** More than one node is
-  writable. The service keeps one master and forces `read_only=1` on the
-  others, but it does not explain why they were writable: investigate the
-  cluster to remove the cause.
+  writable. The service keeps one master and forces `read_only=1` on the others,
+  but investigate the cluster to remove the cause.
 - **`tconfig(history_db_host) row not found...` appears.** The update matched no
   row. Check that `tconfig` contains the `history_db_host` row and that the
-  history database is enabled in Pandora FMS. A failed update is retried only
-  after the next master change.
-- **Configuration edits have no effect.** The file is read only at startup.
-  Restart the service.
+  history database is enabled in Pandora FMS.
+- **Configuration edits have no effect.** The file is read only at startup, so
+  restart the service.
 - **`Promoted '<host>' to master` appears but writes fail.** The message records
-  the promotion request. Verify that the node reports `read_only=0` and that
+  the promotion request; verify that the node reports `read_only=0` and that
   replication is stopped before sending writes to it.
 
 ## Reference
@@ -471,14 +439,10 @@ required; `--destdir` is optional.
 
 | Item | Value |
 | --- | --- |
-| Installation directory | `/opt/pandorafms/pandora_history_ha` |
-| Program directory | `/opt/pandorafms/pandora_history_ha/bin` |
+| Installation | `/opt/pandorafms/pandora_history_ha`, with the program under `bin/` |
 | Configuration file | `/opt/pandorafms/pandora_history_ha/pandora_history_ha.conf` |
-| systemd unit | `/etc/systemd/system/pandora_history_ha.service` |
-| Unit behavior | Restarts the service 10 seconds after an unexpected exit, declares ordering after `network.target` and `mysql.service`, and runs the service as root |
-| Default log file | `/opt/pandorafms/pandora_history_ha/bin/pandora_history_ha.log` |
-| PID file | `/var/run/pandora_history_ha.pid` |
-| Marketplace entry | `pandorafms.pandora_history_ha`, version 1.0, updated 2026-06-24; download limited to licensed users |
+| Service | `/etc/systemd/system/pandora_history_ha.service`; runs as root, restarts 10 seconds after an unexpected exit, and declares ordering after `network.target` and `mysql.service` |
+| Log and PID | `/opt/pandorafms/pandora_history_ha/bin/pandora_history_ha.log` and `/var/run/pandora_history_ha.pid` |
 
 ### Log messages
 
@@ -487,23 +451,11 @@ marks omitted detail.
 
 | Message | Meaning |
 | --- | --- |
-| `pandora_history_ha v1.0 starting` | The service starts and reports its version. |
-| `Config : <path>` | Configuration file in use. |
-| `Hosts  : <list>` | Hosts read from `ha_hosts`, in order. |
-| `DB     : <dbname> (port <port>)` | Database name shown for reference, and the port used to connect. |
-| `AutoFix: enabled` / `AutoFix: disabled` | State of `splitbrain_autofix`. |
-| `Checking history DB cluster [<hosts>]` | Start of a check cycle. |
 | `Host '<host>' is unreachable, skipping` | The node did not answer during the election; the cycle continues with the next host. |
 | `Cannot reach replica host '<host>'` | The node could not be reached during the replica checks; the cycle continues with the next node. |
 | `Split-brain detected! Writable hosts: <list>` | More than one node reports `read_only=0`. |
 | `Keeping '<host>' as master; forcing read_only=1 on remaining writable hosts` | The master kept in a split-brain condition. |
 | `No writable host found. Best failover candidate: <host> (delay: <n>s or unknown)` | No node is writable; the read-only node selected for promotion. |
 | `Promoted '<host>' to master (read_only disabled, replication stopped)` | The promotion was requested on the candidate. |
-| `Master established: <host>` | First election after startup. |
-| `Master failover: <old> -> <new>` | Master change after a failover. |
-| `Replication OK: <replica> -> <master> (delay: <n>s)` | Replica threads running and pointing to the master. |
 | `Replication problem on '<host>' (...)` | Replica threads stopped or pointing to another source; see [Troubleshooting](#troubleshooting). |
-| `Updating main DB tconfig(history_db_host) -> '<new>' on <main>` | The main database update starts. |
-| `tconfig(history_db_host) updated to '<new>'` | The main database row was updated. |
-| `tconfig(history_db_host) row not found in main DB — history DB may not be enabled in Pandora` | The update matched no row; verify that the history database is enabled and the row exists. |
-| `Shutting down pandora_history_ha` | The service received a stop signal and is exiting. |
+| `tconfig(history_db_host) updated to '<new>'` / `tconfig(history_db_host) row not found in main DB — history DB may not be enabled in Pandora` | The main database row was updated, or the update matched no row. |

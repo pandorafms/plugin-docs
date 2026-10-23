@@ -1,18 +1,19 @@
 # HA History Plugin
 
-*Última actualización del artículo: 2026-10-22.*
+*Última actualización del artículo: 2026-10-23.*
 
 ## Qué hace
 
-`pandora_history_ha` es un servicio autónomo que gestiona la conectividad con
-una base de datos de histórico de MySQL configurada en alta disponibilidad
-(HA). Se ejecuta en un único host, sondea todos los nodos del clúster en cada
-ciclo de comprobación, decide qué nodo es el primario activo (maestro) y
-promueve una réplica cuando ningún nodo es escribible. Supervisa el estado de
-las réplicas y, con `splitbrain_autofix` habilitado, reconfigura las réplicas
-detenidas o que apuntan a un origen incorrecto. También puede actualizar la
-base de datos principal de Pandora FMS para que sus componentes lean el nodo
-activo como host de la base de datos de histórico.
+`pandora_history_ha` es un plugin autónomo para la alta disponibilidad (HA) de
+la base de datos de histórico de Pandora FMS sobre MySQL. Es un plugin de
+gestión para un clúster de HA existente; no proporciona el mecanismo de HA en
+sí. Se ejecuta en un único host, sondea todos los nodos en cada ciclo de
+comprobación, decide qué nodo es el primario activo (maestro) y promueve una
+réplica cuando ningún nodo es escribible. Supervisa el estado de las réplicas
+y, con `splitbrain_autofix` habilitado, reconfigura las réplicas detenidas o
+que apuntan a un origen incorrecto. También puede actualizar la base de datos
+principal de Pandora FMS para que sus componentes lean el nodo activo como host
+de la base de datos de histórico.
 
 El servicio trabaja a nivel de servidor: consulta `read_only` y el estado de
 réplica, y ejecuta sentencias administrativas, pero nunca lee ni escribe las
@@ -33,8 +34,7 @@ está limitada a usuarios con licencia.
    en `/opt` y en `/etc/systemd/system` y gestiona el servicio. La unidad
    generada no reduce privilegios: el servicio se ejecuta como root.
 2. **MySQL 8.0.22 o posterior en todos los nodos del clúster de histórico.**
-   8.0.22 es la versión mínima que debe preparar. El paquete declara
-   compatibilidad con MySQL 8.0.22 o posterior y con MySQL 8.4.
+   El paquete declara compatibilidad con MySQL 8.0.22 o posterior.
 3. **Acceso de red desde el host del servicio a todos los nodos del clúster**,
    en el puerto de base de datos configurado con `dbport`. El acceso a la base
    de datos principal de Pandora FMS solo es necesario cuando se habilita la
@@ -135,38 +135,18 @@ Este ejemplo describe un clúster de tres nodos con la actualización de la base
 de datos principal habilitada. Sustituya todos los marcadores de posición.
 
 ```ini
-# Clúster de base de datos de histórico
-dbname              pandora
-dbport              3306
 dbuser              <DB_USER>
 dbpass              <DB_PASSWORD>
-
-# Credenciales de replicación (solo necesarias con splitbrain_autofix 1)
-repl_dbuser         <REPLICATION_USER>
-repl_dbpass         <REPLICATION_PASSWORD>
-
-# Nodos del clúster; el orden es el criterio de desempate
 ha_hosts            <HOST_1>,<HOST_2>,<HOST_3>
 
-# Tiempos
 ha_interval         30
-ha_connect_retries  3
-ha_connect_delay    2
-
-# Comportamiento
 splitbrain_autofix  0
-verbose             0
 
-# Ficheros
-log_file            /opt/pandorafms/pandora_history_ha/bin/pandora_history_ha.log
-pid_file            /var/run/pandora_history_ha.pid
-
-# Base de datos principal de Pandora FMS (opcional)
 main_dbhost         <PANDORA_DB_HOST>
-main_dbport         3306
-main_dbname         pandora
 main_dbuser         <PANDORA_DB_USER>
 main_dbpass         <PANDORA_DB_PASSWORD>
+
+# Consulte la referencia de configuración para el resto de tokens.
 ```
 
 ### Ajustes clave
@@ -219,11 +199,7 @@ establece un maestro. Secuencia de arranque representativa:
 
 ```text
 2026-06-24 10:00:00 [LOG] pandora_history_ha v1.0 starting
-2026-06-24 10:00:00 [LOG] Config : /opt/pandorafms/pandora_history_ha/pandora_history_ha.conf
 2026-06-24 10:00:00 [LOG] Hosts  : <HOST_1>, <HOST_2>, <HOST_3>
-2026-06-24 10:00:00 [LOG] DB     : pandora (port 3306)
-2026-06-24 10:00:00 [LOG] AutoFix: disabled
-2026-06-24 10:00:00 [LOG] Checking history DB cluster [<HOST_1>, <HOST_2>, <HOST_3>]
 2026-06-24 10:00:01 [LOG] Master established: <HOST_1>
 ```
 
@@ -247,10 +223,6 @@ después de un failover. Los valores de host están redactados como `<HOST_1>`
 ![Configuración de la base de datos de histórico antes del failover, host redactado como <HOST_1>](../assets/images/plugins/ha-history-plugin/history-db-before-failover.png)
 
 ![Configuración de la base de datos de histórico después del failover, host redactado como <HOST_2>](../assets/images/plugins/ha-history-plugin/history-db-after-failover.png)
-
-El failover, la promoción y la reconfiguración automática de réplicas descritos
-en esta página se reprodujeron en un clúster de pruebas de dos nodos con MySQL
-8.0.46.
 
 ## Cómo funciona el HA
 
@@ -407,23 +379,18 @@ desatendida.
 
 ### Diagnóstico de problemas
 
-- **El servicio no está en ejecución después de la instalación.** El instalador
-  no verifica que el servicio haya arrancado. Compruebe
+- **El servicio no está en ejecución después de la instalación.** Compruebe
   `systemctl status pandora_history_ha` y `journalctl -u pandora_history_ha` en
-  busca de errores de validación del arranque, confirme que `dbuser`, `dbpass` y
-  `ha_hosts` están presentes y no vacíos, y confirme que el directorio de
-  `log_file` existe y es escribible.
+  busca de errores de validación del arranque, y confirme los tokens
+  obligatorios y el directorio de `log_file`.
 - **Un host no es accesible.** El log muestra
-  `Host '<host>' is unreachable, skipping` durante la elección, o
-  `Cannot reach replica host '<host>'` durante las comprobaciones de réplica.
-  Compruebe la ruta de red, el puerto y las credenciales de ese nodo. Los
-  errores de conexión detallados se escriben solo con `verbose 1`.
+  `Host '<host>' is unreachable, skipping` o
+  `Cannot reach replica host '<host>'`. Compruebe la ruta de red, el puerto y
+  las credenciales de ese nodo.
 - **`Replication problem on '<host>' ... Set splitbrain_autofix=1 to
   auto-reconfigure.` se repite en cada ciclo.** Los hilos de réplica están
   detenidos o apuntan a un origen distinto. Verifique las credenciales de
-  réplica y la topología del clúster antes de habilitar
-  `splitbrain_autofix`; mientras sea `0`, el servicio solo informa del
-  problema.
+  réplica y la topología antes de habilitar `splitbrain_autofix`.
 - **`Error configuring replica ... Access denied; you need (at least one of) the
   RELOAD privilege(s) for this operation`.** El usuario de monitorización no
   tiene `RELOAD`, que el servicio necesita para restablecer los metadatos de
@@ -431,17 +398,15 @@ desatendida.
   reconfigura.
 - **Aparece `Split-brain detected! Writable hosts: ...`.** Hay más de un nodo
   escribible. El servicio conserva un maestro y fuerza `read_only=1` en los
-  demás, pero no explica por qué eran escribibles: investigue el clúster para
-  eliminar la causa.
+  demás, pero investigue el clúster para eliminar la causa.
 - **Aparece `tconfig(history_db_host) row not found...`.** La actualización no
   encontró ninguna fila. Compruebe que `tconfig` contiene la fila
   `history_db_host` y que la base de datos de histórico está habilitada en
-  Pandora FMS. Una actualización fallida solo se reintenta tras el siguiente
-  cambio de maestro.
+  Pandora FMS.
 - **Los cambios de configuración no tienen efecto.** El fichero se lee solo al
-  arrancar. Reinicie el servicio.
+  arrancar, así que reinicie el servicio.
 - **Aparece `Promoted '<host>' to master` pero fallan las escrituras.** El
-  mensaje registra la solicitud de promoción. Compruebe que el nodo informa
+  mensaje registra la solicitud de promoción; compruebe que el nodo informa
   `read_only=0` y que la replicación está detenida antes de enviarle escrituras.
 
 ## Referencia
@@ -493,14 +458,10 @@ El instalador requiere root. Se debe indicar exactamente una de las opciones
 
 | Elemento | Valor |
 | --- | --- |
-| Directorio de instalación | `/opt/pandorafms/pandora_history_ha` |
-| Directorio del programa | `/opt/pandorafms/pandora_history_ha/bin` |
+| Instalación | `/opt/pandorafms/pandora_history_ha`, con el programa en `bin/` |
 | Fichero de configuración | `/opt/pandorafms/pandora_history_ha/pandora_history_ha.conf` |
-| Unidad de systemd | `/etc/systemd/system/pandora_history_ha.service` |
-| Comportamiento de la unidad | Reinicia el servicio 10 segundos después de una salida inesperada, declara orden tras `network.target` y `mysql.service`, y ejecuta el servicio como root |
-| Fichero de log por defecto | `/opt/pandorafms/pandora_history_ha/bin/pandora_history_ha.log` |
-| Fichero PID | `/var/run/pandora_history_ha.pid` |
-| Entrada de Marketplace | `pandorafms.pandora_history_ha`, versión 1.0, actualizada el 2026-06-24; descarga limitada a usuarios con licencia |
+| Servicio | `/etc/systemd/system/pandora_history_ha.service`; se ejecuta como root, reinicia el servicio 10 segundos después de una salida inesperada y declara orden tras `network.target` y `mysql.service` |
+| Log y PID | `/opt/pandorafms/pandora_history_ha/bin/pandora_history_ha.log` y `/var/run/pandora_history_ha.pid` |
 
 ### Mensajes de log
 
@@ -509,23 +470,11 @@ ejecución y `...` indica detalle omitido.
 
 | Mensaje | Significado |
 | --- | --- |
-| `pandora_history_ha v1.0 starting` | El servicio arranca e informa de su versión. |
-| `Config : <path>` | Fichero de configuración en uso. |
-| `Hosts  : <list>` | Hosts leídos de `ha_hosts`, en orden. |
-| `DB     : <dbname> (port <port>)` | Nombre de la base de datos mostrado como referencia, y puerto usado para conectar. |
-| `AutoFix: enabled` / `AutoFix: disabled` | Estado de `splitbrain_autofix`. |
-| `Checking history DB cluster [<hosts>]` | Inicio de un ciclo de comprobación. |
 | `Host '<host>' is unreachable, skipping` | El nodo no respondió durante la elección; el ciclo continúa con el siguiente host. |
 | `Cannot reach replica host '<host>'` | El nodo no se pudo alcanzar durante las comprobaciones de réplica; el ciclo continúa con el siguiente nodo. |
 | `Split-brain detected! Writable hosts: <list>` | Más de un nodo informa `read_only=0`. |
 | `Keeping '<host>' as master; forcing read_only=1 on remaining writable hosts` | Maestro que se conserva en una condición de split-brain. |
 | `No writable host found. Best failover candidate: <host> (delay: <n>s or unknown)` | Ningún nodo es escribible; nodo de solo lectura seleccionado para la promoción. |
 | `Promoted '<host>' to master (read_only disabled, replication stopped)` | Se solicitó la promoción en el candidato. |
-| `Master established: <host>` | Primera elección tras el arranque. |
-| `Master failover: <old> -> <new>` | Cambio de maestro tras un failover. |
-| `Replication OK: <replica> -> <master> (delay: <n>s)` | Hilos de réplica en ejecución y apuntando al maestro. |
 | `Replication problem on '<host>' (...)` | Hilos de réplica detenidos o apuntando a otro origen; consulte [Diagnóstico de problemas](#diagnostico-de-problemas). |
-| `Updating main DB tconfig(history_db_host) -> '<new>' on <main>` | Comienza la actualización de la base de datos principal. |
-| `tconfig(history_db_host) updated to '<new>'` | La fila de la base de datos principal se actualizó. |
-| `tconfig(history_db_host) row not found in main DB — history DB may not be enabled in Pandora` | La actualización no encontró ninguna fila; compruebe que la base de datos de histórico está habilitada y que la fila existe. |
-| `Shutting down pandora_history_ha` | El servicio recibió una señal de parada y está terminando. |
+| `tconfig(history_db_host) updated to '<new>'` / `tconfig(history_db_host) row not found in main DB — history DB may not be enabled in Pandora` | La fila de la base de datos principal se actualizó, o la actualización no encontró ninguna fila. |
