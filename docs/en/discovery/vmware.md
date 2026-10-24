@@ -1,6 +1,6 @@
 # VMware Discovery
 
-*Article last updated: 2026-09-15.*
+*Article last updated: 2026-10-21.*
 
 ## What it monitors
 
@@ -25,7 +25,7 @@ The plugin runs as a Discovery task: the console creates the task, the Discovery
 
 | Scope | State | Evidence |
 | --- | --- | --- |
-| Plugin version `1.21` (`pandorafms.vmware`) | Documented target | The version this page describes, as identified by the package definition. |
+| Plugin version `1.24` (`pandorafms.vmware`) | Documented target | The version this page describes, as identified by the package definition. |
 | VMware vCenter Server with at least one datacenter | `Required` | The plugin resolves every managed object through a datacenter container and connects to a vCenter endpoint. |
 | A vCenter account with read access to the target datacenter | `Required` | The plugin authenticates and reads resource and performance data. It never changes vCenter configuration. |
 | A specific vCenter or ESXi version | `Not validated` | No published test record establishes compatibility with a concrete VMware release. |
@@ -169,6 +169,7 @@ The password supplied in the task is encrypted with a symmetric algorithm before
 | The task reports that the datacenter was not found | The message lists the available datacenters. Correct **Datacenter name** so it matches the vCenter name exactly. |
 | No agents are generated at all | Confirm the credentials, that the target datacenter has the entities you expect, and that the relevant **Scan** options are enabled. |
 | Expected entities are missing | Review **Monitor exclusive agents** and its tree: when it is enabled, the scanning options are ignored and only the selected entities are monitored. Also confirm the re-scan interval has elapsed. |
+| Module settings in **Extra settings** are not applied | Confirm the block heading is `Datacenter`/`DC`, `Datastore`/`DS`, `ESX`, `VM` or `RP` and that the module identifier exists in [Generated modules](#generated-modules). |
 | Event mode reports that the datacenter agent does not exist | Enable **Scan datacenters** so the datacenter agent is generated, and confirm the console API is reachable with valid credentials. |
 | Event mode reports that event correlation is only available in vCenter | Events cannot be read from a connection that does not expose the vCenter event manager. |
 | Tentacle transfer fails | Confirm the Discovery server can reach **Tentacle IP** on **Tentacle port**, and enable **Retry send**. |
@@ -275,10 +276,17 @@ These parameters apply to the whole execution and are read from the `Configurati
 
 #### Entity module blocks
 
-Module generation is configured per entity type inside the `Datacenter`, `Datastore`, `ESX` and `VM` blocks. Each line inside one of these blocks starts with a module identifier followed by one of:
+Module generation is configured per entity type inside the `Datacenter` (`DC`), `Datastore` (`DS`), `ESX`, `VM` and `RP` blocks. The short forms `DC` and `DS` are accepted for the datacenter and datastore blocks. Each line inside one of these blocks starts with a module identifier followed by one of:
 
 - `enabled` or `disabled` to turn a module on or off.
 - One or more `option=value` pairs separated by `;`, which set module options and enable the module.
+
+When a module line sets `name`, `desc`, `limits_warn` or `limits_crit`, the generated module uses those values. This example renames the datastore free space module, changes its description and applies warning and critical ranges:
+
+```
+DS
+freeSpace name=Free Space ; desc=Percentage of datastore free space; limits_warn=5 10; limits_crit=0 4
+```
 
 | Option | Description |
 | --- | --- |

@@ -1,6 +1,6 @@
 # Discovery de VMware
 
-*Última actualización del artículo: 2026-09-15.*
+*Última actualización del artículo: 2026-10-21.*
 
 ## Qué monitoriza
 
@@ -25,7 +25,7 @@ El plugin se ejecuta como una tarea de Discovery: la consola crea la tarea, el s
 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
-| Versión del plugin `1.21` (`pandorafms.vmware`) | Objetivo documentado | Versión descrita en esta página, identificada por la definición del paquete. |
+| Versión del plugin `1.24` (`pandorafms.vmware`) | Objetivo documentado | Versión descrita en esta página, identificada por la definición del paquete. |
 | VMware vCenter Server con al menos un datacenter | `Requerido` | El plugin resuelve todos los objetos gestionados a través de un contenedor de datacenter y se conecta a un endpoint de vCenter. |
 | Una cuenta de vCenter con acceso de lectura al datacenter objetivo | `Requerido` | El plugin se autentica y lee datos de recursos y de rendimiento. Nunca modifica la configuración de vCenter. |
 | Una versión concreta de vCenter o ESXi | `Sin validar` | Ningún registro de pruebas publicado establece compatibilidad con una versión concreta de VMware. |
@@ -169,6 +169,7 @@ La contraseña indicada en la tarea se cifra con un algoritmo simétrico antes d
 | La tarea informa de que no se encontró el datacenter | El mensaje enumera los datacenters disponibles. Corrige **Datacenter name** para que coincida exactamente con el nombre de vCenter. |
 | No se genera ningún agente | Confirma las credenciales, que el datacenter objetivo tenga las entidades esperadas y que las opciones **Scan** correspondientes estén habilitadas. |
 | Faltan entidades esperadas | Revisa **Monitor exclusive agents** y su árbol: cuando está activado, las opciones de escaneo se ignoran y solo se monitorizan las entidades seleccionadas. Comprueba también que haya transcurrido el intervalo de re-escaneo. |
+| La configuración de módulos en **Extra settings** no se aplica | Comprueba que el encabezado del bloque sea `Datacenter`/`DC`, `Datastore`/`DS`, `ESX`, `VM` o `RP` y que el identificador del módulo exista en [Módulos generados](#modulos-generados). |
 | Event mode informa de que el agente del datacenter no existe | Habilita **Scan datacenters** para que se genere el agente del datacenter y confirma que la API de consola sea accesible con credenciales válidas. |
 | Event mode informa de que la correlación de eventos solo está disponible en vCenter | No se pueden leer eventos desde una conexión que no exponga el gestor de eventos de vCenter. |
 | Falla el envío por Tentacle | Confirma que el servidor de Discovery puede alcanzar **Tentacle IP** en **Tentacle port** y habilita **Retry send**. |
@@ -275,10 +276,17 @@ Estos parámetros se aplican a toda la ejecución y se leen del bloque `Configur
 
 #### Bloques de módulos por entidad
 
-La generación de módulos se configura por tipo de entidad dentro de los bloques `Datacenter`, `Datastore`, `ESX` y `VM`. Cada línea dentro de uno de estos bloques empieza por un identificador de módulo seguido de una de estas opciones:
+La generación de módulos se configura por tipo de entidad dentro de los bloques `Datacenter` (`DC`), `Datastore` (`DS`), `ESX`, `VM` y `RP`. Las formas cortas `DC` y `DS` se aceptan para los bloques de datacenter y datastore. Cada línea dentro de uno de estos bloques empieza por un identificador de módulo seguido de una de estas opciones:
 
 - `enabled` o `disabled` para activar o desactivar un módulo.
 - Uno o varios pares `opcion=valor` separados por `;`, que establecen opciones del módulo y lo habilitan.
+
+Cuando una línea de módulo define `name`, `desc`, `limits_warn` o `limits_crit`, el módulo generado usa esos valores. Este ejemplo renombra el módulo de espacio libre de datastore, cambia su descripción y aplica rangos de aviso y crítico:
+
+```
+DS
+freeSpace name=Free Space ; desc=Percentage of datastore free space; limits_warn=5 10; limits_crit=0 4
+```
 
 | Opción | Descripción |
 | --- | --- |
