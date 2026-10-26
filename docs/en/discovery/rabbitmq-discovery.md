@@ -1,6 +1,6 @@
 # RabbitMQ Discovery
 
-*Article last updated: 2026-10-01.*
+*Article last updated: 2026-10-26.*
 
 ## What it monitors
 
@@ -85,9 +85,9 @@ Create the task from **Management → Discovery → Applications → RabbitMQ**.
 
 Force the task from **Management → Discovery → Task list** and check the result in this order.
 
-1. **The task summary** reports `resources_discovered`, `resources_vanished`, `modules` and `errors`. `resources_discovered` is the number of reachable targets; `errors` counts the API endpoints that failed during the run. The example below shows a single target discovered with `141` modules and no errors.
+1. **The task summary** reports `resources_discovered`, `resources_vanished`, `modules` and `errors`. `resources_discovered` is the number of targets in the task, whether they are reachable or not; `errors` counts the API endpoints that failed during the run. The example below shows a single target discovered with `141` modules and no errors.
 
-2. **The agent.** One agent appears per reachable target, named `rabbitmq-<identifier>` with the alias taken from the target URL or its `alias`. An unreachable target produces no agent and is reported in the execution information.
+2. **The agent.** One agent appears per target, named `rabbitmq-<identifier>` with the alias taken from the target URL or its `alias`. An unreachable target still produces an agent whose `Availability` module reports `0`, and the connection or timeout error is reported in the execution information.
 
 3. **The modules.** The agent carries the `Availability` module plus the metric groups enabled in step 4, according to what the broker reports.
 
@@ -170,7 +170,7 @@ The targets file may embed a username and a password. Restrict it to the account
 
 | Symptom | Check |
 | --- | --- |
-| No agent is created and the execution information logs a connection or timeout error | Confirm the broker is reachable from the Pandora FMS server on its Management API port (default `15672` for HTTP), that the management plugin is enabled and that the target URL is correct. |
+| The agent is created but its `Availability` module reports `0` and the execution information logs a connection or timeout error | Confirm the broker is reachable from the Pandora FMS server on its Management API port (default `15672` for HTTP), that the management plugin is enabled and that the target URL is correct. |
 | The execution information logs `HTTP 401` | The user or password is wrong, or the user cannot read the Management API. Review **Default user** and **Default password**, and the inline credentials of the target. |
 | The execution information logs `HTTP 404` | The URL does not point to the Management API of the broker. Check the host and port, and remove any `/api` suffix, which the plugin strips automatically. |
 | TLS certificate errors | Set **CA file** to the PEM bundle that signs the broker certificate, or disable **Verify TLS certificates** only for trusted test environments. |
@@ -329,7 +329,7 @@ connections_enabled=1
 
 Module names are `<Module prefix><module name>`. Resource modules append ` - <resource>` as described in [Modules by agent](#modules-by-agent).
 
-**Target agent** (one per reachable target)
+**Target agent** (one per target)
 
 Always created:
 

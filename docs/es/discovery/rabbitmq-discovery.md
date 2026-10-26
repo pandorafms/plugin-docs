@@ -1,6 +1,6 @@
 # RabbitMQ Discovery
 
-*Última actualización del artículo: 2026-10-01.*
+*Última actualización del artículo: 2026-10-26.*
 
 ## Qué monitoriza
 
@@ -85,9 +85,9 @@ Cree la tarea desde **Management → Discovery → Applications → RabbitMQ**. 
 
 Fuerce la tarea desde **Management → Discovery → Task list** y compruebe el resultado en este orden.
 
-1. **El resumen de la tarea** informa de `resources_discovered`, `resources_vanished`, `modules` y `errors`. `resources_discovered` es el número de objetivos alcanzables; `errors` cuenta los endpoints de la API que fallaron durante la ejecución. El ejemplo siguiente muestra un único objetivo descubierto con `141` módulos y sin errores.
+1. **El resumen de la tarea** informa de `resources_discovered`, `resources_vanished`, `modules` y `errors`. `resources_discovered` es el número de objetivos de la tarea, tanto si son alcanzables como si no; `errors` cuenta los endpoints de la API que fallaron durante la ejecución. El ejemplo siguiente muestra un único objetivo descubierto con `141` módulos y sin errores.
 
-2. **El agente.** Aparece un agente por objetivo alcanzable, llamado `rabbitmq-<identificador>` con el alias tomado de la URL del objetivo o de su `alias`. Un objetivo inalcanzable no produce agente y se informa en la información de ejecución.
+2. **El agente.** Aparece un agente por objetivo, llamado `rabbitmq-<identificador>` con el alias tomado de la URL del objetivo o de su `alias`. Un objetivo inalcanzable también produce un agente cuyo módulo `Availability` informa de `0`, y el error de conexión o de tiempo de espera se registra en la información de ejecución.
 
 3. **Los módulos.** El agente lleva el módulo `Availability` más los grupos de métricas habilitados en el paso 4, según lo que reporte el broker.
 
@@ -170,7 +170,7 @@ El archivo de objetivos puede embeber un nombre de usuario y una contraseña. Re
 
 | Síntoma | Comprobación |
 | --- | --- |
-| No se crea ningún agente y la información de ejecución registra un error de conexión o de tiempo de espera | Confirme que el broker es alcanzable desde el servidor de Pandora FMS por el puerto de su Management API (por defecto `15672` para HTTP), que el plugin de gestión está habilitado y que la URL del objetivo es correcta. |
+| El agente se crea pero su módulo `Availability` informa de `0` y la información de ejecución registra un error de conexión o de tiempo de espera | Confirme que el broker es alcanzable desde el servidor de Pandora FMS por el puerto de su Management API (por defecto `15672` para HTTP), que el plugin de gestión está habilitado y que la URL del objetivo es correcta. |
 | La información de ejecución registra `HTTP 401` | El usuario o la contraseña son incorrectos, o el usuario no puede leer la Management API. Revise **Default user** y **Default password**, y las credenciales en línea del objetivo. |
 | La información de ejecución registra `HTTP 404` | La URL no apunta a la Management API del broker. Compruebe el host y el puerto y elimine cualquier sufijo `/api`, que el plugin recorta automáticamente. |
 | Errores de certificado TLS | Indique en **CA file** el conjunto PEM que firma el certificado del broker, o deshabilite **Verify TLS certificates** solo en entornos de prueba de confianza. |
@@ -329,7 +329,7 @@ connections_enabled=1
 
 Los nombres de módulo son `<Module prefix><nombre de módulo>`. Los módulos de recurso añaden ` - <recurso>` como se describe en [Módulos por agente](#modulos-por-agente).
 
-**Agente objetivo** (uno por objetivo alcanzable)
+**Agente objetivo** (uno por objetivo)
 
 Siempre se crea:
 
