@@ -251,7 +251,7 @@ El addon no tiene indicador verbose ni de depuración. Su canal de diagnóstico 
 | Campo | Macro | Tipo | Valor por defecto | Notas |
 |-------|-------|------|-------------------|-------|
 | AWS Credentials | `_credentials_` | selector de credencial (AWS) | — | Obligatorio. Credencial registrada en el almacén de credenciales |
-| Default agent name | `_agentName_` | cadena | — | Obligatorio |
+| Default agent name | `_agentName_` | cadena | — | Opcional en la definición de la tarea. Si se deja vacío, el agente se crea con el alias vacío |
 | Tentacle IP | `_tentacleIP_` | cadena | `127.0.0.1` | Servidor que recibe los datos de los agentes |
 | Tentacle port | `_tentaclePort_` | número | `41121` | Puerto de Tentacle |
 | Tentacle extra options | `_tentacleExtraOpt_` | cadena | — | Opcional. Esta versión del addon no lo aplica |

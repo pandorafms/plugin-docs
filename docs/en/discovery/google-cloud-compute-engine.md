@@ -12,7 +12,7 @@ A Discovery task generates three kinds of agents:
 - **One agent per monitored zone**, with summary modules aggregated over the monitored instances of that zone.
 - **One agent per monitored instance**, with its state and performance modules. The instance agent is a child of its zone agent.
 
-A zone can be selected as a whole, in which case every instance it contains is monitored, including instances created later. Individual instances can also be selected without selecting their zone.
+A zone can be selected as a whole, in which case every instance it contains is monitored, including instances created later. Individual instance selection is not available in this version: monitor the zone that contains the instances you need.
 
 ## Prepare
 
@@ -69,7 +69,7 @@ Create the task from the Discovery cloud applications and choose **Google Cloud 
 
     <!-- SCREENSHOT NEEDED: Task Setup wizard step showing GCP Credentials, Max threads, proxy, Tentacle and stats agent fields, with no real credentials or addresses. -->
 
-2. **Instance explorer** — a tree of zones and instances read from your Google Cloud project with the selected credential. Check a zone to monitor it and all of its instances, or check individual instances. Instances are grouped by machine type under each zone.
+2. **Instance explorer** — a tree of zones and instances read from your Google Cloud project with the selected credential. Check a zone to monitor it and all of its instances. The tree lists the instances grouped by machine type for reference; selecting an individual instance does not add it to the task in this version.
 
     ![Instance explorer step showing the tree of zones and instances](../assets/images/discovery/google-cloud-compute-engine/gcp-ce-instance-explorer.png)
 
@@ -107,8 +107,8 @@ Force the task from the Discovery task list and check the result in this order.
 | Agent | Alias | Parent | Notes |
 |-------|-------|--------|-------|
 | Global agent | The **Stats agent name**, or `Google Cloud Platform` when empty | None | Created only when **Add global stats agent** is enabled |
-| Zone agent | The zone name, for example `europe-west1-b` | The global agent only when a **Stats agent name** was given | One per selected zone |
-| Instance agent | The instance name | Its zone agent | One per instance, created once even when both the instance and its zone are selected. The agent version is the machine type and the address is the internal IP address followed by the external address, when it has one |
+| Zone agent | The zone name, for example `europe-west1-b` | The global agent when a **Stats agent name** was given. With **Add global stats agent** disabled, the zone agent still declares `Google Cloud Platform` as parent, and that agent is not created | One per selected zone |
+| Instance agent | The instance name | Its zone agent | One per instance, created once even when both the instance and its zone are selected. The agent version is the machine type and the address is the internal IP address of the last network interface followed by its external address, when it has one; on an instance with several interfaces only the last one is kept |
 
 Agent identity does not depend on the task. Zone agents are identified by the service account (`client_email`) and the zone, and instance agents by the service account and the instance name. The global agent is identified by the service account when it has no name, and by the **Stats agent name** otherwise. Moving a zone or instance between tasks that use the same service account keeps reporting to the same agent and preserves its history.
 
@@ -128,11 +128,12 @@ All agents report the operating system name `Google`, and `compute engine` as th
 |--------|-----------|-------------|
 | `summary.google.compute engine.instances` | Always | Instances monitored in the zone |
 | `summary.google.compute engine.CPUUtilization` | **Scan and general monitoring** and **Cpu performance summary** | CPU of the running instances divided by the number of instances in the zone |
-| `summary.google.compute engine.Ram Used`, `summary.google.compute engine.SwapInBytes` | **Scan and general monitoring** and **Cpu performance summary** | Sum over the running instances that report these values |
+| `summary.google.compute engine.Ram Used`, `summary.google.compute engine.SwapInBytes`, `summary.google.compute engine.SwapOutBytes` | **Scan and general monitoring** and **Cpu performance summary** | Sum over the running instances that report these values. `SwapOutBytes` repeats the swap-in value in this version |
 | `summary.google.compute engine.DiskReadBytes`, `summary.google.compute engine.diskWriteBytes` | **Scan and general monitoring** and **Disk performance summary** | Sum over the running instances, in `Bytes` |
 | `summary.google.compute engine.diskAverageIOLatency` | **Scan and general monitoring** and **Disk performance summary** | Sum of the average I/O latency of the running instances that report it |
 | `summary.google.compute engine.DiskReadOps`, `summary.google.compute engine.DiskWriteOps` | **Scan and general monitoring** and **IOPs performance summary** | Sum over the running instances |
 | `summary.google.compute engine.NetworkPacketsIn`, `summary.google.compute engine.NetworkPacketsOut` | **Scan and general monitoring** and **Network performance summary** | Sum over the running instances, in `packets` |
+| `summary.google.compute engine.NetworkBytesIn`, `summary.google.compute engine.NetworkBytesOut` | **Scan and general monitoring** and **Network performance summary** | Declared in `bytes`, but this version fills them with the packet counts of the same instances |
 
 **Instance agent**
 
@@ -142,7 +143,7 @@ All agents report the operating system name `Google`, and `compute engine` as th
 | `Instance State (bool)` | `generic_proc` | Always | `1` when the status is `RUNNING`, `0` otherwise |
 | `CPUUtilization` | `generic_data` | Running, **Cpu performance summary** | CPU usage |
 | `Memory % Used` | `generic_data` | Running, **Memory performance summary**, value available | Percentage of memory used, in `%` |
-| `Ram Used`, `SwapInBytesCount` | `generic_data` | Running, **Memory performance summary**, value available | Memory used in the VM and memory read into the guest from its own swap space. Reported by Google Cloud only for VMs of the e2 family |
+| `Ram Used`, `SwapInBytesCount`, `SwapOutBytesCount` | `generic_data` | Running, **Memory performance summary**, value available | Memory used in the VM and memory read into and written to the guest's own swap space. In this version `SwapOutBytesCount` reports the swap-in value. Reported by Google Cloud only for VMs of the e2 family |
 | `DiskReadBytes`, `DiskWriteBytes` | `generic_data` | Running, **Disk performance summary** | Disk bytes read and written, in `Bytes` |
 | `DiskAverageIOLatency` | `generic_data` | Running, **Disk performance summary**, value available | Average disk I/O latency |
 | `Disk % Used` | `generic_data` | Running, **Disk performance summary**, value available | Percentage of disk used, in `%` |
@@ -217,7 +218,7 @@ The addon has no verbose or debug flag. Its diagnostic channel is the `info` fie
 
 | Field | Macro | Type | Notes |
 |-------|-------|------|-------|
-| Google Cloud Compute Engine zones and instances | `_googleCEZones_`, `_googleCEInstance_` | tree | Zones populate the zone list and instances the instance list. Optional |
+| Google Cloud Compute Engine zones and instances | `_googleCEZones_`, `_googleCEInstance_` | tree | Zones populate the zone list. The tree publishes the instance selection as `_googleCEInstance_` and the addon reads `_googleCEInstances_`, so instance selections do not reach the task: individual instance selection is not available in this version. Optional |
 
 #### Metrics
 

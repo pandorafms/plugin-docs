@@ -99,7 +99,7 @@ Force the task from the Discovery task list and check the result in this order.
 | Virtual machine | The virtual machine name | The host that runs it, empty when the machine is not resident on a host | Address is the list of guest IP addresses, comma separated, when **Scan VM IP** is enabled and the guest reports them |
 | Storage repository | Name: the SR UUID when **ID as Name** is enabled, otherwise the SR name. Alias: always the SR name | None | The description lists the hosts and the device or location of the repository |
 
-In every agent name the character `/` is replaced with `_`. Templates, snapshots and control domains are never monitored as virtual machines. Storage repositories whose name contains `XenServer Tools` or whose physical size is `0` produce no agent.
+In host and virtual machine agent names the character `/` is replaced with `_`; storage repository agent names are left unchanged. Templates, snapshots and control domains are never monitored as virtual machines. Storage repositories whose name contains `XenServer Tools` or whose physical size is `0` produce no agent.
 
 ### Modules per agent
 
@@ -248,7 +248,7 @@ Used by manual execution. The Discovery task generates the same file from its fi
 | `PANDORA` | `logfile` | — | Log file. It is overwritten on every execution |
 | `PANDORA` | `interval` | — | Agent interval, in seconds. Must match the execution interval |
 | `PANDORA` | `transfer_mode` | — | `local` moves the data files to `data_dir`; any other value sends them with Tentacle |
-| `PANDORA` | `tentacle_client` | — | Tentacle client executable |
+| `PANDORA` | `tentacle_client` | — | Tentacle client executable. This version reads the value but does not use it: the command always runs `tentacle_client` from the `PATH` of the Discovery server |
 | `PANDORA` | `tentacle_ip` | — | Tentacle server address |
 | `PANDORA` | `tentacle_port` | — | Tentacle server port |
 | `PANDORA` | `tentacle_opts` | — | Extra Tentacle client options; may be empty |

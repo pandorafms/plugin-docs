@@ -162,6 +162,7 @@ The addon has no verbose or debug flag. Its diagnostic channel is the `info` fie
 - **The task fails and no agent is generated**: the token is missing, invalid or expired, or the Discovery server cannot reach `api.digitalocean.com`.
 - **The task fails after listing droplets and no droplet agent appears**: the global agent reads the account balance before any droplet agent is created. Check that the token can read the account balance.
 - **`Error extracting information from droplets`**: with **Filter project** enabled, the project name was not found. The match is exact and case-sensitive; check the spelling against the project in DigitalOcean.
+- **Every droplet is monitored although a project is selected**: the project exists but has no droplets, so the filter restricts nothing and the run covers the whole account. Assign the droplets to the project in DigitalOcean and check the project name with the previous entry.
 - **`Error while parsing configuration zones or instances`**: the discard list is not a valid JSON array. Use double quotes, for example `["<DROPLET_NAME>"]`. While the list is invalid, no droplet is discarded.
 - **A droplet is still monitored after discarding it**: the name must match the droplet name exactly, including case.
 - **Droplet agents without `Cpu %`, `Mem %`, load and traffic modules**: droplet monitoring is not enabled on that droplet in DigitalOcean.

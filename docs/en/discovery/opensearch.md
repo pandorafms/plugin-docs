@@ -256,8 +256,10 @@ Names are shown without the **Custom module prefix**. A module is created only i
 | Circuit breakers | `breakers_<fielddata\|request\|in_flight_requests\|parent>_` followed by `limit_size`, `limit_size_in_bytes`, `estimated_size`, `estimated_size_in_bytes`, `overhead` and `tripped` |
 | Indexing pressure | `indexing_pressure_memory_current_*`, `indexing_pressure_memory_total_*` and `indexing_pressure_memory_limit_in_bytes` |
 | Request cache | `caches_request_cache_size_in_bytes`, `_evictions`, `_hit_count`, `_miss_count`, `_item_count` and `_store_name` |
-| Disk | `fs_disk_avail`, `fs_disk_used`, `fs_disk_percent` |
+| Disk | `fs_disk_total`, `fs_disk_avail`, `fs_disk_used`, `fs_disk_percent` |
 | Index statistics | The names listed for the primary metrics agent, with a leading `_` instead of the `primaries_` or `total_` prefix |
+
+`fs_disk_total` is created without a value in this version.
 
 **Primary metrics agent**
 
@@ -268,7 +270,7 @@ Every name below appears twice, once with the prefix `primaries_` and once with 
 | Documents and store | `docs_count`, `docs_deleted`, `store_size_in_bytes`, `store_reserved_in_bytes` |
 | Indexing | `indexing_index_total`, `indexing_time`, `indexing_current`, `indexing_failed`, `indexing_delete_total`, `indexing_delete_time`, `indexing_delete_current`, `indexing_noop_update_total`, `indexing_throttle_time` |
 | Get | `get_total`, `get_time`, `get_exists_total`, `get_exists_time`, `get_missing_total`, `get_missing_time`, `get_current` |
-| Search | `search_open_contexts`, `search_query_*`, `search_concurrent_query_*`, `search_concurrent_avg_slice_count`, `search_fetch_*`, `search_scroll_*`, `search_point_time_*`, `search_suggest_*`, `search_search_idle_reactivate_count_total` |
+| Search | `search_open_contexts`, `search_query_*`, `search_concurrent_query_*`, `search_concurrent_avg_slice_count`, `search_fetch_*`, `search_scroll_total`, `search_scroll.time`, `search_scroll_current`, `search_point_time_*`, `search_suggest_*`, `search_search_idle_reactivate_count_total` |
 | Merges | `merges_current`, `merges_current_docs`, `merges_current_size_in_bytes`, `merges_total`, `merges_total_time`, `merges_total_docs`, `merges_total_size_in_bytes`, `merges_total_stopped_time`, `merges_total_throttled_time`, `merges_total_auto_throttle_in_bytes` |
 | Refresh, flush and warmer | `refresh_total`, `refresh_total_time`, `refresh_external_total`, `refresh_external_total_time`, `refresh_listeners`, `flush_total`, `flush_periodic`, `flush_total_time`, `warmer_current`, `warmer_total`, `warmer_total_time` |
 | Caches | `query_cache_*` (memory size, total count, hit count, miss count, cache size, cache count, evictions), `fielddata_memory_size_in_bytes`, `fielddata_evictions`, `completion_size_in_bytes`, `request_cache_*` (memory size, evictions, hit count, miss count) |

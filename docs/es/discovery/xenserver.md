@@ -99,7 +99,7 @@ Fuerce la tarea desde la lista de tareas de Discovery y compruebe el resultado e
 | Máquina virtual | El nombre de la máquina virtual | El host que la ejecuta, vacío si la máquina no reside en un host | La dirección es la lista de IP del invitado, separadas por comas, cuando **Scan VM IP** está activado y el invitado las informa |
 | Repositorio de almacenamiento | Nombre: el UUID del SR con **ID as Name** activado, o el nombre del SR en caso contrario. Alias: siempre el nombre del SR | Ninguno | La descripción lista los hosts y el dispositivo o la ubicación del repositorio |
 
-En todos los nombres de agente el carácter `/` se sustituye por `_`. Las plantillas, las instantáneas y los dominios de control nunca se monitorizan como máquinas virtuales. Los repositorios de almacenamiento cuyo nombre contiene `XenServer Tools` o cuyo tamaño físico es `0` no generan agente.
+En los nombres de agente de host y de máquina virtual el carácter `/` se sustituye por `_`; los nombres de agente de repositorio de almacenamiento no se modifican. Las plantillas, las instantáneas y los dominios de control nunca se monitorizan como máquinas virtuales. Los repositorios de almacenamiento cuyo nombre contiene `XenServer Tools` o cuyo tamaño físico es `0` no generan agente.
 
 ### Módulos por agente
 
@@ -248,7 +248,7 @@ Se usa en la ejecución manual. La tarea de Discovery genera el mismo fichero a 
 | `PANDORA` | `logfile` | — | Fichero de log. Se sobrescribe en cada ejecución |
 | `PANDORA` | `interval` | — | Intervalo de los agentes, en segundos. Debe coincidir con el intervalo de ejecución |
 | `PANDORA` | `transfer_mode` | — | `local` mueve los ficheros de datos a `data_dir`; cualquier otro valor los envía con Tentacle |
-| `PANDORA` | `tentacle_client` | — | Ejecutable del cliente de Tentacle |
+| `PANDORA` | `tentacle_client` | — | Ejecutable del cliente de Tentacle. Esta versión lee el valor pero no lo utiliza: el comando siempre ejecuta `tentacle_client` del `PATH` del servidor Discovery |
 | `PANDORA` | `tentacle_ip` | — | Dirección del servidor de Tentacle |
 | `PANDORA` | `tentacle_port` | — | Puerto del servidor de Tentacle |
 | `PANDORA` | `tentacle_opts` | — | Opciones adicionales del cliente de Tentacle; puede estar vacía |

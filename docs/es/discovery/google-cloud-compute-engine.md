@@ -12,7 +12,7 @@ Una tarea de Discovery genera tres tipos de agentes:
 - **Un agente por cada zona monitorizada**, con módulos de resumen agregados sobre las instancias monitorizadas de esa zona.
 - **Un agente por cada instancia monitorizada**, con su estado y sus módulos de rendimiento. El agente de la instancia es hijo del agente de su zona.
 
-Una zona se puede seleccionar completa, y entonces se monitoriza cada instancia que contiene, incluidas las que se creen más adelante. También se pueden seleccionar instancias individuales sin seleccionar su zona.
+Una zona se puede seleccionar completa, y entonces se monitoriza cada instancia que contiene, incluidas las que se creen más adelante. La selección de instancias individuales no está disponible en esta versión: monitorice la zona que contiene las instancias que necesite.
 
 ## Preparación
 
@@ -69,7 +69,7 @@ Cree la tarea desde las aplicaciones cloud de Discovery y elija **Google Cloud C
 
     <!-- SCREENSHOT NEEDED: Paso Task Setup del asistente con GCP Credentials, Max threads, proxy, Tentacle y agente de estadísticas, sin credenciales ni direcciones reales. -->
 
-2. **Instance explorer** — un árbol de zonas e instancias leído de su proyecto de Google Cloud con la credencial seleccionada. Marque una zona para monitorizarla junto con todas sus instancias, o marque instancias individuales. Las instancias se agrupan por tipo de máquina dentro de cada zona.
+2. **Instance explorer** — un árbol de zonas e instancias leído de su proyecto de Google Cloud con la credencial seleccionada. Marque una zona para monitorizarla junto con todas sus instancias. El árbol lista las instancias agrupadas por tipo de máquina como referencia; en esta versión, marcar una instancia individual no la añade a la tarea.
 
     ![Paso Instance explorer con el árbol de zonas e instancias](../assets/images/discovery/google-cloud-compute-engine/gcp-ce-instance-explorer.png)
 
@@ -107,8 +107,8 @@ Fuerce la tarea desde la lista de tareas de Discovery y compruebe el resultado e
 | Agente | Alias | Padre | Notas |
 |--------|-------|-------|-------|
 | Agente global | El **Stats agent name**, o `Google Cloud Platform` si está vacío | Ninguno | Se crea solo con **Add global stats agent** activado |
-| Agente de zona | El nombre de la zona, por ejemplo `europe-west1-b` | El agente global solo si se indicó un **Stats agent name** | Uno por zona seleccionada |
-| Agente de instancia | El nombre de la instancia | Su agente de zona | Uno por instancia, creado una sola vez aunque se seleccionen la instancia y su zona. La versión del agente es el tipo de máquina y la dirección es la IP interna seguida de la dirección externa, si la tiene |
+| Agente de zona | El nombre de la zona, por ejemplo `europe-west1-b` | El agente global si se indicó un **Stats agent name**. Con **Add global stats agent** desactivado, el agente de zona sigue declarando `Google Cloud Platform` como padre, y ese agente no se crea | Uno por zona seleccionada |
+| Agente de instancia | El nombre de la instancia | Su agente de zona | Uno por instancia, creado una sola vez aunque se seleccionen la instancia y su zona. La versión del agente es el tipo de máquina y la dirección es la IP interna de la última interfaz de red seguida de su dirección externa, si la tiene; con varias interfaces de red solo se conserva la última |
 
 La identidad del agente no depende de la tarea. Los agentes de zona se identifican por la cuenta de servicio (`client_email`) y la zona, y los de instancia por la cuenta de servicio y el nombre de la instancia. El agente global se identifica por la cuenta de servicio cuando no tiene nombre, y por el **Stats agent name** en caso contrario. Mover una zona o instancia entre tareas que usan la misma cuenta de servicio sigue reportando al mismo agente y conserva su histórico.
 
@@ -128,11 +128,12 @@ Todos los agentes informan el nombre de sistema operativo `Google`, y `compute e
 |--------|-----------|-------------|
 | `summary.google.compute engine.instances` | Siempre | Instancias monitorizadas en la zona |
 | `summary.google.compute engine.CPUUtilization` | **Scan and general monitoring** y **Cpu performance summary** | CPU de las instancias en ejecución dividida por el número de instancias de la zona |
-| `summary.google.compute engine.Ram Used`, `summary.google.compute engine.SwapInBytes` | **Scan and general monitoring** y **Cpu performance summary** | Suma de las instancias en ejecución que informan estos valores |
+| `summary.google.compute engine.Ram Used`, `summary.google.compute engine.SwapInBytes`, `summary.google.compute engine.SwapOutBytes` | **Scan and general monitoring** y **Cpu performance summary** | Suma de las instancias en ejecución que informan estos valores. En esta versión, `SwapOutBytes` repite el valor de swap in |
 | `summary.google.compute engine.DiskReadBytes`, `summary.google.compute engine.diskWriteBytes` | **Scan and general monitoring** y **Disk performance summary** | Suma de las instancias en ejecución, en `Bytes` |
 | `summary.google.compute engine.diskAverageIOLatency` | **Scan and general monitoring** y **Disk performance summary** | Suma de la latencia media de E/S de las instancias en ejecución que la informan |
 | `summary.google.compute engine.DiskReadOps`, `summary.google.compute engine.DiskWriteOps` | **Scan and general monitoring** y **IOPs performance summary** | Suma de las instancias en ejecución |
 | `summary.google.compute engine.NetworkPacketsIn`, `summary.google.compute engine.NetworkPacketsOut` | **Scan and general monitoring** y **Network performance summary** | Suma de las instancias en ejecución, en `packets` |
+| `summary.google.compute engine.NetworkBytesIn`, `summary.google.compute engine.NetworkBytesOut` | **Scan and general monitoring** y **Network performance summary** | Declarados en `bytes`, pero en esta versión se rellenan con el número de paquetes de las mismas instancias |
 
 **Agente de instancia**
 
@@ -142,7 +143,7 @@ Todos los agentes informan el nombre de sistema operativo `Google`, y `compute e
 | `Instance State (bool)` | `generic_proc` | Siempre | `1` si el estado es `RUNNING`, `0` en caso contrario |
 | `CPUUtilization` | `generic_data` | En ejecución, **Cpu performance summary** | Uso de CPU |
 | `Memory % Used` | `generic_data` | En ejecución, **Memory performance summary**, valor disponible | Porcentaje de memoria usada, en `%` |
-| `Ram Used`, `SwapInBytesCount` | `generic_data` | En ejecución, **Memory performance summary**, valor disponible | Memoria usada en la VM y memoria leída hacia el invitado desde su propio espacio de swap. Google Cloud los informa solo para VM de la familia e2 |
+| `Ram Used`, `SwapInBytesCount`, `SwapOutBytesCount` | `generic_data` | En ejecución, **Memory performance summary**, valor disponible | Memoria usada en la VM y memoria leída y escrita hacia el invitado desde su propio espacio de swap. En esta versión, `SwapOutBytesCount` informa del valor de swap in. Google Cloud los informa solo para VM de la familia e2 |
 | `DiskReadBytes`, `DiskWriteBytes` | `generic_data` | En ejecución, **Disk performance summary** | Bytes de disco leídos y escritos, en `Bytes` |
 | `DiskAverageIOLatency` | `generic_data` | En ejecución, **Disk performance summary**, valor disponible | Latencia media de E/S de disco |
 | `Disk % Used` | `generic_data` | En ejecución, **Disk performance summary**, valor disponible | Porcentaje de disco usado, en `%` |
@@ -217,7 +218,7 @@ El addon no tiene opción verbose ni de depuración. Su canal de diagnóstico es
 
 | Campo | Macro | Tipo | Notas |
 |-------|-------|------|-------|
-| Google Cloud Compute Engine zones and instances | `_googleCEZones_`, `_googleCEInstance_` | árbol | Las zonas rellenan la lista de zonas y las instancias la de instancias. Opcional |
+| Google Cloud Compute Engine zones and instances | `_googleCEZones_`, `_googleCEInstance_` | árbol | Las zonas rellenan la lista de zonas. El árbol publica la selección de instancias como `_googleCEInstance_` y el addon lee `_googleCEInstances_`, por lo que las selecciones de instancias no llegan a la tarea: la selección individual de instancias no está disponible en esta versión. Opcional |
 
 #### Metrics
 

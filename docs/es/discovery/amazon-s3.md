@@ -203,7 +203,7 @@ El addon no tiene opción de modo detallado ni de depuración. Su canal de diagn
 | Tentacle port | `_tentaclePort_` | número | `41121` | Puerto de Tentacle |
 | Tentacle extra options | `_tentacleExtraOpt_` | cadena | — | Opcional. Opciones adicionales del cliente Tentacle |
 | Add global stats agent | `_statsAgent_` | casilla | activada | Crea el agente global |
-| Stats agent name | `_statsAgentName_` | cadena | `Aws` | Opcional. Se muestra con **Add global stats agent** activado |
+| Stats agent name | `_statsAgentName_` | cadena | — (vacío) | Opcional. Se muestra con **Add global stats agent** activado. Si se deja vacío, el agente global se crea con el alias `Aws` |
 
 Como **Verify proxy SSL** solo se muestra con **Use proxy**, una tarea que no usa proxy se ejecuta siempre con la validación de certificados TLS desactivada. Ejecute estas tareas únicamente desde una red de confianza.
 

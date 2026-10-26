@@ -8,7 +8,7 @@ The OVH Discovery addon monitors OVHcloud environments through the OVHcloud API.
 
 A Discovery task generates four kinds of agents:
 
-- **A global agent** named `OVH`, with the number of instances found and, optionally, the cost modules. It is always created.
+- **A global agent** named `OVH`, with the number of instances found and, optionally, the cost modules. It is created on every run, except in January when **Get monthly and overall costs** is enabled: the cost calculation for the previous month fails in that month and the global agent is not generated.
 - **One agent per virtual machine** (Public Cloud instance), with its state and, optionally, its performance statistics.
 - **One agent per volume** (Public Cloud volume), with its status, size and attachment.
 - **One agent per dedicated server**, with its status and hardware and location attributes.
@@ -104,8 +104,8 @@ Force the task from the Discovery task list and check the result in this order.
 
 | Agent | Alias | Address | Notes |
 |-------|-------|---------|-------|
-| Global agent | `OVH` | None | Always created |
-| Virtual machine agent | The instance name | The instance IPv4 address; empty when it has none | One per instance of every Public Cloud project. Created only when **Monitor virtual machines** is enabled. The description includes the instance region |
+| Global agent | `OVH` | None | Created on every run, except in January when **Get monthly and overall costs** is enabled |
+| Virtual machine agent | The instance name | The instance IPv4 address; empty when it has none | One per instance name of every Public Cloud project: instances with the same name in different projects share one agent. Created only when **Monitor virtual machines** is enabled. The description includes the instance region |
 | Volume agent | The volume name | None | Created only when **Scan Volumes** is enabled |
 | Dedicated server agent | The server name | The server IP address | Created only when **Scan Servers** is enabled |
 

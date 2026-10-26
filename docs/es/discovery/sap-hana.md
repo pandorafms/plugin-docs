@@ -25,7 +25,7 @@ Según su entrada del Marketplace, la descarga del add-on está limitada a usuar
 ### Prerrequisitos
 
 1. **Acceso de red** desde la máquina que ejecuta la tarea de Discovery hasta el puerto SQL de cada destino SAP HANA.
-2. **Un usuario y una contraseña de base de datos** de SAP HANA. Las comprobaciones integradas del plugin solo ejecutan sentencias `SELECT`, sobre estas vistas del sistema: `SYS.M_DATABASE`, `SYS.M_HOST_RESOURCE_UTILIZATION`, `SYS.M_SERVICE_STATISTICS`, `SYS.M_CONNECTIONS`, `SYS.M_BLOCKED_TRANSACTIONS`, `SYS.M_TRANSACTIONS`, `SYS.M_VOLUMES`, `SYS.M_VOLUME_IO_TOTAL_STATISTICS`, `SYS.M_RS_MEMORY`, `SYS.M_CONVERTER_STATISTICS` y `SYS.M_LICENSE`. El usuario debe poder leer las vistas de los grupos que habilite; no se documenta un conjunto de privilegios más reducido. Una vista que el usuario no puede leer genera un módulo con valor vacío en lugar de hacer fallar toda la tarea.
+2. **Un usuario y una contraseña de base de datos** de SAP HANA. Las comprobaciones integradas del plugin solo ejecutan sentencias `SELECT`, sobre estas vistas del sistema: `SYS.M_DATABASE`, `SYS.M_HOST_RESOURCE_UTILIZATION`, `SYS.M_SERVICE_STATISTICS`, `SYS.M_CONNECTIONS`, `SYS.M_BLOCKED_TRANSACTIONS`, `SYS.M_TRANSACTIONS`, `SYS.M_VOLUMES`, `SYS.M_VOLUME_IO_TOTAL_STATISTICS`, `SYS.M_RS_MEMORY`, `SYS.M_CONVERTER_STATISTICS` y `SYS.M_LICENSE`. También lee las vistas de catálogo `SYS.OBJECTS`, `SYS.VIEWS`, `SYS.TABLES`, `SYS.VIEW_COLUMNS` y `SYS.TABLE_COLUMNS` para comprobar qué vistas y columnas existen, y consulta `DUMMY` para las comprobaciones de marca de tiempo y de conexión. El usuario debe poder leer las vistas de los grupos que habilite; no se documenta un conjunto de privilegios más reducido. Una vista que el usuario no puede leer genera un módulo con valor vacío en lugar de hacer fallar toda la tarea.
 3. **Una credencial de Pandora FMS de tipo Custom** en el almacén de credenciales, con ese usuario y contraseña. Ambos son obligatorios.
 4. **Pandora FMS**: un servidor Discovery que ejecute la tarea y la consola para definirla.
 
@@ -94,7 +94,7 @@ Una línea que no cumple este formato no se monitoriza y se cuenta en **Targets 
 
 ### Asignar nombres de agente a los destinos
 
-Por defecto cada agente se llama `HOST - DATABASE`. Para elegir los nombres, rellene **Target agent** con un nombre de agente por línea, **en el mismo orden** que los destinos. Una línea en blanco deja a ese destino con su nombre por defecto. El nombre se usa como nombre y como alias del agente.
+Por defecto cada agente se llama `HOST - DATABASE`. Para elegir los nombres, rellene **Target agent** con un nombre de agente por línea, **en el mismo orden** que los destinos. Las líneas vacías y las que empiezan por `#` se descartan de ambas listas, así que los nombres se asignan por posición entre los destinos válidos: una línea en blanco no deja a ese destino con su nombre por defecto, sino que desplaza todos los nombres siguientes un destino hacia atrás. El nombre se usa como nombre y como alias del agente.
 
 ## Verificar la primera ejecución
 

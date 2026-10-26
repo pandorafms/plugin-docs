@@ -94,7 +94,7 @@ Cree la tarea desde las aplicaciones cloud de Discovery y elija **Amazon EC2**. 
 
     <!-- SCREENSHOT NEEDED: paso EC2 Basic del asistente con credenciales, Max threads, proxy, Tentacle y agente de estadísticas, sin credenciales ni direcciones reales. -->
 
-2. **EC2 Instances** — un árbol de regiones e instancias leído de su cuenta de AWS con la credencial seleccionada. Marque una región para monitorizarla junto con todas sus instancias, o marque instancias individuales. Bajo cada región, las instancias se agrupan por tipo de instancia.
+2. **EC2 Instances** — un árbol de regiones e instancias leído de su cuenta de AWS con la credencial seleccionada. Marque una región para monitorizarla junto con todas sus instancias, o marque instancias individuales. Bajo cada región, las instancias se agrupan por tipo de instancia. Seleccione al menos una región o instancia: la tarea falla con `list index out of range` si la selección está vacía.
 
     <!-- SCREENSHOT NEEDED: paso EC2 Instances del asistente con el árbol de regiones e instancias y una región y una instancia seleccionadas, solo con identificadores de laboratorio. -->
 
@@ -239,7 +239,7 @@ El addon no tiene opción verbose ni de depuración. Su canal de diagnóstico es
 | Tentacle port | `_tentaclePort_` | número | `41121` | Puerto de Tentacle |
 | Tentacle extra options | `_tentacleExtraOpt_` | cadena | — | Opcional. Opciones adicionales del cliente Tentacle |
 | Add global stats agent | `_statsAgent_` | casilla | activada | Crea el agente global |
-| Stats agent name | `_statsAgentName_` | cadena | `Aws` | Opcional. Se muestra con **Add global stats agent** activado |
+| Stats agent name | `_statsAgentName_` | cadena | — (vacío) | Opcional. Se muestra con **Add global stats agent** activado. Si se deja vacío, el agente global se crea con el alias `Aws` |
 | Agent autodisable mode | `_agentautodisable_` | casilla | desactivada | Deshabilita el agente cuando todos sus módulos pasan a desconocido hasta que vuelvan a llegar datos |
 
 Como **Verify proxy SSL** solo se muestra con **Use proxy**, una tarea que no usa proxy se ejecuta siempre con la validación de certificados TLS desactivada. Ejecute estas tareas únicamente desde una red de confianza.
@@ -248,7 +248,7 @@ Como **Verify proxy SSL** solo se muestra con **Use proxy**, una tarea que no us
 
 | Campo | Macro | Tipo | Notas |
 |-------|-------|------|-------|
-| EC2 zones and instances | `_ec2Zones_`, `_ec2Instance_` | árbol | Las regiones rellenan la lista de regiones y las instancias la lista de instancias. Opcional |
+| EC2 zones and instances | `_ec2Zones_`, `_ec2Instance_` | árbol | Las regiones rellenan la lista de regiones y las instancias la lista de instancias. Seleccione al menos una región o instancia: con la selección vacía la tarea termina con el error `list index out of range` |
 
 #### Instances monitoring
 

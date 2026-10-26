@@ -162,6 +162,7 @@ El addon no tiene opción de verbose ni de depuración. Su canal de diagnóstico
 - **La tarea falla y no se genera ningún agente**: el token falta, no es válido o ha caducado, o el servidor de Discovery no alcanza `api.digitalocean.com`.
 - **La tarea falla tras listar los droplets y no aparece ningún agente de droplet**: el agente global lee el saldo de la cuenta antes de crear ningún agente de droplet. Compruebe que el token puede leer el saldo de la cuenta.
 - **`Error extracting information from droplets`**: con **Filter project** activado, no se encontró el nombre del proyecto. La coincidencia es exacta y distingue mayúsculas de minúsculas; compruebe la ortografía con el proyecto en DigitalOcean.
+- **Se monitorizan todos los droplets aunque haya un proyecto seleccionado**: el proyecto existe pero no contiene droplets, así que el filtro no restringe nada y la ejecución cubre toda la cuenta. Asigne los droplets al proyecto en DigitalOcean y compruebe el nombre del proyecto con la entrada anterior.
 - **`Error while parsing configuration zones or instances`**: la lista de descarte no es un array JSON válido. Use comillas dobles, por ejemplo `["<DROPLET_NAME>"]`. Mientras la lista no sea válida, no se descarta ningún droplet.
 - **Un droplet se sigue monitorizando tras descartarlo**: el nombre debe coincidir exactamente con el del droplet, incluidas las mayúsculas.
 - **Agentes de droplet sin los módulos `Cpu %`, `Mem %`, carga y tráfico**: la monitorización no está activada en ese droplet en DigitalOcean.

@@ -94,7 +94,7 @@ Create the task from the Discovery cloud applications and choose **Amazon EC2**.
 
     <!-- SCREENSHOT NEEDED: EC2 Basic wizard step showing credentials, Max threads, proxy, Tentacle and stats agent fields, with no real credentials or addresses. -->
 
-2. **EC2 Instances** — a tree of regions and instances read from your AWS account with the selected credential. Check a region to monitor it and all of its instances, or check individual instances. Instances are grouped by instance type under each region.
+2. **EC2 Instances** — a tree of regions and instances read from your AWS account with the selected credential. Check a region to monitor it and all of its instances, or check individual instances. Instances are grouped by instance type under each region. Select at least one region or instance; the task fails with `list index out of range` when the selection is empty.
 
     <!-- SCREENSHOT NEEDED: EC2 Instances wizard step showing the region and instance tree with a region and an instance selected, using lab identifiers only. -->
 
@@ -239,7 +239,7 @@ The addon has no verbose or debug flag. Its diagnostic channel is the `info` fie
 | Tentacle port | `_tentaclePort_` | number | `41121` | Tentacle port |
 | Tentacle extra options | `_tentacleExtraOpt_` | string | — | Optional. Extra Tentacle client options |
 | Add global stats agent | `_statsAgent_` | checkbox | on | Create the global agent |
-| Stats agent name | `_statsAgentName_` | string | `Aws` | Optional. Shown when **Add global stats agent** is on |
+| Stats agent name | `_statsAgentName_` | string | — (empty) | Optional. Shown when **Add global stats agent** is on. When empty, the global agent is created with the alias `Aws` |
 | Agent autodisable mode | `_agentautodisable_` | checkbox | off | Disables the agent when all its modules become unknown until data returns |
 
 Because **Verify proxy SSL** is only shown with **Use proxy**, a task that does not use a proxy always runs with TLS certificate validation disabled. Run such tasks only from a network you trust.
@@ -248,7 +248,7 @@ Because **Verify proxy SSL** is only shown with **Use proxy**, a task that does 
 
 | Field | Macro | Type | Notes |
 |-------|-------|------|-------|
-| EC2 zones and instances | `_ec2Zones_`, `_ec2Instance_` | tree | Regions populate the region list and instances the instance list. Optional |
+| EC2 zones and instances | `_ec2Zones_`, `_ec2Instance_` | tree | Regions populate the region list and instances the instance list. Select at least one region or instance: an empty selection ends the task with the error `list index out of range` |
 
 #### Instances monitoring
 

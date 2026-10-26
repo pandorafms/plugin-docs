@@ -87,7 +87,7 @@ El grupo y el intervalo de la tarea proceden del paso genérico de definición d
 
 Fuerce la tarea desde la lista de tareas de Discovery y compruebe el resultado en este orden.
 
-1. **El resumen de la tarea.** Una tarea que finaliza correctamente informa de **Total agents**, el número de agentes generados. Una tarea que no finaliza correctamente registra los errores en su información de ejecución.
+1. **El resumen de la tarea.** Una tarea que finaliza correctamente informa de `total_agents`, el número de agentes generados. Una tarea que no finaliza correctamente registra los errores en su información de ejecución.
 
     <!-- SCREENSHOT NEEDED: Resumen de ejecución de la tarea de Discovery de Azure backup con Total agents. -->
 
@@ -97,7 +97,7 @@ Fuerce la tarea desde la lista de tareas de Discovery y compruebe el resultado e
 
     <!-- SCREENSHOT NEEDED: Agente generado por una tarea de Azure backup con los seis módulos de un elemento protegido, solo con identificadores de laboratorio. -->
 
-Si no se crea ningún agente y **Total agents** es `0`, la suscripción no tiene elementos protegidos o los filtros los han excluido todos.
+Si no se crea ningún agente y `total_agents` es `0`, la suscripción no tiene elementos protegidos o los filtros los han excluido todos.
 
 ## Comprender los resultados
 
@@ -191,7 +191,7 @@ El canal de diagnóstico es el campo `info` del resultado JSON de la ejecución,
 - **`[ERROR] The proxy URL needs to be specified.`**: **Use proxy** está activado y **Proxy url** está vacía.
 - **`Error creating clients`**: no se pudo crear el cliente de Azure a partir de la credencial. El mensaje incluye el detalle.
 - **`[Error]: ...`**: falló una petición a Azure al listar almacenes o elementos protegidos, por ejemplo porque la aplicación no tiene acceso de lectura a la suscripción o porque un patrón allow/deny no es una expresión regular válida. El mensaje incluye el error devuelto.
-- **`Total agents` es `0`**: no hay elementos protegidos en la suscripción, o los filtros allow y deny los excluyeron todos.
+- **`total_agents` es `0`**: no hay elementos protegidos en la suscripción, o los filtros allow y deny los excluyeron todos.
 - **`Recovery points` es `0`**: el elemento no tiene puntos de recuperación, o no se pudieron listar. En el segundo caso el addon no informa de ningún error.
 - **Falta un elemento en un agente en modo `Agent per item`**: un fallo al construir los módulos de un elemento se omite en silencio salvo que `debug_mode` esté activado en la ejecución manual.
 

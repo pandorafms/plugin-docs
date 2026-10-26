@@ -123,8 +123,8 @@ Ambos agentes se refrescan con el intervalo de la tarea y tienen la descripción
 | Módulo | Tipo | Condición | Descripción |
 |--------|------|-----------|-------------|
 | `<Prefix><id de servicio>_status` | `generic_data_string` | **Not data** desactivado | Estado del servicio de Microsoft 365 según Microsoft Graph. El módulo pasa a `warning` cuando el estado coincide con `investigating`, `restoringService` o `extendedRecovery`, y a `critical` cuando coincide con `serviceDegradation` o `serviceInterruption` |
-| `<Prefix><id de servicio>_active_issues` | `generic_data_string` | **Not data** desactivado | Identificador y título de cada incidencia sin resolver del servicio; `None` cuando el servicio no tiene incidencias sin resolver. Descripción: `<servicio> Issues Ids` |
-| Entradas de log | Recolector de logs | **Logs** activado | Una entrada por aviso de servicio, con el origen `<Prefix>_<servicio>`. El contenido es el aviso convertido a texto plano |
+| `<Prefix><id de servicio>_active_issues` | `generic_data_string` | **Not data** desactivado | Identificador y título de cada incidencia sin resolver del servicio, concatenados sin separador, por lo que las incidencias consecutivas quedan unidas; `None` cuando el servicio no tiene incidencias sin resolver. Descripción: `<servicio> Issues Ids` |
+| Entradas de log | Recolector de logs | **Logs** activado | Una entrada por aviso de servicio leído a partir del elemento 101, con el origen `<Prefix>_<servicio>`. El contenido es el aviso convertido a texto plano. La colección no se pagina, por lo que los 100 primeros avisos nunca se recogen y un tenant con menos de 100 avisos no produce entradas |
 
 `<id de servicio>` es el identificador del servicio que devuelve Microsoft Graph, por ejemplo el de Exchange Online o Microsoft Teams.
 
@@ -170,7 +170,7 @@ El addon no tiene opción de salida detallada ni de depuración. Su canal de dia
 - **`error with accounts data: ...`**: no se puede leer el fichero de configuración. Solo aparece en la ejecución manual.
 - **No hay módulos `_status` ni `_active_issues`**: **Not data** está activado.
 - **No hay agente de licencias**: **Activate licensing monitoring** está desactivado.
-- **No hay entradas de log**: **Logs** está desactivado o Microsoft Graph no devolvió avisos.
+- **No hay entradas de log**: **Logs** está desactivado, Microsoft Graph no devolvió avisos a partir del elemento 101 o el tenant tiene menos de 100 avisos.
 - **Los valores de incidencias aparecen como una cadena de bytes**: **utf8** está desactivado. Actívelo salvo que el entorno requiera bytes sin procesar.
 
 ## Referencia

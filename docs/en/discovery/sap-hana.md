@@ -25,7 +25,7 @@ The add-on download is limited to licensed users, according to its Marketplace e
 ### Prerequisites
 
 1. **Network access** from the machine that runs the Discovery task to the SQL port of every SAP HANA target.
-2. **A database user and password** for SAP HANA. The plugin runs only `SELECT` statements in its built-in checks, against these system views: `SYS.M_DATABASE`, `SYS.M_HOST_RESOURCE_UTILIZATION`, `SYS.M_SERVICE_STATISTICS`, `SYS.M_CONNECTIONS`, `SYS.M_BLOCKED_TRANSACTIONS`, `SYS.M_TRANSACTIONS`, `SYS.M_VOLUMES`, `SYS.M_VOLUME_IO_TOTAL_STATISTICS`, `SYS.M_RS_MEMORY`, `SYS.M_CONVERTER_STATISTICS` and `SYS.M_LICENSE`. The user must be able to read the views behind the groups you enable; no narrower privilege set is documented. A view the user cannot read produces a module with an empty value rather than a failure of the whole task.
+2. **A database user and password** for SAP HANA. The plugin runs only `SELECT` statements in its built-in checks, against these system views: `SYS.M_DATABASE`, `SYS.M_HOST_RESOURCE_UTILIZATION`, `SYS.M_SERVICE_STATISTICS`, `SYS.M_CONNECTIONS`, `SYS.M_BLOCKED_TRANSACTIONS`, `SYS.M_TRANSACTIONS`, `SYS.M_VOLUMES`, `SYS.M_VOLUME_IO_TOTAL_STATISTICS`, `SYS.M_RS_MEMORY`, `SYS.M_CONVERTER_STATISTICS` and `SYS.M_LICENSE`. It also reads the catalog views `SYS.OBJECTS`, `SYS.VIEWS`, `SYS.TABLES`, `SYS.VIEW_COLUMNS` and `SYS.TABLE_COLUMNS` to check which views and columns exist, and queries `DUMMY` for the timestamp and connection probes. The user must be able to read the views behind the groups you enable; no narrower privilege set is documented. A view the user cannot read produces a module with an empty value rather than a failure of the whole task.
 3. **A Pandora FMS credential of type Custom** in the credential store, holding that user and password. Both are required.
 4. **Pandora FMS**: a Discovery server to execute the task, and the console to define it.
 
@@ -94,7 +94,7 @@ A line that does not match this format is not monitored and is counted in **Targ
 
 ### Map targets to agent names
 
-By default each agent is named `HOST - DATABASE`. To choose the names yourself, fill **Target agent** with one agent name per line, **in the same order** as the target strings. A blank line leaves that target with its default name. The name is used both as agent name and alias.
+By default each agent is named `HOST - DATABASE`. To choose the names yourself, fill **Target agent** with one agent name per line, **in the same order** as the target strings. Empty lines and lines starting with `#` are discarded from both lists, so names are assigned by position among the valid targets: a blank line does not leave that target with its default name, it shifts every name after it to the previous target. The name is used both as agent name and alias.
 
 ## Verify the first run
 

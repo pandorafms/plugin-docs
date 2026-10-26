@@ -203,7 +203,7 @@ The addon has no verbose or debug flag. Its diagnostic channel is the `info` fie
 | Tentacle port | `_tentaclePort_` | number | `41121` | Tentacle port |
 | Tentacle extra options | `_tentacleExtraOpt_` | string | — | Optional. Extra Tentacle client options |
 | Add global stats agent | `_statsAgent_` | checkbox | on | Create the global agent |
-| Stats agent name | `_statsAgentName_` | string | `Aws` | Optional. Shown when **Add global stats agent** is on |
+| Stats agent name | `_statsAgentName_` | string | — (empty) | Optional. Shown when **Add global stats agent** is on. When empty, the global agent is created with the alias `Aws` |
 
 Because **Verify proxy SSL** is only shown with **Use proxy**, a task that does not use a proxy always runs with TLS certificate validation disabled. Run such tasks only from a network you trust.
 

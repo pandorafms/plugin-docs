@@ -154,7 +154,7 @@ El addon no tiene opción verbose ni de depuración. Su canal de diagnóstico es
 - **`Error file: <ruta> does not exist`**: ejecución manual con una ruta `--conf` inexistente o vacía.
 - **`Error while reading configuration file: ...`**: el fichero de configuración no se puede interpretar.
 - **`Error: Could not connect to OpenSearch primary|node|cluster with <host>:<puerto>`**: no se pudo alcanzar el clúster para ese rol. El texto menciona OpenSearch aunque el destino sea Elasticsearch. Compruebe la IP, el puerto, el cortafuegos y el valor de **Verify SSL**: un clúster que sirve HTTPS necesita tenerlo activado, uno que sirve HTTP plano necesita desactivarlo.
-- **`Error: The index does not exist in the cluster.`**: la consulta de métricas primarias no encontró las estadísticas solicitadas.
+- **Un índice que no existe**: la consulta de métricas primarias informa de `Error: Could not connect to OpenSearch primary with <host>:<puerto>`. El mensaje específico `Error: The index does not exist in the cluster.` no se produce en esta versión, así que interprete ese mensaje de conexión como un índice inexistente cuando el resto del clúster responde con normalidad.
 - **`Error: when attempting to obtain node data ...` o `... cluster statistics ...`**: el clúster respondió con un error, por ejemplo porque la cuenta no tiene permiso. El mensaje incluye el error devuelto por el clúster.
 - **`Unable to obtain OpenSearch metrics.`**: ningún rol produjo datos. O bien las tres opciones de métricas están desactivadas, o todas las consultas fallaron.
 - **Menos agentes de los esperados**: un rol cuya consulta falla se omite sin detener los demás, por lo que la tarea puede terminar con solo algunos agentes. Lea la información de ejecución para ver qué rol falla.
@@ -298,7 +298,7 @@ Además de los 96 módulos de estadísticas de índices (`_<métrica>`), cada ag
 | Circuit breakers (24) | `breakers_<breaker>_<valor>` para los breakers `request`, `fielddata`, `in_flight_requests` y `parent` y los valores `limit_size_in_bytes`, `limit_size`, `estimated_size_in_bytes`, `estimated_size`, `overhead` y `tripped` |
 | Indexing pressure (14) | `indexing_pressure_memory_current_combined_coordinating_and_primary_in_bytes`, `indexing_pressure_memory_current_coordinating_in_bytes`, `indexing_pressure_memory_current_primary_in_bytes`, `indexing_pressure_memory_current_replica_in_bytes`, `indexing_pressure_memory_current_all_in_bytes`, `indexing_pressure_memory_total_combined_coordinating_and_primary_in_bytes`, `indexing_pressure_memory_total_coordinating_in_bytes`, `indexing_pressure_memory_total_primary_in_bytes`, `indexing_pressure_memory_total_replica_in_bytes`, `indexing_pressure_memory_total_all_in_bytes`, `indexing_pressure_memory_total_coordinating_rejections`, `indexing_pressure_memory_total_primary_rejections`, `indexing_pressure_memory_total_replica_rejections`, `indexing_pressure_memory_limit_in_bytes` |
 | Cachés (6) | `caches_request_cache_size_in_bytes`, `caches_request_cache_evictions`, `caches_request_cache_hit_count`, `caches_request_cache_miss_count`, `caches_request_cache_item_count`, `caches_request_cache_store_name` |
-| Disco (4) | `fs_disk_total`, `fs_disk_avail`, `fs_disk_used` (bytes) y `fs_disk_percent` (`%`), agregados sobre las rutas de datos del nodo |
+| Disco (4) | `fs_disk_avail`, `fs_disk_used` (bytes) y `fs_disk_percent` (`%`), agregados sobre las rutas de datos del nodo, y `fs_disk_total`, que en esta versión se crea sin valor |
 
 Los valores que el clúster no informa para un nodo se crean con el valor `0`.
 

@@ -53,13 +53,13 @@ frontend stats
     stats refresh 10s
 ```
 
-La URL que hay que facilitar al addon es:
+La URL que hay que facilitar al addon es el host y el puerto, sin ruta:
 
 ```
-http://<HAPROXY_HOST>:8404/stats
+http://<HAPROXY_HOST>:8404
 ```
 
-El addon añade por sí mismo el sufijo `/stats;csv` y el parámetro `norefresh` cuando faltan, por lo que basta con la URL base de la página de estadísticas. Consulta [Cómo se normaliza la URL](#como-se-normaliza-la-url).
+El addon añade `/stats;csv` a la ruta que se le indica en lugar de sustituirla, por lo que la dirección de la página de estadísticas no sirve tal cual: `http://<HAPROXY_HOST>:8404/stats` se solicita como `http://<HAPROXY_HOST>:8404/stats/stats;csv` y HAProxy responde `404`. Indica solo el host y el puerto, o una URL que ya termine en `stats;csv`. Consulta [Cómo se normaliza la URL](#como-se-normaliza-la-url).
 
 #### Autenticación básica
 
@@ -158,7 +158,7 @@ Crea la tarea desde **Management → Discovery → Application → HAProxy**. Tr
     - **Verify SSL**: valida el certificado de una URL `https://`. Desactivado por defecto.
     - **Transfer mode**, **Tentacle IP** y **Tentacle port**: cómo llegan los datos a Pandora FMS. `native` permite que el servidor Discovery lea los datos directamente; `tentacle` los envía con el cliente Tentacle. Los campos de Tentacle solo importan en modo `tentacle`.
 
-    <!-- SCREENSHOT NEEDED: Paso HAProxy Basic del asistente con el área de URL, Username, Password, Verify SSL y Transfer mode con los campos de Tentacle, usando marcadores de documentación (por ejemplo http://<HAPROXY_HOST>:8404/stats) y sin direcciones IP privadas. -->
+    <!-- SCREENSHOT NEEDED: Paso HAProxy Basic del asistente con el área de URL, Username, Password, Verify SSL y Transfer mode con los campos de Tentacle, usando marcadores de documentación (por ejemplo http://<HAPROXY_HOST>:8404) y sin direcciones IP privadas. -->
 
 2. **HAProxy Advanced** — ajuste opcional del resultado:
 
@@ -236,7 +236,7 @@ Solo se usa la primera palabra del estado de HAProxy, por lo que `UP 2/3` se int
 
 ### Cómo se normaliza la URL
 
-Para cada URL, el addon solicita la exportación CSV. Si la ruta de la URL no termina ya en `stats;csv`, añade `/stats;csv` a la ruta, y añade el parámetro `norefresh` a la consulta cuando falta. Cada petición tiene un tiempo de espera fijo de 10 segundos. Por ejemplo, `http://<HAPROXY_HOST>:8404/stats` se solicita como `http://<HAPROXY_HOST>:8404/stats/stats;csv?norefresh`.
+Para cada URL, el addon solicita la exportación CSV. Añade `/stats;csv` a la ruta de la URL cuando la ruta no termina ya en `stats;csv`, y añade el parámetro `norefresh` a la consulta cuando falta. Cada petición tiene un tiempo de espera fijo de 10 segundos. Como el sufijo se añade y no se sustituye, `http://<HAPROXY_HOST>:8404` se solicita como `http://<HAPROXY_HOST>:8404/stats;csv?norefresh`, mientras que `http://<HAPROXY_HOST>:8404/stats` se solicita como `http://<HAPROXY_HOST>:8404/stats/stats;csv?norefresh` y falla con `404`.
 
 ## Operar
 
@@ -249,7 +249,7 @@ El addon puede ejecutarse fuera de una tarea de Discovery, que es la forma más 
 
 ```bash
 # Modo simple
-./pandora_haproxy --urls http://<HAPROXY_HOST_1>:8404/stats,http://<HAPROXY_HOST_2>:8404/stats \
+./pandora_haproxy --urls http://<HAPROXY_HOST_1>:8404,http://<HAPROXY_HOST_2>:8404 \
     --user <USERNAME> --password <PASSWORD> --ssl false
 
 # Modo avanzado
@@ -268,7 +268,7 @@ La ejecución imprime un resumen JSON. En modo `native`, los datos recogidos se 
 
 El addon no tiene opción verbose ni de depuración. Su canal de diagnóstico es la información de ejecución de la tarea (el campo `info` del resumen JSON en una ejecución manual), que nombra la URL que falla.
 
-- **`HTTP error for <url>: HTTP Error <code> for <url>`** — el endpoint respondió con un estado de error. `401` significa que las credenciales faltan o son incorrectas: comprueba **Username** y **Password** (ambos deben estar rellenos para que se envíe la autenticación) frente a la `userlist`. `404` significa que la URL no coincide con el `stats uri` de HAProxy.
+- **`HTTP error for <url>: HTTP Error <code> for <url>`** — el endpoint respondió con un estado de error. `401` significa que las credenciales faltan o son incorrectas: comprueba **Username** y **Password** (ambos deben estar rellenos para que se envíe la autenticación) frente a la `userlist`. `404` normalmente significa que la URL y el `stats uri` de HAProxy no encajan: el addon añade `/stats;csv` a la ruta indicada, así que una URL que ya termina en `/stats` solicita `/stats/stats;csv`. Indica solo el host y el puerto, o una URL que ya termine en `stats;csv`.
 - **`Request error for <url>: ...`** — no se pudo completar la petición: conexión rechazada o con tiempo agotado (10 segundos), puerto incorrecto, cortafuegos o error de certificado. Ante un error de certificado en un endpoint HTTPS, desactiva **Verify SSL** si el certificado es autofirmado o instala la CA emisora en el servidor Discovery.
 - **`Error parsing CSV for <url>` o `No stats data returned for <url>`** — la URL respondió, pero no con la exportación CSV o sin filas. Compruébalo con el comando `curl` de [Comprobar que el endpoint responde](#comprobar-que-el-endpoint-responde).
 - **`No modules created for <url>`** — los filtros de filas eliminaron todo. Revisa **Allow list**, **Deny list** y las opciones **Monitor**.
@@ -383,8 +383,8 @@ monitor_servers=true
 Fichero de destinos (`--conf_targets`), una URL por línea, separadas por comas, o ambas cosas:
 
 ```
-http://<HAPROXY_HOST_1>:8404/stats
-http://<HAPROXY_HOST_2>:8404/stats
+http://<HAPROXY_HOST_1>:8404
+http://<HAPROXY_HOST_2>:8404
 ```
 
 ### Módulos por estadística

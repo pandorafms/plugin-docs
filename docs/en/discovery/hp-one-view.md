@@ -119,11 +119,11 @@ For each resource listed in the appliance health status, where `<resource_id>` a
 | `<prefix><resource_id> <resource_type> capacity` | `generic_data_string` | Capacity, as reported by OneView |
 | `<prefix><resource_id> <resource_type> used_percent` | `generic_data` | Used percentage in `%`, calculated as `100 - (available × 100 / capacity)` and rounded to two decimals. It is `0` when the capacity is `0` |
 
-The used percentage is calculated from the numeric part of the values only. The unit text of the values is ignored.
+The numeric part is read by taking the first run of digits, commas and dots in the value and replacing commas with dots, so a thousands separator is read as a decimal separator. A value with more than one separator, such as `1,234,567`, makes the calculation fail and the appliance produces no modules in that run. The unit text of the values is ignored.
 
 ### Events from alerts
 
-When **Scan alerts** is on, the addon reads the first 10 alerts that OneView returns. For every one of them whose state is `Active` or `Locked`, it creates a Pandora FMS event whose text is the description of the alert, assigned to the appliance agent and to the group set in **Events ID group**. The event severity is `critical` for a Critical alert and `warning` for a Warning alert. The addon does not check whether the event already exists, so the same alert generates a new event on every run while it stays active.
+When **Scan alerts** is on, the addon reads the first 10 alerts that OneView returns. For every one of them whose state is `Active` or `Locked`, it creates a Pandora FMS event whose text is the description of the alert, assigned to the appliance agent and to the group set in **Events ID group**. The event severity is `critical` for a Critical alert and `warning` for a Warning alert. An alert of any other severity keeps the severity of the previous alert in the same run, so a Critical alert followed by one of another severity also produces a `critical` event. The addon does not check whether the event already exists, so the same alert generates a new event on every run while it stays active.
 
 ## Operate
 

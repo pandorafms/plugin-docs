@@ -154,7 +154,7 @@ The addon has no verbose or debug flag. Its diagnostic channel is the informatio
 - **`Error file: <path> does not exist`**: manual execution with a missing or empty `--conf` path.
 - **`Error while reading configuration file: ...`**: the configuration file cannot be parsed.
 - **`Error: Could not connect to OpenSearch primary|node|cluster with <host>:<port>`**: the cluster could not be reached for that role. The text mentions OpenSearch even when the target is Elasticsearch. Check the IP, port, firewall and the **Verify SSL** setting: a cluster that serves HTTPS needs it enabled, one that serves plain HTTP needs it disabled.
-- **`Error: The index does not exist in the cluster.`**: the primary metrics query did not find the statistics it requested.
+- **An index that does not exist**: the primary metrics query reports `Error: Could not connect to OpenSearch primary with <host>:<port>`. The specific message `Error: The index does not exist in the cluster.` is not produced in this version, so read that connection message as a missing index when the rest of the cluster answers normally.
 - **`Error: when attempting to obtain node data ...` or `... cluster statistics ...`**: the cluster answered with an error, for example because the account lacks permission. The message includes the error returned by the cluster.
 - **`Unable to obtain OpenSearch metrics.`**: no role produced data. Either all three metrics options are disabled, or every query failed.
 - **Fewer agents than expected**: a role that fails is skipped without stopping the others, so the task can finish with only some agents. Read the execution information for the failing role.
@@ -298,7 +298,7 @@ Besides the 96 index statistics modules (`_<metric>`), each node agent has these
 | Circuit breakers (24) | `breakers_<breaker>_<value>` for the breakers `request`, `fielddata`, `in_flight_requests` and `parent` and the values `limit_size_in_bytes`, `limit_size`, `estimated_size_in_bytes`, `estimated_size`, `overhead` and `tripped` |
 | Indexing pressure (14) | `indexing_pressure_memory_current_combined_coordinating_and_primary_in_bytes`, `indexing_pressure_memory_current_coordinating_in_bytes`, `indexing_pressure_memory_current_primary_in_bytes`, `indexing_pressure_memory_current_replica_in_bytes`, `indexing_pressure_memory_current_all_in_bytes`, `indexing_pressure_memory_total_combined_coordinating_and_primary_in_bytes`, `indexing_pressure_memory_total_coordinating_in_bytes`, `indexing_pressure_memory_total_primary_in_bytes`, `indexing_pressure_memory_total_replica_in_bytes`, `indexing_pressure_memory_total_all_in_bytes`, `indexing_pressure_memory_total_coordinating_rejections`, `indexing_pressure_memory_total_primary_rejections`, `indexing_pressure_memory_total_replica_rejections`, `indexing_pressure_memory_limit_in_bytes` |
 | Caches (6) | `caches_request_cache_size_in_bytes`, `caches_request_cache_evictions`, `caches_request_cache_hit_count`, `caches_request_cache_miss_count`, `caches_request_cache_item_count`, `caches_request_cache_store_name` |
-| Disk (4) | `fs_disk_total`, `fs_disk_avail`, `fs_disk_used` (bytes) and `fs_disk_percent` (`%`), aggregated over the data paths of the node |
+| Disk (4) | `fs_disk_avail`, `fs_disk_used` (bytes) and `fs_disk_percent` (`%`), aggregated over the data paths of the node, and `fs_disk_total`, which is created without a value in this version |
 
 Values that the cluster does not report for a node are created with the value `0`.
 

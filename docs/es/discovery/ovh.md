@@ -8,7 +8,7 @@ El addon de Discovery de OVH monitoriza entornos de OVHcloud a través de la API
 
 Una tarea de Discovery genera cuatro tipos de agentes:
 
-- **Un agente global** llamado `OVH`, con el número de instancias encontradas y, opcionalmente, los módulos de costes. Se crea siempre.
+- **Un agente global** llamado `OVH`, con el número de instancias encontradas y, opcionalmente, los módulos de costes. Se crea en cada ejecución, salvo en enero con **Get monthly and overall costs** activado: en ese mes falla el cálculo de costes del mes anterior y el agente global no se genera.
 - **Un agente por cada máquina virtual** (instancia de Public Cloud), con su estado y, opcionalmente, sus estadísticas de rendimiento.
 - **Un agente por cada volumen** (volumen de Public Cloud), con su estado, tamaño y asociación.
 - **Un agente por cada servidor dedicado**, con su estado y atributos de hardware y ubicación.
@@ -104,8 +104,8 @@ Fuerce la tarea desde la lista de tareas de Discovery y compruebe el resultado e
 
 | Agente | Alias | Dirección | Notas |
 |--------|-------|-----------|-------|
-| Agente global | `OVH` | Ninguna | Se crea siempre |
-| Agente de máquina virtual | El nombre de la instancia | La dirección IPv4 de la instancia; vacía si no tiene | Uno por instancia de cada proyecto de Public Cloud. Solo se crea con **Monitor virtual machines** activado. La descripción incluye la región de la instancia |
+| Agente global | `OVH` | Ninguna | Se crea en cada ejecución, salvo en enero con **Get monthly and overall costs** activado |
+| Agente de máquina virtual | El nombre de la instancia | La dirección IPv4 de la instancia; vacía si no tiene | Uno por nombre de instancia de cada proyecto de Public Cloud: las instancias con el mismo nombre en proyectos distintos comparten agente. Solo se crea con **Monitor virtual machines** activado. La descripción incluye la región de la instancia |
 | Agente de volumen | El nombre del volumen | Ninguna | Solo se crea con **Scan Volumes** activado |
 | Agente de servidor dedicado | El nombre del servidor | La dirección IP del servidor | Solo se crea con **Scan Servers** activado |
 

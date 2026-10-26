@@ -119,11 +119,11 @@ Para cada recurso del estado de salud de la appliance, donde `<resource_id>` y `
 | `<prefix><resource_id> <resource_type> capacity` | `generic_data_string` | Capacidad, tal como la informa OneView |
 | `<prefix><resource_id> <resource_type> used_percent` | `generic_data` | Porcentaje de uso en `%`, calculado como `100 - (available × 100 / capacity)` y redondeado a dos decimales. Es `0` cuando la capacidad es `0` |
 
-El porcentaje de uso se calcula solo con la parte numérica de los valores. El texto de la unidad se ignora.
+La parte numérica se obtiene tomando el primer tramo de dígitos, comas y puntos del valor y sustituyendo las comas por puntos, por lo que un separador de miles se lee como separador decimal. Un valor con más de un separador, como `1,234,567`, hace fallar el cálculo y el appliance no produce módulos en esa ejecución. El texto de la unidad se ignora.
 
 ### Eventos a partir de alertas
 
-Cuando **Scan alerts** está activado, el addon lee las primeras 10 alertas que devuelve OneView. Por cada una cuyo estado sea `Active` o `Locked`, crea un evento de Pandora FMS cuyo texto es la descripción de la alerta, asignado al agente de appliance y al grupo indicado en **Events ID group**. La severidad del evento es `critical` para una alerta Critical y `warning` para una alerta Warning. El addon no comprueba si el evento ya existe, por lo que la misma alerta genera un evento nuevo en cada ejecución mientras siga activa.
+Cuando **Scan alerts** está activado, el addon lee las primeras 10 alertas que devuelve OneView. Por cada una cuyo estado sea `Active` o `Locked`, crea un evento de Pandora FMS cuyo texto es la descripción de la alerta, asignado al agente de appliance y al grupo indicado en **Events ID group**. La severidad del evento es `critical` para una alerta Critical y `warning` para una alerta Warning. Una alerta de cualquier otra severidad conserva la severidad de la alerta anterior de la misma ejecución, por lo que una alerta Critical seguida de otra de distinta severidad también genera un evento `critical`. El addon no comprueba si el evento ya existe, por lo que la misma alerta genera un evento nuevo en cada ejecución mientras siga activa.
 
 ## Operación
 

@@ -104,7 +104,7 @@ Fuerce la tarea desde **Management → Discovery → Task list** y compruebe el 
 | Wireless | `<prefijo de agente>Wireless_<nombre o serie>` | Dirección IP pública del dispositivo | **Location**, más `Access Points` |
 | Tráfico de red | `<prefijo de agente> Traffic Appliance_<Network>` | Ninguna | **Location** |
 
-- Con **Name Agent Hostname** activado se usa el nombre del dispositivo, recurriendo al número de serie cuando el dispositivo no tiene nombre; desactivado, se usa el número de serie.
+- Con **Name Agent Hostname** activado, los agentes switch y wireless usan el nombre del dispositivo, recurriendo al número de serie cuando el dispositivo no tiene nombre; desactivado, se usa el número de serie. Los agentes appliance también leen el ajuste, pero toman el nombre de los datos de switch, que la ruta de appliance no tiene: con **Name Agent Hostname** activado la ejecución termina con un error al llegar a un appliance. Desactívelo para crear agentes appliance con el número de serie.
 - La identidad del agente se deriva del prefijo de agente y del nombre o serie utilizado. Cambiar el prefijo o el ajuste **Name Agent Hostname**, o renombrar un dispositivo, produce un agente nuevo en lugar de actualizar el anterior.
 - Solo producen agentes los dispositivos que pertenecen a la red monitorizada y cuyo tipo está habilitado (**Scan appliances**, **Scan switches**, **Scan wireless**).
 - Los agentes informan con el grupo y el intervalo de la tarea.
@@ -245,13 +245,13 @@ Se usa en la ejecución manual. Un `clave = valor` por línea, sin secciones. La
 | `scan_switch` | No | `1` | Agentes switch |
 | `scan_wireless` | No | `1` | Agentes wireless |
 | `scan_traffic_appliance_network` | No | `1` | Agente de tráfico de red |
-| `transfer_mode` | No | `tentacle` | `tentacle` envía los ficheros de datos con Tentacle; `local` los escribe en `data_dir` |
+| `transfer_mode` | No | `tentacle` | `tentacle` envía los ficheros de datos con Tentacle; `local` los mueve al directorio de datos predeterminado de Pandora FMS (`/var/spool/pandora/data_in/`) |
 | `tentacle_address` | No | `127.0.0.1` | Dirección del servidor Tentacle |
 | `tentacle_port` | No | `41121` | Puerto del servidor Tentacle |
 | `tentacle_client` | No | `tentacle_client` | Ejecutable del cliente Tentacle |
-| `tentacle_opts` | No | vacío | Opciones adicionales del cliente Tentacle |
-| `temporal` | No | `/tmp` | Directorio donde se escriben los ficheros de datos antes de enviarlos |
-| `data_dir` | No | `/var/spool/pandora/data_in/` | Destino de los ficheros de datos en modo `local` |
+| `tentacle_opts` | No | vacío | Opciones adicionales del cliente Tentacle. Esta versión lee el valor pero no lo pasa a la transferencia, que siempre se ejecuta sin opciones adicionales |
+| `temporal` | No | `/tmp` | Directorio donde se escriben los ficheros de datos antes de enviarlos. Esta versión lee el valor pero no lo pasa a la transferencia, que siempre usa `/tmp` |
+| `data_dir` | No | `/var/spool/pandora/data_in/` | Destino de los ficheros de datos en modo `local`. Esta versión lee el valor pero no lo pasa a la transferencia, que siempre usa `/var/spool/pandora/data_in/` |
 
 Las claves `api_url`, `api_user`, `api_pass` y `api_user_pass` se aceptan pero esta versión no las utiliza.
 

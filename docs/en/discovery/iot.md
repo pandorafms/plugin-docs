@@ -234,7 +234,7 @@ The messages are stored in the table `pandora_mqtt_data` of a SQLite database, w
 | The task reports an error parsing filters | The filter text could not be read. Check that each block has `filter_begin` and `filter_end` and that the file is plain text. |
 | `Total agents` is `0` | No unprocessed message passed a filter. Confirm that messages are arriving and that `filter_topic` and `filter_message` match them. Remember that earlier runs mark messages as processed. |
 | Modules are missing for some messages | Several messages resolve to the same module name in the same agent. Only the first is kept. Include `__topic__` or captured values in the module name. |
-| A module value contains an unreplaced or empty macro | The capture did not match. Test the regular expression or JSONPath against a real message. An invalid capture expression is ignored. |
+| A module value contains an unreplaced or empty macro | The capture did not match. Test the regular expression or JSONPath against a real message. An invalid regular expression is ignored; an invalid JSONPath expression stops the task. |
 | The IoT server does not start | Check `journalctl -u pandora_iot_server` and the IoT server log. Confirm that **Enable IOT Server** is on and that the service user can write to the database and log directories. |
 | Startup fails with `Invalid topic configuration` | The topic value is a malformed JSON array. Use one line, double quotes and at least one non-empty string. Do not add a trailing comma. |
 | Messages are not stored | Check the broker host, port, protocol and credentials, and the broker permissions for each topic filter. A subscription rejected by the broker is written to the IoT server log. |
@@ -298,7 +298,7 @@ log_location = /var/log/pandora/
 | Time window | No | Empty | Intended to limit the messages by age. In version `1.1` the value is not passed to the processor, so it has no effect: every unprocessed message is read. Leave it empty. |
 | Tentacle IP | Yes | `127.0.0.1` | Tentacle server that receives the agent data. |
 | Tentacle port | Yes | `41121` | Tentacle port. |
-| Tentacle extra options | No | Empty | Extra options for Tentacle. |
+| Tentacle extra options | No | Empty | Extra options for Tentacle. This version writes the value to the configuration but does not read it, so it has no effect. |
 
 #### Iot detailed
 

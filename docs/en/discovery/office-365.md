@@ -123,8 +123,8 @@ Both agents are refreshed at the task interval and report the description `Agent
 | Module | Type | Condition | Description |
 |--------|------|-----------|-------------|
 | `<Prefix><service id>_status` | `generic_data_string` | **Not data** disabled | Status of the Microsoft 365 service as reported by Microsoft Graph. The module is `warning` when the status matches `investigating`, `restoringService` or `extendedRecovery`, and `critical` when it matches `serviceDegradation` or `serviceInterruption` |
-| `<Prefix><service id>_active_issues` | `generic_data_string` | **Not data** disabled | Identifier and title of each unresolved incident of the service; `None` when the service has no unresolved incident. Description: `<service> Issues Ids` |
-| Log entries | Log collector | **Logs** enabled | One entry per service announcement, with the source `<Prefix>_<service>`. The content is the announcement, converted to plain text |
+| `<Prefix><service id>_active_issues` | `generic_data_string` | **Not data** disabled | Identifier and title of each unresolved incident of the service, concatenated without a separator, so consecutive incidents run together; `None` when the service has no unresolved incident. Description: `<service> Issues Ids` |
+| Log entries | Log collector | **Logs** enabled | One entry per service announcement read from offset 100, with the source `<Prefix>_<service>`. The content is the announcement, converted to plain text. The collection is not paged, so the first 100 announcements are never collected and a tenant with fewer than 100 announcements produces no entries |
 
 `<service id>` is the service identifier returned by Microsoft Graph, for example the identifier of Exchange Online or Microsoft Teams.
 
@@ -170,7 +170,7 @@ The addon has no verbose or debug flag. Its diagnostic channel is the informatio
 - **`error with accounts data: ...`**: the configuration file cannot be read. It appears only in manual execution.
 - **No `_status` or `_active_issues` modules**: **Not data** is enabled.
 - **No licensing agent**: **Activate licensing monitoring** is disabled.
-- **No log entries**: **Logs** is disabled, or Microsoft Graph returned no announcements.
+- **No log entries**: **Logs** is disabled, Microsoft Graph returned no announcements after the first 100, or the tenant has fewer than 100 announcements.
 - **Incident values show a byte string**: **utf8** is disabled. Enable it unless the environment requires raw bytes.
 
 ## Reference

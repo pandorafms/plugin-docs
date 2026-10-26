@@ -104,7 +104,7 @@ Force the task from **Management → Discovery → Task list** and check the res
 | Wireless | `<agent prefix>Wireless_<name or serial>` | Public IP address of the device | **Location**, plus `Access Points` |
 | Network traffic | `<agent prefix> Traffic Appliance_<Network>` | None | **Location** |
 
-- With **Name Agent Hostname** enabled the name of the device is used, falling back to the serial number when the device has no name; when disabled, the serial number is used.
+- With **Name Agent Hostname** enabled, switch and wireless agents use the device name, falling back to the serial number when the device has no name; when disabled, the serial number is used. Appliance agents also read the flag, but they take the name from the switch data, which the appliance path does not have: with **Name Agent Hostname** enabled the run stops with an error when it reaches an appliance. Disable it to create appliance agents named after the serial number.
 - The agent identity is derived from the agent prefix and the name or serial used. Changing the prefix or the **Name Agent Hostname** setting, or renaming a device, produces a new agent instead of updating the previous one.
 - Only devices that belong to the monitored network and whose type is enabled (**Scan appliances**, **Scan switches**, **Scan wireless**) produce agents.
 - Agents report with the task group and interval.
@@ -245,13 +245,13 @@ Used by manual execution. One `key = value` per line, without sections. Numeric 
 | `scan_switch` | No | `1` | Switch agents |
 | `scan_wireless` | No | `1` | Wireless agents |
 | `scan_traffic_appliance_network` | No | `1` | Network traffic agent |
-| `transfer_mode` | No | `tentacle` | `tentacle` sends the data files with Tentacle; `local` writes them to `data_dir` |
+| `transfer_mode` | No | `tentacle` | `tentacle` sends the data files with Tentacle; `local` moves them to the default Pandora FMS data directory (`/var/spool/pandora/data_in/`) |
 | `tentacle_address` | No | `127.0.0.1` | Tentacle server address |
 | `tentacle_port` | No | `41121` | Tentacle server port |
 | `tentacle_client` | No | `tentacle_client` | Tentacle client executable |
-| `tentacle_opts` | No | empty | Extra Tentacle client options |
-| `temporal` | No | `/tmp` | Directory where the data files are written before sending |
-| `data_dir` | No | `/var/spool/pandora/data_in/` | Destination of the data files in `local` mode |
+| `tentacle_opts` | No | empty | Extra Tentacle client options. This version reads the value but does not pass it to the transfer, which always runs without extra options |
+| `temporal` | No | `/tmp` | Directory where the data files are written before sending. This version reads the value but does not pass it to the transfer, which always uses `/tmp` |
+| `data_dir` | No | `/var/spool/pandora/data_in/` | Destination of the data files in `local` mode. This version reads the value but does not pass it to the transfer, which always uses `/var/spool/pandora/data_in/` |
 
 The keys `api_url`, `api_user`, `api_pass` and `api_user_pass` are accepted but not used by this version.
 

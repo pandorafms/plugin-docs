@@ -251,7 +251,7 @@ The addon has no verbose or debug flag. Its diagnostic channel is the execution 
 | Field | Macro | Type | Default | Notes |
 |-------|-------|------|---------|-------|
 | AWS Credentials | `_credentials_` | credential select (AWS) | — | Mandatory. Credential registered in the credential store |
-| Default agent name | `_agentName_` | string | — | Mandatory |
+| Default agent name | `_agentName_` | string | — | Optional in the task definition. If left empty, the agent is created with an empty alias |
 | Tentacle IP | `_tentacleIP_` | string | `127.0.0.1` | Server that receives the agent data |
 | Tentacle port | `_tentaclePort_` | number | `41121` | Tentacle port |
 | Tentacle extra options | `_tentacleExtraOpt_` | string | — | Optional. This version of the addon does not apply it |

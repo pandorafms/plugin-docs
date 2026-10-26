@@ -234,7 +234,7 @@ Los mensajes se almacenan en la tabla `pandora_mqtt_data` de una base de datos S
 | La tarea informa de un error al analizar los filtros | No se pudo leer el texto de los filtros. Compruebe que cada bloque tiene `filter_begin` y `filter_end` y que es texto plano. |
 | `Total agents` es `0` | Ningún mensaje sin procesar ha superado un filtro. Confirme que llegan mensajes y que `filter_topic` y `filter_message` coinciden con ellos. Recuerde que las ejecuciones anteriores marcan los mensajes como procesados. |
 | Faltan módulos de algunos mensajes | Varios mensajes resuelven al mismo nombre de módulo en el mismo agente. Solo se conserva el primero. Incluya `__topic__` o valores capturados en el nombre del módulo. |
-| El valor de un módulo contiene una macro sin sustituir o vacía | La captura no coincidió. Pruebe la expresión regular o el JSONPath con un mensaje real. Una expresión de captura no válida se ignora. |
+| El valor de un módulo contiene una macro sin sustituir o vacía | La captura no coincidió. Pruebe la expresión regular o el JSONPath con un mensaje real. Una expresión regular no válida se ignora; una expresión JSONPath no válida detiene la tarea. |
 | El servidor IoT no arranca | Revise `journalctl -u pandora_iot_server` y el log del servidor IoT. Confirme que **Enable IOT Server** está activado y que el usuario del servicio puede escribir en los directorios de base de datos y de logs. |
 | El arranque falla con `Invalid topic configuration` | El valor del tópico es un array JSON mal formado. Use una línea, comillas dobles y al menos una cadena no vacía. No añada coma final. |
 | Los mensajes no se almacenan | Revise host, puerto, protocolo y credenciales del broker, y los permisos del broker para cada filtro de tópico. Una suscripción rechazada por el broker se escribe en el log del servidor IoT. |
@@ -298,7 +298,7 @@ log_location = /var/log/pandora/
 | Time window | No | Vacío | Pensado para limitar los mensajes por antigüedad. En la versión `1.1` el valor no se transmite al procesador, por lo que no tiene efecto: se leen todos los mensajes sin procesar. Déjelo vacío. |
 | Tentacle IP | Sí | `127.0.0.1` | Servidor Tentacle que recibe los datos de los agentes. |
 | Tentacle port | Sí | `41121` | Puerto de Tentacle. |
-| Tentacle extra options | No | Vacío | Opciones adicionales de Tentacle. |
+| Tentacle extra options | No | Vacío | Opciones adicionales de Tentacle. Esta versión escribe el valor en la configuración pero no lo lee, por lo que no tiene efecto. |
 
 #### Iot detailed
 
