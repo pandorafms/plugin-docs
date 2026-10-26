@@ -2315,8 +2315,8 @@
 
 
 <h1 id="kubernetes-discovery">Kubernetes Discovery<a class="headerlink" href="#kubernetes-discovery" title="Permanent link">¶</a></h1>
-<p><em>Article last updated: 2026-10-23.</em></p>
-<!-- DRAFT: Source-verified for package 1.2; distributed-package installation and live collection remain unvalidated. -->
+<p><em>Article last updated: 2026-10-26.</em></p>
+<!-- DRAFT: Source-verified for package 1.3; distributed-package installation and live collection remain unvalidated. -->
 
 <h2 id="what-it-monitors">What it monitors<a class="headerlink" href="#what-it-monitors" title="Permanent link">¶</a></h2>
 <p>The Kubernetes Discovery plugin connects to the Kubernetes API server of a cluster and discovers its workloads and infrastructure: nodes, pods, deployments, namespaces, services, component statuses and the API health endpoints. It generates one Pandora FMS agent per discovered resource and fills it with availability, capacity and performance modules read from the API.</p>
@@ -2324,8 +2324,8 @@
 <ul>
 <li>the cluster itself, through a global <strong>Kubernetes</strong> agent;</li>
 <li>every node, when <strong>Scan Nodes</strong> is enabled;</li>
-<li>every deployment, when <strong>Scan Deployments</strong> is enabled;</li>
-<li>pods with available metrics and complete node/IP data, when <strong>Scan Pods</strong> is enabled.</li>
+<li>every deployment with condition data, when <strong>Scan Deployments</strong> is enabled;</li>
+<li>every pod already scheduled to a node, when <strong>Scan Pods</strong> is enabled.</li>
 </ul>
 <p>The global agent also carries the cluster-wide API status, health endpoints, service count, namespace count and component statuses.</p>
 <p>The plugin runs as a Discovery task: the console creates the task, the Discovery server runs the plugin, and the generated agents and modules are created automatically. The task delivers the generated agent data through Tentacle.</p>
@@ -2341,9 +2341,9 @@
 </thead>
 <tbody>
 <tr>
-<td>Plugin version <code>1.2</code> (<code>pandorafms.kubernetes</code>)</td>
+<td>Plugin version <code>1.3</code> (<code>pandorafms.kubernetes</code>)</td>
 <td>Documented target</td>
-<td>Package identity; see <a href="#plugin-identity">Plugin identity</a></td>
+<td>The version this page describes, as identified by the package definition. See <a href="#plugin-identity">Plugin identity</a></td>
 </tr>
 <tr>
 <td>A Kubernetes cluster exposing the API server over HTTPS</td>
@@ -2353,12 +2353,12 @@
 <tr>
 <td>A Bearer token that can read the queried API resources</td>
 <td><code>Required</code></td>
-<td>The plugin authenticates with <code>Authorization: Bearer &lt;token&gt;</code> to list nodes, pods, deployments, services, namespaces and component statuses. Prerequisite, not a compatibility statement</td>
+<td>The plugin authenticates with <code>Authorization: Bearer &lt;token&gt;</code> to list nodes, pods, deployments, services, namespaces and component statuses. Health and component endpoints may require elevated permissions. Prerequisite, not a compatibility statement</td>
 </tr>
 <tr>
-<td>Kubernetes Metrics API (<code>metrics.k8s.io</code>)</td>
-<td><code>Required</code> for node/pod discovery</td>
-<td>Node and pod data originate in <code>/apis/metrics.k8s.io/v1beta1</code>; missing metrics can prevent agents from being generated, not just omit CPU/memory modules</td>
+<td>The Kubernetes Metrics API (<code>metrics.k8s.io</code>) for CPU and memory usage</td>
+<td><code>Required</code> for CPU and memory modules</td>
+<td>Node and container CPU and memory modules are read from <code>/apis/metrics.k8s.io/v1beta1</code>. Without it, node and pod agents are still generated, but those modules are omitted</td>
 </tr>
 <tr>
 <td>A specific Kubernetes version</td>
@@ -2376,21 +2376,21 @@
 <ol>
 <li><strong>A Pandora FMS server with Discovery enabled</strong> to run the task, and the console to define it.</li>
 <li><strong>A Kubernetes API server reachable from the Discovery server</strong>, addressed by host and port. The plugin always uses HTTPS; enter the host without a scheme.</li>
-<li><strong>A Bearer token</strong> with read access to the queried resources: nodes, pods, deployments, namespaces, services, component statuses, node/pod metrics and the health endpoints listed in <a href="#api-requests">API requests</a>. The task does not define a specific role. Health and component requests are always attempted; there are no switches for them in this version.</li>
+<li><strong>A Bearer token</strong> for the API server. It is required to read the protected endpoints; grant it read access to the resources the task queries and no more. The <strong>Scan API health checks</strong> and <strong>Scan component statuses</strong> options may need elevated API permissions, as noted in the task tips.</li>
 <li><strong>A target agent group and a monitoring interval</strong> for the generated agents. Both come from the Discovery task and are inherited by every generated agent.</li>
 <li><strong>Network reachability to the Tentacle destination</strong>, because the task transfers the generated agent data through Tentacle.</li>
 <li>The plugin is distributed as a Pandora FMS Discovery application (<code>.disco</code> package) that the Discovery server executes on the Pandora FMS server.</li>
 </ol>
-<p>Direct API connections use HTTPS without certificate verification: the server identity is not authenticated. Restrict network access accordingly. Proxy mode uses the supplied proxy URL and omits the Bearer header. The token is entered in the task and written to its configuration; restrict access to both. For manual runs, keep the token in a protected configuration file, not in shell commands.</p>
+<p>Direct API connections use HTTPS without certificate verification: the server identity is not authenticated, so self-signed certificates work. Restrict network access accordingly. Proxy mode uses the supplied proxy URL and omits the Bearer header. The token is entered in the task and written to its configuration; restrict access to both. For manual runs, keep the token in a protected configuration file, not in shell commands.</p>
 <h3 id="check-target-access">Check target access<a class="headerlink" href="#check-target-access" title="Permanent link">¶</a></h3>
 <p>Before creating the task, verify the Metrics API and the node/pod metrics with an account authorized for the target cluster:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>--raw<span class="w"> </span>/apis/metrics.k8s.io/v1beta1/
 kubectl<span class="w"> </span>top<span class="w"> </span>node
 kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </span>--all-namespaces
 </code></pre></div>
-<p>If the cluster does not expose the Metrics API, its administrator must configure it before node/pod discovery can be verified. These diagnostic commands do not grant the plugin token any permissions.</p>
+<p>If the cluster does not expose the Metrics API, node and pod agents are still generated, but their CPU and memory modules are omitted. These diagnostic commands do not grant the plugin token any permissions.</p>
 <h3 id="install-the-plugin">Install the plugin<a class="headerlink" href="#install-the-plugin" title="Permanent link">¶</a></h3>
-<p>Obtain the <code>.disco</code> package from the <a href="https://marketplace.pandorafms.com/entries/pandorafms.kubernetes">Kubernetes Marketplace entry</a> and load it in Discovery. Select <strong>Kubernetes</strong> when creating an application task. This page covers package <code>1.2</code>, not a <code>1.3</code> interface.</p>
+<p>Obtain the <code>.disco</code> package from the <a href="https://marketplace.pandorafms.com/entries/pandorafms.kubernetes">Kubernetes Marketplace entry</a> and load it in Discovery from <strong>Management → Discovery → Extension manager</strong>. Once loaded, <strong>Kubernetes</strong> appears under the <strong>Applications</strong> category of the Discovery wizard. This page covers package <code>1.3</code>.</p>
 <h2 id="configure-the-discovery-task">Configure the Discovery task<a class="headerlink" href="#configure-the-discovery-task" title="Permanent link">¶</a></h2>
 <p>Create the task from <strong>Management → Discovery → Applications → Kubernetes</strong>. The wizard walks through the generic task definition and two plugin steps: <strong>Kubernetes base</strong> and <strong>Kubernetes detailed</strong>. Every field is documented in <a href="#task-parameters">Task parameters</a>.</p>
 <h3 id="step-1-task-definition">Step 1 — Task definition<a class="headerlink" href="#step-1-task-definition" title="Permanent link">¶</a></h3>
@@ -2410,19 +2410,20 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <h3 id="step-3-kubernetes-detailed">Step 3 — Kubernetes detailed<a class="headerlink" href="#step-3-kubernetes-detailed" title="Permanent link">¶</a></h3>
 <p>What to scan:</p>
 <ul>
-<li><strong>Scan Deployments</strong>, <strong>Scan Nodes</strong> and <strong>Scan Pods</strong> enable or disable agent generation for each resource category. Collection requests still run when these options are disabled.</li>
-<li>Health endpoints and component statuses have no scan switches in package <code>1.2</code>.</li>
+<li><strong>Scan Deployments</strong>, <strong>Scan Nodes</strong> and <strong>Scan Pods</strong> enable or disable each resource category.</li>
+<li><strong>Scan API health checks</strong> generates the API health endpoint modules. Health endpoints may require elevated API permissions.</li>
+<li><strong>Scan component statuses</strong> generates the component count and the component condition modules. Component statuses may require elevated API permissions.</li>
 </ul>
-<!-- SCREENSHOT NEEDED: Kubernetes 1.2 detailed step showing only the three resource scan switches; the inherited 1.3 image is not applicable. -->
-
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/kubernetes/kubernetes-detailed.png" data-desc-position="bottom"><img alt="Kubernetes detailed step" src="../../assets/images/discovery/kubernetes/kubernetes-detailed.png"></a></p>
 <h2 id="verify-the-first-run">Verify the first run<a class="headerlink" href="#verify-the-first-run" title="Permanent link">¶</a></h2>
 <p>Run the task from <strong>Management → Discovery → Task list</strong> and check the result in this order.</p>
 <ol>
 <li><strong>The task summary</strong> shows the overall progress and a summary with the number of node agents, pod agents and deployment agents generated, and the total number of agents.</li>
-<li><strong>The agents.</strong> Check the global <strong>Kubernetes</strong> agent and the enabled resource categories. Node and pod agents depend on metrics; deployment agents require returned condition data.</li>
-<li><strong>The modules.</strong> Confirm representative CPU/memory values and pod conditions against the cluster. Do not treat the summary counters as proof of successful data ingestion.</li>
+<li><strong>The agents.</strong> Expect the global <strong>Kubernetes</strong> agent plus one agent per discovered node, deployment and scheduled pod. Node and pod agents are generated even when the Metrics API is unavailable; deployment agents require returned condition data.</li>
+<li><strong>The modules.</strong> Every generated agent carries the modules of its resource; a reachable cluster with the Metrics API available populates the CPU and memory values. Do not treat the summary counters as proof of successful data ingestion.</li>
 <li><strong>The execution information.</strong> A successful run reports no errors; any per-request failure is recorded there.</li>
 </ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/kubernetes/task-summary.png" data-desc-position="bottom"><img alt="Task execution summary" src="../../assets/images/discovery/kubernetes/task-summary.png"></a></p>
 <p>If the task fails before generating anything, the host, the port, the network reachability and the token are the first things to check.</p>
 <h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
 <h3 id="agents-and-identity">Agents and identity<a class="headerlink" href="#agents-and-identity" title="Permanent link">¶</a></h3>
@@ -2453,13 +2454,13 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 <tr>
 <td>Pod</td>
-<td><code>[Prefix]&lt;pod&gt;</code></td>
+<td><code>[Prefix]&lt;namespace&gt;/&lt;pod&gt;</code></td>
 <td>The node agent that runs the pod</td>
 </tr>
 </tbody>
 </table>
 <p>Node agents refer to the prefixed global agent; deployment agents refer to the unprefixed <code>Kubernetes</code> parent even when a prefix is set. Each pod agent refers to its prefixed node and uses the pod IP as its address. The global agent is described as <code>Kubernetes global agent</code>, node agents as <code>Kubernetes node</code>, deployment agents as <code>Kubernetes deployment</code> and pod agents as <code>Kubernetes pod</code>.</p>
-<p>Node and pod discovery starts from Metrics API results. Incomplete metrics, a missing assigned node or missing pod IP can interrupt processing and leave a partial result. Pod and deployment identities do not contain the namespace: equal names in different namespaces can collide. Use separate prefixes for different clusters; namespace filtering does not add a namespace to the identity.</p>
+<p>Node and pod agents do not depend on the Metrics API: when it is unavailable, they are still generated without CPU and memory modules. Only pods already scheduled to a node are discovered: a pod without an assigned node is skipped, as are resources the API returns without a name. Pod identities include the namespace, so equal pod names in different namespaces do not collide; deployment identities do not include the namespace, so equal deployment names in different namespaces can collide. Use separate prefixes for different clusters; namespace filtering does not add a namespace to the deployment identity.</p>
 <p>Changing <strong>Prefix</strong> later changes the identity of every generated agent. The <strong>Filter namespace</strong> option applies only to deployments and pods, because nodes are cluster-scoped. Namespace matching is exact and case-sensitive, and the list is entered as a JSON array, for example <code>["default","kube-system"]</code>. When <strong>Filter namespace</strong> is enabled, list at least one namespace: an empty list matches no workload and no deployment or pod agent is generated.</p>
 <h3 id="modules-by-agent">Modules by agent<a class="headerlink" href="#modules-by-agent" title="Permanent link">¶</a></h3>
 <p>Every agent receives the modules of its resource. The values are read from the API during every task run; the exact name, type and unit of each module are listed in <a href="#generated-modules">Generated modules</a>.</p>
@@ -2477,7 +2478,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 <tr>
 <td>Node</td>
-<td>Pod usage against node allocatable capacity, node conditions, CPU and memory; depends on Metrics API data</td>
+<td>Pod usage against the node allocatable, node conditions and, when the Metrics API is available, CPU and memory usage</td>
 </tr>
 <tr>
 <td>Deployment</td>
@@ -2485,7 +2486,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 <tr>
 <td>Pod</td>
-<td>Pod phase and conditions, container count and per-container CPU/memory; depends on Metrics API data</td>
+<td>Pod phase and conditions, container count and, when the Metrics API is available, per-container CPU and memory usage</td>
 </tr>
 </tbody>
 </table>
@@ -2495,7 +2496,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <p>The plugin can also be run outside the Discovery wizard with a configuration file. This is useful for testing connectivity or for a one-off run. Write a configuration file with the <code>key=value</code> pairs listed in <a href="#configuration-file-keys">Configuration file keys</a>, then run the plugin entry point with the file as argument:</p>
 <div class="highlight"><pre><span></span><code>pandora_kubernetes<span class="w"> </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;
 </code></pre></div>
-<p>For example, this direct-mode configuration enables all three resource categories. Replace every placeholder before use; the example has not been executed:</p>
+<p>For example, this direct-mode configuration enables every resource category and scan option. Replace every placeholder before use; the example has not been executed:</p>
 <div class="highlight"><pre><span></span><code><span class="na">ip</span><span class="o">=</span><span class="s">&lt;TARGET_HOST&gt;</span>
 <span class="na">port</span><span class="o">=</span><span class="s">&lt;API_PORT&gt;</span>
 <span class="na">token</span><span class="o">=</span><span class="s">&lt;API_TOKEN&gt;</span>
@@ -2512,6 +2513,8 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <span class="na">deployments</span><span class="o">=</span><span class="s">1</span>
 <span class="na">nodes</span><span class="o">=</span><span class="s">1</span>
 <span class="na">pods</span><span class="o">=</span><span class="s">1</span>
+<span class="na">health_checks</span><span class="o">=</span><span class="s">1</span>
+<span class="na">component_checks</span><span class="o">=</span><span class="s">1</span>
 </code></pre></div>
 <p>Execution returns a Discovery JSON summary and generates XML for each agent. An illustrative summary is <code>{"summary":{"Total agents":4,"Nodes agents":1,"Pods agents":1,"Deployments agents":1}}</code>; these counters describe generation, not confirmed delivery.</p>
 <p>The operational CLI input is <code>--conf</code> (<code>-h</code>/<code>--help</code> displays help). When the plugin runs as a Discovery task, the server builds that file from the task fields. Manual examples have not been executed against a live target.</p>
@@ -2530,27 +2533,27 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 <tr>
 <td>Requests fail with <code>401</code> or <code>403</code></td>
-<td>The token is missing, invalid or lacks read access to the queried resources. Check access to the exact paths in the API reference; no validated role definition is provided here.</td>
+<td>The token is missing, invalid or lacks read access to the queried resources. Health checks and component statuses may need elevated permissions. Check access to the exact paths in the API reference; no validated role definition is provided here.</td>
 </tr>
 <tr>
 <td>No deployments or pods are generated but nodes are</td>
-<td>Review <strong>Filter namespace</strong>: when it is enabled, names must match exactly and in the same case, and an empty list matches nothing.</td>
+<td>Review <strong>Scan Deployments</strong> and <strong>Scan Pods</strong>, and <strong>Filter namespace</strong>: when it is enabled, names must match exactly and in the same case, and an empty list matches nothing.</td>
 </tr>
 <tr>
 <td>Expected pods are missing</td>
-<td>Check that each pod has metrics, an assigned node and a pod IP. Incomplete entries can interrupt pod generation; do not assume all pending pods are safely skipped.</td>
+<td>Only pods already scheduled to a node are discovered. A pod in <code>Pending</code> without an assigned node is not generated.</td>
 </tr>
 <tr>
-<td>Node or pod agents/modules are missing</td>
-<td>Check the Metrics API, node allocation data and pod node/IP fields. Inspect <code>Can't get metrics</code>, <code>Error: Nodes</code> and <code>Error: Pods</code>; processing may stop after incomplete data.</td>
+<td>Node CPU and memory modules are missing</td>
+<td>The Kubernetes Metrics API is not available in the cluster. The node agent is still generated.</td>
 </tr>
 <tr>
-<td>Global, health or component modules are missing</td>
-<td>Inspect request errors, including <code>401</code>, <code>403</code> and <code>404</code>. Health endpoint failures omit those modules; failures fetching services, namespaces or component statuses can prevent the global agent from being sent. There is no switch to skip these requests.</td>
+<td>Some global, health or component modules are missing</td>
+<td>Those endpoints returned <code>401</code>, <code>403</code> or <code>404</code>, or the corresponding scan option is disabled. The plugin skips an optional endpoint that is not accessible instead of failing the whole run.</td>
 </tr>
 <tr>
-<td><code>Could not connect to the API</code> or <strong>API status</strong> is <code>0</code></td>
-<td><code>/healthz</code> did not return exactly <code>ok</code>. Check endpoint access and API health; this is also the initial connection check.</td>
+<td><strong>API status</strong> is <code>0</code></td>
+<td>The <code>/healthz</code> endpoint did not return <code>ok</code>. Check the API server health itself. If <code>/healthz</code> is inaccessible, the module is omitted.</td>
 </tr>
 <tr>
 <td>A deployment has no agent</td>
@@ -2583,15 +2586,17 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <th>Field</th>
 <th>Macro</th>
+<th>Type</th>
 <th>Required</th>
 <th>Default</th>
-<th>Description</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Kubernetes host</td>
 <td><code>_ip_</code></td>
+<td>string</td>
 <td>Direct mode</td>
 <td>Empty</td>
 <td>API server address or hostname, without a scheme</td>
@@ -2599,6 +2604,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Kubernetes port</td>
 <td><code>_port_</code></td>
+<td>number</td>
 <td>Direct mode</td>
 <td>Empty</td>
 <td>Numeric API server port</td>
@@ -2606,6 +2612,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Kubernetes token</td>
 <td><code>_token_</code></td>
+<td>textarea</td>
 <td>Protected direct endpoints</td>
 <td>Empty</td>
 <td>Bearer token; the wizard permits an empty value</td>
@@ -2613,13 +2620,15 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Use prefix</td>
 <td><code>_usePrefix_</code></td>
+<td>checkbox</td>
 <td>No</td>
 <td>off</td>
-<td>Shows the prefix field</td>
+<td>Shows the prefix field; does not suppress a populated prefix</td>
 </tr>
 <tr>
 <td>Prefix</td>
 <td><code>_prefix_</code></td>
+<td>string</td>
 <td>No</td>
 <td>Empty</td>
 <td>Shown with <strong>Use prefix</strong>; clear it to stop applying a prefix</td>
@@ -2627,6 +2636,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Filter namespace</td>
 <td><code>_filterNamespace_</code></td>
+<td>checkbox</td>
 <td>No</td>
 <td>off</td>
 <td>Restricts deployment and pod agents to listed namespaces</td>
@@ -2634,6 +2644,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Namespace</td>
 <td><code>_namespace_</code></td>
+<td>textarea</td>
 <td>When filtering</td>
 <td><code>[]</code></td>
 <td>JSON array, for example <code>["default","kube-system"]</code>; exact, case-sensitive matching</td>
@@ -2641,6 +2652,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Use proxy</td>
 <td><code>_useProxy_</code></td>
+<td>checkbox</td>
 <td>No</td>
 <td>off</td>
 <td>Uses <strong>Proxy url</strong> instead of the direct API address; omits Bearer authentication</td>
@@ -2648,6 +2660,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Proxy url</td>
 <td><code>_proxyUrl_</code></td>
+<td>string</td>
 <td>Proxy mode</td>
 <td>Empty</td>
 <td>Base URL, including scheme; shown with <strong>Use proxy</strong></td>
@@ -2655,6 +2668,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Tentacle IP</td>
 <td><code>_tentacleIP_</code></td>
+<td>string</td>
 <td>Yes</td>
 <td><code>127.0.0.1</code></td>
 <td>Transfer destination</td>
@@ -2662,6 +2676,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Tentacle port</td>
 <td><code>_tentaclePort_</code></td>
+<td>number</td>
 <td>Yes</td>
 <td><code>41121</code></td>
 <td>Numeric transfer destination port</td>
@@ -2674,15 +2689,17 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <th>Field</th>
 <th>Macro</th>
+<th>Type</th>
 <th>Required</th>
 <th>Default</th>
-<th>Description</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Scan Deployments</td>
 <td><code>_scanDeployments_</code></td>
+<td>checkbox</td>
 <td>No</td>
 <td>on</td>
 <td>Generates deployment agents when condition data is present</td>
@@ -2690,16 +2707,34 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Scan Nodes</td>
 <td><code>_scanNodes_</code></td>
+<td>checkbox</td>
 <td>No</td>
 <td>on</td>
-<td>Generates node agents from available metrics</td>
+<td>Generates node agents; CPU and memory modules require the Metrics API</td>
 </tr>
 <tr>
 <td>Scan Pods</td>
 <td><code>_scanPods_</code></td>
+<td>checkbox</td>
 <td>No</td>
 <td>on</td>
-<td>Generates pod agents from complete metric/node/IP data</td>
+<td>Generates pod agents for scheduled pods; container CPU and memory modules require the Metrics API</td>
+</tr>
+<tr>
+<td>Scan API health checks</td>
+<td><code>_healthChecks_</code></td>
+<td>checkbox</td>
+<td>No</td>
+<td>on</td>
+<td>Generates the API health endpoint modules. May require elevated API permissions</td>
+</tr>
+<tr>
+<td>Scan component statuses</td>
+<td><code>_componentChecks_</code></td>
+<td>checkbox</td>
+<td>No</td>
+<td>on</td>
+<td>Generates the component count and component condition modules. May require elevated API permissions</td>
 </tr>
 </tbody>
 </table>
@@ -2804,19 +2839,31 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <td><code>deployments</code></td>
 <td>No</td>
 <td><code>1</code></td>
-<td><code>1</code> generates deployment agents</td>
+<td><code>1</code> collects deployments and generates deployment agents</td>
 </tr>
 <tr>
 <td><code>nodes</code></td>
 <td>No</td>
 <td><code>1</code></td>
-<td><code>1</code> generates node agents</td>
+<td><code>1</code> collects nodes and generates node agents</td>
 </tr>
 <tr>
 <td><code>pods</code></td>
 <td>No</td>
 <td><code>1</code></td>
-<td><code>1</code> generates pod agents</td>
+<td><code>1</code> collects pods and generates pod agents</td>
+</tr>
+<tr>
+<td><code>health_checks</code></td>
+<td>No</td>
+<td><code>1</code></td>
+<td><code>1</code> generates the API health endpoint modules</td>
+</tr>
+<tr>
+<td><code>component_checks</code></td>
+<td>No</td>
+<td><code>1</code></td>
+<td><code>1</code> generates the component status modules</td>
 </tr>
 <tr>
 <td><code>data_dir</code></td>
@@ -2855,27 +2902,27 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td><code>API status</code></td>
 <td>generic_proc</td>
-<td><code>1</code> when <code>/healthz</code> returns <code>ok</code>, <code>0</code> otherwise</td>
+<td><code>1</code> when <code>/healthz</code> returns <code>ok</code>, <code>0</code> otherwise; created only when <code>/healthz</code> responds</td>
 </tr>
 <tr>
 <td>One module per health endpoint</td>
 <td>generic_proc</td>
-<td><code>1</code> when the response is <code>ok</code>, <code>0</code> otherwise; omitted if the request fails</td>
+<td><code>1</code> when the response is <code>ok</code>, <code>0</code> otherwise; only when <strong>Scan API health checks</strong> is enabled and the endpoint responds</td>
 </tr>
 <tr>
 <td><code>Services</code></td>
 <td>generic_data</td>
-<td>Number of services</td>
+<td>Number of services; omitted if the request is not accessible</td>
 </tr>
 <tr>
 <td><code>Namespaces</code></td>
 <td>generic_data</td>
-<td>Number of namespaces</td>
+<td>Number of namespaces; omitted if the request is not accessible</td>
 </tr>
 <tr>
 <td><code>Components</code></td>
 <td>generic_data</td>
-<td>Number of component statuses</td>
+<td>Number of component statuses; only when <strong>Scan component statuses</strong> is enabled and the request is accessible</td>
 </tr>
 <tr>
 <td><code>&lt;component&gt;.&lt;condition&gt;</code></td>
@@ -2885,11 +2932,11 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td><code>Deployments</code></td>
 <td>generic_data</td>
-<td>Number of deployments</td>
+<td>Number of deployments; <code>0</code> when <strong>Scan Deployments</strong> is disabled</td>
 </tr>
 </tbody>
 </table>
-<p>Health module names and their exact paths are listed in <a href="#api-requests">API requests</a>. The global agent is transferred only if its collection stage completes.</p>
+<p>Health module names and their exact paths are listed in <a href="#api-requests">API requests</a>. A module is created only for an endpoint that responds. Optional endpoint failures do not prevent the global agent from being transferred.</p>
 <h4 id="node-agents">Node agents<a class="headerlink" href="#node-agents" title="Permanent link">¶</a></h4>
 <table>
 <thead>
@@ -2911,7 +2958,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <td><code>Pods (%)</code></td>
 <td>generic_data</td>
 <td>%</td>
-<td>Collected pod count against the node's allocatable pod capacity; missing capacity can stop node generation</td>
+<td>Collected pod count against the node's allocatable pod capacity; omitted when the capacity is missing</td>
 </tr>
 <tr>
 <td><code>CPU (cores)</code></td>
@@ -2951,7 +2998,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 </tbody>
 </table>
-<p>Node generation requires complete metric and allocation data, including allocatable pods. Missing fields can stop the node-processing stage rather than produce an agent with fewer modules. <code>Pods</code> counts pods processed from the returned data, not an independently validated count of every pod on the node.</p>
+<p>Node agents are generated even when the Metrics API is unavailable; the CPU and memory modules are then omitted. <code>Pods</code> counts pods processed from the returned data, not an independently validated count of every pod on the node.</p>
 <h4 id="deployment-agents">Deployment agents<a class="headerlink" href="#deployment-agents" title="Permanent link">¶</a></h4>
 <table>
 <thead>
@@ -3013,6 +3060,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 </tbody>
 </table>
+<p>Deployment agents are generated only when the deployment returns at least one condition.</p>
 <h4 id="pod-agents">Pod agents<a class="headerlink" href="#pod-agents" title="Permanent link">¶</a></h4>
 <table>
 <thead>
@@ -3074,9 +3122,9 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 </tbody>
 </table>
-<p>Incomplete per-container metrics can interrupt pod-agent generation. The percentages use the node's allocatable resources, not container requests or limits.</p>
+<p>A per-container CPU or memory module is created only when the container exposes that metric; the pod agent is still generated when a metric is missing. The percentages use the node's allocatable resources, not container requests or limits.</p>
 <h3 id="api-requests">API requests<a class="headerlink" href="#api-requests" title="Permanent link">¶</a></h3>
-<p>The token needs access to the requests below. Scan switches control agent generation, not collection. This is the queried surface, not a validated least-privilege role definition.</p>
+<p>The token needs access to the requests below. The resource scan switches control collection and agent generation; the health and component switches control their own requests. This is the queried surface, not a validated least-privilege role definition.</p>
 <table>
 <thead>
 <tr>
@@ -3172,7 +3220,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 <tr>
 <td>Plugin version</td>
-<td><code>1.2</code></td>
+<td><code>1.3</code></td>
 </tr>
 <tr>
 <td>Type</td>

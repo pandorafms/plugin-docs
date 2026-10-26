@@ -2315,8 +2315,8 @@
 
 
 <h1 id="kubernetes-discovery">Kubernetes Discovery<a class="headerlink" href="#kubernetes-discovery" title="Permanent link">¶</a></h1>
-<p><em>Última actualización del artículo: 2026-10-23.</em></p>
-<!-- DRAFT: Verificado contra las fuentes del paquete 1.2; faltan validar la instalación del paquete distribuido y la recopilación en un entorno real. -->
+<p><em>Última actualización del artículo: 2026-10-26.</em></p>
+<!-- DRAFT: Verificado contra las fuentes del paquete 1.3; faltan validar la instalación del paquete distribuido y la recopilación en un entorno real. -->
 
 <h2 id="que-monitoriza">Qué monitoriza<a class="headerlink" href="#que-monitoriza" title="Permanent link">¶</a></h2>
 <p>El plugin de Discovery de Kubernetes se conecta al servidor de API del clúster y descubre sus cargas de trabajo e infraestructura: nodos, pods, deployments, namespaces, servicios, estados de componentes y endpoints de salud de la API. Genera un agente de Pandora FMS por recurso descubierto con módulos de disponibilidad, capacidad y rendimiento leídos de la API.</p>
@@ -2324,8 +2324,8 @@
 <ul>
 <li>el propio clúster, mediante un agente global <strong>Kubernetes</strong>;</li>
 <li>cada nodo, cuando <strong>Scan Nodes</strong> está habilitado;</li>
-<li>cada deployment, cuando <strong>Scan Deployments</strong> está habilitado;</li>
-<li>los pods con métricas y datos completos de nodo e IP, cuando <strong>Scan Pods</strong> está habilitado.</li>
+<li>cada deployment con datos de condiciones, cuando <strong>Scan Deployments</strong> está habilitado;</li>
+<li>cada pod ya planificado en un nodo, cuando <strong>Scan Pods</strong> está habilitado.</li>
 </ul>
 <p>El agente global también incluye el estado de la API, los endpoints de salud, el número de servicios, el número de namespaces y los estados de componentes del clúster.</p>
 <p>El plugin se ejecuta como tarea de Discovery: la consola define la tarea, el servidor de Discovery ejecuta el plugin y los agentes y módulos se crean automáticamente. Los datos generados se envían mediante Tentacle.</p>
@@ -2341,9 +2341,9 @@
 </thead>
 <tbody>
 <tr>
-<td>Versión del plugin <code>1.2</code> (<code>pandorafms.kubernetes</code>)</td>
+<td>Versión del plugin <code>1.3</code> (<code>pandorafms.kubernetes</code>)</td>
 <td>Objetivo documentado</td>
-<td>Identidad del paquete; consulte <a href="#identidad-del-plugin">Identidad del plugin</a></td>
+<td>La versión que describe esta página, identificada por la definición del paquete. Consulte <a href="#identidad-del-plugin">Identidad del plugin</a></td>
 </tr>
 <tr>
 <td>Clúster de Kubernetes con API accesible por HTTPS</td>
@@ -2353,12 +2353,12 @@
 <tr>
 <td>Token Bearer con acceso de lectura a los recursos consultados</td>
 <td><code>Requerido</code></td>
-<td>Autenticación con <code>Authorization: Bearer &lt;token&gt;</code> para nodos, pods, deployments, servicios, namespaces y estados de componentes</td>
+<td>Autenticación con <code>Authorization: Bearer &lt;token&gt;</code> para nodos, pods, deployments, servicios, namespaces y estados de componentes. Los endpoints de salud y de componentes pueden necesitar permisos elevados. Es un requisito, no una declaración de compatibilidad</td>
 </tr>
 <tr>
-<td>API de métricas de Kubernetes (<code>metrics.k8s.io</code>)</td>
-<td><code>Requerido</code> para descubrir nodos y pods</td>
-<td>Los datos parten de <code>/apis/metrics.k8s.io/v1beta1</code>; su ausencia puede impedir generar agentes, no solo omitir CPU y memoria</td>
+<td>API de métricas de Kubernetes (<code>metrics.k8s.io</code>) para el uso de CPU y memoria</td>
+<td><code>Requerido</code> para los módulos de CPU y memoria</td>
+<td>Los módulos de CPU y memoria de nodos y contenedores se leen de <code>/apis/metrics.k8s.io/v1beta1</code>. Sin ella, los agentes de nodo y pod se siguen generando, pero esos módulos se omiten</td>
 </tr>
 <tr>
 <td>Versión concreta de Kubernetes</td>
@@ -2376,21 +2376,21 @@
 <ol>
 <li><strong>Un servidor de Pandora FMS con Discovery habilitado</strong> para ejecutar la tarea y una consola para definirla.</li>
 <li><strong>Acceso al servidor de API desde el servidor de Discovery</strong>, por host y puerto. La conexión directa usa HTTPS; introduzca el host sin esquema.</li>
-<li><strong>Un token Bearer</strong> con acceso de lectura a nodos, pods, deployments, namespaces, servicios, estados de componentes, métricas de nodos y pods y los endpoints de salud de <a href="#peticiones-a-la-api">Peticiones a la API</a>. La tarea no define un rol concreto. Las peticiones de salud y componentes siempre se intentan; esta versión no tiene interruptores para ellas.</li>
+<li><strong>Un token Bearer</strong> para el servidor de API. Es necesario para leer los endpoints protegidos; concédale acceso de lectura solo a los recursos que consulta la tarea. Las opciones <strong>Scan API health checks</strong> y <strong>Scan component statuses</strong> pueden necesitar permisos de API elevados, como indican las ayudas de la tarea.</li>
 <li><strong>Un grupo de agentes y un intervalo de monitorización</strong>. Todos los agentes generados heredan ambos valores de la tarea.</li>
 <li><strong>Conectividad al destino de Tentacle</strong> para enviar los datos generados.</li>
 <li>El plugin se distribuye como aplicación de Discovery de Pandora FMS (paquete <code>.disco</code>), ejecutada por el servidor de Discovery.</li>
 </ol>
-<p>Las conexiones directas usan HTTPS sin verificar el certificado: la identidad del servidor no queda autenticada. Restrinja el acceso de red. En modo proxy se utiliza la URL indicada sin añadir la cabecera Bearer. El token se introduce en la tarea y se escribe en su configuración; restrinja el acceso a ambos. En ejecuciones manuales, guarde el token en un archivo protegido, no en comandos del shell.</p>
+<p>Las conexiones directas usan HTTPS sin verificar el certificado: la identidad del servidor no queda autenticada, por lo que funcionan los certificados autofirmados. Restrinja el acceso de red. En modo proxy se utiliza la URL indicada sin añadir la cabecera Bearer. El token se introduce en la tarea y se escribe en su configuración; restrinja el acceso a ambos. En ejecuciones manuales, guarde el token en un archivo protegido, no en comandos del shell.</p>
 <h3 id="comprobar-el-acceso-al-destino">Comprobar el acceso al destino<a class="headerlink" href="#comprobar-el-acceso-al-destino" title="Permanent link">¶</a></h3>
 <p>Antes de crear la tarea, compruebe la API de métricas y las métricas de nodos y pods con una cuenta autorizada para el clúster:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>--raw<span class="w"> </span>/apis/metrics.k8s.io/v1beta1/
 kubectl<span class="w"> </span>top<span class="w"> </span>node
 kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </span>--all-namespaces
 </code></pre></div>
-<p>Si el clúster no expone la API de métricas, su administrador debe configurarla antes de verificar el descubrimiento de nodos y pods. Estos comandos de diagnóstico no conceden permisos al token del plugin.</p>
+<p>Si el clúster no expone la API de métricas, los agentes de nodo y pod se siguen generando, pero se omiten sus módulos de CPU y memoria. Estos comandos de diagnóstico no conceden permisos al token del plugin.</p>
 <h3 id="instalar-el-plugin">Instalar el plugin<a class="headerlink" href="#instalar-el-plugin" title="Permanent link">¶</a></h3>
-<p>Obtenga el paquete <code>.disco</code> en la <a href="https://marketplace.pandorafms.com/entries/pandorafms.kubernetes">entrada de Kubernetes del Marketplace</a> y cárguelo en Discovery. Seleccione <strong>Kubernetes</strong> al crear una tarea de aplicación. Esta página corresponde al paquete <code>1.2</code>, no a una interfaz <code>1.3</code>.</p>
+<p>Obtenga el paquete <code>.disco</code> en la <a href="https://marketplace.pandorafms.com/entries/pandorafms.kubernetes">entrada de Kubernetes del Marketplace</a> y cárguelo en Discovery desde <strong>Management → Discovery → Extension manager</strong>. Una vez cargado, <strong>Kubernetes</strong> aparece en la categoría <strong>Applications</strong> del asistente de Discovery. Esta página corresponde al paquete <code>1.3</code>.</p>
 <h2 id="configurar-la-tarea-de-discovery">Configurar la tarea de Discovery<a class="headerlink" href="#configurar-la-tarea-de-discovery" title="Permanent link">¶</a></h2>
 <p>Cree la tarea desde <strong>Management → Discovery → Applications → Kubernetes</strong>. El asistente contiene la definición genérica y dos pasos del plugin: <strong>Kubernetes base</strong> y <strong>Kubernetes detailed</strong>. Todos los campos están en <a href="#parametros-de-la-tarea">Parámetros de la tarea</a>.</p>
 <h3 id="paso-1-task-definition">Paso 1 — Task definition<a class="headerlink" href="#paso-1-task-definition" title="Permanent link">¶</a></h3>
@@ -2410,20 +2410,21 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <h3 id="paso-3-kubernetes-detailed">Paso 3 — Kubernetes detailed<a class="headerlink" href="#paso-3-kubernetes-detailed" title="Permanent link">¶</a></h3>
 <p>Selección de recursos:</p>
 <ul>
-<li><strong>Scan Deployments</strong>, <strong>Scan Nodes</strong> y <strong>Scan Pods</strong> activan o desactivan la generación de agentes por categoría. Las peticiones de recopilación se ejecutan aunque estas opciones estén desactivadas.</li>
-<li>El paquete <code>1.2</code> no tiene interruptores para los endpoints de salud ni los estados de componentes.</li>
+<li><strong>Scan Deployments</strong>, <strong>Scan Nodes</strong> y <strong>Scan Pods</strong> activan o desactivan cada categoría de recurso.</li>
+<li><strong>Scan API health checks</strong> genera los módulos de los endpoints de salud de la API. Los endpoints de salud pueden necesitar permisos de API elevados.</li>
+<li><strong>Scan component statuses</strong> genera el recuento de componentes y los módulos de condiciones de componente. Los estados de componentes pueden necesitar permisos de API elevados.</li>
 </ul>
-<!-- SCREENSHOT NEEDED: Paso Kubernetes detailed de la versión 1.2 con solo los tres interruptores de recursos; la imagen heredada de 1.3 no corresponde. -->
-
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/kubernetes/kubernetes-detailed.png" data-desc-position="bottom"><img alt="Paso Kubernetes detailed" src="../../../assets/images/discovery/kubernetes/kubernetes-detailed.png"></a></p>
 <h2 id="verificar-la-primera-ejecucion">Verificar la primera ejecución<a class="headerlink" href="#verificar-la-primera-ejecucion" title="Permanent link">¶</a></h2>
 <p>Ejecute la tarea desde <strong>Management → Discovery → Task list</strong> y compruebe:</p>
 <ol>
 <li><strong>El resumen de la tarea</strong>: progreso, agentes de nodo, pod y deployment generados y total de agentes.</li>
-<li><strong>Los agentes</strong>: el global <strong>Kubernetes</strong> y las categorías habilitadas. Los nodos y pods dependen de las métricas; los deployments requieren datos de condiciones.</li>
-<li><strong>Los módulos</strong>: contraste valores representativos de CPU y memoria y condiciones de pods con el clúster. Los contadores del resumen no demuestran que los datos se hayan recibido correctamente.</li>
+<li><strong>Los agentes</strong>: el global <strong>Kubernetes</strong> y una instancia por cada nodo, deployment y pod planificado descubiertos. Los agentes de nodo y pod se generan aunque la API de métricas no esté disponible; los deployments requieren datos de condiciones.</li>
+<li><strong>Los módulos</strong>: cada agente generado lleva los módulos de su recurso; un clúster accesible con la API de métricas disponible rellena los valores de CPU y memoria. Los contadores del resumen no demuestran que los datos se hayan recibido correctamente.</li>
 <li><strong>La información de ejecución</strong>: una ejecución correcta no informa de errores; los fallos de peticiones se registran ahí.</li>
 </ol>
-<p>Si no se genera nada, revise primero host, puerto, conectividad y token.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/kubernetes/task-summary.png" data-desc-position="bottom"><img alt="Resumen de ejecución de la tarea" src="../../../assets/images/discovery/kubernetes/task-summary.png"></a></p>
+<p>Si la tarea falla antes de generar nada, revise primero host, puerto, conectividad y token.</p>
 <h2 id="interpretar-los-resultados">Interpretar los resultados<a class="headerlink" href="#interpretar-los-resultados" title="Permanent link">¶</a></h2>
 <h3 id="agentes-e-identidad">Agentes e identidad<a class="headerlink" href="#agentes-e-identidad" title="Permanent link">¶</a></h3>
 <p>El plugin crea un agente por recurso descubierto. Los nombres se forman con el nombre original del recurso y el prefijo opcional.</p>
@@ -2453,13 +2454,13 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 <tr>
 <td>Pod</td>
-<td><code>[Prefix]&lt;pod&gt;</code></td>
+<td><code>[Prefix]&lt;namespace&gt;/&lt;pod&gt;</code></td>
 <td>El agente del nodo que lo ejecuta</td>
 </tr>
 </tbody>
 </table>
 <p>Los nodos apuntan al global con prefijo; los deployments apuntan al padre <code>Kubernetes</code> sin prefijo aunque haya uno configurado. Los pods apuntan al nodo con prefijo y usan la IP del pod como dirección. Las descripciones son <code>Kubernetes global agent</code>, <code>Kubernetes node</code>, <code>Kubernetes deployment</code> y <code>Kubernetes pod</code>.</p>
-<p>El descubrimiento de nodos y pods parte de la API de métricas. Las métricas incompletas, la ausencia de nodo asignado o de IP del pod pueden interrumpir el procesamiento y dejar resultados parciales. Las identidades de pods y deployments no incluyen el namespace: nombres iguales en namespaces distintos pueden colisionar. Use prefijos distintos para clústeres diferentes; filtrar namespaces no añade el namespace a la identidad.</p>
+<p>Los agentes de nodo y pod no dependen de la API de métricas: si no está disponible, se siguen generando sin los módulos de CPU y memoria. Solo se descubren los pods ya planificados en un nodo: un pod sin nodo asignado se omite, igual que los recursos que la API devuelve sin nombre. Las identidades de los pods incluyen el namespace, por lo que nombres iguales en namespaces distintos no colisionan; las de los deployments no incluyen el namespace, por lo que nombres iguales de deployment en namespaces distintos pueden colisionar. Use prefijos distintos para clústeres diferentes; filtrar namespaces no añade el namespace a la identidad del deployment.</p>
 <p>Cambiar <strong>Prefix</strong> cambia la identidad de todos los agentes generados. <strong>Filter namespace</strong> solo afecta a deployments y pods; los nodos tienen ámbito de clúster. La comparación es exacta y distingue mayúsculas. La lista es un array JSON, por ejemplo <code>["default","kube-system"]</code>. Con el filtro activado, incluya al menos un namespace: una lista vacía no genera agentes de deployment ni de pod.</p>
 <h3 id="modulos-por-agente">Módulos por agente<a class="headerlink" href="#modulos-por-agente" title="Permanent link">¶</a></h3>
 <p>Los valores se leen en cada ejecución. Los nombres, tipos y unidades están en <a href="#modulos-generados">Módulos generados</a>.</p>
@@ -2477,7 +2478,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 <tr>
 <td>Nodo</td>
-<td>Pods frente a capacidad asignable, condiciones, CPU y memoria; depende de la API de métricas</td>
+<td>Pods frente a capacidad asignable, condiciones y, cuando la API de métricas está disponible, uso de CPU y memoria</td>
 </tr>
 <tr>
 <td>Deployment</td>
@@ -2485,7 +2486,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 <tr>
 <td>Pod</td>
-<td>Fase, condiciones, número de contenedores y CPU/memoria por contenedor; depende de la API de métricas</td>
+<td>Fase, condiciones, número de contenedores y, cuando la API de métricas está disponible, CPU y memoria por contenedor</td>
 </tr>
 </tbody>
 </table>
@@ -2495,7 +2496,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <p>Para probar la conectividad o realizar una ejecución puntual fuera del asistente, escriba los pares <code>key=value</code> de <a href="#claves-del-archivo-de-configuracion">Claves del archivo de configuración</a> y ejecute:</p>
 <div class="highlight"><pre><span></span><code>pandora_kubernetes<span class="w"> </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;
 </code></pre></div>
-<p>Este ejemplo de configuración directa habilita las tres categorías de recursos. Sustituya todos los marcadores antes de usarlo; el ejemplo no se ha ejecutado:</p>
+<p>Este ejemplo de configuración directa habilita todas las categorías de recursos y opciones de escaneo. Sustituya todos los marcadores antes de usarlo; el ejemplo no se ha ejecutado:</p>
 <div class="highlight"><pre><span></span><code><span class="na">ip</span><span class="o">=</span><span class="s">&lt;TARGET_HOST&gt;</span>
 <span class="na">port</span><span class="o">=</span><span class="s">&lt;API_PORT&gt;</span>
 <span class="na">token</span><span class="o">=</span><span class="s">&lt;API_TOKEN&gt;</span>
@@ -2512,6 +2513,8 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <span class="na">deployments</span><span class="o">=</span><span class="s">1</span>
 <span class="na">nodes</span><span class="o">=</span><span class="s">1</span>
 <span class="na">pods</span><span class="o">=</span><span class="s">1</span>
+<span class="na">health_checks</span><span class="o">=</span><span class="s">1</span>
+<span class="na">component_checks</span><span class="o">=</span><span class="s">1</span>
 </code></pre></div>
 <p>La ejecución devuelve un resumen JSON de Discovery y genera XML por agente. Un resumen ilustrativo es <code>{"summary":{"Total agents":4,"Nodes agents":1,"Pods agents":1,"Deployments agents":1}}</code>; los contadores describen la generación, no la entrega confirmada.</p>
 <p>La entrada operativa de la CLI es <code>--conf</code> (<code>-h</code>/<code>--help</code> muestra ayuda). En una tarea de Discovery, el servidor construye el archivo a partir de los campos. Los ejemplos manuales no se han ejecutado contra un entorno real.</p>
@@ -2530,31 +2533,31 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 <tr>
 <td>Respuestas <code>401</code> o <code>403</code></td>
-<td>El token falta, no es válido o no permite leer el recurso. Compruebe el acceso a las rutas exactas de la referencia de API; esta página no proporciona un rol validado.</td>
+<td>El token falta, no es válido o no permite leer el recurso. Los endpoints de salud y de componentes pueden necesitar permisos elevados. Compruebe el acceso a las rutas exactas de la referencia de API; esta página no proporciona un rol validado.</td>
 </tr>
 <tr>
 <td>Se generan nodos, pero no deployments ni pods</td>
-<td>Revise <strong>Filter namespace</strong>: coincidencia exacta con las mismas mayúsculas; una lista vacía no coincide con nada.</td>
+<td>Revise <strong>Scan Deployments</strong> y <strong>Scan Pods</strong>, y <strong>Filter namespace</strong>: con el filtro activado, los nombres deben coincidir de forma exacta y con las mismas mayúsculas; una lista vacía no coincide con nada.</td>
 </tr>
 <tr>
 <td>Faltan pods esperados</td>
-<td>Compruebe métricas, nodo asignado e IP. Los datos incompletos pueden interrumpir la generación; no presuponga que todos los pods pendientes se omiten sin errores.</td>
+<td>Solo se descubren los pods ya planificados en un nodo. Un pod en <code>Pending</code> sin nodo asignado no se genera.</td>
 </tr>
 <tr>
-<td>Faltan agentes o módulos de nodo/pod</td>
-<td>Revise la API de métricas, los recursos asignables y los datos de nodo/IP del pod. Consulte <code>Can't get metrics</code>, <code>Error: Nodes</code> y <code>Error: Pods</code>: los datos incompletos pueden detener el procesamiento.</td>
+<td>Faltan los módulos de CPU y memoria de los nodos</td>
+<td>La API de métricas de Kubernetes no está disponible en el clúster. El agente de nodo se sigue generando.</td>
 </tr>
 <tr>
-<td>Faltan módulos globales, de salud o componentes</td>
-<td>Revise errores de peticiones, incluidos <code>401</code>, <code>403</code> y <code>404</code>. Los fallos de endpoints de salud omiten sus módulos; los fallos al consultar servicios, namespaces o componentes pueden impedir enviar el global. No hay interruptor para omitir estas peticiones.</td>
+<td>Faltan algunos módulos globales, de salud o de componentes</td>
+<td>Esos endpoints devolvieron <code>401</code>, <code>403</code> o <code>404</code>, o la opción de escaneo correspondiente está deshabilitada. El plugin omite un endpoint opcional no accesible en lugar de hacer fallar toda la ejecución.</td>
 </tr>
 <tr>
-<td><code>Could not connect to the API</code> o <strong>API status</strong> a <code>0</code></td>
-<td><code>/healthz</code> no devuelve exactamente <code>ok</code>. Revise acceso y salud de la API; también es la comprobación inicial de conexión.</td>
+<td><strong>API status</strong> es <code>0</code></td>
+<td>El endpoint <code>/healthz</code> no devolvió <code>ok</code>. Compruebe la salud del propio servidor de API. Si <code>/healthz</code> no es accesible, el módulo se omite.</td>
 </tr>
 <tr>
 <td>Falta un agente de deployment</td>
-<td>Revise <strong>Scan Deployments</strong>, filtro de namespaces y condiciones devueltas.</td>
+<td>Revise <strong>Scan Deployments</strong>, el filtro de namespaces y las condiciones devueltas.</td>
 </tr>
 <tr>
 <td><strong>Available</strong> parece correcto con una condición fallida</td>
@@ -2566,7 +2569,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 <tr>
 <td>Falla Tentacle</td>
-<td>Compruebe acceso desde Discovery a <strong>Tentacle IP</strong> y <strong>Tentacle port</strong>.</td>
+<td>Compruebe el acceso desde Discovery a <strong>Tentacle IP</strong> y <strong>Tentacle port</strong>.</td>
 </tr>
 <tr>
 <td>El modo proxy no se autentica</td>
@@ -2583,15 +2586,17 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <th>Campo</th>
 <th>Macro</th>
+<th>Tipo</th>
 <th>Requerido</th>
 <th>Por defecto</th>
-<th>Descripción</th>
+<th>Notas</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Kubernetes host</td>
 <td><code>_ip_</code></td>
+<td>string</td>
 <td>Modo directo</td>
 <td>Vacío</td>
 <td>Dirección o nombre del servidor de API, sin esquema</td>
@@ -2599,6 +2604,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Kubernetes port</td>
 <td><code>_port_</code></td>
+<td>number</td>
 <td>Modo directo</td>
 <td>Vacío</td>
 <td>Puerto numérico del servidor de API</td>
@@ -2606,6 +2612,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Kubernetes token</td>
 <td><code>_token_</code></td>
+<td>textarea</td>
 <td>Endpoints directos protegidos</td>
 <td>Vacío</td>
 <td>Token Bearer; el asistente permite dejarlo vacío</td>
@@ -2613,13 +2620,15 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Use prefix</td>
 <td><code>_usePrefix_</code></td>
+<td>checkbox</td>
 <td>No</td>
 <td>off</td>
-<td>Muestra el campo de prefijo</td>
+<td>Muestra el campo de prefijo; no anula un prefijo con contenido</td>
 </tr>
 <tr>
 <td>Prefix</td>
 <td><code>_prefix_</code></td>
+<td>string</td>
 <td>No</td>
 <td>Vacío</td>
 <td>Visible con <strong>Use prefix</strong>; vacíelo para dejar de aplicar prefijo</td>
@@ -2627,13 +2636,15 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Filter namespace</td>
 <td><code>_filterNamespace_</code></td>
+<td>checkbox</td>
 <td>No</td>
 <td>off</td>
-<td>Limita agentes de deployment y pod a la lista indicada</td>
+<td>Limita los agentes de deployment y de pod a la lista indicada</td>
 </tr>
 <tr>
 <td>Namespace</td>
 <td><code>_namespace_</code></td>
+<td>textarea</td>
 <td>Al filtrar</td>
 <td><code>[]</code></td>
 <td>Array JSON, por ejemplo <code>["default","kube-system"]</code>; comparación exacta con distinción de mayúsculas</td>
@@ -2641,6 +2652,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Use proxy</td>
 <td><code>_useProxy_</code></td>
+<td>checkbox</td>
 <td>No</td>
 <td>off</td>
 <td>Usa <strong>Proxy url</strong> en lugar de la dirección directa; omite autenticación Bearer</td>
@@ -2648,6 +2660,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Proxy url</td>
 <td><code>_proxyUrl_</code></td>
+<td>string</td>
 <td>Modo proxy</td>
 <td>Vacío</td>
 <td>URL base con esquema; visible con <strong>Use proxy</strong></td>
@@ -2655,6 +2668,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Tentacle IP</td>
 <td><code>_tentacleIP_</code></td>
+<td>string</td>
 <td>Sí</td>
 <td><code>127.0.0.1</code></td>
 <td>Destino de transferencia</td>
@@ -2662,6 +2676,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td>Tentacle port</td>
 <td><code>_tentaclePort_</code></td>
+<td>number</td>
 <td>Sí</td>
 <td><code>41121</code></td>
 <td>Puerto numérico de transferencia</td>
@@ -2674,32 +2689,52 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <th>Campo</th>
 <th>Macro</th>
+<th>Tipo</th>
 <th>Requerido</th>
 <th>Por defecto</th>
-<th>Descripción</th>
+<th>Notas</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Scan Deployments</td>
 <td><code>_scanDeployments_</code></td>
+<td>checkbox</td>
 <td>No</td>
 <td>on</td>
-<td>Genera agentes de deployment cuando hay condiciones</td>
+<td>Genera agentes de deployment cuando hay datos de condiciones</td>
 </tr>
 <tr>
 <td>Scan Nodes</td>
 <td><code>_scanNodes_</code></td>
+<td>checkbox</td>
 <td>No</td>
 <td>on</td>
-<td>Genera agentes de nodo a partir de métricas disponibles</td>
+<td>Genera agentes de nodo; los módulos de CPU y memoria requieren la API de métricas</td>
 </tr>
 <tr>
 <td>Scan Pods</td>
 <td><code>_scanPods_</code></td>
+<td>checkbox</td>
 <td>No</td>
 <td>on</td>
-<td>Genera agentes de pod con datos completos de métricas, nodo e IP</td>
+<td>Genera agentes de pod planificados; los módulos de CPU y memoria por contenedor requieren la API de métricas</td>
+</tr>
+<tr>
+<td>Scan API health checks</td>
+<td><code>_healthChecks_</code></td>
+<td>checkbox</td>
+<td>No</td>
+<td>on</td>
+<td>Genera los módulos de los endpoints de salud de la API. Puede necesitar permisos de API elevados</td>
+</tr>
+<tr>
+<td>Scan component statuses</td>
+<td><code>_componentChecks_</code></td>
+<td>checkbox</td>
+<td>No</td>
+<td>on</td>
+<td>Genera el recuento de componentes y los módulos de condiciones de componente. Puede necesitar permisos de API elevados</td>
 </tr>
 </tbody>
 </table>
@@ -2804,19 +2839,31 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <td><code>deployments</code></td>
 <td>No</td>
 <td><code>1</code></td>
-<td><code>1</code> genera agentes de deployment</td>
+<td><code>1</code> recopila deployments y genera agentes de deployment</td>
 </tr>
 <tr>
 <td><code>nodes</code></td>
 <td>No</td>
 <td><code>1</code></td>
-<td><code>1</code> genera agentes de nodo</td>
+<td><code>1</code> recopila nodos y genera agentes de nodo</td>
 </tr>
 <tr>
 <td><code>pods</code></td>
 <td>No</td>
 <td><code>1</code></td>
-<td><code>1</code> genera agentes de pod</td>
+<td><code>1</code> recopila pods y genera agentes de pod</td>
+</tr>
+<tr>
+<td><code>health_checks</code></td>
+<td>No</td>
+<td><code>1</code></td>
+<td><code>1</code> genera los módulos de los endpoints de salud de la API</td>
+</tr>
+<tr>
+<td><code>component_checks</code></td>
+<td>No</td>
+<td><code>1</code></td>
+<td><code>1</code> genera los módulos de estado de componentes</td>
 </tr>
 <tr>
 <td><code>data_dir</code></td>
@@ -2855,27 +2902,27 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td><code>API status</code></td>
 <td>generic_proc</td>
-<td><code>1</code> si <code>/healthz</code> devuelve <code>ok</code>; <code>0</code> en caso contrario</td>
+<td><code>1</code> si <code>/healthz</code> devuelve <code>ok</code>; <code>0</code> en caso contrario. Solo se crea cuando <code>/healthz</code> responde</td>
 </tr>
 <tr>
 <td>Un módulo por endpoint de salud</td>
 <td>generic_proc</td>
-<td><code>1</code> si devuelve <code>ok</code>; <code>0</code> en caso contrario; se omite si falla la petición</td>
+<td><code>1</code> si devuelve <code>ok</code>; <code>0</code> en caso contrario. Solo cuando <strong>Scan API health checks</strong> está habilitado y el endpoint responde</td>
 </tr>
 <tr>
 <td><code>Services</code></td>
 <td>generic_data</td>
-<td>Número de servicios</td>
+<td>Número de servicios; se omite si la petición no es accesible</td>
 </tr>
 <tr>
 <td><code>Namespaces</code></td>
 <td>generic_data</td>
-<td>Número de namespaces</td>
+<td>Número de namespaces; se omite si la petición no es accesible</td>
 </tr>
 <tr>
 <td><code>Components</code></td>
 <td>generic_data</td>
-<td>Número de estados de componentes</td>
+<td>Número de estados de componentes. Solo cuando <strong>Scan component statuses</strong> está habilitado y la petición es accesible</td>
 </tr>
 <tr>
 <td><code>&lt;component&gt;.&lt;condition&gt;</code></td>
@@ -2885,11 +2932,11 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <tr>
 <td><code>Deployments</code></td>
 <td>generic_data</td>
-<td>Número de deployments</td>
+<td>Número de deployments; <code>0</code> cuando <strong>Scan Deployments</strong> está deshabilitado</td>
 </tr>
 </tbody>
 </table>
-<p>Los nombres y rutas de salud están en <a href="#peticiones-a-la-api">Peticiones a la API</a>. El global se transfiere solo si termina su fase de recopilación.</p>
+<p>Los nombres y rutas de salud están en <a href="#peticiones-a-la-api">Peticiones a la API</a>. Solo se crea un módulo para un endpoint que responde. Los fallos de endpoints opcionales no impiden la transferencia del agente global.</p>
 <h4 id="agentes-de-nodo">Agentes de nodo<a class="headerlink" href="#agentes-de-nodo" title="Permanent link">¶</a></h4>
 <table>
 <thead>
@@ -2911,7 +2958,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 <td><code>Pods (%)</code></td>
 <td>generic_data</td>
 <td>%</td>
-<td>Pods recopilados frente a capacidad asignable del nodo; su ausencia puede detener la generación de nodos</td>
+<td>Pods recopilados frente a capacidad asignable del nodo; se omite si falta esa capacidad</td>
 </tr>
 <tr>
 <td><code>CPU (cores)</code></td>
@@ -2951,7 +2998,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 </tbody>
 </table>
-<p>La generación de nodos requiere métricas y datos asignables completos, incluida la capacidad de pods. La ausencia de campos puede detener la fase de nodos en lugar de generar agentes con menos módulos. <code>Pods</code> cuenta los pods procesados de los datos recibidos, no un recuento independiente validado de todos los pods del nodo.</p>
+<p>Los agentes de nodo se generan aunque la API de métricas no esté disponible; en ese caso se omiten los módulos de CPU y memoria. <code>Pods</code> cuenta los pods procesados de los datos recibidos, no un recuento independiente validado de todos los pods del nodo.</p>
 <h4 id="agentes-de-deployment">Agentes de deployment<a class="headerlink" href="#agentes-de-deployment" title="Permanent link">¶</a></h4>
 <table>
 <thead>
@@ -3013,6 +3060,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 </tbody>
 </table>
+<p>Los agentes de deployment solo se generan cuando el deployment devuelve al menos una condición.</p>
 <h4 id="agentes-de-pod">Agentes de pod<a class="headerlink" href="#agentes-de-pod" title="Permanent link">¶</a></h4>
 <table>
 <thead>
@@ -3074,9 +3122,9 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 </tbody>
 </table>
-<p>Las métricas incompletas de contenedores pueden interrumpir la generación del agente. Los porcentajes usan los recursos asignables del nodo, no los requests ni límites del contenedor.</p>
+<p>Solo se crea un módulo de CPU o memoria por contenedor cuando el contenedor expone esa métrica; el agente de pod se genera aunque falte una métrica. Los porcentajes usan los recursos asignables del nodo, no los requests ni límites del contenedor.</p>
 <h3 id="peticiones-a-la-api">Peticiones a la API<a class="headerlink" href="#peticiones-a-la-api" title="Permanent link">¶</a></h3>
-<p>El token necesita acceso a las siguientes peticiones. Los interruptores controlan la generación de agentes, no la recopilación. Esta lista describe las consultas, no un rol de mínimo privilegio validado.</p>
+<p>El token necesita acceso a las siguientes peticiones. Los interruptores de recursos controlan la recopilación y la generación de agentes; los de salud y componentes controlan sus propias peticiones. Esta lista describe las consultas, no un rol de mínimo privilegio validado.</p>
 <table>
 <thead>
 <tr>
@@ -3172,7 +3220,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 </tr>
 <tr>
 <td>Versión del plugin</td>
-<td><code>1.2</code></td>
+<td><code>1.3</code></td>
 </tr>
 <tr>
 <td>Tipo</td>
