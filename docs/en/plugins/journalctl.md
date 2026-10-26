@@ -31,7 +31,7 @@ that match or by dropping the ones that match.
 | A Linux host with systemd and `journalctl` in the `PATH` | `Required` | `journalctl` is the only data source of the plugin: when the command is not available the run ends with an error and prints no entries |
 | An account allowed to read the journal | `Required` | The plugin reads the journal through `journalctl` with the permissions of the account that runs the agent; when the journal cannot be read the command fails and the run ends with an error |
 | A Pandora FMS agent installed on the monitored host | `Required` | The plugin is executed by the agent and its output is consumed as agent plugin output |
-| Pandora FMS NG 784 and later | `Supported` | The Marketplace states that all its integrations are compatible with Pandora FMS NG 784 and later versions. It is a general Marketplace statement, not a statement specific to this addon |
+| Pandora FMS NG 784 and later | `Not validated` | The Marketplace states that all its integrations are compatible with Pandora FMS NG 784 and later versions. It is a general Marketplace statement, not a statement specific to this addon, so it is not enough for `Supported` |
 | Individual Linux distributions and versions | `Not validated` | No distribution or version matrix is recorded for this addon |
 
 The plugin runs on the monitored host itself: it reports the journal of that

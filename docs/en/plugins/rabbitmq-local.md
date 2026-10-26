@@ -11,6 +11,8 @@ exchange activity, connection counters and an availability check.
 
 The plugin supports two execution models:
 
+> This page documents the plugin bundled with the Pandora FMS agent. The Marketplace addon `pandorafms.rabbitmq` is a different one: see [RabbitMQ monitoring plugin](rabbitmq.md).
+
 - **Server plugin mode** (default; selected when `as_agent_plugin` is absent,
   `0` or empty): each run builds an `agent_data` document and delivers it to
   Pandora FMS through Tentacle or through a local data folder.
