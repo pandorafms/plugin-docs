@@ -1,0 +1,3625 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/discovery/proxmox/">
+      
+      
+        <link rel="prev" href="../postgresql/">
+      
+      
+        <link rel="next" href="../rabbitmq-discovery/">
+      
+      
+        
+          <link rel="alternate" href="../../../discovery/proxmox/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Discovery de Proxmox - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#discovery-de-proxmox" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Discovery de Proxmox
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../discovery/proxmox/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de KVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de Proxmox
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de Proxmox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-monitoriza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué monitoriza
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurar-la-tarea-de-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurar la tarea de Discovery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configurar la tarea de Discovery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-definicion-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 1 — Definición de la tarea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-proxmox-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 2 — Proxmox base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-proxmox-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 3 — Proxmox detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificar-la-primera-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar la primera ejecución
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entender los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agentes-e-identidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes e identidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-lista-de-entidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de lista de entidades
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-por-agente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos por agente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operar
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución manual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitaciones
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de la tarea
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parámetros de la tarea">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxmox-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxmox base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proxmox-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxmox detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-lista-de-entidades_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de lista de entidades
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reglas-de-renombrado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reglas de renombrado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Módulos generados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nodos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nodos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maquinas-virtuales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Máquinas virtuales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contenedores-lxc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contenedores LXC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#almacenamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Almacenamiento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copias-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copias de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centro-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centro de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de VMware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Dynamic SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-monitoriza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué monitoriza
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurar-la-tarea-de-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurar la tarea de Discovery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configurar la tarea de Discovery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-definicion-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 1 — Definición de la tarea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-proxmox-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 2 — Proxmox base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-proxmox-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 3 — Proxmox detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificar-la-primera-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar la primera ejecución
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entender los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agentes-e-identidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes e identidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-lista-de-entidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de lista de entidades
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-por-agente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos por agente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operar
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución manual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitaciones
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de la tarea
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parámetros de la tarea">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxmox-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxmox base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proxmox-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxmox detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-lista-de-entidades_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de lista de entidades
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reglas-de-renombrado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reglas de renombrado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Módulos generados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nodos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nodos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maquinas-virtuales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Máquinas virtuales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contenedores-lxc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contenedores LXC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#almacenamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Almacenamiento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copias-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copias de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centro-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centro de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="discovery-de-proxmox">Discovery de Proxmox<a class="headerlink" href="#discovery-de-proxmox" title="Permanent link">¶</a></h1>
+<p><em>Última actualización del artículo: 2026-10-27.</em></p>
+<h2 id="que-monitoriza">Qué monitoriza<a class="headerlink" href="#que-monitoriza" title="Permanent link">¶</a></h2>
+<p>El plugin de Discovery de Proxmox se conecta a un clúster de Proxmox VE a través de la API de Proxmox VE y descubre sus recursos. Genera un agente de Pandora FMS por cada recurso descubierto y lo completa con módulos de disponibilidad, capacidad, configuración y rendimiento leídos de la API de Proxmox.</p>
+<p>El plugin genera agentes para:</p>
+<ul>
+<li>cada nodo de Proxmox;</li>
+<li>cada máquina virtual QEMU;</li>
+<li>cada contenedor LXC;</li>
+<li>cada almacenamiento definido en un nodo;</li>
+<li>un agente de clúster para las copias de seguridad programadas;</li>
+<li>un agente de centro de datos con el resumen del clúster.</li>
+</ul>
+<p>Las categorías de recursos se seleccionan en la tarea y una lista de entidades por tarea permite ajustar qué recursos se monitorizan y renombrar los agentes resultantes.</p>
+<p>El plugin se ejecuta como una tarea de Discovery: la consola crea la tarea, el servidor de Discovery ejecuta el plugin y los agentes y módulos generados se crean automáticamente. La tarea entrega los datos de los agentes generados a través de Tentacle.</p>
+<h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
+<h3 id="compatibilidad">Compatibilidad<a class="headerlink" href="#compatibilidad" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Ámbito</th>
+<th>Estado</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Versión del plugin <code>1.6</code> (<code>pandorafms.proxmox</code>)</td>
+<td>Objetivo documentado</td>
+<td>La versión que describe esta página, identificada por la definición del paquete.</td>
+</tr>
+<tr>
+<td>Clúster de Proxmox VE con la API accesible en el puerto configurado (por defecto <code>8006</code>)</td>
+<td><code>Required</code></td>
+<td>El plugin se autentica y lee cada recurso a través de la API de Proxmox VE.</td>
+</tr>
+<tr>
+<td>Una cuenta o token de API con acceso de lectura a nodos, invitados, almacenamiento, copias de seguridad y estado del clúster</td>
+<td><code>Required</code></td>
+<td>El plugin lista nodos, invitados QEMU y LXC, almacenamiento y copias de seguridad del clúster; nunca cambia la configuración de Proxmox.</td>
+</tr>
+<tr>
+<td>Una versión concreta de Proxmox VE</td>
+<td><code>Not validated</code></td>
+<td>Ningún registro de pruebas publicado establece compatibilidad con una versión concreta de Proxmox VE.</td>
+</tr>
+<tr>
+<td>Sistema operativo del host que ejecuta el plugin</td>
+<td><code>Not validated</code></td>
+<td>Ningún registro de pruebas publicado establece compatibilidad con un sistema operativo.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="requisitos">Requisitos<a class="headerlink" href="#requisitos" title="Permanent link">¶</a></h3>
+<ul>
+<li>Un servidor de Pandora FMS con Discovery habilitado para ejecutar la tarea, y una consola para definirla.</li>
+<li>Un endpoint de Proxmox VE accesible desde el servidor de Discovery, con la API expuesta en el puerto configurado. El puerto por defecto de la API de Proxmox VE es <code>8006</code>.</li>
+<li>Una de estas credenciales:<ul>
+<li>un usuario de Proxmox en formato <code>user@realm</code>, por ejemplo <code>root@pam</code>, con su contraseña;</li>
+<li>un token de API de Proxmox, indicado mediante su nombre de token y su secreto.</li>
+</ul>
+</li>
+<li>Un grupo de agentes de destino y un intervalo de monitorización para los agentes generados. Ambos proceden de la tarea de Discovery y los hereda cada agente generado.</li>
+<li>Conectividad de red con el destino Tentacle, porque la tarea transfiere los datos de los agentes generados a través de Tentacle.</li>
+<li>Una ruta escribible para el archivo de lista de entidades. Por defecto es un archivo específico de la tarea de Discovery dentro del directorio temporal de Pandora.</li>
+<li>El plugin se distribuye como una aplicación de Discovery de Pandora FMS (paquete <code>.disco</code>) que el servidor de Discovery ejecuta en el servidor de Pandora FMS.</li>
+</ul>
+<p>Concede a la cuenta o al token de Proxmox únicamente el acceso de lectura que necesite tu monitorización. El plugin solo consulta la API; nunca modifica nodos, invitados, almacenamiento ni copias de seguridad.</p>
+<p>El plugin se conecta a la API de Proxmox VE sin verificar su certificado TLS. Ejecuta la tarea solo en una red de confianza o protege el tráfico mediante un túnel. Este plugin no ofrece ninguna opción para habilitar la verificación del certificado.</p>
+<h3 id="instalar-el-plugin">Instalar el plugin<a class="headerlink" href="#instalar-el-plugin" title="Permanent link">¶</a></h3>
+<p>Carga el paquete <code>.disco</code> desde <strong>Management → Discovery → Manage disco packages</strong>: elige <strong>Select a file</strong>, selecciona el paquete y pulsa <strong>Upload DISCO</strong>. Tras la carga, <strong>Proxmox</strong> aparece en la lista de paquetes y en la sección <strong>Applications</strong> del asistente de Discovery.</p>
+<h2 id="configurar-la-tarea-de-discovery">Configurar la tarea de Discovery<a class="headerlink" href="#configurar-la-tarea-de-discovery" title="Permanent link">¶</a></h2>
+<p>Crea la tarea desde <strong>Management → Discovery → Applications → Proxmox</strong>. El asistente recorre la definición genérica de la tarea y dos pasos del plugin: <strong>Proxmox base</strong> y <strong>Proxmox detailed</strong>. Todos los campos se documentan en <a href="#parametros-de-la-tarea">Parámetros de la tarea</a>.</p>
+<h3 id="paso-1-definicion-de-la-tarea">Paso 1 — Definición de la tarea<a class="headerlink" href="#paso-1-definicion-de-la-tarea" title="Permanent link">¶</a></h3>
+<p>El paso genérico pide el <strong>nombre</strong> de la tarea, el <strong>grupo de agentes</strong> y el <strong>servidor</strong> en el que se ejecuta, y el <strong>intervalo</strong>. El grupo y el intervalo se pasan al plugin y los hereda cada agente generado.</p>
+<h3 id="paso-2-proxmox-base">Paso 2 — Proxmox base<a class="headerlink" href="#paso-2-proxmox-base" title="Permanent link">¶</a></h3>
+<p>Datos de conexión, autenticación y destino Tentacle:</p>
+<ul>
+<li><strong>Proxmox host</strong> es la dirección o el nombre de host del endpoint de Proxmox VE.</li>
+<li><strong>Port</strong> es el puerto de la API. Por defecto <code>8006</code>.</li>
+<li><strong>Proxmox user</strong> es la cuenta en formato <code>user@realm</code>, por ejemplo <code>root@pam</code>.</li>
+<li><strong>Password Authentication</strong> controla la visibilidad de <strong>Password</strong>. Introduce la contraseña del usuario de Proxmox.</li>
+<li><strong>Token API Authentication</strong> controla la visibilidad de <strong>Token Name</strong> y <strong>Token Password</strong>. Introduce el nombre y el secreto de un token de API de Proxmox.</li>
+<li><strong>Tentacle IP</strong>, <strong>Tentacle port</strong>, <strong>Tentacle client path</strong> y <strong>Tentacle extra options</strong> definen cómo se envían los datos generados. Deja los valores por defecto salvo que tu entorno necesite otro destino Tentacle.</li>
+<li><strong>Agent name prefix</strong> se antepone a los nombres de los agentes generados. Por defecto <code>Proxmox.</code>.</li>
+<li><strong>Agent autodisable mode</strong> crea los agentes generados en modo autodisable.</li>
+</ul>
+<p>Las dos casillas de autenticación solo controlan qué campos muestra el asistente. El plugin se autentica con el token de API cuando <strong>Token Name</strong> y <strong>Token Password</strong> están ambos informados, y con el usuario y la contraseña de Proxmox en caso contrario. No rellenes solo uno de los campos de token: en ese caso el plugin recurre a la autenticación por contraseña.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/proxmox/proxmox-base.png" data-desc-position="bottom"><img alt="Paso Proxmox base del asistente de Discovery" src="../../../assets/images/discovery/proxmox/proxmox-base.png"></a></p>
+<h3 id="paso-3-proxmox-detailed">Paso 3 — Proxmox detailed<a class="headerlink" href="#paso-3-proxmox-detailed" title="Permanent link">¶</a></h3>
+<p>Categorías de recursos, la lista de entidades y el comportamiento del reescaneo:</p>
+<ul>
+<li><strong>Scan VMs</strong>, <strong>Scan LXC</strong>, <strong>Scan backups</strong>, <strong>Scan nodes</strong>, <strong>Scan data center</strong> y <strong>Scan storage</strong> habilitan o deshabilitan cada categoría de recurso. Todas están habilitadas por defecto.</li>
+<li><strong>Enable entities list re-scan interval</strong> reconstruye las secciones de recursos de la lista de entidades tras el intervalo configurado. Consulta <a href="#archivo-de-lista-de-entidades">Archivo de lista de entidades</a> para conocer sus consecuencias.</li>
+<li><strong>Re-scan entities list interval</strong> es la frecuencia con la que se reconstruye la lista. Solo se muestra cuando <strong>Enable entities list re-scan interval</strong> está activado.</li>
+</ul>
+<p>El asistente no expone la ruta de la lista de entidades. El plugin la mantiene en un archivo específico de la tarea dentro del directorio temporal de Pandora y la lee en cada ejecución. Edita ese archivo para elegir qué recursos concretos se monitorizan y para renombrar sus agentes. Consulta <a href="#archivo-de-lista-de-entidades">Archivo de lista de entidades</a>.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/proxmox/proxmox-detailed.png" data-desc-position="bottom"><img alt="Paso Proxmox detailed del asistente de Discovery" src="../../../assets/images/discovery/proxmox/proxmox-detailed.png"></a></p>
+<h2 id="verificar-la-primera-ejecucion">Verificar la primera ejecución<a class="headerlink" href="#verificar-la-primera-ejecucion" title="Permanent link">¶</a></h2>
+<p>Ejecuta la tarea desde <strong>Management → Discovery → Task list</strong> y comprueba el resultado en este orden.</p>
+<ol>
+<li><strong>El resumen de la tarea</strong> informa del número total de agentes generados y de cuántos pertenecen a cada grupo de recursos.</li>
+<li><strong>Los agentes.</strong> Espera un agente por cada recurso habilitado y accesible, más el agente de copias de seguridad del clúster y el agente de centro de datos cuando sus categorías estén habilitadas.</li>
+<li><strong>Los módulos.</strong> Cada agente generado incluye los módulos de su tipo de recurso; un entorno accesible rellena los valores de disponibilidad, capacidad y rendimiento.</li>
+<li><strong>La información de ejecución.</strong> Una ejecución correcta no informa de errores; cualquier fallo por recurso se registra ahí.</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/proxmox/task-summary.png" data-desc-position="bottom"><img alt="Resumen de ejecución de la tarea" src="../../../assets/images/discovery/proxmox/task-summary.png"></a></p>
+<p>Si la tarea falla antes de generar nada, el host de Proxmox, el puerto y las credenciales son lo primero que hay que revisar.</p>
+<h2 id="entender-los-resultados">Entender los resultados<a class="headerlink" href="#entender-los-resultados" title="Permanent link">¶</a></h2>
+<h3 id="agentes-e-identidad">Agentes e identidad<a class="headerlink" href="#agentes-e-identidad" title="Permanent link">¶</a></h3>
+<p>El plugin crea un agente por cada recurso descubierto. Todos los agentes generados pertenecen al grupo de agentes de la tarea y heredan su intervalo. Los agentes de nodo, máquina virtual y LXC también incluyen un campo personalizado, <code>proxmox_device</code>, cuyo valor es <code>Node</code>, <code>VM</code> o <code>LXC</code>.</p>
+<p>Cada agente tiene un nombre interno estable y un alias legible. El nombre interno es un hash acotado a la tarea de Discovery, al host y puerto de Proxmox, al tipo de recurso y al identificador del recurso. El alias se construye a partir del prefijo configurado y de la identidad del recurso, y puede reescribirse con una regla de renombrado.</p>
+<table>
+<thead>
+<tr>
+<th>Recurso</th>
+<th>Plantilla de alias (por defecto)</th>
+<th>Alcance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nodo</td>
+<td><code>&lt;prefix&gt;.&lt;node&gt;.&lt;node id&gt;</code></td>
+<td>Un agente por nodo</td>
+</tr>
+<tr>
+<td>Máquina virtual</td>
+<td><code>&lt;prefix&gt;.&lt;vm name&gt;.&lt;vmid&gt;.&lt;node&gt;</code></td>
+<td>Un agente por invitado QEMU</td>
+</tr>
+<tr>
+<td>Contenedor LXC</td>
+<td><code>&lt;prefix&gt;.&lt;container name&gt;.&lt;vmid&gt;.&lt;node&gt;</code></td>
+<td>Un agente por invitado LXC</td>
+</tr>
+<tr>
+<td>Almacenamiento</td>
+<td><code>&lt;prefix&gt;_&lt;storage&gt;_&lt;node&gt;</code></td>
+<td>Un agente por almacenamiento de nodo</td>
+</tr>
+<tr>
+<td>Copias de seguridad</td>
+<td><code>&lt;prefix&gt;_Backups</code></td>
+<td>Un agente para todo el clúster</td>
+</tr>
+<tr>
+<td>Centro de datos</td>
+<td><code>&lt;prefix&gt;_Data_Center</code></td>
+<td>Un agente para todo el clúster</td>
+</tr>
+</tbody>
+</table>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/proxmox/generated-agents.png" data-desc-position="bottom"><img alt="Agentes generados" src="../../../assets/images/discovery/proxmox/generated-agents.png"></a></p>
+<p>Como el nombre interno incluye el identificador de la tarea de Discovery y el endpoint de Proxmox, dos tareas que monitorizan entornos de Proxmox distintos no pueden actualizar el mismo agente aunque coincidan los nombres de sus recursos. El nombre del archivo de lista de entidades también es específico de la tarea.</p>
+<p>Las reglas de renombrado solo cambian el alias visible. El nombre interno no se ve afectado y los agentes invitados se identifican por su VMID, así que renombrar un invitado sigue actualizando el mismo agente.</p>
+<h3 id="archivo-de-lista-de-entidades">Archivo de lista de entidades<a class="headerlink" href="#archivo-de-lista-de-entidades" title="Permanent link">¶</a></h3>
+<p>En su primera ejecución, el plugin crea el archivo de lista de entidades con un encabezado de sección por tipo de recurso y los recursos que ha descubierto:</p>
+<div class="highlight"><pre><span></span><code>Node
+pve1
+VM
+pve1/100
+LXC
+pve1/200
+Storage
+pve1/local
+Backups
+Backups
+Datacenter
+Data_Center
+Rename
+web-prod TO Production web
+</code></pre></div>
+<p>Elimina una línea de recurso para excluirlo de la monitorización. Los cambios surten efecto en la siguiente ejecución de la tarea. La lista es el mecanismo de este plugin para seleccionar recursos concretos y renombrar sus agentes; consulta <a href="#archivo-de-lista-de-entidades">Archivo de lista de entidades</a> en la referencia para conocer la semántica exacta, incluido qué ocurre cuando se elimina un recurso en Proxmox VE, y el comportamiento del reescaneo.</p>
+<h3 id="modulos-por-agente">Módulos por agente<a class="headerlink" href="#modulos-por-agente" title="Permanent link">¶</a></h3>
+<p>Cada agente recibe los módulos de su tipo de recurso. Los valores de los módulos se leen de la API de Proxmox en cada ejecución de la tarea; el nombre y la unidad exactos de cada módulo se listan en <a href="#modulos-generados">Módulos generados</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Agente</th>
+<th>Módulos que incluye</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nodo</td>
+<td>Estado y situación del host, CPU, memoria, disco, capacidad de almacenamiento, versión de kernel y del gestor, huella SSL y tráfico de red</td>
+</tr>
+<tr>
+<td>Máquina virtual</td>
+<td>Estado de encendido y situación, uso de CPU, memoria, disco y red</td>
+</tr>
+<tr>
+<td>Contenedor LXC</td>
+<td>Estado de encendido y situación, uso de CPU, memoria, disco y red, más porcentajes de uso relativos al contenedor y al host</td>
+</tr>
+<tr>
+<td>Almacenamiento</td>
+<td>Porcentaje de espacio usado, estado habilitado y activo, capacidad total y usada, tipo, ruta y tipos de contenido</td>
+</tr>
+<tr>
+<td>Copias de seguridad</td>
+<td>Un par de módulos por cada trabajo de copia programado: su estado y el tiempo restante hasta la próxima ejecución</td>
+</tr>
+<tr>
+<td>Centro de datos</td>
+<td>Contadores de nodos, máquinas virtuales y LXC y porcentajes generales de uso de CPU, memoria y almacenamiento</td>
+</tr>
+</tbody>
+</table>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/proxmox/data-center-modules.png" data-desc-position="bottom"><img alt="Módulos del centro de datos" src="../../../assets/images/discovery/proxmox/data-center-modules.png"></a></p>
+<h2 id="operar">Operar<a class="headerlink" href="#operar" title="Permanent link">¶</a></h2>
+<h3 id="ejecucion-manual">Ejecución manual<a class="headerlink" href="#ejecucion-manual" title="Permanent link">¶</a></h3>
+<p>El plugin también puede ejecutarse fuera del asistente de Discovery con un archivo de configuración. Esto es útil para probar la conectividad, para una ejecución puntual o para una programación propia. El archivo de configuración es una lista simple de líneas <code>clave=valor</code>:</p>
+<div class="highlight"><pre><span></span><code>pandora_proxmox<span class="w"> </span>--conf<span class="w"> </span>&lt;ruta<span class="w"> </span>del<span class="w"> </span>archivo<span class="w"> </span>de<span class="w"> </span>configuración&gt;
+</code></pre></div>
+<p>Un archivo de configuración mínimo para una ejecución manual tiene este aspecto:</p>
+<div class="highlight"><pre><span></span><code>host=&lt;PROXMOX_HOST&gt;
+port=8006
+user=&lt;PROXMOX_USER&gt;
+password=&lt;PROXMOX_PASSWORD&gt;
+prefix=Proxmox.
+interval=300
+transfer_mode=tentacle
+tentacle_ip=&lt;TENTACLE_IP&gt;
+tentacle_port=41121
+entities_list=/tmp/proxmox_entities_list.txt
+</code></pre></div>
+<p>Todas las claves se documentan en <a href="#archivo-de-configuracion">Archivo de configuración</a>. Cuando no se indica <code>task_id</code>, las ejecuciones manuales recurren a la identidad del endpoint para los nombres internos de los agentes.</p>
+<h3 id="limitaciones">Limitaciones<a class="headerlink" href="#limitaciones" title="Permanent link">¶</a></h3>
+<ul>
+<li>El plugin no verifica el certificado TLS de Proxmox VE.</li>
+<li>La tarea escribe las credenciales de conexión en su archivo de configuración en el servidor de Pandora FMS. Este plugin no ofrece cifrado de contraseña, así que protege el acceso al servidor y a sus archivos temporales.</li>
+<li>Las copias de seguridad se leen a nivel de clúster. Solo se informan los trabajos de copia de seguridad programados del clúster; la retención de copias por invitado no la expone este plugin.</li>
+<li>El descubrimiento de almacenamiento empareja la lista de almacenamientos de un nodo con la lista de almacenamientos del clúster. Si un nodo informa de un número de almacenamientos distinto al de la lista del clúster, se omite el almacenamiento de ese nodo.</li>
+<li>La lista de entidades solo excluye o renombra recursos. Eliminar un recurso de Proxmox no borra su agente automáticamente.</li>
+</ul>
+<h2 id="resolucion-de-problemas">Resolución de problemas<a class="headerlink" href="#resolucion-de-problemas" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Comprobación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>La tarea informa de un error al iniciar sesión en el entorno de Proxmox</td>
+<td>Confirma <strong>Proxmox host</strong> y <strong>Port</strong>, que la API es accesible desde el servidor de Discovery y que las credenciales son válidas.</td>
+</tr>
+<tr>
+<td>La autenticación falla con una cuenta por contraseña</td>
+<td>El usuario de Proxmox debe usar el formato <code>user@realm</code>, por ejemplo <code>root@pam</code>.</td>
+</tr>
+<tr>
+<td>No se usa la autenticación por token</td>
+<td>Rellena <strong>Token Name</strong> y <strong>Token Password</strong>. Con solo uno de ellos informado, el plugin recurre al usuario y la contraseña.</td>
+</tr>
+<tr>
+<td>No se genera ningún agente</td>
+<td>Confirma las credenciales, que el clúster de Proxmox tiene los recursos que esperas y que las opciones <strong>Scan</strong> correspondientes están habilitadas.</td>
+</tr>
+<tr>
+<td>Faltan recursos esperados</td>
+<td>Revisa el archivo de lista de entidades: una línea eliminada excluye el recurso, y una categoría deshabilitada no se escribe cuando la lista se crea por primera vez.</td>
+</tr>
+<tr>
+<td>Un agente aparece como crítico después de eliminar un recurso en Proxmox VE</td>
+<td>La línea del recurso sigue en la lista de entidades. Elimina la línea o habilita <strong>Enable entities list re-scan interval</strong> para que la siguiente reconstrucción descarte los recursos que ya no existen.</td>
+</tr>
+<tr>
+<td>Un recurso excluido manualmente vuelve a monitorizarse tras un reescaneo</td>
+<td>Una reconstrucción restaura las líneas de recursos que siguen existiendo en Proxmox VE. Para mantener las exclusiones manuales, deja el intervalo de reescaneo desactivado o vuelve a eliminar la línea después de la reconstrucción.</td>
+</tr>
+<tr>
+<td>Un agente renombrado no se actualiza</td>
+<td>Usa en la regla de renombrado el alias original, el nombre del recurso o el identificador del recurso, y confirma que la regla está en la sección <code>Rename</code>.</td>
+</tr>
+<tr>
+<td>Faltan agentes de almacenamiento en un nodo</td>
+<td>El plugin omite un nodo cuya lista de almacenamientos no coincide con la lista del clúster. Confirma que el nodo informa correctamente de sus almacenamientos.</td>
+</tr>
+<tr>
+<td>Aparecieron agentes nuevos tras actualizar el plugin</td>
+<td>Esta versión cambió la identidad interna de los agentes: las versiones anteriores la construían a partir del nombre visible. La primera ejecución de esta versión crea agentes nuevos en lugar de actualizar los creados por versiones anteriores. Revisa las alertas y paneles que hagan referencia a los agentes antiguos antes de eliminarlos.</td>
+</tr>
+<tr>
+<td>La transferencia por Tentacle falla</td>
+<td>Confirma que el servidor de Discovery puede alcanzar <strong>Tentacle IP</strong> en <strong>Tentacle port</strong> y que el cliente Tentacle está disponible, o define <strong>Tentacle client path</strong>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
+<h3 id="parametros-de-la-tarea">Parámetros de la tarea<a class="headerlink" href="#parametros-de-la-tarea" title="Permanent link">¶</a></h3>
+<p>La consola muestra estos campos después de la definición genérica de la tarea. La columna de macro es el identificador usado en la configuración de la tarea generada.</p>
+<h4 id="proxmox-base">Proxmox base<a class="headerlink" href="#proxmox-base" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Macro</th>
+<th>Tipo</th>
+<th>Por defecto</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Proxmox host</td>
+<td><code>_proxmoxHost_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Dirección o nombre de host del endpoint de Proxmox VE. Obligatorio</td>
+</tr>
+<tr>
+<td>Port</td>
+<td><code>_proxmoxPort_</code></td>
+<td>number</td>
+<td><code>8006</code></td>
+<td>Puerto de la API de Proxmox VE</td>
+</tr>
+<tr>
+<td>Proxmox user</td>
+<td><code>_proxmoxUser_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Cuenta en formato <code>user@realm</code>, por ejemplo <code>root@pam</code></td>
+</tr>
+<tr>
+<td>Password Authentication</td>
+<td><code>_passwordAuth_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Controla la visibilidad del campo de contraseña</td>
+</tr>
+<tr>
+<td>Password</td>
+<td><code>_proxmoxPassword_</code></td>
+<td>password</td>
+<td>—</td>
+<td>Contraseña del usuario de Proxmox</td>
+</tr>
+<tr>
+<td>Token API Authentication</td>
+<td><code>_TokenAuth_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Controla la visibilidad de los campos de token</td>
+</tr>
+<tr>
+<td>Token Name</td>
+<td><code>_proxmoxTokenName_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Nombre del token de API de Proxmox</td>
+</tr>
+<tr>
+<td>Token Password</td>
+<td><code>_proxmoxTokenPassword_</code></td>
+<td>password</td>
+<td>—</td>
+<td>Secreto del token de API de Proxmox</td>
+</tr>
+<tr>
+<td>Tentacle IP</td>
+<td><code>_tentacleIP_</code></td>
+<td>string</td>
+<td><code>127.0.0.1</code></td>
+<td>Destino de la transferencia por Tentacle</td>
+</tr>
+<tr>
+<td>Tentacle port</td>
+<td><code>_tentaclePort_</code></td>
+<td>number</td>
+<td><code>41121</code></td>
+<td>Puerto de destino de la transferencia por Tentacle</td>
+</tr>
+<tr>
+<td>Tentacle client path</td>
+<td><code>_tentaclePath_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Ruta opcional al cliente Tentacle cuando no está en el <code>PATH</code> por defecto</td>
+</tr>
+<tr>
+<td>Tentacle extra options</td>
+<td><code>_tentacleExtraOpt_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Opciones adicionales pasadas al cliente Tentacle</td>
+</tr>
+<tr>
+<td>Agent name prefix</td>
+<td><code>_prefix_</code></td>
+<td>string</td>
+<td><code>Proxmox.</code></td>
+<td>Se antepone a los alias de los agentes generados</td>
+</tr>
+<tr>
+<td>Agent autodisable mode</td>
+<td><code>_agentautodisable_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Crea los agentes generados en modo autodisable</td>
+</tr>
+</tbody>
+</table>
+<h4 id="proxmox-detailed">Proxmox detailed<a class="headerlink" href="#proxmox-detailed" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Macro</th>
+<th>Tipo</th>
+<th>Por defecto</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scan VMs</td>
+<td><code>_scanVM_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Genera un agente por máquina virtual QEMU</td>
+</tr>
+<tr>
+<td>Scan LXC</td>
+<td><code>_scanLXC_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Genera un agente por contenedor LXC</td>
+</tr>
+<tr>
+<td>Scan backups</td>
+<td><code>_scanBackups_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Genera el agente de copias de seguridad del clúster</td>
+</tr>
+<tr>
+<td>Scan nodes</td>
+<td><code>_scanNodes_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Genera un agente por nodo</td>
+</tr>
+<tr>
+<td>Scan data center</td>
+<td><code>_scanDataCenter_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Genera el agente de centro de datos</td>
+</tr>
+<tr>
+<td>Scan storage</td>
+<td><code>_scanStorage_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Genera un agente por almacenamiento de nodo</td>
+</tr>
+<tr>
+<td>Enable entities list re-scan interval</td>
+<td><code>_enableEntitiesInterval_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Reconstruye las secciones de recursos tras el intervalo</td>
+</tr>
+<tr>
+<td>Re-scan entities list interval</td>
+<td><code>_entitiesInterval_</code></td>
+<td>select (interval)</td>
+<td><code>86400</code></td>
+<td>Intervalo de reconstrucción en segundos. Solo se muestra cuando el reescaneo está habilitado</td>
+</tr>
+</tbody>
+</table>
+<p>La tarea siempre entrega los datos a través de Tentacle con la <strong>Tentacle IP</strong> y el <strong>Tentacle port</strong> configurados; el asistente no ofrece un modo de transferencia local.</p>
+<h3 id="archivo-de-configuracion">Archivo de configuración<a class="headerlink" href="#archivo-de-configuracion" title="Permanent link">¶</a></h3>
+<p>La tarea de Discovery genera un archivo de configuración para el plugin. Se usa el mismo formato en una ejecución manual. Es un archivo de texto plano de líneas <code>clave=valor</code>. Esta es la superficie de configuración de todos los parámetros.</p>
+<table>
+<thead>
+<tr>
+<th>Clave</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>host</code></td>
+<td>—</td>
+<td>Dirección o nombre de host de Proxmox VE. Obligatorio</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td><code>8006</code></td>
+<td>Puerto de la API de Proxmox VE</td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td>—</td>
+<td>Cuenta de Proxmox en formato <code>user@realm</code></td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>—</td>
+<td>Contraseña del usuario de Proxmox</td>
+</tr>
+<tr>
+<td><code>proxmox_token_name</code></td>
+<td>—</td>
+<td>Nombre del token de API de Proxmox</td>
+</tr>
+<tr>
+<td><code>proxmox_token_pass</code></td>
+<td>—</td>
+<td>Secreto del token de API de Proxmox</td>
+</tr>
+<tr>
+<td><code>prefix</code></td>
+<td><code>Proxmox.</code></td>
+<td>Prefijo de los alias de los agentes generados</td>
+</tr>
+<tr>
+<td><code>agents_group_name</code></td>
+<td>—</td>
+<td>Grupo de agentes de los agentes generados</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td><code>300</code></td>
+<td>Intervalo de los agentes generados</td>
+</tr>
+<tr>
+<td><code>task_id</code></td>
+<td>—</td>
+<td>Identificador de la tarea de Discovery. Acota los nombres internos de los agentes</td>
+</tr>
+<tr>
+<td><code>agent_autodisable</code></td>
+<td><code>False</code></td>
+<td>Ponlo a <code>true</code> para crear los agentes generados en modo autodisable</td>
+</tr>
+<tr>
+<td><code>scan_nodes</code></td>
+<td><code>1</code></td>
+<td>Genera un agente por nodo</td>
+</tr>
+<tr>
+<td><code>scan_backups</code></td>
+<td><code>1</code></td>
+<td>Genera el agente de copias de seguridad del clúster</td>
+</tr>
+<tr>
+<td><code>scan_vms</code></td>
+<td><code>1</code></td>
+<td>Genera un agente por máquina virtual QEMU</td>
+</tr>
+<tr>
+<td><code>scan_lxc</code></td>
+<td><code>1</code></td>
+<td>Genera un agente por contenedor LXC</td>
+</tr>
+<tr>
+<td><code>scan_data_center</code></td>
+<td><code>1</code></td>
+<td>Genera el agente de centro de datos</td>
+</tr>
+<tr>
+<td><code>scan_storage</code></td>
+<td><code>1</code></td>
+<td>Genera un agente por almacenamiento de nodo</td>
+</tr>
+<tr>
+<td><code>discard_nodes</code></td>
+<td><code>[]</code></td>
+<td>Lista JSON de nombres de nodo que se descartan de la monitorización de nodos, invitados y almacenamiento</td>
+</tr>
+<tr>
+<td><code>entities_list</code></td>
+<td><code>/tmp/proxmox_entities_list.txt</code></td>
+<td>Ruta del archivo de lista de entidades. Una tarea de Discovery siempre fija una ruta específica de la tarea dentro del directorio temporal de Pandora</td>
+</tr>
+<tr>
+<td><code>enable_entities_interval</code></td>
+<td><code>False</code></td>
+<td>Ponlo a <code>true</code> para reconstruir la lista de entidades por intervalos</td>
+</tr>
+<tr>
+<td><code>entities_interval</code></td>
+<td><code>86400</code></td>
+<td>Intervalo de reconstrucción en segundos</td>
+</tr>
+<tr>
+<td><code>transfer_mode</code></td>
+<td><code>tentacle</code></td>
+<td><code>tentacle</code> envía los datos por Tentacle; <code>local</code> los escribe en <code>local_folder</code></td>
+</tr>
+<tr>
+<td><code>tentacle_ip</code></td>
+<td><code>127.0.0.1</code></td>
+<td>Dirección de destino Tentacle</td>
+</tr>
+<tr>
+<td><code>tentacle_port</code></td>
+<td><code>41121</code></td>
+<td>Puerto de destino Tentacle</td>
+</tr>
+<tr>
+<td><code>tentacle_path</code></td>
+<td>—</td>
+<td>Ruta opcional al cliente Tentacle</td>
+</tr>
+<tr>
+<td><code>tentacle_opts</code></td>
+<td>—</td>
+<td>Opciones adicionales pasadas al cliente Tentacle</td>
+</tr>
+<tr>
+<td><code>temporal</code></td>
+<td><code>/tmp/</code></td>
+<td>Carpeta de trabajo para archivos temporales</td>
+</tr>
+<tr>
+<td><code>local_folder</code></td>
+<td><code>/var/spool/pandora/data_in/</code></td>
+<td>Carpeta de destino cuando <code>transfer_mode</code> es <code>local</code></td>
+</tr>
+<tr>
+<td><code>pandora_url</code></td>
+<td>—</td>
+<td>URL de la API de la consola</td>
+</tr>
+<tr>
+<td><code>api_user</code></td>
+<td>—</td>
+<td>Usuario de la API de la consola</td>
+</tr>
+<tr>
+<td><code>api_pass</code></td>
+<td>—</td>
+<td>Contraseña de la API de la consola</td>
+</tr>
+<tr>
+<td><code>apiuser_pass</code></td>
+<td>—</td>
+<td>Contraseña del usuario de la API de la consola</td>
+</tr>
+</tbody>
+</table>
+<p>Los parámetros de la API de la consola se usan para crear el campo personalizado <code>proxmox_device</code> en Pandora FMS cuando todavía no existe.</p>
+<h3 id="archivo-de-lista-de-entidades_1">Archivo de lista de entidades<a class="headerlink" href="#archivo-de-lista-de-entidades_1" title="Permanent link">¶</a></h3>
+<p>La lista de entidades es un archivo de texto plano que selecciona y renombra recursos. El plugin lo crea en la primera ejecución y lo lee en cada ejecución. En una tarea de Discovery la ruta es fija, un archivo específico de la tarea dentro del directorio temporal de Pandora, y no se configura desde el asistente; solo una ejecución manual puede fijarla con la clave <code>entities_list</code>.</p>
+<p>En este plugin, la lista de entidades es el mecanismo que decide qué recursos descubiertos se monitorizan y cómo se nombran sus agentes. Úsala para:</p>
+<ul>
+<li>excluir un recurso concreto, por ejemplo una máquina virtual, de la monitorización sin deshabilitar toda su categoría de escaneo;</li>
+<li>mantener una selección de recursos monitorizados entre ejecuciones de la tarea, porque el archivo se lee en cada ejecución;</li>
+<li>renombrar los alias visibles de los agentes con reglas <code>Rename</code>.</li>
+</ul>
+<p>Si eliminas un recurso de Proxmox VE pero su línea permanece en el archivo, el plugin deja de recopilarlo en la siguiente ejecución y su agente puede aparecer como crítico. La línea solo se elimina cuando la lista se reconstruye tras el intervalo de reescaneo, que debe estar habilitado para que esto ocurra; también puedes borrar la línea manualmente. Una reconstrucción además restaura las líneas que hayas eliminado de recursos que siguen existiendo en Proxmox VE, así que revisa el archivo después de un reescaneo.</p>
+<table>
+<thead>
+<tr>
+<th>Sección</th>
+<th>Formato de entrada</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Node</code></td>
+<td>Nombre del nodo</td>
+<td><code>pve1</code></td>
+</tr>
+<tr>
+<td><code>VM</code></td>
+<td><code>&lt;node&gt;/&lt;vmid&gt;</code></td>
+<td><code>pve1/100</code></td>
+</tr>
+<tr>
+<td><code>LXC</code></td>
+<td><code>&lt;node&gt;/&lt;vmid&gt;</code></td>
+<td><code>pve1/200</code></td>
+</tr>
+<tr>
+<td><code>Storage</code></td>
+<td><code>&lt;node&gt;/&lt;storage&gt;</code></td>
+<td><code>pve1/local</code></td>
+</tr>
+<tr>
+<td><code>Backups</code></td>
+<td>La entrada fija <code>Backups</code></td>
+<td><code>Backups</code></td>
+</tr>
+<tr>
+<td><code>Datacenter</code></td>
+<td>La entrada fija <code>Data_Center</code></td>
+<td><code>Data_Center</code></td>
+</tr>
+<tr>
+<td><code>Rename</code></td>
+<td><code>ORIGINAL TO NEW</code></td>
+<td><code>web-prod TO Production web</code></td>
+</tr>
+</tbody>
+</table>
+<p>Reglas:</p>
+<ul>
+<li>Elimina una línea de recurso para excluirlo de la monitorización. Los cambios surten efecto en la siguiente ejecución de la tarea.</li>
+<li>La entrada <code>all</code> dentro de una sección permite todos los recursos actuales de ese tipo.</li>
+<li>Las categorías de escaneo deshabilitadas no se escriben cuando la lista se crea por primera vez. Habilita un intervalo o añade entradas manualmente si habilitas una categoría más adelante.</li>
+<li><strong>Enable entities list re-scan interval</strong> reconstruye las secciones de recursos tras el intervalo configurado. Está desactivado por defecto para que las exclusiones manuales persistan. Una reconstrucción descubre recursos nuevos y conserva las reglas <code>Rename</code>, pero restaura las líneas de recurso que habías eliminado.</li>
+<li>El archivo debe ser escribible por la cuenta que ejecuta la tarea de Discovery.</li>
+</ul>
+<h3 id="reglas-de-renombrado">Reglas de renombrado<a class="headerlink" href="#reglas-de-renombrado" title="Permanent link">¶</a></h3>
+<p>Añade asignaciones en la sección <code>Rename</code> con el formato <code>ORIGINAL TO NEW</code>.</p>
+<ul>
+<li><code>ORIGINAL</code> puede ser el alias original del agente incluido el prefijo, o el nombre del recurso de origen, por ejemplo <code>web-prod</code>.</li>
+<li>El destino se convierte en el alias visible del agente.</li>
+<li>El renombrado no cambia el nombre interno hasheado del agente. Los agentes invitados se identifican por su VMID.</li>
+<li>Para nombres de recurso iguales en nodos distintos, usa el alias original completo para dirigirte a un solo agente.</li>
+</ul>
+<h3 id="modulos-generados">Módulos generados<a class="headerlink" href="#modulos-generados" title="Permanent link">¶</a></h3>
+<p>Las siguientes tablas listan los módulos que genera el plugin por recurso.</p>
+<h4 id="nodos">Nodos<a class="headerlink" href="#nodos" title="Permanent link">¶</a></h4>
+<p>En los nombres de módulo, <code>&lt;node&gt;</code> es el nombre del nodo. Los módulos se generan solo cuando la API de Proxmox devuelve el campo correspondiente.</p>
+<table>
+<thead>
+<tr>
+<th>Nombre del módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;node&gt;_maxdisk</code></td>
+<td>generic_data</td>
+<td>Bytes</td>
+<td>Tamaño del disco raíz</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_uptime</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Tiempo de actividad</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_status</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td><code>1</code> cuando el nodo está online, <code>0</code> en caso contrario</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_state</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Estado del nodo informado por la API</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_maxcpu</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Número máximo de CPU</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_disk</code></td>
+<td>generic_data</td>
+<td>Bytes</td>
+<td>Uso de disco</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_mem</code></td>
+<td>generic_data</td>
+<td>Bytes</td>
+<td>Uso de memoria</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_maxmem</code></td>
+<td>generic_data</td>
+<td>Bytes</td>
+<td>Memoria máxima</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_cpu</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Uso de CPU, con el modelo de CPU y el número de núcleos en la descripción</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_ssl_fingerprint</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Huella SSL</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_mem_usage_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Porcentaje de uso de memoria</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_disk_usage_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Porcentaje de uso de disco</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_kernel_version</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Versión del kernel</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_manager_version</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Versión del gestor de Proxmox</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_netin_traffic</code></td>
+<td>generic_data</td>
+<td>bytes/s</td>
+<td>Tráfico de red entrante</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_netout_traffic</code></td>
+<td>generic_data</td>
+<td>bytes/s</td>
+<td>Tráfico de red saliente</td>
+</tr>
+</tbody>
+</table>
+<h4 id="maquinas-virtuales">Máquinas virtuales<a class="headerlink" href="#maquinas-virtuales" title="Permanent link">¶</a></h4>
+<p>En los nombres de módulo, <code>&lt;vm&gt;</code> es el nombre de la máquina virtual. Los módulos se generan solo cuando la API de Proxmox devuelve el campo correspondiente.</p>
+<table>
+<thead>
+<tr>
+<th>Nombre del módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;vm&gt;_Status</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td><code>1</code> cuando el invitado está en ejecución, <code>0</code> en caso contrario</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_State</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Estado del invitado informado por la API</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_netout</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Tráfico de red saliente</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_diskread</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Lectura de disco</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_cpu</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Uso de CPU</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_disk</code></td>
+<td>generic_data</td>
+<td>Bytes</td>
+<td>Uso de disco</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_mem</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Uso de memoria en bytes</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_netin</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Tráfico de red entrante</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_uptime</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Tiempo de actividad</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_maxmem</code></td>
+<td>generic_data</td>
+<td>bytes</td>
+<td>Memoria máxima</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_maxdisk</code></td>
+<td>generic_data</td>
+<td>bytes</td>
+<td>Tamaño del disco raíz</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_diskwrite</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Escritura de disco</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_cpus</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>CPUs máximas utilizables</td>
+</tr>
+</tbody>
+</table>
+<h4 id="contenedores-lxc">Contenedores LXC<a class="headerlink" href="#contenedores-lxc" title="Permanent link">¶</a></h4>
+<p>Un contenedor LXC genera los mismos módulos que una máquina virtual, con el nombre del contenedor como <code>&lt;lxc&gt;</code>, más los siguientes módulos de porcentaje.</p>
+<table>
+<thead>
+<tr>
+<th>Nombre del módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;lxc&gt;_cpu_usage_host_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Uso de CPU del contenedor relativo al total de núcleos del host</td>
+</tr>
+<tr>
+<td><code>&lt;lxc&gt;_mem_usage_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Porcentaje de uso de memoria del contenedor</td>
+</tr>
+<tr>
+<td><code>&lt;lxc&gt;_mem_usage_host_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Uso de memoria del contenedor relativo a la memoria total del host</td>
+</tr>
+</tbody>
+</table>
+<h4 id="almacenamiento">Almacenamiento<a class="headerlink" href="#almacenamiento" title="Permanent link">¶</a></h4>
+<p>En los nombres de módulo, <code>&lt;node&gt;</code> es el nombre del nodo y <code>&lt;storage&gt;</code> es el nombre del almacenamiento.</p>
+<table>
+<thead>
+<tr>
+<th>Nombre del módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_disk_usage_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Porcentaje de espacio usado</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_enable</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td><code>1</code> cuando el almacenamiento está habilitado, <code>0</code> en caso contrario</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_is_active</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td><code>1</code> cuando el almacenamiento está activo, <code>0</code> en caso contrario</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_total_capacity</code></td>
+<td>generic_data</td>
+<td>bytes</td>
+<td>Capacidad total de disco</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_used_space</code></td>
+<td>generic_data</td>
+<td>bytes</td>
+<td>Espacio de disco usado</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_type</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Tipo de almacenamiento</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_path</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Ruta del almacenamiento</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_content</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Tipos de contenido admitidos por el almacenamiento, como lista</td>
+</tr>
+</tbody>
+</table>
+<h4 id="copias-de-seguridad">Copias de seguridad<a class="headerlink" href="#copias-de-seguridad" title="Permanent link">¶</a></h4>
+<p>El agente de copias de seguridad del clúster genera un par de módulos por cada trabajo de copia programado. En los nombres de módulo, <code>&lt;vmid&gt;</code> y <code>&lt;node&gt;</code> proceden del trabajo de copia; son <code>None</code> cuando la API no los devuelve.</p>
+<table>
+<thead>
+<tr>
+<th>Nombre del módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;vmid&gt;_&lt;node&gt;info</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td><code>enabled</code> o <code>disabled</code>. La descripción incluye la próxima ejecución, la programación, el almacenamiento, el ID de copia y los valores repeat-missed</td>
+</tr>
+<tr>
+<td><code>&lt;vmid&gt;_&lt;node&gt;_next_backup</code></td>
+<td>generic_data</td>
+<td>s</td>
+<td>Tiempo restante hasta la próxima copia de seguridad</td>
+</tr>
+</tbody>
+</table>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/proxmox/backups-modules.png" data-desc-position="bottom"><img alt="Módulos de copias de seguridad" src="../../../assets/images/discovery/proxmox/backups-modules.png"></a></p>
+<h4 id="centro-de-datos">Centro de datos<a class="headerlink" href="#centro-de-datos" title="Permanent link">¶</a></h4>
+<p>El agente de centro de datos incluye el resumen del clúster.</p>
+<table>
+<thead>
+<tr>
+<th>Nombre del módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data_center_status</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td><code>OK</code> cuando ningún nodo está offline, <code>Offline Nodes</code> en caso contrario</td>
+</tr>
+<tr>
+<td><code>data_center_nodes_online</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Número de nodos online</td>
+</tr>
+<tr>
+<td><code>data_center_nodes_offline</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Número de nodos offline</td>
+</tr>
+<tr>
+<td><code>data_center_total_nodes</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Número total de nodos</td>
+</tr>
+<tr>
+<td><code>data_center_total_vm</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Número total de máquinas virtuales</td>
+</tr>
+<tr>
+<td><code>data_center_vm_running</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Número de máquinas virtuales en ejecución</td>
+</tr>
+<tr>
+<td><code>data_center_vm_stopped</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Número de máquinas virtuales detenidas</td>
+</tr>
+<tr>
+<td><code>data_center_total_lxc</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Número total de contenedores LXC</td>
+</tr>
+<tr>
+<td><code>data_center_lxc_running</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Número de contenedores LXC en ejecución</td>
+</tr>
+<tr>
+<td><code>data_center_lxc_stopped</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Número de contenedores LXC detenidos</td>
+</tr>
+<tr>
+<td><code>data_center_cpu_usage_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Uso general de CPU</td>
+</tr>
+<tr>
+<td><code>data_center_mem_usage_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Uso general de memoria</td>
+</tr>
+<tr>
+<td><code>data_center_storage_usage_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Uso general de almacenamiento</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

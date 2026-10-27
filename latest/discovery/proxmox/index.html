@@ -1,0 +1,3625 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/discovery/proxmox/">
+      
+      
+        <link rel="prev" href="../postgresql/">
+      
+      
+        <link rel="next" href="../rabbitmq-discovery/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../../es/discovery/proxmox/" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Proxmox Discovery - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#proxmox-discovery" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Proxmox Discovery
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/discovery/proxmox/" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proxmox Discovery
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proxmox Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-monitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it monitors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-the-discovery-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure the Discovery task
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure the Discovery task">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-task-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Task definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-proxmox-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Proxmox base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-proxmox-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Proxmox detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-the-first-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify the first run
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understand the results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agents-and-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents and identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-entities-list-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The entities list file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modules-by-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modules by agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshoot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxmox-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxmox base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proxmox-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxmox detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entities-list-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entities list file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rename-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rename rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated modules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Generated modules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-machines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual machines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lxc-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LXC containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-center" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data center
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Chat integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft Teams integration (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegram integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic SNMP plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to document
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-monitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it monitors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-the-discovery-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure the Discovery task
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure the Discovery task">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-task-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Task definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-proxmox-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Proxmox base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-proxmox-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Proxmox detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-the-first-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify the first run
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understand the results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agents-and-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents and identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-entities-list-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The entities list file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modules-by-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modules by agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshoot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxmox-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxmox base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proxmox-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxmox detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entities-list-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entities list file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rename-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rename rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated modules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Generated modules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-machines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual machines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lxc-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LXC containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-center" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data center
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="proxmox-discovery">Proxmox Discovery<a class="headerlink" href="#proxmox-discovery" title="Permanent link">¶</a></h1>
+<p><em>Article last updated: 2026-10-27.</em></p>
+<h2 id="what-it-monitors">What it monitors<a class="headerlink" href="#what-it-monitors" title="Permanent link">¶</a></h2>
+<p>The Proxmox Discovery plugin connects to a Proxmox VE cluster through the Proxmox VE API and discovers its resources. It generates one Pandora FMS agent per discovered resource and fills it with availability, capacity, configuration and performance modules read from the Proxmox API.</p>
+<p>The plugin generates agents for:</p>
+<ul>
+<li>every Proxmox node;</li>
+<li>every QEMU virtual machine;</li>
+<li>every LXC container;</li>
+<li>every storage defined on a node;</li>
+<li>one cluster agent for scheduled backups;</li>
+<li>one data center agent with the cluster summary.</li>
+</ul>
+<p>The resource categories are selectable in the task, and a per-task entities list lets you fine-tune which resources are monitored and rename the resulting agents.</p>
+<p>The plugin runs as a Discovery task: the console creates the task, the Discovery server runs the plugin, and the generated agents and modules are created automatically. The task delivers the generated agent data through Tentacle.</p>
+<h2 id="prepare">Prepare<a class="headerlink" href="#prepare" title="Permanent link">¶</a></h2>
+<h3 id="compatibility">Compatibility<a class="headerlink" href="#compatibility" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>State</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plugin version <code>1.6</code> (<code>pandorafms.proxmox</code>)</td>
+<td>Documented target</td>
+<td>The version this page describes, as identified by the package definition.</td>
+</tr>
+<tr>
+<td>Proxmox VE cluster with the API reachable on the configured port (default <code>8006</code>)</td>
+<td><code>Required</code></td>
+<td>The plugin authenticates and reads every resource through the Proxmox VE API.</td>
+</tr>
+<tr>
+<td>An account or API token with read access to nodes, guests, storage, backups and cluster status</td>
+<td><code>Required</code></td>
+<td>The plugin lists nodes, QEMU and LXC guests, storage and cluster backups; it never changes the Proxmox configuration.</td>
+</tr>
+<tr>
+<td>A specific Proxmox VE version</td>
+<td><code>Not validated</code></td>
+<td>No published test record establishes compatibility with a concrete Proxmox VE release.</td>
+</tr>
+<tr>
+<td>Host operating system running the plugin</td>
+<td><code>Not validated</code></td>
+<td>No published test record establishes operating-system compatibility.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">¶</a></h3>
+<ul>
+<li>A Pandora FMS server with Discovery enabled to run the task, and a console to define it.</li>
+<li>A Proxmox VE endpoint reachable from the Discovery server, with the API exposed on the configured port. The default Proxmox VE API port is <code>8006</code>.</li>
+<li>One of the following credentials:<ul>
+<li>a Proxmox user in the <code>user@realm</code> format, for example <code>root@pam</code>, with its password;</li>
+<li>a Proxmox API token, provided as its token name and token secret.</li>
+</ul>
+</li>
+<li>A target agent group and a monitoring interval for the generated agents. Both come from the Discovery task and are inherited by every generated agent.</li>
+<li>Network reachability to the Tentacle destination, because the task transfers the generated agent data through Tentacle.</li>
+<li>A writable path for the entities list file. The default is a file specific to the Discovery task under Pandora's temporary directory.</li>
+<li>The plugin is distributed as a Pandora FMS Discovery application (<code>.disco</code> package) that the Discovery server executes on the Pandora FMS server.</li>
+</ul>
+<p>Grant the Proxmox account or API token only the read access your monitoring needs. The plugin only queries the API; it never modifies nodes, guests, storage or backups.</p>
+<p>The plugin connects to the Proxmox VE API without verifying its TLS certificate. Run the task only over a network you trust, or protect the traffic through a tunnel. There is no option to enable certificate verification for this plugin.</p>
+<h3 id="install-the-plugin">Install the plugin<a class="headerlink" href="#install-the-plugin" title="Permanent link">¶</a></h3>
+<p>Load the <code>.disco</code> package from <strong>Management → Discovery → Manage disco packages</strong>: choose <strong>Select a file</strong>, pick the package, and click <strong>Upload DISCO</strong>. After loading, <strong>Proxmox</strong> appears in the package list and under the <strong>Applications</strong> section of the Discovery wizard.</p>
+<h2 id="configure-the-discovery-task">Configure the Discovery task<a class="headerlink" href="#configure-the-discovery-task" title="Permanent link">¶</a></h2>
+<p>Create the task from <strong>Management → Discovery → Applications → Proxmox</strong>. The wizard walks through the generic task definition and two plugin steps: <strong>Proxmox base</strong> and <strong>Proxmox detailed</strong>. Every field is documented in <a href="#task-parameters">Task parameters</a>.</p>
+<h3 id="step-1-task-definition">Step 1 — Task definition<a class="headerlink" href="#step-1-task-definition" title="Permanent link">¶</a></h3>
+<p>The generic step asks for the task <strong>name</strong>, the <strong>agent group</strong> and <strong>server</strong> on which the task runs, and the <strong>interval</strong>. The group and the interval are passed to the plugin and inherited by every generated agent.</p>
+<h3 id="step-2-proxmox-base">Step 2 — Proxmox base<a class="headerlink" href="#step-2-proxmox-base" title="Permanent link">¶</a></h3>
+<p>Connection details, authentication and the Tentacle destination:</p>
+<ul>
+<li><strong>Proxmox host</strong> is the address or hostname of the Proxmox VE endpoint.</li>
+<li><strong>Port</strong> is the API port. The default is <code>8006</code>.</li>
+<li><strong>Proxmox user</strong> is the account in <code>user@realm</code> format, for example <code>root@pam</code>.</li>
+<li><strong>Password Authentication</strong> controls the visibility of <strong>Password</strong>. Enter the password of the Proxmox user.</li>
+<li><strong>Token API Authentication</strong> controls the visibility of <strong>Token Name</strong> and <strong>Token Password</strong>. Enter the name and secret of a Proxmox API token.</li>
+<li><strong>Tentacle IP</strong>, <strong>Tentacle port</strong>, <strong>Tentacle client path</strong> and <strong>Tentacle extra options</strong> set how the generated data is sent. Leave the defaults unless your environment needs another Tentacle target.</li>
+<li><strong>Agent name prefix</strong> is prepended to the generated agent names. The default is <code>Proxmox.</code>.</li>
+<li><strong>Agent autodisable mode</strong> creates the generated agents in autodisabled mode.</li>
+</ul>
+<p>The two authentication checkboxes only control which fields the wizard shows. The plugin authenticates with the API token when both <strong>Token Name</strong> and <strong>Token Password</strong> are set, and with the Proxmox user and password otherwise. Do not fill only one of the token fields: in that case the plugin falls back to password authentication.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/proxmox/proxmox-base.png" data-desc-position="bottom"><img alt="Proxmox base step" src="../../assets/images/discovery/proxmox/proxmox-base.png"></a></p>
+<h3 id="step-3-proxmox-detailed">Step 3 — Proxmox detailed<a class="headerlink" href="#step-3-proxmox-detailed" title="Permanent link">¶</a></h3>
+<p>Resource categories, the entities list and the re-scan behaviour:</p>
+<ul>
+<li><strong>Scan VMs</strong>, <strong>Scan LXC</strong>, <strong>Scan backups</strong>, <strong>Scan nodes</strong>, <strong>Scan data center</strong> and <strong>Scan storage</strong> enable or disable each resource category. All of them are enabled by default.</li>
+<li><strong>Enable entities list re-scan interval</strong> rebuilds the resource sections of the entities list after the configured interval. See <a href="#entities-list-file">Entities list file</a> for the consequences.</li>
+<li><strong>Re-scan entities list interval</strong> is how often the list is rebuilt. It is only shown when <strong>Enable entities list re-scan interval</strong> is on.</li>
+</ul>
+<p>The wizard does not expose the path of the entities list. The plugin keeps it in a file specific to the task under Pandora's temporary directory and reads it on every run. Edit that file to choose which individual resources are monitored and to rename their agents. See <a href="#entities-list-file">Entities list file</a>.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/proxmox/proxmox-detailed.png" data-desc-position="bottom"><img alt="Proxmox detailed step" src="../../assets/images/discovery/proxmox/proxmox-detailed.png"></a></p>
+<h2 id="verify-the-first-run">Verify the first run<a class="headerlink" href="#verify-the-first-run" title="Permanent link">¶</a></h2>
+<p>Run the task from <strong>Management → Discovery → Task list</strong> and check the result in this order.</p>
+<ol>
+<li><strong>The task summary</strong> reports the total number of generated agents and how many belong to each resource group.</li>
+<li><strong>The agents.</strong> Expect one agent per enabled and reachable resource, plus the cluster backups agent and the data center agent when their categories are enabled.</li>
+<li><strong>The modules.</strong> Every generated agent carries the modules of its resource type; a reachable environment populates availability, capacity and performance values.</li>
+<li><strong>The execution information.</strong> A successful run reports no errors; any per-resource failure is recorded there.</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/proxmox/task-summary.png" data-desc-position="bottom"><img alt="Task execution summary" src="../../assets/images/discovery/proxmox/task-summary.png"></a></p>
+<p>If the task fails before generating anything, the Proxmox host, the port and the credentials are the first things to check.</p>
+<h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
+<h3 id="agents-and-identity">Agents and identity<a class="headerlink" href="#agents-and-identity" title="Permanent link">¶</a></h3>
+<p>The plugin creates one agent per discovered resource. Every generated agent belongs to the task's agent group and inherits its interval. Node, virtual machine and LXC agents also carry a custom field, <code>proxmox_device</code>, whose value is <code>Node</code>, <code>VM</code> or <code>LXC</code>.</p>
+<p>Each agent has a stable internal name and a readable alias. The internal name is a hash scoped to the Discovery task, the Proxmox host and port, the resource type and the resource ID. The alias is built from the configured prefix and the resource identity, and can be rewritten with a rename rule.</p>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Alias template (default)</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node</td>
+<td><code>&lt;prefix&gt;.&lt;node&gt;.&lt;node id&gt;</code></td>
+<td>One agent per node</td>
+</tr>
+<tr>
+<td>Virtual machine</td>
+<td><code>&lt;prefix&gt;.&lt;vm name&gt;.&lt;vmid&gt;.&lt;node&gt;</code></td>
+<td>One agent per QEMU guest</td>
+</tr>
+<tr>
+<td>LXC container</td>
+<td><code>&lt;prefix&gt;.&lt;container name&gt;.&lt;vmid&gt;.&lt;node&gt;</code></td>
+<td>One agent per LXC guest</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td><code>&lt;prefix&gt;_&lt;storage&gt;_&lt;node&gt;</code></td>
+<td>One agent per node storage</td>
+</tr>
+<tr>
+<td>Backups</td>
+<td><code>&lt;prefix&gt;_Backups</code></td>
+<td>One agent for the whole cluster</td>
+</tr>
+<tr>
+<td>Data center</td>
+<td><code>&lt;prefix&gt;_Data_Center</code></td>
+<td>One agent for the whole cluster</td>
+</tr>
+</tbody>
+</table>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/proxmox/generated-agents.png" data-desc-position="bottom"><img alt="Generated agents" src="../../assets/images/discovery/proxmox/generated-agents.png"></a></p>
+<p>Because the internal name includes the Discovery task ID and the Proxmox endpoint, two tasks monitoring different Proxmox environments cannot update the same agent even if their resource names coincide. The entities list filename is also specific to the task.</p>
+<p>Rename rules change the visible alias only. The internal name is not affected, and guest agents are identified by VMID, so renaming a guest keeps updating the same agent.</p>
+<h3 id="the-entities-list-file">The entities list file<a class="headerlink" href="#the-entities-list-file" title="Permanent link">¶</a></h3>
+<p>On its first run, the plugin creates the entities list file with a section heading per resource type and the resources it discovered:</p>
+<div class="highlight"><pre><span></span><code>Node
+pve1
+VM
+pve1/100
+LXC
+pve1/200
+Storage
+pve1/local
+Backups
+Backups
+Datacenter
+Data_Center
+Rename
+web-prod TO Production web
+</code></pre></div>
+<p>Remove a resource line to exclude it from monitoring. Changes take effect on the next task execution. The list is how this plugin selects individual resources and renames their agents; see <a href="#entities-list-file">Entities list file</a> in the reference for the exact semantics, including what happens when a resource is deleted in Proxmox VE, and the re-scan behaviour.</p>
+<h3 id="modules-by-agent">Modules by agent<a class="headerlink" href="#modules-by-agent" title="Permanent link">¶</a></h3>
+<p>Each agent receives the modules of its resource type. The module values are read from the Proxmox API during every task run; the exact name and unit of each module are listed in <a href="#generated-modules">Generated modules</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Modules it carries</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node</td>
+<td>Host status and state, CPU, memory, disk, storage capacity, kernel and manager version, SSL fingerprint and network traffic</td>
+</tr>
+<tr>
+<td>Virtual machine</td>
+<td>Power status and state, CPU, memory, disk and network usage</td>
+</tr>
+<tr>
+<td>LXC container</td>
+<td>Power status and state, CPU, memory, disk and network usage, plus usage percentages relative to the container and to the host</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>Used-space percentage, enabled and active state, total and used capacity, type, path and content types</td>
+</tr>
+<tr>
+<td>Backups</td>
+<td>One pair of modules per scheduled backup job: its state and the time remaining until the next run</td>
+</tr>
+<tr>
+<td>Data center</td>
+<td>Node, VM and LXC counters and the general CPU, memory and storage usage percentages</td>
+</tr>
+</tbody>
+</table>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/proxmox/data-center-modules.png" data-desc-position="bottom"><img alt="Data center modules" src="../../assets/images/discovery/proxmox/data-center-modules.png"></a></p>
+<h2 id="operate">Operate<a class="headerlink" href="#operate" title="Permanent link">¶</a></h2>
+<h3 id="manual-execution">Manual execution<a class="headerlink" href="#manual-execution" title="Permanent link">¶</a></h3>
+<p>The plugin can also be run outside the Discovery wizard with a configuration file. This is useful for testing connectivity, for a one-off run, or for a custom schedule. The configuration file is a plain list of <code>key=value</code> lines:</p>
+<div class="highlight"><pre><span></span><code>pandora_proxmox<span class="w"> </span>--conf<span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>configuration<span class="w"> </span>file&gt;
+</code></pre></div>
+<p>A minimal configuration file for a manual run looks like this:</p>
+<div class="highlight"><pre><span></span><code>host=&lt;PROXMOX_HOST&gt;
+port=8006
+user=&lt;PROXMOX_USER&gt;
+password=&lt;PROXMOX_PASSWORD&gt;
+prefix=Proxmox.
+interval=300
+transfer_mode=tentacle
+tentacle_ip=&lt;TENTACLE_IP&gt;
+tentacle_port=41121
+entities_list=/tmp/proxmox_entities_list.txt
+</code></pre></div>
+<p>All keys are documented in <a href="#configuration-file">Configuration file</a>. When no <code>task_id</code> is provided, manual executions fall back to the endpoint identity for the internal agent names.</p>
+<h3 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">¶</a></h3>
+<ul>
+<li>The plugin does not verify the Proxmox VE TLS certificate.</li>
+<li>The task writes the connection credentials to its configuration file on the Pandora FMS server. There is no password encryption option for this plugin, so protect access to the server and its temporary files.</li>
+<li>Backups are read at cluster level. Only scheduled cluster backup jobs are reported; per-guest backup retention is not exposed by this plugin.</li>
+<li>Storage discovery pairs the storage list of a node with the cluster storage list. If a node reports a different number of storages than the cluster list, that node's storage is skipped.</li>
+<li>The entities list only excludes or renames resources. Removing a resource from Proxmox does not delete its agent automatically.</li>
+</ul>
+<h2 id="troubleshoot">Troubleshoot<a class="headerlink" href="#troubleshoot" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The task reports an error logging into the Proxmox environment</td>
+<td>Confirm <strong>Proxmox host</strong> and <strong>Port</strong>, that the API is reachable from the Discovery server, and that the credentials are valid.</td>
+</tr>
+<tr>
+<td>Authentication fails with a password account</td>
+<td>The Proxmox user must use the <code>user@realm</code> format, for example <code>root@pam</code>.</td>
+</tr>
+<tr>
+<td>Token authentication is not used</td>
+<td>Fill both <strong>Token Name</strong> and <strong>Token Password</strong>. With only one of them set, the plugin falls back to the user and password.</td>
+</tr>
+<tr>
+<td>No agents are generated at all</td>
+<td>Confirm the credentials, that the Proxmox cluster has the resources you expect, and that the relevant <strong>Scan</strong> options are enabled.</td>
+</tr>
+<tr>
+<td>Expected resources are missing</td>
+<td>Review the entities list file: a removed line excludes the resource, and a disabled category is not written when the list is first built.</td>
+</tr>
+<tr>
+<td>An agent is reported as critical after a resource is deleted in Proxmox VE</td>
+<td>The resource line is still in the entities list. Delete the line, or enable <strong>Enable entities list re-scan interval</strong> so the next rebuild drops resources that no longer exist.</td>
+</tr>
+<tr>
+<td>A manually excluded resource is monitored again after a re-scan</td>
+<td>A rebuild restores lines for resources that still exist in Proxmox VE. To keep manual exclusions, leave the re-scan interval off or remove the line again after the rebuild.</td>
+</tr>
+<tr>
+<td>A renamed agent is not updated</td>
+<td>Use the original alias, the resource name or the resource identifier in the rename rule, and confirm the rule is under the <code>Rename</code> section.</td>
+</tr>
+<tr>
+<td>Storage agents are missing for a node</td>
+<td>The plugin skips a node whose node storage list does not match the cluster storage list. Confirm the node reports its storages correctly.</td>
+</tr>
+<tr>
+<td>New agents appeared after upgrading the plugin</td>
+<td>This version changed the internal agent identity: earlier versions built it from the display name. The first run of this version creates new agents instead of updating the ones created by earlier versions. Review alerts and dashboards that refer to the old agents before removing them.</td>
+</tr>
+<tr>
+<td>Tentacle transfer fails</td>
+<td>Confirm the Discovery server can reach <strong>Tentacle IP</strong> on <strong>Tentacle port</strong> and that the Tentacle client is available, or set <strong>Tentacle client path</strong>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">¶</a></h2>
+<h3 id="task-parameters">Task parameters<a class="headerlink" href="#task-parameters" title="Permanent link">¶</a></h3>
+<p>The console presents these fields after the generic task definition. The macro column is the identifier used in the generated task configuration.</p>
+<h4 id="proxmox-base">Proxmox base<a class="headerlink" href="#proxmox-base" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Macro</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Proxmox host</td>
+<td><code>_proxmoxHost_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Address or hostname of the Proxmox VE endpoint. Required</td>
+</tr>
+<tr>
+<td>Port</td>
+<td><code>_proxmoxPort_</code></td>
+<td>number</td>
+<td><code>8006</code></td>
+<td>Proxmox VE API port</td>
+</tr>
+<tr>
+<td>Proxmox user</td>
+<td><code>_proxmoxUser_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Account in <code>user@realm</code> format, for example <code>root@pam</code></td>
+</tr>
+<tr>
+<td>Password Authentication</td>
+<td><code>_passwordAuth_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Controls the visibility of the password field</td>
+</tr>
+<tr>
+<td>Password</td>
+<td><code>_proxmoxPassword_</code></td>
+<td>password</td>
+<td>—</td>
+<td>Password of the Proxmox user</td>
+</tr>
+<tr>
+<td>Token API Authentication</td>
+<td><code>_TokenAuth_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Controls the visibility of the token fields</td>
+</tr>
+<tr>
+<td>Token Name</td>
+<td><code>_proxmoxTokenName_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Name of the Proxmox API token</td>
+</tr>
+<tr>
+<td>Token Password</td>
+<td><code>_proxmoxTokenPassword_</code></td>
+<td>password</td>
+<td>—</td>
+<td>Secret of the Proxmox API token</td>
+</tr>
+<tr>
+<td>Tentacle IP</td>
+<td><code>_tentacleIP_</code></td>
+<td>string</td>
+<td><code>127.0.0.1</code></td>
+<td>Tentacle transfer destination</td>
+</tr>
+<tr>
+<td>Tentacle port</td>
+<td><code>_tentaclePort_</code></td>
+<td>number</td>
+<td><code>41121</code></td>
+<td>Tentacle transfer destination port</td>
+</tr>
+<tr>
+<td>Tentacle client path</td>
+<td><code>_tentaclePath_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Optional path to the Tentacle client when it is not in the default <code>PATH</code></td>
+</tr>
+<tr>
+<td>Tentacle extra options</td>
+<td><code>_tentacleExtraOpt_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Extra options passed to the Tentacle client</td>
+</tr>
+<tr>
+<td>Agent name prefix</td>
+<td><code>_prefix_</code></td>
+<td>string</td>
+<td><code>Proxmox.</code></td>
+<td>Prepended to the generated agent aliases</td>
+</tr>
+<tr>
+<td>Agent autodisable mode</td>
+<td><code>_agentautodisable_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Creates the generated agents in autodisabled mode</td>
+</tr>
+</tbody>
+</table>
+<h4 id="proxmox-detailed">Proxmox detailed<a class="headerlink" href="#proxmox-detailed" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Macro</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scan VMs</td>
+<td><code>_scanVM_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Generates an agent per QEMU virtual machine</td>
+</tr>
+<tr>
+<td>Scan LXC</td>
+<td><code>_scanLXC_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Generates an agent per LXC container</td>
+</tr>
+<tr>
+<td>Scan backups</td>
+<td><code>_scanBackups_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Generates the cluster backups agent</td>
+</tr>
+<tr>
+<td>Scan nodes</td>
+<td><code>_scanNodes_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Generates an agent per node</td>
+</tr>
+<tr>
+<td>Scan data center</td>
+<td><code>_scanDataCenter_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Generates the data center agent</td>
+</tr>
+<tr>
+<td>Scan storage</td>
+<td><code>_scanStorage_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Generates an agent per node storage</td>
+</tr>
+<tr>
+<td>Enable entities list re-scan interval</td>
+<td><code>_enableEntitiesInterval_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Rebuilds the resource sections after the interval</td>
+</tr>
+<tr>
+<td>Re-scan entities list interval</td>
+<td><code>_entitiesInterval_</code></td>
+<td>select (interval)</td>
+<td><code>86400</code></td>
+<td>Rebuild interval in seconds. Only shown when the re-scan is enabled</td>
+</tr>
+</tbody>
+</table>
+<p>The task always delivers data through Tentacle with the configured <strong>Tentacle IP</strong> and <strong>Tentacle port</strong>; the wizard does not offer a local transfer mode.</p>
+<h3 id="configuration-file">Configuration file<a class="headerlink" href="#configuration-file" title="Permanent link">¶</a></h3>
+<p>The Discovery task builds a configuration file for the plugin. The same format is used for a manual execution. It is a plain text file of <code>key=value</code> lines. This is the configuration surface for every parameter.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>host</code></td>
+<td>—</td>
+<td>Proxmox VE address or hostname. Required</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td><code>8006</code></td>
+<td>Proxmox VE API port</td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td>—</td>
+<td>Proxmox account in <code>user@realm</code> format</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>—</td>
+<td>Proxmox user password</td>
+</tr>
+<tr>
+<td><code>proxmox_token_name</code></td>
+<td>—</td>
+<td>Proxmox API token name</td>
+</tr>
+<tr>
+<td><code>proxmox_token_pass</code></td>
+<td>—</td>
+<td>Proxmox API token secret</td>
+</tr>
+<tr>
+<td><code>prefix</code></td>
+<td><code>Proxmox.</code></td>
+<td>Prefix for the generated agent aliases</td>
+</tr>
+<tr>
+<td><code>agents_group_name</code></td>
+<td>—</td>
+<td>Agent group for the generated agents</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td><code>300</code></td>
+<td>Agent interval for the generated agents</td>
+</tr>
+<tr>
+<td><code>task_id</code></td>
+<td>—</td>
+<td>Discovery task identifier. Used to scope the internal agent names</td>
+</tr>
+<tr>
+<td><code>agent_autodisable</code></td>
+<td><code>False</code></td>
+<td>Set to <code>true</code> to create the generated agents in autodisabled mode</td>
+</tr>
+<tr>
+<td><code>scan_nodes</code></td>
+<td><code>1</code></td>
+<td>Generate an agent per node</td>
+</tr>
+<tr>
+<td><code>scan_backups</code></td>
+<td><code>1</code></td>
+<td>Generate the cluster backups agent</td>
+</tr>
+<tr>
+<td><code>scan_vms</code></td>
+<td><code>1</code></td>
+<td>Generate an agent per QEMU virtual machine</td>
+</tr>
+<tr>
+<td><code>scan_lxc</code></td>
+<td><code>1</code></td>
+<td>Generate an agent per LXC container</td>
+</tr>
+<tr>
+<td><code>scan_data_center</code></td>
+<td><code>1</code></td>
+<td>Generate the data center agent</td>
+</tr>
+<tr>
+<td><code>scan_storage</code></td>
+<td><code>1</code></td>
+<td>Generate an agent per node storage</td>
+</tr>
+<tr>
+<td><code>discard_nodes</code></td>
+<td><code>[]</code></td>
+<td>JSON list of node names to discard from node, guest and storage monitoring</td>
+</tr>
+<tr>
+<td><code>entities_list</code></td>
+<td><code>/tmp/proxmox_entities_list.txt</code></td>
+<td>Path of the entities list file. A Discovery task always sets a task-specific path under Pandora's temporary directory</td>
+</tr>
+<tr>
+<td><code>enable_entities_interval</code></td>
+<td><code>False</code></td>
+<td>Set to <code>true</code> to rebuild the entities list on an interval</td>
+</tr>
+<tr>
+<td><code>entities_interval</code></td>
+<td><code>86400</code></td>
+<td>Rebuild interval in seconds</td>
+</tr>
+<tr>
+<td><code>transfer_mode</code></td>
+<td><code>tentacle</code></td>
+<td><code>tentacle</code> sends the data through Tentacle; <code>local</code> writes it to <code>local_folder</code></td>
+</tr>
+<tr>
+<td><code>tentacle_ip</code></td>
+<td><code>127.0.0.1</code></td>
+<td>Tentacle destination address</td>
+</tr>
+<tr>
+<td><code>tentacle_port</code></td>
+<td><code>41121</code></td>
+<td>Tentacle destination port</td>
+</tr>
+<tr>
+<td><code>tentacle_path</code></td>
+<td>—</td>
+<td>Optional path to the Tentacle client</td>
+</tr>
+<tr>
+<td><code>tentacle_opts</code></td>
+<td>—</td>
+<td>Extra options passed to the Tentacle client</td>
+</tr>
+<tr>
+<td><code>temporal</code></td>
+<td><code>/tmp/</code></td>
+<td>Working folder for temporary files</td>
+</tr>
+<tr>
+<td><code>local_folder</code></td>
+<td><code>/var/spool/pandora/data_in/</code></td>
+<td>Destination folder when <code>transfer_mode</code> is <code>local</code></td>
+</tr>
+<tr>
+<td><code>pandora_url</code></td>
+<td>—</td>
+<td>Console API URL</td>
+</tr>
+<tr>
+<td><code>api_user</code></td>
+<td>—</td>
+<td>Console API user</td>
+</tr>
+<tr>
+<td><code>api_pass</code></td>
+<td>—</td>
+<td>Console API password</td>
+</tr>
+<tr>
+<td><code>apiuser_pass</code></td>
+<td>—</td>
+<td>Console API user password</td>
+</tr>
+</tbody>
+</table>
+<p>The console API parameters are used to create the <code>proxmox_device</code> custom field in Pandora FMS when it does not exist yet.</p>
+<h3 id="entities-list-file">Entities list file<a class="headerlink" href="#entities-list-file" title="Permanent link">¶</a></h3>
+<p>The entities list is a plain text file that selects and renames resources. The plugin creates it on the first run and reads it on every run. In a Discovery task the path is fixed to a task-specific file under Pandora's temporary directory and is not configurable from the wizard; only a manual execution can set it with the <code>entities_list</code> key.</p>
+<p>In this plugin, the entities list is the mechanism that decides which discovered resources are monitored and how their agents are named. Use it to:</p>
+<ul>
+<li>exclude an individual resource, such as one virtual machine, from monitoring without disabling its whole scan category;</li>
+<li>keep a selection of monitored resources between task runs, because the file is read on every run;</li>
+<li>rename the visible agent aliases with <code>Rename</code> rules.</li>
+</ul>
+<p>If a resource is removed from Proxmox VE but its line remains in the file, the plugin stops collecting it on the next run and its agent can be reported as critical. The line is removed only when the list is rebuilt after the re-scan interval, which must be enabled for this to happen; you can also delete the line manually. A rebuild also restores lines you removed for resources that still exist in Proxmox VE, so review the file after a re-scan.</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Entry format</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Node</code></td>
+<td>Node name</td>
+<td><code>pve1</code></td>
+</tr>
+<tr>
+<td><code>VM</code></td>
+<td><code>&lt;node&gt;/&lt;vmid&gt;</code></td>
+<td><code>pve1/100</code></td>
+</tr>
+<tr>
+<td><code>LXC</code></td>
+<td><code>&lt;node&gt;/&lt;vmid&gt;</code></td>
+<td><code>pve1/200</code></td>
+</tr>
+<tr>
+<td><code>Storage</code></td>
+<td><code>&lt;node&gt;/&lt;storage&gt;</code></td>
+<td><code>pve1/local</code></td>
+</tr>
+<tr>
+<td><code>Backups</code></td>
+<td>The fixed entry <code>Backups</code></td>
+<td><code>Backups</code></td>
+</tr>
+<tr>
+<td><code>Datacenter</code></td>
+<td>The fixed entry <code>Data_Center</code></td>
+<td><code>Data_Center</code></td>
+</tr>
+<tr>
+<td><code>Rename</code></td>
+<td><code>ORIGINAL TO NEW</code></td>
+<td><code>web-prod TO Production web</code></td>
+</tr>
+</tbody>
+</table>
+<p>Rules:</p>
+<ul>
+<li>Remove a resource line to exclude it from monitoring. Changes take effect on the next task execution.</li>
+<li>The entry <code>all</code> inside a section permits every current resource of that type.</li>
+<li>Disabled scan categories are not written when the list is first built. Enable an interval or add entries manually if you enable a category later.</li>
+<li><strong>Enable entities list re-scan interval</strong> rebuilds the resource sections after the configured interval. It is off by default so manual exclusions persist. A rebuild discovers new resources and retains the <code>Rename</code> rules, but it restores the resource lines you removed.</li>
+<li>The file must be writable by the account that runs the Discovery task.</li>
+</ul>
+<h3 id="rename-rules">Rename rules<a class="headerlink" href="#rename-rules" title="Permanent link">¶</a></h3>
+<p>Add mappings under the <code>Rename</code> section using <code>ORIGINAL TO NEW</code>.</p>
+<ul>
+<li><code>ORIGINAL</code> may be the original agent alias including the prefix, or the source resource name, for example <code>web-prod</code>.</li>
+<li>The target becomes the visible agent alias.</li>
+<li>A rename does not change the internal hashed agent name. Guest agents are identified by VMID.</li>
+<li>For equal resource names on different nodes, use the full original alias to target one agent.</li>
+</ul>
+<h3 id="generated-modules">Generated modules<a class="headerlink" href="#generated-modules" title="Permanent link">¶</a></h3>
+<p>The following tables list the modules the plugin generates per resource.</p>
+<h4 id="nodes">Nodes<a class="headerlink" href="#nodes" title="Permanent link">¶</a></h4>
+<p>In the module names, <code>&lt;node&gt;</code> is the node name. Modules are generated only when the Proxmox API returns the corresponding field.</p>
+<table>
+<thead>
+<tr>
+<th>Module name</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;node&gt;_maxdisk</code></td>
+<td>generic_data</td>
+<td>Bytes</td>
+<td>Root disk size</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_uptime</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Uptime</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_status</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td><code>1</code> when the node is online, <code>0</code> otherwise</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_state</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Node status as reported by the API</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_maxcpu</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Maximum number of CPUs</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_disk</code></td>
+<td>generic_data</td>
+<td>Bytes</td>
+<td>Disk usage</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_mem</code></td>
+<td>generic_data</td>
+<td>Bytes</td>
+<td>Memory usage</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_maxmem</code></td>
+<td>generic_data</td>
+<td>Bytes</td>
+<td>Maximum memory</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_cpu</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>CPU usage, with the CPU model and core count in the description</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_ssl_fingerprint</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>SSL fingerprint</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_mem_usage_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Memory usage percentage</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_disk_usage_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Disk usage percentage</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_kernel_version</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Kernel version</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_manager_version</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Proxmox manager version</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_netin_traffic</code></td>
+<td>generic_data</td>
+<td>bytes/s</td>
+<td>Network traffic in</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_netout_traffic</code></td>
+<td>generic_data</td>
+<td>bytes/s</td>
+<td>Network traffic out</td>
+</tr>
+</tbody>
+</table>
+<h4 id="virtual-machines">Virtual machines<a class="headerlink" href="#virtual-machines" title="Permanent link">¶</a></h4>
+<p>In the module names, <code>&lt;vm&gt;</code> is the virtual machine name. Modules are generated only when the Proxmox API returns the corresponding field.</p>
+<table>
+<thead>
+<tr>
+<th>Module name</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;vm&gt;_Status</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td><code>1</code> when the guest is running, <code>0</code> otherwise</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_State</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Guest status as reported by the API</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_netout</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Network traffic out</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_diskread</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Disk read</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_cpu</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>CPU usage</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_disk</code></td>
+<td>generic_data</td>
+<td>Bytes</td>
+<td>Disk usage</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_mem</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Memory usage in bytes</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_netin</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Network traffic in</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_uptime</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Uptime</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_maxmem</code></td>
+<td>generic_data</td>
+<td>bytes</td>
+<td>Maximum memory</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_maxdisk</code></td>
+<td>generic_data</td>
+<td>bytes</td>
+<td>Root disk size</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_diskwrite</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Disk write</td>
+</tr>
+<tr>
+<td><code>&lt;vm&gt;_cpus</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Maximum usable CPUs</td>
+</tr>
+</tbody>
+</table>
+<h4 id="lxc-containers">LXC containers<a class="headerlink" href="#lxc-containers" title="Permanent link">¶</a></h4>
+<p>An LXC container generates the same modules as a virtual machine, with the container name as <code>&lt;lxc&gt;</code>, plus the following percentage modules.</p>
+<table>
+<thead>
+<tr>
+<th>Module name</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;lxc&gt;_cpu_usage_host_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Container CPU usage relative to the total host cores</td>
+</tr>
+<tr>
+<td><code>&lt;lxc&gt;_mem_usage_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Container memory usage percentage</td>
+</tr>
+<tr>
+<td><code>&lt;lxc&gt;_mem_usage_host_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Container memory usage relative to the total host memory</td>
+</tr>
+</tbody>
+</table>
+<h4 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">¶</a></h4>
+<p>In the module names, <code>&lt;node&gt;</code> is the node name and <code>&lt;storage&gt;</code> is the storage name.</p>
+<table>
+<thead>
+<tr>
+<th>Module name</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_disk_usage_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>Percentage of used space</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_enable</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td><code>1</code> when the storage is enabled, <code>0</code> otherwise</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_is_active</code></td>
+<td>generic_proc</td>
+<td>—</td>
+<td><code>1</code> when the storage is active, <code>0</code> otherwise</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_total_capacity</code></td>
+<td>generic_data</td>
+<td>bytes</td>
+<td>Total disk capacity</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_used_space</code></td>
+<td>generic_data</td>
+<td>bytes</td>
+<td>Used disk space</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_type</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Storage type</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_path</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Storage path</td>
+</tr>
+<tr>
+<td><code>&lt;node&gt;_&lt;storage&gt;_content</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td>Content types supported by the storage, as a list</td>
+</tr>
+</tbody>
+</table>
+<h4 id="backups">Backups<a class="headerlink" href="#backups" title="Permanent link">¶</a></h4>
+<p>The cluster backups agent generates one pair of modules per scheduled backup job. In the module names, <code>&lt;vmid&gt;</code> and <code>&lt;node&gt;</code> come from the backup job; they are <code>None</code> when the API does not return them.</p>
+<table>
+<thead>
+<tr>
+<th>Module name</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;vmid&gt;_&lt;node&gt;info</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td><code>enabled</code> or <code>disabled</code>. The description carries the next run, schedule, storage, backup ID and repeat-missed values</td>
+</tr>
+<tr>
+<td><code>&lt;vmid&gt;_&lt;node&gt;_next_backup</code></td>
+<td>generic_data</td>
+<td>s</td>
+<td>Time remaining until the next backup</td>
+</tr>
+</tbody>
+</table>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/proxmox/backups-modules.png" data-desc-position="bottom"><img alt="Backups modules" src="../../assets/images/discovery/proxmox/backups-modules.png"></a></p>
+<h4 id="data-center">Data center<a class="headerlink" href="#data-center" title="Permanent link">¶</a></h4>
+<p>The data center agent carries the cluster summary.</p>
+<table>
+<thead>
+<tr>
+<th>Module name</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data_center_status</code></td>
+<td>generic_data_string</td>
+<td>—</td>
+<td><code>OK</code> when no node is offline, <code>Offline Nodes</code> otherwise</td>
+</tr>
+<tr>
+<td><code>data_center_nodes_online</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Number of online nodes</td>
+</tr>
+<tr>
+<td><code>data_center_nodes_offline</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Number of offline nodes</td>
+</tr>
+<tr>
+<td><code>data_center_total_nodes</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Total number of nodes</td>
+</tr>
+<tr>
+<td><code>data_center_total_vm</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Total number of virtual machines</td>
+</tr>
+<tr>
+<td><code>data_center_vm_running</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Number of running virtual machines</td>
+</tr>
+<tr>
+<td><code>data_center_vm_stopped</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Number of stopped virtual machines</td>
+</tr>
+<tr>
+<td><code>data_center_total_lxc</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Total number of LXC containers</td>
+</tr>
+<tr>
+<td><code>data_center_lxc_running</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Number of running LXC containers</td>
+</tr>
+<tr>
+<td><code>data_center_lxc_stopped</code></td>
+<td>generic_data</td>
+<td>—</td>
+<td>Number of stopped LXC containers</td>
+</tr>
+<tr>
+<td><code>data_center_cpu_usage_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>General CPU usage</td>
+</tr>
+<tr>
+<td><code>data_center_mem_usage_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>General memory usage</td>
+</tr>
+<tr>
+<td><code>data_center_storage_usage_pct</code></td>
+<td>generic_data</td>
+<td>%</td>
+<td>General storage usage</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
