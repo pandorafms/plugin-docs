@@ -24,15 +24,15 @@ El plugin no conserva estado entre ejecuciones, de modo que los valores que publ
 
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
-| Acceso de red desde la máquina que ejecuta el plugin al listener de PostgreSQL (TCP, `--port`, `5432` por defecto) | `Required` | Los parámetros de conexión `-i` y `--port` |
-| Un rol de PostgreSQL con permiso de lectura sobre `pg_stat_activity`, `pg_roles`, `pg_locks`, `pg_stat_database` y `pg_database` | `Required` | Las consultas de ejemplo que acompañan al addon |
-| PostgreSQL 9.6 o posterior mientras se mantengan las consultas de `wait_event` incluidas | `Required` | `pg_stat_activity.wait_event` existe desde PostgreSQL 9.6; en servidores anteriores esas dos consultas fallan y sus módulos se omiten |
-| Plugin Server de Pandora FMS habilitado con el auxiliar `plugin_exec` instalado, cuando el plugin se registra en Pandora FMS | `Required` | Pandora FMS ejecuta los módulos de plugin a través del Plugin Server |
-| Un directorio de datos de Pandora FMS con permiso de escritura para el usuario que ejecuta el plugin, para la entrega por archivo y por Tentacle | `Required` | `--data_dir`, `/var/spool/pandora/data_in/` por defecto |
-| Sistema operativo y distribución de la máquina que ejecuta el plugin | `Not validated` | No hay ningún sistema operativo registrado para la versión `1.1` |
-| Versiones del servidor PostgreSQL | `Not validated` | No hay matriz de versiones de PostgreSQL registrada para este addon |
-| Versiones concretas de Pandora FMS | `Not validated` | No hay matriz de versiones registrada para este addon |
-| Entrega por Tentacle | `Not validated` | `--tentacle_address` necesita un `tentacle_client` accesible; no hay ninguna ejecución de ese tipo registrada |
+| Acceso de red desde la máquina que ejecuta el plugin al listener de PostgreSQL (TCP, `--port`, `5432` por defecto) | `Requerido` | Los parámetros de conexión `-i` y `--port` |
+| Un rol de PostgreSQL con permiso de lectura sobre `pg_stat_activity`, `pg_roles`, `pg_locks`, `pg_stat_database` y `pg_database` | `Requerido` | Las consultas de ejemplo que acompañan al addon |
+| PostgreSQL 9.6 o posterior mientras se mantengan las consultas de `wait_event` incluidas | `Requerido` | `pg_stat_activity.wait_event` existe desde PostgreSQL 9.6; en servidores anteriores esas dos consultas fallan y sus módulos se omiten |
+| Plugin Server de Pandora FMS habilitado con el auxiliar `plugin_exec` instalado, cuando el plugin se registra en Pandora FMS | `Requerido` | Pandora FMS ejecuta los módulos de plugin a través del Plugin Server |
+| Un directorio de datos de Pandora FMS con permiso de escritura para el usuario que ejecuta el plugin, para la entrega por archivo y por Tentacle | `Requerido` | `--data_dir`, `/var/spool/pandora/data_in/` por defecto |
+| Sistema operativo y distribución de la máquina que ejecuta el plugin | `Sin validar` | No hay ningún sistema operativo registrado para la versión `1.1` |
+| Versiones del servidor PostgreSQL | `Sin validar` | No hay matriz de versiones de PostgreSQL registrada para este addon |
+| Versiones concretas de Pandora FMS | `Sin validar` | No hay matriz de versiones registrada para este addon |
+| Entrega por Tentacle | `Sin validar` | `--tentacle_address` necesita un `tentacle_client` accesible; no hay ninguna ejecución de ese tipo registrada |
 
 El registro del Marketplace indica que este plugin ya no se mantiene ni actualiza activamente y recomienda un plugin alternativo para instalaciones nuevas. Ese mismo registro limita la descarga a usuarios con licencia; consulte [Identidad del addon](#identidad-del-addon).
 

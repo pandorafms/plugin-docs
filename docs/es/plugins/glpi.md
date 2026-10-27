@@ -37,12 +37,12 @@ Dos modos de ejecución gobiernan el ciclo de vida del ticket:
 
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
-| Pandora FMS NG 784 y posteriores | `Supported` | El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores |
-| Una instancia de GLPI cuya API REST responda en `/apirest.php`, accesible desde el host que ejecuta el comando de alerta | `Required` | Todas las operaciones usan ese punto de entrada; el addon añade `/apirest.php/...` a `--url` |
-| Una consola nodo de Pandora FMS cuya API pueda leer y escribir el ID personalizado del módulo, con el host incluido en la *Lista de IPs con acceso al API* de la consola | `Required` | La asociación se lee y se escribe mediante `include/api.php` antes y después de las llamadas a GLPI |
-| Versiones de GLPI | `Not validated` | No hay una matriz de versiones de GLPI registrada para este addon |
-| Sistema operativo del host que ejecuta el comando de alerta | `Not validated` | No hay un sistema operativo registrado para la versión `1.0` |
-| Plugins de GLPI instalados o campos de ticket personalizados | `Not validated` | El addon solo usa tipos de elemento estándar |
+| Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores |
+| Una instancia de GLPI cuya API REST responda en `/apirest.php`, accesible desde el host que ejecuta el comando de alerta | `Requerido` | Todas las operaciones usan ese punto de entrada; el addon añade `/apirest.php/...` a `--url` |
+| Una consola nodo de Pandora FMS cuya API pueda leer y escribir el ID personalizado del módulo, con el host incluido en la *Lista de IPs con acceso al API* de la consola | `Requerido` | La asociación se lee y se escribe mediante `include/api.php` antes y después de las llamadas a GLPI |
+| Versiones de GLPI | `Sin validar` | No hay una matriz de versiones de GLPI registrada para este addon |
+| Sistema operativo del host que ejecuta el comando de alerta | `Sin validar` | No hay un sistema operativo registrado para la versión `1.0` |
+| Plugins de GLPI instalados o campos de ticket personalizados | `Sin validar` | El addon solo usa tipos de elemento estándar |
 
 La versión de GLPI, la cuenta de GLPI y la consola nodo son requisitos de
 operación, no declaraciones de compatibilidad.

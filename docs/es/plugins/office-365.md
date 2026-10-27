@@ -32,11 +32,11 @@ de Pandora FMS.
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Plugin `pandorafms.office365_plugin`, versión `1.0` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del plugin](#identidad-del-plugin) |
-| Pandora FMS NG `784` y posteriores | `Supported` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Es una declaración general de compatibilidad que cubre el plugin, no un registro de prueba del mismo |
-| El servidor de plugins de Pandora FMS, habilitado | `Required` | El addon es un plugin de servidor y lo ejecuta el servidor de plugins |
-| Acceso de red desde el host que ejecuta el plugin hasta `login.microsoftonline.com` y `graph.microsoft.com` por HTTPS | `Required` | El plugin obtiene su token y lee sus datos de esos dos hosts; no expone ninguna opción para cambiar ninguno de los dos endpoints |
-| Una aplicación de Microsoft Entra ID con los permisos de [Permisos de Microsoft Graph](#permisos-de-microsoft-graph) | `Required` | Es un requisito previo, no una declaración de compatibilidad |
-| Sistema operativo del host que ejecuta el plugin | `Not validated` | No se ha registrado un sistema operativo para esta versión |
+| Pandora FMS NG `784` y posteriores | `Soportado` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Es una declaración general de compatibilidad que cubre el plugin, no un registro de prueba del mismo |
+| El servidor de plugins de Pandora FMS, habilitado | `Requerido` | El addon es un plugin de servidor y lo ejecuta el servidor de plugins |
+| Acceso de red desde el host que ejecuta el plugin hasta `login.microsoftonline.com` y `graph.microsoft.com` por HTTPS | `Requerido` | El plugin obtiene su token y lee sus datos de esos dos hosts; no expone ninguna opción para cambiar ninguno de los dos endpoints |
+| Una aplicación de Microsoft Entra ID con los permisos de [Permisos de Microsoft Graph](#permisos-de-microsoft-graph) | `Requerido` | Es un requisito previo, no una declaración de compatibilidad |
+| Sistema operativo del host que ejecuta el plugin | `Sin validar` | No se ha registrado un sistema operativo para esta versión |
 
 La entrada del Marketplace indica que este addon ya no se mantiene ni se
 actualiza activamente y que deben considerarse los plugins alternativos de la

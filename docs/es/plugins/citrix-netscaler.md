@@ -37,15 +37,15 @@ expone cada dispositivo o firmware.
 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
-| Pandora FMS NG 784 y posteriores | `Supported` | El Marketplace indica que todas sus entradas son compatibles con Pandora FMS NG 784 y versiones posteriores; es una declaración de todo el catálogo que cubre este addon, no un registro de prueba |
-| Un dispositivo Citrix NetScaler que exponga la API de estadísticas NITRO en `ns_url` | `Required` | La petición del catálogo se dirige a `<ns_url>` y cada lectura de servicio añade `/<servicio>` |
-| Una cuenta de NetScaler autorizada a leer la API de estadísticas | `Required` | Las credenciales viajan en las cabeceras `X-NITRO-USER` y `X-NITRO-PASS` de cada petición |
-| Un entorno de ejecución de Perl con `LWP::UserAgent` y `JSON` | `Required` | El plugin no arranca sin ellos |
-| Acceso de red desde el host del plugin al dispositivo | `Required` | Las estadísticas se leen por HTTP o HTTPS desde ese host |
-| Una carpeta temporal con permiso de escritura | `Required` | Cada documento de agente se escribe en `temp` antes de entregarse |
-| Un destino de entrega: el servicio Tentacle de Pandora FMS o una carpeta de datos local con permiso de escritura | `Required` | `mode` selecciona uno de los dos |
-| Modelos y versiones de firmware de NetScaler | `Not validated` | No se ha registrado una matriz de modelos ni de firmware para este addon. La guía heredada indica `NSMPX-10500` como plataforma probada; ningún registro actual lo confirma |
-| Sistema operativo del host que ejecuta el plugin | `Not validated` | No se ha registrado un sistema operativo para esta versión |
+| Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que todas sus entradas son compatibles con Pandora FMS NG 784 y versiones posteriores; es una declaración de todo el catálogo que cubre este addon, no un registro de prueba |
+| Un dispositivo Citrix NetScaler que exponga la API de estadísticas NITRO en `ns_url` | `Requerido` | La petición del catálogo se dirige a `<ns_url>` y cada lectura de servicio añade `/<servicio>` |
+| Una cuenta de NetScaler autorizada a leer la API de estadísticas | `Requerido` | Las credenciales viajan en las cabeceras `X-NITRO-USER` y `X-NITRO-PASS` de cada petición |
+| Un entorno de ejecución de Perl con `LWP::UserAgent` y `JSON` | `Requerido` | El plugin no arranca sin ellos |
+| Acceso de red desde el host del plugin al dispositivo | `Requerido` | Las estadísticas se leen por HTTP o HTTPS desde ese host |
+| Una carpeta temporal con permiso de escritura | `Requerido` | Cada documento de agente se escribe en `temp` antes de entregarse |
+| Un destino de entrega: el servicio Tentacle de Pandora FMS o una carpeta de datos local con permiso de escritura | `Requerido` | `mode` selecciona uno de los dos |
+| Modelos y versiones de firmware de NetScaler | `Sin validar` | No se ha registrado una matriz de modelos ni de firmware para este addon. La guía heredada indica `NSMPX-10500` como plataforma probada; ningún registro actual lo confirma |
+| Sistema operativo del host que ejecuta el plugin | `Sin validar` | No se ha registrado un sistema operativo para esta versión |
 
 ### Requisitos
 

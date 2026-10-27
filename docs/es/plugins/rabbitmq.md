@@ -37,14 +37,14 @@ configuraciones.
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
 | Addon `pandorafms.rabbitmq`, versión `1.1` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
-| Un broker de RabbitMQ con el plugin de gestión habilitado | `Required` | El plugin lee `/api/overview`, `/api/nodes`, `/api/exchanges` y `/api/connections`, que proporciona el plugin de gestión |
-| Acceso HTTP desde el host que ejecuta el plugin al puerto de escucha de gestión (TCP, `15672` por defecto en RabbitMQ) | `Required` | El plugin envía todas sus peticiones a la URL base de `host` |
-| Un usuario de RabbitMQ autorizado a leer datos de nodos y conexiones | `Required` | Un único par de credenciales HTTP Basic, `user` y `pass`; la documentación de RabbitMQ indica que la etiqueta `monitoring` concede los datos de nivel de nodo y las conexiones de otros usuarios |
-| `tentacle_client` en el host que ejecuta el plugin | `Required` cuando `transfer_mode=tentacle` | Entrega en modo plugin de servidor |
-| Versiones del broker RabbitMQ | `Not validated` | No hay una matriz de versiones registrada. La guía heredada solo indica que el plugin se desarrolló contra RabbitMQ `3.7.18`; el plugin no exige nada más allá de una API que responda a los cuatro endpoints documentados |
-| Sistema operativo del host que ejecuta el plugin | `Not validated` | No hay un sistema operativo registrado para esta versión |
-| Pandora FMS NG 784 y posteriores | `Supported` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores; es una declaración de catálogo que cubre este addon, no un registro de prueba del mismo |
-| TLS hacia la API de gestión | `Not validated` | El addon no tiene opción de TLS, proxy ni CA: la URL base se usa tal cual |
+| Un broker de RabbitMQ con el plugin de gestión habilitado | `Requerido` | El plugin lee `/api/overview`, `/api/nodes`, `/api/exchanges` y `/api/connections`, que proporciona el plugin de gestión |
+| Acceso HTTP desde el host que ejecuta el plugin al puerto de escucha de gestión (TCP, `15672` por defecto en RabbitMQ) | `Requerido` | El plugin envía todas sus peticiones a la URL base de `host` |
+| Un usuario de RabbitMQ autorizado a leer datos de nodos y conexiones | `Requerido` | Un único par de credenciales HTTP Basic, `user` y `pass`; la documentación de RabbitMQ indica que la etiqueta `monitoring` concede los datos de nivel de nodo y las conexiones de otros usuarios |
+| `tentacle_client` en el host que ejecuta el plugin | `Requerido` cuando `transfer_mode=tentacle` | Entrega en modo plugin de servidor |
+| Versiones del broker RabbitMQ | `Sin validar` | No hay una matriz de versiones registrada. La guía heredada solo indica que el plugin se desarrolló contra RabbitMQ `3.7.18`; el plugin no exige nada más allá de una API que responda a los cuatro endpoints documentados |
+| Sistema operativo del host que ejecuta el plugin | `Sin validar` | No hay un sistema operativo registrado para esta versión |
+| Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores; es una declaración de catálogo que cubre este addon, no un registro de prueba del mismo |
+| TLS hacia la API de gestión | `Sin validar` | El addon no tiene opción de TLS, proxy ni CA: la URL base se usa tal cual |
 
 ### Requisitos
 

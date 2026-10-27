@@ -41,11 +41,11 @@ por lo que una ejecución no es un informe sobre el estado de todo el endpoint.
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Versión del plugin `2.1` | Objetivo documentado | La versión que describe esta página |
-| Linux con systemd | `Tested` | Probado en Fedora 44 (systemd 259) y Rocky Linux 10.2 (systemd 257): lista integrada, listas propias, exclusiones, diagnósticos detallados y filtrado de `oneshot` |
-| Linux sin systemd (SysV) | `Not validated` | No se ha registrado ningún equipo solo con SysV |
-| Windows (Administrador de servicios, amd64) | `Tested` | Probado en Windows 11: lista integrada, correspondencia por subcadena y exacta, exclusiones, sufijo `.service`, regla de tres caracteres y `--usage` |
-| Nombres de servicio de Windows de menos de tres caracteres | `Required` | El plugin descarta en Windows las entradas de la lista de menos de tres caracteres, consulte [Reglas de correspondencia](#reglas-de-correspondencia) |
-| Un agente capaz de ejecutar entradas `module_plugin` en el endpoint | `Required` | Prerrequisito, consulte [Requisitos](#requisitos) |
+| Linux con systemd | `Probado` | Probado en Fedora 44 (systemd 259) y Rocky Linux 10.2 (systemd 257): lista integrada, listas propias, exclusiones, diagnósticos detallados y filtrado de `oneshot` |
+| Linux sin systemd (SysV) | `Sin validar` | No se ha registrado ningún equipo solo con SysV |
+| Windows (Administrador de servicios, amd64) | `Probado` | Probado en Windows 11: lista integrada, correspondencia por subcadena y exacta, exclusiones, sufijo `.service`, regla de tres caracteres y `--usage` |
+| Nombres de servicio de Windows de menos de tres caracteres | `Requerido` | El plugin descarta en Windows las entradas de la lista de menos de tres caracteres, consulte [Reglas de correspondencia](#reglas-de-correspondencia) |
+| Un agente capaz de ejecutar entradas `module_plugin` en el endpoint | `Requerido` | Prerrequisito, consulte [Requisitos](#requisitos) |
 
 ### Requisitos
 

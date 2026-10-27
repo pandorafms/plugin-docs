@@ -15,11 +15,11 @@ El addon crea **un agente por instancia de Redis**, de modo que una única tarea
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Versión `1.0` del addon (`pandorafms.redis`) | Objetivo documentado | La versión que describe esta página. Consulta [Identidad del addon](#identidad-del-addon) |
-| Versiones de Pandora FMS | `Not validated` | El Marketplace muestra un aviso general para todas sus integraciones, no una declaración específica de este addon |
-| Conectividad de red desde el servidor de Discovery a cada instancia de Redis | `Required` | El addon abre una conexión por instancia |
-| Capacidad de búsqueda de Redis (`FT.SEARCH`) en la instancia | `Required` solo para consultas personalizadas | Prerrequisito de la función **Custom queries**, no una declaración de compatibilidad |
-| Cualquier versión, edición o modo de despliegue concreto de Redis | `Not validated` | No hay registro de pruebas para una matriz de versiones |
-| Sistema operativo del servidor de Discovery | `Not validated` | No se ha registrado ningún sistema operativo |
+| Versiones de Pandora FMS | `Sin validar` | El Marketplace muestra un aviso general para todas sus integraciones, no una declaración específica de este addon |
+| Conectividad de red desde el servidor de Discovery a cada instancia de Redis | `Requerido` | El addon abre una conexión por instancia |
+| Capacidad de búsqueda de Redis (`FT.SEARCH`) en la instancia | `Requerido` solo para consultas personalizadas | Prerrequisito de la función **Custom queries**, no una declaración de compatibilidad |
+| Cualquier versión, edición o modo de despliegue concreto de Redis | `Sin validar` | No hay registro de pruebas para una matriz de versiones |
+| Sistema operativo del servidor de Discovery | `Sin validar` | No se ha registrado ningún sistema operativo |
 
 ### Prerrequisitos
 

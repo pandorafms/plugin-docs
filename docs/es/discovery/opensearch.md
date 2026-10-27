@@ -21,11 +21,11 @@ Cada grupo de agentes es opcional: se elige cuáles de los tres grupos de métri
 | Alcance | Estado | Evidencia |
 |---------|--------|-----------|
 | Addon `pandorafms.opensearch`, versión `1.2` | Objetivo documentado | Versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
-| Acceso de red desde el servidor de Discovery al endpoint REST de OpenSearch | `Required` | El addon se conecta a la IP y al puerto configurados en la tarea |
-| Acceso a las API Nodes stats, Cluster health e Indices stats | `Required` | El addon llama a estas tres API; cada una solo es necesaria para su grupo de métricas |
-| Versiones de OpenSearch | `Not validated` | No se ha registrado una matriz de versiones para este addon |
-| Sistema operativo del servidor de Discovery | `Not validated` | No se ha registrado ningún sistema operativo para esta versión |
-| Versiones concretas de Pandora FMS | `Not validated` | No se ha registrado una matriz de versiones para este addon |
+| Acceso de red desde el servidor de Discovery al endpoint REST de OpenSearch | `Requerido` | El addon se conecta a la IP y al puerto configurados en la tarea |
+| Acceso a las API Nodes stats, Cluster health e Indices stats | `Requerido` | El addon llama a estas tres API; cada una solo es necesaria para su grupo de métricas |
+| Versiones de OpenSearch | `Sin validar` | No se ha registrado una matriz de versiones para este addon |
+| Sistema operativo del servidor de Discovery | `Sin validar` | No se ha registrado ningún sistema operativo para esta versión |
+| Versiones concretas de Pandora FMS | `Sin validar` | No se ha registrado una matriz de versiones para este addon |
 
 ### Requisitos previos
 

@@ -14,12 +14,12 @@ El addon es un recolector de inventario, no un plugin de monitorización: no cre
 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
-| Pandora FMS NG 784 y posteriores | `Supported` | El Marketplace indica que todas las integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores |
-| Un servicio SSH en el dispositivo que proporcione una shell interactiva | `Required` | El addon abre una shell SSH interactiva para ejecutar el comando |
-| Acceso SSH al dispositivo en el puerto SSH predeterminado (`22`) | `Required` | El addon se conecta al servicio SSH sin opción de puerto |
-| Un usuario del dispositivo autorizado a ejecutar el comando configurado | `Required` | El addon envía el comando con el usuario configurado |
-| Fabricantes, modelos y versiones de firmware de dispositivos de red | `Not validated` | No se ha registrado una matriz de dispositivos ni de firmware |
-| Sistema operativo del host que ejecuta el módulo de inventario | `Not validated` | No se ha registrado una matriz de sistemas operativos |
+| Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que todas las integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores |
+| Un servicio SSH en el dispositivo que proporcione una shell interactiva | `Requerido` | El addon abre una shell SSH interactiva para ejecutar el comando |
+| Acceso SSH al dispositivo en el puerto SSH predeterminado (`22`) | `Requerido` | El addon se conecta al servicio SSH sin opción de puerto |
+| Un usuario del dispositivo autorizado a ejecutar el comando configurado | `Requerido` | El addon envía el comando con el usuario configurado |
+| Fabricantes, modelos y versiones de firmware de dispositivos de red | `Sin validar` | No se ha registrado una matriz de dispositivos ni de firmware |
+| Sistema operativo del host que ejecuta el módulo de inventario | `Sin validar` | No se ha registrado una matriz de sistemas operativos |
 
 ### Requisitos
 

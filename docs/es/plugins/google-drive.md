@@ -40,16 +40,16 @@ y la fecha del archivo van al agente aparte que crea el plugin.
 | Alcance | Estado | Evidencia |
 |---------|--------|-----------|
 | Addon `pandorafms.googledrive`, versión `1.0` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
-| Pandora FMS NG 784 y posteriores | `Supported` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Es una declaración de catálogo que cubre el addon, no un registro de prueba del mismo |
-| Acceso HTTPS desde el host que ejecuta el plugin a la API de Google Drive | `Required` | Cada ejecución llama a la API de Drive v3 para leer la cuota y los metadatos del archivo |
-| Un proyecto de Google Cloud con la API de Google Drive habilitada y un cliente OAuth 2.0 de tipo aplicación de escritorio | `Required` | El plugin se autentica con el JSON de secreto de cliente de un cliente OAuth de aplicación de escritorio |
-| Una cuenta de Google que pueda autorizar el ámbito solicitado | `Required` | La lectura de cuota y la búsqueda del archivo se ejecutan como la cuenta que autoriza |
-| Rocky Linux y Fedora 34 | `Known compatible` | La guía antigua de este addon registra ambos como los sistemas donde se probó. No se ha revalidado para la versión `1.0` |
-| Otras distribuciones Linux | `Not validated` | No se ha registrado un rango de distribuciones ni una matriz de versiones para este addon |
-| `tentacle_client` en `PATH` | `Required` cuando `--transfer_mode` no es `local` | La entrega por Tentacle ejecuta ese comando; el plugin no tiene ninguna opción que cambie su nombre |
-| Permiso de escritura en `/tmp` | `Required` | El XML del agente se prepara en `/tmp` antes de la entrega; `--temporal` no lo cambia |
-| Permiso de escritura en `/var/spool/pandora/data_in/` | `Required` cuando se usa `--transfer_mode local` | La entrega local mueve el documento a ese directorio; `--data_dir` no lo cambia |
-| Una sesión de navegador en el host que realiza la primera autorización | `Required` | La autorización abre un servidor web local y un navegador. En un host sin entorno gráfico, complétela en una máquina con navegador y copie `token.json` |
+| Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Es una declaración de catálogo que cubre el addon, no un registro de prueba del mismo |
+| Acceso HTTPS desde el host que ejecuta el plugin a la API de Google Drive | `Requerido` | Cada ejecución llama a la API de Drive v3 para leer la cuota y los metadatos del archivo |
+| Un proyecto de Google Cloud con la API de Google Drive habilitada y un cliente OAuth 2.0 de tipo aplicación de escritorio | `Requerido` | El plugin se autentica con el JSON de secreto de cliente de un cliente OAuth de aplicación de escritorio |
+| Una cuenta de Google que pueda autorizar el ámbito solicitado | `Requerido` | La lectura de cuota y la búsqueda del archivo se ejecutan como la cuenta que autoriza |
+| Rocky Linux y Fedora 34 | `Compatible conocido` | La guía antigua de este addon registra ambos como los sistemas donde se probó. No se ha revalidado para la versión `1.0` |
+| Otras distribuciones Linux | `Sin validar` | No se ha registrado un rango de distribuciones ni una matriz de versiones para este addon |
+| `tentacle_client` en `PATH` | `Requerido` cuando `--transfer_mode` no es `local` | La entrega por Tentacle ejecuta ese comando; el plugin no tiene ninguna opción que cambie su nombre |
+| Permiso de escritura en `/tmp` | `Requerido` | El XML del agente se prepara en `/tmp` antes de la entrega; `--temporal` no lo cambia |
+| Permiso de escritura en `/var/spool/pandora/data_in/` | `Requerido` cuando se usa `--transfer_mode local` | La entrega local mueve el documento a ese directorio; `--data_dir` no lo cambia |
+| Una sesión de navegador en el host que realiza la primera autorización | `Requerido` | La autorización abre un servidor web local y un navegador. En un host sin entorno gráfico, complétela en una máquina con navegador y copie `token.json` |
 
 Ninguna declaración de compatibilidad establece una edición de Google Workspace,
 un plan de Drive ni una distribución Linux distinta del registro anterior.

@@ -32,12 +32,12 @@ Dos rutas de ejecución usan el origen de datos configurado:
 
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
-| Pandora FMS NG 784 y posteriores | `Supported` | El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores |
-| Grafana `10.0.3` o posterior | `Required` | El plugin declara `grafanaDependency` `>=10.0.3` |
-| Una consola nodo de Pandora FMS con la extensión API de Grafana disponible | `Required` | El addon añade `/search` y `/query` a la URL configurada de la extensión, y la extensión responde `403` en una metaconsola |
-| Un usuario de Pandora FMS con el privilegio de lectura de agentes (`AR`) | `Required` | Ambos puntos de la extensión comprueban ese privilegio antes de devolver ningún grupo |
-| Versiones de Grafana posteriores al mínimo declarado | `Not validated` | No hay una matriz de versiones de Grafana registrada para este addon |
-| Sistema operativo del host de Grafana | `Not validated` | El addon se ejecuta dentro de Grafana; no hay un sistema operativo registrado |
+| Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores |
+| Grafana `10.0.3` o posterior | `Requerido` | El plugin declara `grafanaDependency` `>=10.0.3` |
+| Una consola nodo de Pandora FMS con la extensión API de Grafana disponible | `Requerido` | El addon añade `/search` y `/query` a la URL configurada de la extensión, y la extensión responde `403` en una metaconsola |
+| Un usuario de Pandora FMS con el privilegio de lectura de agentes (`AR`) | `Requerido` | Ambos puntos de la extensión comprueban ese privilegio antes de devolver ningún grupo |
+| Versiones de Grafana posteriores al mínimo declarado | `Sin validar` | No hay una matriz de versiones de Grafana registrada para este addon |
+| Sistema operativo del host de Grafana | `Sin validar` | El addon se ejecuta dentro de Grafana; no hay un sistema operativo registrado |
 
 La versión de Pandora FMS, la versión de Grafana y la consola nodo son
 requisitos de instalación, no declaraciones de compatibilidad sobre otras

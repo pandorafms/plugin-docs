@@ -40,15 +40,15 @@ que verifique la entrega por separado (consulte [Verificación](#verificacion)).
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Addon `pandorafms.apache_kafka`, versión `1.1` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
-| Pandora FMS NG 784 y posteriores | `Supported` | El Marketplace indica que todas las integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Es una declaración de catálogo que cubre el addon, no un registro de prueba del mismo |
-| Un listener de Kafka accesible por TCP desde el servidor de Pandora FMS | `Required` | El plugin se conecta a cada endpoint indicado en `--bootstrap_servers` |
-| Un listener que acepte conexiones PLAINTEXT sin autenticación | `Required` | El addon no expone opciones de autenticación SASL ni de TLS, así que solo puede usar la configuración de conexión predeterminada del cliente de Kafka |
-| Rocky Linux | `Known compatible` | La guía antigua de este addon registra Rocky Linux como el sistema donde se probó. No se ha revalidado para la versión `1.1` |
-| Otras distribuciones de Linux | `Not validated` | No se ha registrado un rango de distribuciones ni una matriz de versiones para este addon |
-| Versiones de broker de Kafka | `Not validated` | No se ha registrado una matriz de versiones de broker para este addon |
-| `tentacle_client` en `PATH` | `Required` cuando `--transfer_mode` no es `local` | La entrega por Tentacle ejecuta ese comando |
-| Permiso de escritura en `/tmp` | `Required` | El plugin prepara el XML generado en `/tmp` antes de entregarlo |
-| Permiso de escritura en `/var/spool/pandora/data_in/` | `Required` cuando se usa `--transfer_mode local` | El documento XML se mueve a ese directorio |
+| Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que todas las integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Es una declaración de catálogo que cubre el addon, no un registro de prueba del mismo |
+| Un listener de Kafka accesible por TCP desde el servidor de Pandora FMS | `Requerido` | El plugin se conecta a cada endpoint indicado en `--bootstrap_servers` |
+| Un listener que acepte conexiones PLAINTEXT sin autenticación | `Requerido` | El addon no expone opciones de autenticación SASL ni de TLS, así que solo puede usar la configuración de conexión predeterminada del cliente de Kafka |
+| Rocky Linux | `Compatible conocido` | La guía antigua de este addon registra Rocky Linux como el sistema donde se probó. No se ha revalidado para la versión `1.1` |
+| Otras distribuciones de Linux | `Sin validar` | No se ha registrado un rango de distribuciones ni una matriz de versiones para este addon |
+| Versiones de broker de Kafka | `Sin validar` | No se ha registrado una matriz de versiones de broker para este addon |
+| `tentacle_client` en `PATH` | `Requerido` cuando `--transfer_mode` no es `local` | La entrega por Tentacle ejecuta ese comando |
+| Permiso de escritura en `/tmp` | `Requerido` | El plugin prepara el XML generado en `/tmp` antes de entregarlo |
+| Permiso de escritura en `/var/spool/pandora/data_in/` | `Requerido` cuando se usa `--transfer_mode local` | El documento XML se mueve a ese directorio |
 
 Ninguna declaración de compatibilidad establece un rango de versiones de Kafka,
 una distribución de broker ni una distribución de Linux distinta del registro de

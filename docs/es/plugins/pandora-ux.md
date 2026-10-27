@@ -46,15 +46,15 @@ agente de Pandora FMS o como plugin de servidor registrado.
 | Alcance | Estado | Evidencia |
 | --- | --- | --- |
 | Addon `pandorafms.pandora_ux`, versión `1.0` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
-| Un servidor Selenium accesible desde el equipo, para las comprobaciones web | `Required` | Las comprobaciones web abren una sesión contra `-pwr_host`:`-pwr_port`, `localhost:4444` por defecto |
-| Versiones de servidor Selenium 3 | `Not validated` | El cliente informa como incompatible un servidor Selenium 3 anterior a 3.14 cuando no puede crear una sesión; no hay matriz de versiones registrada para este addon |
-| Un entorno de ejecución de Java en el equipo, para `PDR` y para el servidor PWR | `Required` | `pdr.cmd` usa `JAVA_HOME`, después el `java` de la ruta y después las carpetas estándar de Java; el readme de PWR pide Java 8 |
-| `curl` en el `PATH`, para el modo `stats` | `Required` | El plugin lo comprueba al construir su ayuda y lo usa para cronometrar cada URL |
-| El componente Goliat de Pandora FMS, para el modo `goliat` | `Required` | El modo Goliat carga sus bibliotecas y se detiene si no están |
-| Una sesión de escritorio interactiva y desbloqueada, para las comprobaciones de escritorio | `Required` | La comprobación captura el escritorio de la sesión que ejecuta el plugin |
-| Sistemas operativos | `Not validated` | La ayuda del plugin limita PWR a Windows y Linux, PDR a Windows y Goliat a Linux; no hay registro de pruebas para esta versión |
-| Herramientas de automatización de terceros usadas con `-exe` | `Not validated` | Se acepta cualquier ejecutable; no hay ninguna herramienta registrada como validada |
-| Versiones concretas de Pandora FMS | `Not validated` | El aviso del Marketplace es general para todas sus integraciones, no una declaración de este addon |
+| Un servidor Selenium accesible desde el equipo, para las comprobaciones web | `Requerido` | Las comprobaciones web abren una sesión contra `-pwr_host`:`-pwr_port`, `localhost:4444` por defecto |
+| Versiones de servidor Selenium 3 | `Sin validar` | El cliente informa como incompatible un servidor Selenium 3 anterior a 3.14 cuando no puede crear una sesión; no hay matriz de versiones registrada para este addon |
+| Un entorno de ejecución de Java en el equipo, para `PDR` y para el servidor PWR | `Requerido` | `pdr.cmd` usa `JAVA_HOME`, después el `java` de la ruta y después las carpetas estándar de Java; el readme de PWR pide Java 8 |
+| `curl` en el `PATH`, para el modo `stats` | `Requerido` | El plugin lo comprueba al construir su ayuda y lo usa para cronometrar cada URL |
+| El componente Goliat de Pandora FMS, para el modo `goliat` | `Requerido` | El modo Goliat carga sus bibliotecas y se detiene si no están |
+| Una sesión de escritorio interactiva y desbloqueada, para las comprobaciones de escritorio | `Requerido` | La comprobación captura el escritorio de la sesión que ejecuta el plugin |
+| Sistemas operativos | `Sin validar` | La ayuda del plugin limita PWR a Windows y Linux, PDR a Windows y Goliat a Linux; no hay registro de pruebas para esta versión |
+| Herramientas de automatización de terceros usadas con `-exe` | `Sin validar` | Se acepta cualquier ejecutable; no hay ninguna herramienta registrada como validada |
+| Versiones concretas de Pandora FMS | `Sin validar` | El aviso del Marketplace es general para todas sus integraciones, no una declaración de este addon |
 
 ### Requisitos
 

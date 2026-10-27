@@ -27,14 +27,14 @@ documentado en [Apache Discovery](../discovery/apache-discovery.md).
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Addon `Apache`, versión `1.0` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
-| Pandora FMS NG 784 y posteriores | `Supported` | El Marketplace indica que todas sus integraciones son compatibles con estas versiones. Es una declaración pública de compatibilidad que cubre el addon, no un registro de pruebas del mismo |
-| `curl` en el host que ejecuta el plugin | `Required` | El plugin obtiene la página de estado ejecutando el comando `curl`; no tiene otro cliente HTTP |
-| Acceso de red desde el agente de Pandora FMS a la URL de estado | `Required` | Prerrequisito, no una declaración de compatibilidad |
-| Una página `mod_status` de Apache servida por HTTP | `Required` | El plugin analiza el texto de esa página. Consulte [Habilitar la página de estado](#habilitar-la-pagina-de-estado) |
-| Credenciales de autenticación básica para la ubicación de estado, cuando está protegida | `Required` cuando la ubicación exige autenticación | El plugin las envía con `-user` y `-pass` |
-| Versiones de Apache HTTP Server | `Not validated` | No se ha publicado ningún registro de pruebas de este addon. La guía heredada indicaba Apache 1.3 o posterior; nada en la evidencia disponible establece ese rango |
-| Sistema operativo del host que ejecuta el plugin | `Not validated` | No hay un sistema operativo registrado para esta versión. La guía heredada indicaba que se desarrolló y probó en Rocky Linux y Fedora 34; ningún registro lo confirma |
-| Conjunto de módulos y MPM de Apache | `Not validated` | Los contadores disponibles dependen de la configuración del servidor, no del plugin |
+| Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que todas sus integraciones son compatibles con estas versiones. Es una declaración pública de compatibilidad que cubre el addon, no un registro de pruebas del mismo |
+| `curl` en el host que ejecuta el plugin | `Requerido` | El plugin obtiene la página de estado ejecutando el comando `curl`; no tiene otro cliente HTTP |
+| Acceso de red desde el agente de Pandora FMS a la URL de estado | `Requerido` | Prerrequisito, no una declaración de compatibilidad |
+| Una página `mod_status` de Apache servida por HTTP | `Requerido` | El plugin analiza el texto de esa página. Consulte [Habilitar la página de estado](#habilitar-la-pagina-de-estado) |
+| Credenciales de autenticación básica para la ubicación de estado, cuando está protegida | `Requerido` cuando la ubicación exige autenticación | El plugin las envía con `-user` y `-pass` |
+| Versiones de Apache HTTP Server | `Sin validar` | No se ha publicado ningún registro de pruebas de este addon. La guía heredada indicaba Apache 1.3 o posterior; nada en la evidencia disponible establece ese rango |
+| Sistema operativo del host que ejecuta el plugin | `Sin validar` | No hay un sistema operativo registrado para esta versión. La guía heredada indicaba que se desarrolló y probó en Rocky Linux y Fedora 34; ningún registro lo confirma |
+| Conjunto de módulos y MPM de Apache | `Sin validar` | Los contadores disponibles dependen de la configuración del servidor, no del plugin |
 
 ### Requisitos
 

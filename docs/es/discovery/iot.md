@@ -22,11 +22,11 @@ La tarea crea **un agente por cada valor distinto de `filter_topic`** definido e
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Addon `pandorafms.iot`, versión `1.1` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
-| Pandora FMS NG 784 y posteriores | `Supported` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores |
-| Un broker MQTT accesible desde el equipo del servidor IoT | `Required` | Requisito previo, no una declaración de compatibilidad |
-| Acceso de red desde el servidor de Discovery a la base de datos del servidor IoT | `Required` | La tarea lee la ruta del fichero de base de datos que configure |
-| Versiones del protocolo MQTT y productos de broker concretos | `Not validated` | No se ha registrado ninguna matriz de versiones de broker o protocolo |
-| Sistema operativo del servidor de Discovery | `Not validated` | No se ha registrado ningún sistema operativo para esta versión |
+| Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores |
+| Un broker MQTT accesible desde el equipo del servidor IoT | `Requerido` | Requisito previo, no una declaración de compatibilidad |
+| Acceso de red desde el servidor de Discovery a la base de datos del servidor IoT | `Requerido` | La tarea lee la ruta del fichero de base de datos que configure |
+| Versiones del protocolo MQTT y productos de broker concretos | `Sin validar` | No se ha registrado ninguna matriz de versiones de broker o protocolo |
+| Sistema operativo del servidor de Discovery | `Sin validar` | No se ha registrado ningún sistema operativo para esta versión |
 
 ### Requisitos previos
 

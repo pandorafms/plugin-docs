@@ -41,13 +41,13 @@ ejecuciones.
 
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
-| Acceso de red desde el host que ejecuta el plugin al listener de MongoDB | `Required` | El addon se conecta por red; no se instala nada en el host de la base de datos |
-| Un usuario de MongoDB autorizado a ejecutar `dbStats` y `collStats` en las bases de datos monitorizadas | `Required` | Prerrequisito de los módulos de base de datos y de colección, no una declaración de compatibilidad |
-| Un usuario de MongoDB con el rol `clusterMonitor` cuando se habilita el grupo de estado del servidor | `Required` | Prerrequisito del comando `serverStatus`, no una declaración de compatibilidad |
-| Versiones de servidor MongoDB | `Not validated` | Ningún registro de pruebas establece compatibilidad con una versión concreta de MongoDB |
-| Niveles de clúster de MongoDB Atlas | `Not validated` | Ningún registro de pruebas establece compatibilidad con un nivel concreto de Atlas |
-| Versiones de Pandora FMS | `Not validated` | Ningún registro de pruebas establece compatibilidad con una versión concreta de consola o servidor |
-| Sistema operativo del host que ejecuta el plugin | `Not validated` | Ningún registro de pruebas establece compatibilidad de sistema operativo |
+| Acceso de red desde el host que ejecuta el plugin al listener de MongoDB | `Requerido` | El addon se conecta por red; no se instala nada en el host de la base de datos |
+| Un usuario de MongoDB autorizado a ejecutar `dbStats` y `collStats` en las bases de datos monitorizadas | `Requerido` | Prerrequisito de los módulos de base de datos y de colección, no una declaración de compatibilidad |
+| Un usuario de MongoDB con el rol `clusterMonitor` cuando se habilita el grupo de estado del servidor | `Requerido` | Prerrequisito del comando `serverStatus`, no una declaración de compatibilidad |
+| Versiones de servidor MongoDB | `Sin validar` | Ningún registro de pruebas establece compatibilidad con una versión concreta de MongoDB |
+| Niveles de clúster de MongoDB Atlas | `Sin validar` | Ningún registro de pruebas establece compatibilidad con un nivel concreto de Atlas |
+| Versiones de Pandora FMS | `Sin validar` | Ningún registro de pruebas establece compatibilidad con una versión concreta de consola o servidor |
+| Sistema operativo del host que ejecuta el plugin | `Sin validar` | Ningún registro de pruebas establece compatibilidad de sistema operativo |
 
 ### Requisitos
 

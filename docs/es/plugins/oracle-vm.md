@@ -30,16 +30,16 @@ manager de virtualización Oracle VM.
 
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
-| Oracle VM Manager 3.4.5 | `Known compatible` | La guía del addon enlazada desde la entrada del Marketplace indica que el plugin se desarrolló contra Oracle VM Manager 3.4.5 |
-| Versiones de Oracle VM Manager distintas de 3.4.5 | `Not validated` | No se ha registrado una matriz de versiones para este addon |
-| Acceso desde el host que ejecuta el plugin a la API REST del OVM Manager | `Required` | Cada ejecución consulta la API |
-| Un usuario del OVM Manager con permiso de lectura sobre los recursos de la API | `Required` | Cada petición se autentica con credenciales HTTP Basic |
-| La librería de plugins de Pandora FMS (`PandoraFMS::PluginTools`) | `Required` | La guía del addon la enumera como requisito previo |
-| Un servidor Tentacle accesible en `tentacle_ip` y `tentacle_port` | `Required` cuando `transfer_mode=tentacle` | Cada documento generado se envía a esa dirección y ese puerto |
-| Una carpeta de datos con permiso de escritura | `Required` cuando `transfer_mode` no es `tentacle` | Cada documento generado se copia en `local_folder` |
-| Las guest additions de Oracle VM en las máquinas virtuales monitorizadas | `Required` para las direcciones IP de las VM | La guía del addon indica que la recogida de IP necesita las guest additions |
-| Una versión concreta de Pandora FMS | `Not validated` | No se ha registrado una matriz de versiones para este addon. El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y posteriores |
-| Un sistema operativo concreto del host | `Not validated` | No se ha registrado un sistema operativo para esta versión |
+| Oracle VM Manager 3.4.5 | `Compatible conocido` | La guía del addon enlazada desde la entrada del Marketplace indica que el plugin se desarrolló contra Oracle VM Manager 3.4.5 |
+| Versiones de Oracle VM Manager distintas de 3.4.5 | `Sin validar` | No se ha registrado una matriz de versiones para este addon |
+| Acceso desde el host que ejecuta el plugin a la API REST del OVM Manager | `Requerido` | Cada ejecución consulta la API |
+| Un usuario del OVM Manager con permiso de lectura sobre los recursos de la API | `Requerido` | Cada petición se autentica con credenciales HTTP Basic |
+| La librería de plugins de Pandora FMS (`PandoraFMS::PluginTools`) | `Requerido` | La guía del addon la enumera como requisito previo |
+| Un servidor Tentacle accesible en `tentacle_ip` y `tentacle_port` | `Requerido` cuando `transfer_mode=tentacle` | Cada documento generado se envía a esa dirección y ese puerto |
+| Una carpeta de datos con permiso de escritura | `Requerido` cuando `transfer_mode` no es `tentacle` | Cada documento generado se copia en `local_folder` |
+| Las guest additions de Oracle VM en las máquinas virtuales monitorizadas | `Requerido` para las direcciones IP de las VM | La guía del addon indica que la recogida de IP necesita las guest additions |
+| Una versión concreta de Pandora FMS | `Sin validar` | No se ha registrado una matriz de versiones para este addon. El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y posteriores |
+| Un sistema operativo concreto del host | `Sin validar` | No se ha registrado un sistema operativo para esta versión |
 
 El addon se distribuye a través del Marketplace de Pandora FMS y su descarga está
 limitada a usuarios con licencia.

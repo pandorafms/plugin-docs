@@ -29,11 +29,11 @@ coinciden.
 | Ámbito | Estado | Evidencia |
 |-------|-------|----------|
 | Addon `pandorafms.journalctl`, versión `1.0` | Objetivo documentado | La versión del paquete del Marketplace `pandorafms.journalctl.1.0.zip`. Ver [Identidad del addon](#identidad-del-addon) |
-| Host Linux con systemd y `journalctl` en el `PATH` | `Required` | `journalctl` es la única fuente de datos del plugin: cuando el comando no está disponible, la ejecución termina con error y no imprime ninguna entrada |
-| Cuenta con permiso para leer el journal | `Required` | El plugin lee el journal mediante `journalctl` con los permisos de la cuenta que ejecuta el agente; cuando el journal no se puede leer, el comando falla y la ejecución termina con error |
-| Agente de Pandora FMS instalado en el host monitorizado | `Required` | El plugin lo ejecuta el agente y su salida se consume como salida de plugin de agente |
-| Pandora FMS NG 784 y posteriores | `Not validated` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Es una declaración general del Marketplace, no una declaración específica de este addon, así que no basta para `Supported` |
-| Distribuciones y versiones concretas de Linux | `Not validated` | No hay ninguna matriz de distribuciones o versiones registrada para este addon |
+| Host Linux con systemd y `journalctl` en el `PATH` | `Requerido` | `journalctl` es la única fuente de datos del plugin: cuando el comando no está disponible, la ejecución termina con error y no imprime ninguna entrada |
+| Cuenta con permiso para leer el journal | `Requerido` | El plugin lee el journal mediante `journalctl` con los permisos de la cuenta que ejecuta el agente; cuando el journal no se puede leer, el comando falla y la ejecución termina con error |
+| Agente de Pandora FMS instalado en el host monitorizado | `Requerido` | El plugin lo ejecuta el agente y su salida se consume como salida de plugin de agente |
+| Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Es una declaración general del Marketplace, no una declaración específica de este addon |
+| Distribuciones y versiones concretas de Linux | `Sin validar` | No hay ninguna matriz de distribuciones o versiones registrada para este addon |
 
 El plugin se ejecuta en el propio host monitorizado: informa únicamente del
 journal de ese host y no tiene modo de ejecución remota ni conexión con otro

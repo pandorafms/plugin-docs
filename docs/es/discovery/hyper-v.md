@@ -20,12 +20,12 @@ No se instala nada en el host Hyper-V ni dentro de las VM.
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Addon `pandorafms.hyperv`, versión `1.1` | Objetivo documentado | La versión que describe esta página. Consulta [Identidad del addon](#identidad-del-addon) |
-| Listener WinRM en el puerto TCP `5985` del host Hyper-V, accesible desde el servidor de Discovery | `Required` | El addon se conecta a `http://<host>:5985/wsman` |
-| Cuenta aceptada por el host mediante autenticación HTTP Basic que pueda ejecutar los cmdlets de PowerShell de Hyper-V | `Required` | Prerrequisito, no una declaración de compatibilidad. Consulta [Permisos](#permisos) |
-| Comando `curl` disponible en el servidor de Discovery | `Required` | El addon ejecuta `curl` para comunicarse con el host |
-| Versiones de Windows Server y de Hyper-V del host monitorizado | `Not validated` | No se ha registrado ninguna versión para este addon |
-| Sistema operativo del servidor de Discovery | `Not validated` | No se ha registrado ningún sistema operativo para esta versión |
-| Versiones concretas de Pandora FMS | `Not validated` | No se ha registrado una matriz de versiones para este addon |
+| Listener WinRM en el puerto TCP `5985` del host Hyper-V, accesible desde el servidor de Discovery | `Requerido` | El addon se conecta a `http://<host>:5985/wsman` |
+| Cuenta aceptada por el host mediante autenticación HTTP Basic que pueda ejecutar los cmdlets de PowerShell de Hyper-V | `Requerido` | Prerrequisito, no una declaración de compatibilidad. Consulta [Permisos](#permisos) |
+| Comando `curl` disponible en el servidor de Discovery | `Requerido` | El addon ejecuta `curl` para comunicarse con el host |
+| Versiones de Windows Server y de Hyper-V del host monitorizado | `Sin validar` | No se ha registrado ninguna versión para este addon |
+| Sistema operativo del servidor de Discovery | `Sin validar` | No se ha registrado ningún sistema operativo para esta versión |
+| Versiones concretas de Pandora FMS | `Sin validar` | No se ha registrado una matriz de versiones para este addon |
 
 ### Prerrequisitos
 

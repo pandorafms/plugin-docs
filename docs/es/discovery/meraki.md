@@ -22,11 +22,11 @@ La tarea se autentica con un token Bearer y envía los datos de los agentes gene
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Addon `pandorafms.meraki`, versión `1.1` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
-| Acceso de red desde el servidor de Discovery a la API de Meraki Dashboard | `Required` | Todas las peticiones van a la URL de la API configurada en la tarea |
-| Token Bearer de la API de Meraki con acceso a la organización | `Required` | Prerrequisito, no una declaración de compatibilidad |
-| Sistema operativo del servidor de Discovery | `Not validated` | No se ha registrado ningún sistema operativo para esta versión |
-| Versiones concretas de Pandora FMS | `Not validated` | No se ha registrado una matriz de versiones para este addon |
-| Modelos y firmware concretos de Meraki | `Not validated` | No se ha registrado una matriz de modelos ni de firmware |
+| Acceso de red desde el servidor de Discovery a la API de Meraki Dashboard | `Requerido` | Todas las peticiones van a la URL de la API configurada en la tarea |
+| Token Bearer de la API de Meraki con acceso a la organización | `Requerido` | Prerrequisito, no una declaración de compatibilidad |
+| Sistema operativo del servidor de Discovery | `Sin validar` | No se ha registrado ningún sistema operativo para esta versión |
+| Versiones concretas de Pandora FMS | `Sin validar` | No se ha registrado una matriz de versiones para este addon |
+| Modelos y firmware concretos de Meraki | `Sin validar` | No se ha registrado una matriz de modelos ni de firmware |
 
 ### Prerrequisitos
 

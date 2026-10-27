@@ -41,12 +41,12 @@ producen las sentencias que usted escribe. Consulte
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
 | Addon `pandorafms.db2_remote`, versión `1.0` | Objetivo documentado | Versión de la entrada del Marketplace, que el addon imprime además en su resumen de uso. Consulte [Identidad del addon](#identidad-del-addon) |
-| Acceso TCP desde el host que ejecuta el addon hasta el listener de Db2 (puerto `50000` por defecto) | `Required` | El addon conecta con `--hostname`, `--port` y `--protocol` |
-| Un usuario de Db2 con permiso de lectura sobre cada objeto que lean sus sentencias | `Required` | Es un requisito previo, no una declaración de compatibilidad |
-| Un intérprete `python3` con el driver `ibm-db` `3.1.4` | `Required` | El `requirements.txt` del paquete fija `ibm-db==3.1.4` |
-| Versiones y plataformas del servidor Db2 | `Not validated` | No hay matriz de versiones registrada para este addon |
-| Sistema operativo del host que ejecuta el addon | `Not validated` | No hay sistema operativo registrado para la versión `1.0` |
-| Versión de Pandora FMS | `Not validated` | No existe un registro de validación por versión. El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y posteriores |
+| Acceso TCP desde el host que ejecuta el addon hasta el listener de Db2 (puerto `50000` por defecto) | `Requerido` | El addon conecta con `--hostname`, `--port` y `--protocol` |
+| Un usuario de Db2 con permiso de lectura sobre cada objeto que lean sus sentencias | `Requerido` | Es un requisito previo, no una declaración de compatibilidad |
+| Un intérprete `python3` con el driver `ibm-db` `3.1.4` | `Requerido` | El `requirements.txt` del paquete fija `ibm-db==3.1.4` |
+| Versiones y plataformas del servidor Db2 | `Sin validar` | No hay matriz de versiones registrada para este addon |
+| Sistema operativo del host que ejecuta el addon | `Sin validar` | No hay sistema operativo registrado para la versión `1.0` |
+| Versión de Pandora FMS | `Sin validar` | No existe un registro de validación por versión. El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y posteriores |
 
 La entrada del Marketplace indica que este addon ya no se mantiene ni se
 actualiza activamente y remite a las alternativas publicadas en su biblioteca.

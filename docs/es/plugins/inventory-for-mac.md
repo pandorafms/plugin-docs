@@ -26,20 +26,20 @@ modo que no añade gráficas, umbrales ni alertas.
 | Alcance | Estado | Evidencia |
 | --- | --- | --- |
 | Addon `pandorafms.mac_inventory`, versión `1.0` | Objetivo documentado | Versión de la entrada del Marketplace. Consulte [Identidad del addon](#identidad-del-addon) |
-| Un endpoint macOS | `Required` | El addon lee utilidades del sistema macOS que solo existen en macOS |
-| El agente de Pandora FMS para macOS, capaz de ejecutar entradas `module_plugin` y reenviar datos de inventario | `Required` | El addon se inicia desde el archivo de configuración del agente |
-| Un intérprete `perl` para el usuario que ejecuta el agente | `Required` | El agente inicia el addon mediante `perl` (consulte [Añadir el plugin al agente](#anadir-el-plugin-al-agente)) |
-| Las utilidades macOS `sysctl`, `system_profiler`, `top`, `diskutil`, `networksetup` y `ls` | `Required` | Comandos de [Módulos de inventario generados](#modulos-de-inventario-generados) |
-| macOS 10.13 High Sierra | `Not validated` | No existe un registro reproducible para este addon |
-| macOS 10.14 Mojave | `Not validated` | No existe un registro reproducible para este addon |
-| Cualquier otra versión de macOS | `Not validated` | No hay una matriz de versiones registrada para este addon |
-| Versión de Pandora FMS | `Not validated` | No existe un registro específico por versión. El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y posteriores |
+| Un endpoint macOS | `Requerido` | El addon lee utilidades del sistema macOS que solo existen en macOS |
+| El agente de Pandora FMS para macOS, capaz de ejecutar entradas `module_plugin` y reenviar datos de inventario | `Requerido` | El addon se inicia desde el archivo de configuración del agente |
+| Un intérprete `perl` para el usuario que ejecuta el agente | `Requerido` | El agente inicia el addon mediante `perl` (consulte [Añadir el plugin al agente](#anadir-el-plugin-al-agente)) |
+| Las utilidades macOS `sysctl`, `system_profiler`, `top`, `diskutil`, `networksetup` y `ls` | `Requerido` | Comandos de [Módulos de inventario generados](#modulos-de-inventario-generados) |
+| macOS 10.13 High Sierra | `Sin validar` | No existe un registro reproducible para este addon |
+| macOS 10.14 Mojave | `Sin validar` | No existe un registro reproducible para este addon |
+| Cualquier otra versión de macOS | `Sin validar` | No hay una matriz de versiones registrada para este addon |
+| Versión de Pandora FMS | `Sin validar` | No existe un registro específico por versión. El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y posteriores |
 
 La guía que sustituye esta página indica macOS High Sierra y macOS Mojave, con la
 versión 755 del agente de Pandora FMS, como entorno probado. Ese registro no
 puede reproducirse a partir del addon y aquí no se presenta como una declaración
 de compatibilidad validada: las versiones de macOS de la tabla siguen en
-`Not validated` hasta que exista un registro de pruebas de este addon.
+`Sin validar` hasta que exista un registro de pruebas de este addon.
 
 ### Requisitos
 

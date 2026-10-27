@@ -31,14 +31,14 @@ Cada ejecución es independiente: el plugin no guarda estado entre ejecuciones.
 
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
-| Pandora FMS NG 784 y posteriores | `Supported` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Es una declaración general, no un registro de pruebas de este plugin |
-| Un servidor OpenLDAP que exponga el subárbol `cn=Monitor` | `Required` | El plugin busca en `cn=Monitor` y lee sus atributos de monitorización en cada ejecución |
-| Una cuenta del directorio con acceso de lectura a `cn=Monitor` | `Required` | Requisito previo, no una declaración de compatibilidad: el plugin se autentica con las credenciales de `-b` y `-p` |
-| Acceso de red desde el host que ejecuta el plugin al listener LDAP | `Required` | El plugin se conecta a la URL indicada en `-s` |
-| `tentacle_client` en el `PATH` | `Required` cuando se usa `--tentacle_address` | El plugin ejecuta el cliente de Tentacle para entregar el documento |
-| Otros servidores de directorio, como Active Directory | `Not validated` | El plugin lee el árbol de monitorización de OpenLDAP; no se ha registrado ningún otro servidor de directorio |
-| Versiones de OpenLDAP | `Not validated` | No se ha registrado una matriz de versiones para este plugin |
-| Sistema operativo del host que ejecuta el plugin | `Not validated` | No se ha registrado ningún sistema operativo para esta versión |
+| Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Es una declaración general, no un registro de pruebas de este plugin |
+| Un servidor OpenLDAP que exponga el subárbol `cn=Monitor` | `Requerido` | El plugin busca en `cn=Monitor` y lee sus atributos de monitorización en cada ejecución |
+| Una cuenta del directorio con acceso de lectura a `cn=Monitor` | `Requerido` | Requisito previo, no una declaración de compatibilidad: el plugin se autentica con las credenciales de `-b` y `-p` |
+| Acceso de red desde el host que ejecuta el plugin al listener LDAP | `Requerido` | El plugin se conecta a la URL indicada en `-s` |
+| `tentacle_client` en el `PATH` | `Requerido` cuando se usa `--tentacle_address` | El plugin ejecuta el cliente de Tentacle para entregar el documento |
+| Otros servidores de directorio, como Active Directory | `Sin validar` | El plugin lee el árbol de monitorización de OpenLDAP; no se ha registrado ningún otro servidor de directorio |
+| Versiones de OpenLDAP | `Sin validar` | No se ha registrado una matriz de versiones para este plugin |
+| Sistema operativo del host que ejecuta el plugin | `Sin validar` | No se ha registrado ningún sistema operativo para esta versión |
 
 ### Requisitos
 

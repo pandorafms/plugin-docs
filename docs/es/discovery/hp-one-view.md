@@ -19,11 +19,11 @@ Una tarea de Discovery puede generar:
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Addon `pandorafms.hp.oneview`, versión `1.0` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
-| Acceso de red desde el servidor de Discovery a la appliance HP OneView | `Required` | El addon se conecta a la appliance con las credenciales de la tarea |
-| Usuario de HP OneView con acceso de lectura al hardware de servidores y a la salud de la appliance | `Required` | Prerrequisito. Los roles necesarios no están documentados para este addon |
-| Versiones concretas de HP OneView | `Not validated` | No se ha registrado una matriz de versiones para este addon |
-| Sistema operativo del servidor de Discovery | `Not validated` | No se ha registrado ningún sistema operativo para esta versión |
-| Versiones concretas de Pandora FMS | `Not validated` | No se ha registrado una matriz de versiones para este addon |
+| Acceso de red desde el servidor de Discovery a la appliance HP OneView | `Requerido` | El addon se conecta a la appliance con las credenciales de la tarea |
+| Usuario de HP OneView con acceso de lectura al hardware de servidores y a la salud de la appliance | `Requerido` | Prerrequisito. Los roles necesarios no están documentados para este addon |
+| Versiones concretas de HP OneView | `Sin validar` | No se ha registrado una matriz de versiones para este addon |
+| Sistema operativo del servidor de Discovery | `Sin validar` | No se ha registrado ningún sistema operativo para esta versión |
+| Versiones concretas de Pandora FMS | `Sin validar` | No se ha registrado una matriz de versiones para este addon |
 
 ### Prerrequisitos
 

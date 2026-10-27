@@ -22,12 +22,12 @@ Esta página documenta el plugin de monitorización, que lee las estadísticas d
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Addon `redis`, versión `1.1` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
-| Acceso de red desde el host que ejecuta el plugin al puerto de escucha de Redis (TCP, `6379` por defecto en Redis) | `Required` | El plugin abre una conexión de cliente a la dirección de `server` |
-| Una contraseña de Redis, cuando la instancia exige autenticación | `Required` cuando la autenticación está habilitada | Requisito previo de la clave `password`, no una declaración de compatibilidad |
-| `tentacle_client` en el host que ejecuta el plugin | `Required` cuando `mode=tentacle` | Entrega en modo plugin de servidor |
-| Versiones del servidor Redis | `Not validated` | No hay una matriz de versiones registrada. La guía heredada solo indica que el plugin se desarrolló contra Redis `3.2.12`; el plugin no necesita nada más allá de un servidor que responda a `INFO` |
-| Sistema operativo del host que ejecuta el plugin | `Not validated` | No hay un sistema operativo registrado para esta versión |
-| Versiones de Pandora FMS | `Not validated` | El Marketplace muestra un aviso general para todas sus integraciones, no una declaración específica de este addon |
+| Acceso de red desde el host que ejecuta el plugin al puerto de escucha de Redis (TCP, `6379` por defecto en Redis) | `Requerido` | El plugin abre una conexión de cliente a la dirección de `server` |
+| Una contraseña de Redis, cuando la instancia exige autenticación | `Requerido` cuando la autenticación está habilitada | Requisito previo de la clave `password`, no una declaración de compatibilidad |
+| `tentacle_client` en el host que ejecuta el plugin | `Requerido` cuando `mode=tentacle` | Entrega en modo plugin de servidor |
+| Versiones del servidor Redis | `Sin validar` | No hay una matriz de versiones registrada. La guía heredada solo indica que el plugin se desarrolló contra Redis `3.2.12`; el plugin no necesita nada más allá de un servidor que responda a `INFO` |
+| Sistema operativo del host que ejecuta el plugin | `Sin validar` | No hay un sistema operativo registrado para esta versión |
+| Versiones de Pandora FMS | `Sin validar` | El Marketplace muestra un aviso general para todas sus integraciones, no una declaración específica de este addon |
 
 ### Requisitos
 

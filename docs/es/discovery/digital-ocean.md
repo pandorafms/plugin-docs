@@ -20,10 +20,10 @@ Por defecto se monitoriza cada droplet que devuelve la API. Puede limitar la tar
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Addon `pandorafms.digitalocean`, versión `1.0` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
-| Acceso de red desde el servidor de Discovery a `api.digitalocean.com` | `Required` | El addon llama a la API de DigitalOcean por HTTPS |
-| Token de API de DigitalOcean | `Required` | Consulte [Crear el token de API](#crear-el-token-de-api) |
-| Sistema operativo del servidor de Discovery | `Not validated` | No se ha registrado ningún sistema operativo para esta versión |
-| Versiones concretas de Pandora FMS | `Not validated` | No se ha registrado ninguna matriz de versiones para este addon |
+| Acceso de red desde el servidor de Discovery a `api.digitalocean.com` | `Requerido` | El addon llama a la API de DigitalOcean por HTTPS |
+| Token de API de DigitalOcean | `Requerido` | Consulte [Crear el token de API](#crear-el-token-de-api) |
+| Sistema operativo del servidor de Discovery | `Sin validar` | No se ha registrado ningún sistema operativo para esta versión |
+| Versiones concretas de Pandora FMS | `Sin validar` | No se ha registrado ninguna matriz de versiones para este addon |
 
 ### Prerrequisitos
 

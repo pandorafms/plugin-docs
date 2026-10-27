@@ -14,12 +14,12 @@ El addon es un recolector de inventario, no un plugin de monitorización: no cre
 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
-| Pandora FMS NG 784 y posteriores | `Supported` | El Marketplace indica que todas las integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores |
-| Un dispositivo Cisco cuya CLI acepte `enable`, `terminal length 0` y `show running-config` | `Required` | Son los comandos que el addon ejecuta en cada pasada |
-| Acceso SSH al dispositivo en el puerto SSH predeterminado (`22`) | `Required` | El addon se conecta al servicio SSH sin opción de puerto |
-| Un usuario del dispositivo autorizado a entrar en modo privilegiado y ejecutar `show running-config` | `Required` | El addon entra en modo enable antes de leer la configuración |
-| Modelos de dispositivo Cisco y versiones de IOS, IOS XE, IOS XR o NX-OS | `Not validated` | No se ha registrado una matriz de modelos ni de firmware |
-| Sistema operativo del host que ejecuta el módulo de inventario | `Not validated` | No se ha registrado una matriz de sistemas operativos |
+| Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que todas las integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores |
+| Un dispositivo Cisco cuya CLI acepte `enable`, `terminal length 0` y `show running-config` | `Requerido` | Son los comandos que el addon ejecuta en cada pasada |
+| Acceso SSH al dispositivo en el puerto SSH predeterminado (`22`) | `Requerido` | El addon se conecta al servicio SSH sin opción de puerto |
+| Un usuario del dispositivo autorizado a entrar en modo privilegiado y ejecutar `show running-config` | `Requerido` | El addon entra en modo enable antes de leer la configuración |
+| Modelos de dispositivo Cisco y versiones de IOS, IOS XE, IOS XR o NX-OS | `Sin validar` | No se ha registrado una matriz de modelos ni de firmware |
+| Sistema operativo del host que ejecuta el módulo de inventario | `Sin validar` | No se ha registrado una matriz de sistemas operativos |
 
 ### Requisitos
 

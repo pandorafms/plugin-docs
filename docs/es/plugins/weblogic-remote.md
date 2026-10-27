@@ -17,14 +17,14 @@ El colector se ejecuta como **plugin de servidor** de Pandora FMS. Cada ejecuci�
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
 | Addon `pandorafms.weblogic_remote`, versión `1.0` | Objetivo documentado | Entrada del Marketplace; consulte [Identidad del addon](#identidad-del-addon) |
-| CentOS 7 y Fedora | `Known compatible` | La edición anterior de esta guía registra ambos como sistemas probados para el addon. Sin revalidar para la versión `1.0` |
-| Otros sistemas operativos del servidor de Pandora FMS que ejecuta el colector | `Not validated` | No hay registro de pruebas. La edición anterior afirma que debería funcionar en cualquier sistema Linux, sin evidencia |
-| Versiones y ediciones de WebLogic Server | `Not validated` | No se ha registrado una matriz de versiones para este addon |
-| Versiones de Pandora FMS | `Not validated` | No hay registro por versión. El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y posteriores |
-| Un dominio de WebLogic con el agente SNMP activado y accesible | `Required` | Todos los módulos se construyen a partir de objetos bajo `1.3.6.1.4.1.140.625` |
-| Una comunidad SNMP de lectura aceptada por el agente SNMP de WebLogic | `Required` | Todas las consultas se envían con esa comunidad |
-| La utilidad `snmpwalk` de net-snmp en `PATH` | `Required` | Toda lectura de datos es una llamada a `snmpwalk` |
-| Un Plugin Server de Pandora FMS con acceso al puerto SNMP de WebLogic | `Required` | El colector es un plugin de servidor |
+| CentOS 7 y Fedora | `Compatible conocido` | La edición anterior de esta guía registra ambos como sistemas probados para el addon. Sin revalidar para la versión `1.0` |
+| Otros sistemas operativos del servidor de Pandora FMS que ejecuta el colector | `Sin validar` | No hay registro de pruebas. La edición anterior afirma que debería funcionar en cualquier sistema Linux, sin evidencia |
+| Versiones y ediciones de WebLogic Server | `Sin validar` | No se ha registrado una matriz de versiones para este addon |
+| Versiones de Pandora FMS | `Sin validar` | No hay registro por versión. El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y posteriores |
+| Un dominio de WebLogic con el agente SNMP activado y accesible | `Requerido` | Todos los módulos se construyen a partir de objetos bajo `1.3.6.1.4.1.140.625` |
+| Una comunidad SNMP de lectura aceptada por el agente SNMP de WebLogic | `Requerido` | Todas las consultas se envían con esa comunidad |
+| La utilidad `snmpwalk` de net-snmp en `PATH` | `Requerido` | Toda lectura de datos es una llamada a `snmpwalk` |
+| Un Plugin Server de Pandora FMS con acceso al puerto SNMP de WebLogic | `Requerido` | El colector es un plugin de servidor |
 
 ### Requisitos
 

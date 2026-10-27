@@ -30,13 +30,13 @@ superficie útil de esta versión es la de escritura.
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
 | Addon `pandorafms.zendesk`, versión `1.0` | Objetivo documentado | Entrada del Marketplace; consulte [Identidad del addon](#identidad-del-addon) |
-| API v2 de Zendesk en `https://<ZENDESK_SUBDOMAIN>.zendesk.com` | `Required` | Todas las peticiones se construyen contra ese host; consulte [Operaciones y endpoints](#operaciones-y-endpoints) |
-| Acceso HTTPS desde el host que ejecuta el addon hasta el subdominio de Zendesk, puerto `443` | `Required` | El esquema de la URL está fijado a `https` y el puerto no es configurable |
-| Una cuenta de agente de Zendesk y autenticación mediante token de API (o contraseña) | `Required` | En cada ejecución es obligatorio un par de credenciales |
-| Un rol de Zendesk que pueda listar, crear, actualizar y eliminar tickets | `Required` | Es un requisito previo de las operaciones que ejecute, no una declaración de compatibilidad |
-| Sistema operativo del host que ejecuta el addon | `Not validated` | No hay ningún sistema operativo registrado para esta versión |
-| Planes y ediciones de Zendesk | `Not validated` | No hay matriz de planes de Zendesk registrada para este addon |
-| Versiones de Pandora FMS | `Not validated` | No hay matriz de versiones registrada. El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y posteriores |
+| API v2 de Zendesk en `https://<ZENDESK_SUBDOMAIN>.zendesk.com` | `Requerido` | Todas las peticiones se construyen contra ese host; consulte [Operaciones y endpoints](#operaciones-y-endpoints) |
+| Acceso HTTPS desde el host que ejecuta el addon hasta el subdominio de Zendesk, puerto `443` | `Requerido` | El esquema de la URL está fijado a `https` y el puerto no es configurable |
+| Una cuenta de agente de Zendesk y autenticación mediante token de API (o contraseña) | `Requerido` | En cada ejecución es obligatorio un par de credenciales |
+| Un rol de Zendesk que pueda listar, crear, actualizar y eliminar tickets | `Requerido` | Es un requisito previo de las operaciones que ejecute, no una declaración de compatibilidad |
+| Sistema operativo del host que ejecuta el addon | `Sin validar` | No hay ningún sistema operativo registrado para esta versión |
+| Planes y ediciones de Zendesk | `Sin validar` | No hay matriz de planes de Zendesk registrada para este addon |
+| Versiones de Pandora FMS | `Sin validar` | No hay matriz de versiones registrada. El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y posteriores |
 
 El addon está publicado en el Marketplace de Pandora FMS, con descarga limitada
 a usuarios con licencia:

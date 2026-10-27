@@ -20,13 +20,13 @@ Como los módulos de proceso leen la lista de procesos local, ejecute el plugin 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
 | Addon `pandorafms.sybase`, versión `1.0` | Objetivo documentado | Entrada del Marketplace; consulte [Identidad del addon](#identidad-del-addon) |
-| Windows 10 | `Known compatible` | La edición anterior de esta guía registra Windows 10 como sistema probado, y el paquete del Marketplace es un ejecutable de Windows. Sin revalidar para la versión `1.0` |
-| Sistemas operativos distintos de Windows | `Not validated` | No hay registro de pruebas; la entrada del Marketplace distribuye un único ejecutable de Windows |
-| Versiones y ediciones de Sybase ASE | `Not validated` | No se ha registrado una matriz de versiones para este addon |
-| Versiones de Pandora FMS | `Not validated` | No se ha registrado una matriz de versiones. El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y posteriores |
-| Un script de entorno de Sybase existente en el host | `Required` | El plugin termina con código de salida `1` cuando `sybase_env_script` no apunta a un fichero existente |
-| La utilidad `isql` de Sybase accesible desde el host | `Required` | Todas las comprobaciones SQL se ejecutan mediante `isql` |
-| Un agente de Pandora FMS en el host de ASE | `Required` | El plugin se ejecuta como plugin de agente |
+| Windows 10 | `Compatible conocido` | La edición anterior de esta guía registra Windows 10 como sistema probado, y el paquete del Marketplace es un ejecutable de Windows. Sin revalidar para la versión `1.0` |
+| Sistemas operativos distintos de Windows | `Sin validar` | No hay registro de pruebas; la entrada del Marketplace distribuye un único ejecutable de Windows |
+| Versiones y ediciones de Sybase ASE | `Sin validar` | No se ha registrado una matriz de versiones para este addon |
+| Versiones de Pandora FMS | `Sin validar` | No se ha registrado una matriz de versiones. El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y posteriores |
+| Un script de entorno de Sybase existente en el host | `Requerido` | El plugin termina con código de salida `1` cuando `sybase_env_script` no apunta a un fichero existente |
+| La utilidad `isql` de Sybase accesible desde el host | `Requerido` | Todas las comprobaciones SQL se ejecutan mediante `isql` |
+| Un agente de Pandora FMS en el host de ASE | `Requerido` | El plugin se ejecuta como plugin de agente |
 
 El addon se publica en el Marketplace de Pandora FMS, con descarga gratuita:
 

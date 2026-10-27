@@ -20,10 +20,10 @@ El addon recoge únicamente lo que devuelven sus consultas. No define consultas 
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Addon `pandorafms.prometheus`, versión `1.0` | Objetivo documentado | La versión que describe esta página. La entrada del Marketplace ofrece el paquete `pandorafms.prometheus.1.0.disco` |
-| Acceso de red desde el servidor de Discovery a la API HTTP de Prometheus | `Required` | El addon llama a `<URL>/api/v1/query` |
-| Versiones del servidor Prometheus | `Not validated` | No se ha registrado una matriz de versiones para este addon |
-| Sistema operativo del servidor de Discovery | `Not validated` | No se ha registrado ningún sistema operativo para esta versión |
-| Versiones concretas de Pandora FMS | `Not validated` | El Marketplace indica únicamente una compatibilidad general de sus entradas con Pandora FMS NG 784 y posteriores; no se ha registrado una matriz para este addon |
+| Acceso de red desde el servidor de Discovery a la API HTTP de Prometheus | `Requerido` | El addon llama a `<URL>/api/v1/query` |
+| Versiones del servidor Prometheus | `Sin validar` | No se ha registrado una matriz de versiones para este addon |
+| Sistema operativo del servidor de Discovery | `Sin validar` | No se ha registrado ningún sistema operativo para esta versión |
+| Versiones concretas de Pandora FMS | `Sin validar` | El Marketplace indica únicamente una compatibilidad general de sus entradas con Pandora FMS NG 784 y posteriores; no se ha registrado una matriz para este addon |
 
 ### Prerrequisitos
 

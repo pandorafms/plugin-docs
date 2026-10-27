@@ -15,10 +15,10 @@ El plugin crea **un agente por cada destino SAP HANA**, con un módulo de dispon
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Versión `1.0` del add-on (`pandorafms.sap.hana`) | Objetivo documentado | Versión publicada en la entrada del Marketplace, actualizada por última vez el 2026-06-11. Consulte [Identidad del plugin](#identidad-del-plugin) |
-| Pandora FMS NG 784 y posteriores | `Supported` | Declaración mostrada en el Marketplace para todas sus integraciones |
-| Puerto SQL de SAP HANA accesible desde el servidor Discovery | `Required` | El plugin abre una conexión a la base de datos por destino |
-| Usuario de base de datos con lectura de las vistas de monitorización `SYS` | `Required` | Prerrequisito, no una declaración de compatibilidad. Consulte [Prerrequisitos](#prerrequisitos) |
-| Cualquier versión concreta de SAP HANA | `Not validated` | No se ha registrado ninguna matriz de versiones o ediciones |
+| Pandora FMS NG 784 y posteriores | `Soportado` | Declaración mostrada en el Marketplace para todas sus integraciones |
+| Puerto SQL de SAP HANA accesible desde el servidor Discovery | `Requerido` | El plugin abre una conexión a la base de datos por destino |
+| Usuario de base de datos con lectura de las vistas de monitorización `SYS` | `Requerido` | Prerrequisito, no una declaración de compatibilidad. Consulte [Prerrequisitos](#prerrequisitos) |
+| Cualquier versión concreta de SAP HANA | `Sin validar` | No se ha registrado ninguna matriz de versiones o ediciones |
 
 Según su entrada del Marketplace, la descarga del add-on está limitada a usuarios con licencia. Esta página no describe más condiciones de licencia.
 

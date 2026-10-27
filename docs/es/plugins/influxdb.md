@@ -31,11 +31,11 @@ Todos los módulos generados son de tipo `generic_data`.
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Plugin `pandorafms.influxdb`, versión `1.0` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del plugin](#identidad-del-plugin) |
-| Pandora FMS NG `784` y posteriores | `Supported` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Es una declaración general de compatibilidad que cubre el plugin, no un registro de prueba del mismo |
-| Un endpoint de InfluxDB que acepte un usuario y una contraseña y responda a `SHOW STATS` | `Required` | El plugin expone `--user` y `--password` y ejecuta esa sentencia; no tiene opción de autenticación por token |
-| Versiones del servidor InfluxDB | `Not validated` | No se ha registrado una matriz de versiones de InfluxDB para este plugin |
-| Sistema operativo del host que ejecuta el plugin | `Not validated` | No se ha registrado un sistema operativo para esta versión |
-| Acceso de red desde ese host a la API HTTP de InfluxDB | `Required` | El plugin se conecta al host y al puerto que configure |
+| Pandora FMS NG `784` y posteriores | `Soportado` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Es una declaración general de compatibilidad que cubre el plugin, no un registro de prueba del mismo |
+| Un endpoint de InfluxDB que acepte un usuario y una contraseña y responda a `SHOW STATS` | `Requerido` | El plugin expone `--user` y `--password` y ejecuta esa sentencia; no tiene opción de autenticación por token |
+| Versiones del servidor InfluxDB | `Sin validar` | No se ha registrado una matriz de versiones de InfluxDB para este plugin |
+| Sistema operativo del host que ejecuta el plugin | `Sin validar` | No se ha registrado un sistema operativo para esta versión |
+| Acceso de red desde ese host a la API HTTP de InfluxDB | `Requerido` | El plugin se conecta al host y al puerto que configure |
 
 ### Requisitos
 

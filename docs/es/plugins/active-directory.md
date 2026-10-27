@@ -26,13 +26,13 @@ comprobaciones de disponibilidad y los resultados de los diagnósticos del domin
 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
-| Pandora FMS NG 784 y posteriores | `Supported` | El Marketplace indica que todas las integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores |
-| Un controlador de dominio como host que ejecuta el addon | `Required` | El addon ejecuta `dcdiag` y `repadmin /showrepl` sin servidor de destino, por lo que ambos actúan sobre el equipo local y sobre su rol en el dominio |
-| Windows PowerShell 5.0 o posterior con el módulo Active Directory | `Required` | El addon lee el bosque y las cuentas a través de los cmdlets del módulo, y esta compilación no puede ejecutarse en versiones anteriores de Windows PowerShell |
-| `dcdiag` y `repadmin` disponibles para la cuenta que ejecuta el addon | `Required` | El addon ejecuta ambas herramientas en cada pasada |
-| Un agente Windows de Pandora FMS en el mismo host | `Required` | Es lo que ingiere los módulos que imprime el addon |
-| Versiones de Windows Server, y niveles funcionales de dominio y bosque | `Not validated` | No se ha registrado una matriz de versiones ni de niveles funcionales |
-| Versiones del agente Windows de Pandora FMS | `Not validated` | No se ha registrado una matriz de versiones del agente para este addon |
+| Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que todas las integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores |
+| Un controlador de dominio como host que ejecuta el addon | `Requerido` | El addon ejecuta `dcdiag` y `repadmin /showrepl` sin servidor de destino, por lo que ambos actúan sobre el equipo local y sobre su rol en el dominio |
+| Windows PowerShell 5.0 o posterior con el módulo Active Directory | `Requerido` | El addon lee el bosque y las cuentas a través de los cmdlets del módulo, y esta compilación no puede ejecutarse en versiones anteriores de Windows PowerShell |
+| `dcdiag` y `repadmin` disponibles para la cuenta que ejecuta el addon | `Requerido` | El addon ejecuta ambas herramientas en cada pasada |
+| Un agente Windows de Pandora FMS en el mismo host | `Requerido` | Es lo que ingiere los módulos que imprime el addon |
+| Versiones de Windows Server, y niveles funcionales de dominio y bosque | `Sin validar` | No se ha registrado una matriz de versiones ni de niveles funcionales |
+| Versiones del agente Windows de Pandora FMS | `Sin validar` | No se ha registrado una matriz de versiones del agente para este addon |
 
 ### Requisitos
 

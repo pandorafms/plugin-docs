@@ -18,10 +18,10 @@ Una tarea de Discovery genera hasta dos agentes:
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Addon `pandorafms.office365`, versión `1.1` | Objetivo documentado | La versión que describe esta página. Véase [Identidad del addon](#identidad-del-addon) |
-| Acceso de red desde el servidor de Discovery a `login.microsoftonline.com` y `graph.microsoft.com` | `Required` | El addon se autentica y consulta los datos mediante estos hosts |
-| Aplicación de Microsoft Entra ID con los permisos indicados en [Permisos de Microsoft Graph](#permisos-de-microsoft-graph) | `Required` | Prerrequisito, no una declaración de compatibilidad |
-| Versiones concretas de Pandora FMS | `Not validated` | El Marketplace muestra un aviso general para todas sus integraciones; no se ha registrado una matriz de versiones para este addon |
-| Sistema operativo del servidor de Discovery | `Not validated` | No se ha registrado ningún sistema operativo para esta versión |
+| Acceso de red desde el servidor de Discovery a `login.microsoftonline.com` y `graph.microsoft.com` | `Requerido` | El addon se autentica y consulta los datos mediante estos hosts |
+| Aplicación de Microsoft Entra ID con los permisos indicados en [Permisos de Microsoft Graph](#permisos-de-microsoft-graph) | `Requerido` | Prerrequisito, no una declaración de compatibilidad |
+| Versiones concretas de Pandora FMS | `Sin validar` | El Marketplace muestra un aviso general para todas sus integraciones; no se ha registrado una matriz de versiones para este addon |
+| Sistema operativo del servidor de Discovery | `Sin validar` | No se ha registrado ningún sistema operativo para esta versión |
 
 ### Prerrequisitos
 

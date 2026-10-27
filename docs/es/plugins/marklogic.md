@@ -39,16 +39,16 @@ tarea programada.
 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
-| API REST de gestión de MarkLogic accesible en el host y el puerto configurados | `Required` | Toda la recopilación lee `/manage/<api-version>/...` con `format=json` desde ese host y ese puerto |
-| Un valor de `ml_api_version` que la instalación acepte: `V1`, `V2` o `LATEST` | `Required` | El valor es un segmento de ruta de todas las peticiones; el archivo de configuración distribuido documenta esos tres valores |
-| Un usuario de MarkLogic con permiso para leer la API de gestión | `Required` | El plugin se autentica con `ml_user`, `ml_pass` y `ml_realm` |
-| Un entorno de ejecución de Perl con `LWP::UserAgent`, `JSON`, `IO::Socket::INET6` y `PerlIO::encoding` | `Required` | El plugin no arranca sin ellos |
-| Acceso de red desde el host del plugin a `ml_server:ml_port` | `Required` | El plugin conecta con la API de gestión desde ese host |
-| Acceso de red desde el host del plugin al puerto de cada servidor de aplicaciones, cuando la comprobación de puertos está activada | `Required` | La comprobación de puertos abre una conexión TCP por cada servidor de aplicaciones |
-| Acceso de red al puerto de Tentacle de Pandora FMS, `41121` por defecto, cuando se entrega con Tentacle | `Required` | La entrega con Tentacle es el modo por defecto |
-| Versión del servidor MarkLogic | `Not validated` | No se ha registrado una matriz de versiones de MarkLogic para este addon; el archivo distribuido documenta `LATEST` como la versión de API de MarkLogic 8 |
-| Sistema operativo del host que ejecuta el plugin | `Not validated` | No se ha registrado un sistema operativo para esta versión |
-| Pandora FMS NG 784 y posteriores | `Supported` | El Marketplace indica que todas sus entradas son compatibles con Pandora FMS NG 784 y versiones posteriores; es una declaración del catálogo que cubre este addon, no un registro de pruebas |
+| API REST de gestión de MarkLogic accesible en el host y el puerto configurados | `Requerido` | Toda la recopilación lee `/manage/<api-version>/...` con `format=json` desde ese host y ese puerto |
+| Un valor de `ml_api_version` que la instalación acepte: `V1`, `V2` o `LATEST` | `Requerido` | El valor es un segmento de ruta de todas las peticiones; el archivo de configuración distribuido documenta esos tres valores |
+| Un usuario de MarkLogic con permiso para leer la API de gestión | `Requerido` | El plugin se autentica con `ml_user`, `ml_pass` y `ml_realm` |
+| Un entorno de ejecución de Perl con `LWP::UserAgent`, `JSON`, `IO::Socket::INET6` y `PerlIO::encoding` | `Requerido` | El plugin no arranca sin ellos |
+| Acceso de red desde el host del plugin a `ml_server:ml_port` | `Requerido` | El plugin conecta con la API de gestión desde ese host |
+| Acceso de red desde el host del plugin al puerto de cada servidor de aplicaciones, cuando la comprobación de puertos está activada | `Requerido` | La comprobación de puertos abre una conexión TCP por cada servidor de aplicaciones |
+| Acceso de red al puerto de Tentacle de Pandora FMS, `41121` por defecto, cuando se entrega con Tentacle | `Requerido` | La entrega con Tentacle es el modo por defecto |
+| Versión del servidor MarkLogic | `Sin validar` | No se ha registrado una matriz de versiones de MarkLogic para este addon; el archivo distribuido documenta `LATEST` como la versión de API de MarkLogic 8 |
+| Sistema operativo del host que ejecuta el plugin | `Sin validar` | No se ha registrado un sistema operativo para esta versión |
+| Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que todas sus entradas son compatibles con Pandora FMS NG 784 y versiones posteriores; es una declaración del catálogo que cubre este addon, no un registro de pruebas |
 
 ### Requisitos
 

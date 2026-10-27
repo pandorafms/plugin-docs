@@ -29,11 +29,11 @@ agente, mantengan sus módulos separados.
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
 | Addon `pandorafms.pandora_netusage`, versión `1.1` | Objetivo documentado | La versión que describe esta página. Ver [Identidad del addon](#identidad-del-addon) |
-| Un host Linux que exponga `/proc/net/dev` | `Required` | Es la única fuente de datos del plugin: la ejecución falla en cualquier host que no ofrezca ese archivo |
-| Rocky Linux 9 | `Known compatible` | La guía antigua de este addon registra Rocky 9 como el sistema donde se probó. No se ha revalidado para la versión `1.1` |
-| Otras distribuciones Linux | `Not validated` | No hay rango de distribuciones ni matriz de versiones registrada para este addon |
-| Un agente de Pandora FMS en el host monitorizado | `Required` | El plugin lo ejecuta el agente y su salida se consume como módulos de plugin de agente |
-| Versiones de Pandora FMS | `Not validated` | El Marketplace muestra un aviso general para todas sus integraciones, no una declaración específica de este addon |
+| Un host Linux que exponga `/proc/net/dev` | `Requerido` | Es la única fuente de datos del plugin: la ejecución falla en cualquier host que no ofrezca ese archivo |
+| Rocky Linux 9 | `Compatible conocido` | La guía antigua de este addon registra Rocky 9 como el sistema donde se probó. No se ha revalidado para la versión `1.1` |
+| Otras distribuciones Linux | `Sin validar` | No hay rango de distribuciones ni matriz de versiones registrada para este addon |
+| Un agente de Pandora FMS en el host monitorizado | `Requerido` | El plugin lo ejecuta el agente y su salida se consume como módulos de plugin de agente |
+| Versiones de Pandora FMS | `Sin validar` | El Marketplace muestra un aviso general para todas sus integraciones, no una declaración específica de este addon |
 
 El plugin se ejecuta en el propio host monitorizado, así que informa únicamente
 de las interfaces de ese host. No tiene modo de ejecución remota ni conexión con

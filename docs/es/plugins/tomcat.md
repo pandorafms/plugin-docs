@@ -38,14 +38,14 @@ propio grupo de módulos:
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
 | Addon `pandorafms.tomcat`, versión `1.0` | Objetivo documentado | Versión del paquete del Marketplace que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
-| La aplicación web Manager de Tomcat desplegada en `<TARGET_HOST>:<port>` | `Required` | Cada lectura es una petición HTTP a `/manager/status/all?XML=true` o a `/manager/text/vminfo` |
-| Un usuario de Tomcat con el rol `manager-script` | `Required` | La aplicación Manager restringe `/manager/text/*` a ese rol y también lo admite en `/manager/status/*` |
-| Acceso de red desde el host del plugin hasta el conector de Tomcat | `Required` | El plugin conecta desde el host donde se ejecuta |
-| Acceso de red al puerto de Tentacle, `41121` por defecto | `Required` cuando la entrega no es una copia local | La entrega por Tentacle es la opción por defecto |
-| Una carpeta `/var/spool/pandora/data_in/` escribible en el host del plugin | `Required` para la copia local | `transfer_mode=local` mueve el documento a esa carpeta |
-| Versiones de Tomcat | `Not validated` | No hay matriz de versiones registrada para la versión `1.0` |
-| Sistema operativo del host del plugin | `Not validated` | No hay sistema operativo registrado para la versión `1.0` |
-| Pandora FMS NG 784 y posteriores | `Not validated` | No existe un registro de validación por versión. El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y posteriores |
+| La aplicación web Manager de Tomcat desplegada en `<TARGET_HOST>:<port>` | `Requerido` | Cada lectura es una petición HTTP a `/manager/status/all?XML=true` o a `/manager/text/vminfo` |
+| Un usuario de Tomcat con el rol `manager-script` | `Requerido` | La aplicación Manager restringe `/manager/text/*` a ese rol y también lo admite en `/manager/status/*` |
+| Acceso de red desde el host del plugin hasta el conector de Tomcat | `Requerido` | El plugin conecta desde el host donde se ejecuta |
+| Acceso de red al puerto de Tentacle, `41121` por defecto | `Requerido` cuando la entrega no es una copia local | La entrega por Tentacle es la opción por defecto |
+| Una carpeta `/var/spool/pandora/data_in/` escribible en el host del plugin | `Requerido` para la copia local | `transfer_mode=local` mueve el documento a esa carpeta |
+| Versiones de Tomcat | `Sin validar` | No hay matriz de versiones registrada para la versión `1.0` |
+| Sistema operativo del host del plugin | `Sin validar` | No hay sistema operativo registrado para la versión `1.0` |
+| Pandora FMS NG 784 y posteriores | `Sin validar` | No existe un registro de validación por versión. El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y posteriores |
 
 ### Requisitos
 
