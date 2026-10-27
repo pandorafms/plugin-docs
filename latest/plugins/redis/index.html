@@ -1,0 +1,4646 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/plugins/redis/">
+      
+      
+        <link rel="prev" href="../rabbitmq/">
+      
+      
+        <link rel="next" href="../sap-hana-database/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../../es/plugins/redis/" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Redis monitoring plugin - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#redis-monitoring-plugin" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Redis monitoring plugin
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/plugins/redis/" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-cloudwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon CloudWatch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-ec2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon EC2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-rds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon S3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/db2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/digital-ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Ocean Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasticsearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/google-cloud-compute-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud Compute Engine Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/haproxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HAProxy Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hp-one-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HP One View Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hyper-v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/iot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/jmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JMX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/meraki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meraki Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Office 365 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/opensearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenSearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/ovh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OVH Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proxmox Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/rabbitmq-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-hana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-r3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP R3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/xenserver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XenServer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/discord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discord integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Chat integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/slack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Slack integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft Teams integration (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegram integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../active-directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Enterprise Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure PostgreSQL monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Azure SQL plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Azure Storage monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cisco-inventory-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco Inventory configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-netscaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix NetScaler monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../db2-remote/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Remote plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic SNMP plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exchange/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exchange
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glpi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GLPI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../google-drive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Drive monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ibm-z-series-mainframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBM Z Series Mainframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../influxdb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-for-mac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory plugin for MAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-ssh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory SSH plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../journalctl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Journalctl plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kafka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kafka monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../marklogic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MarkLogic monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-remote-atlas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora MongoDB remote / Atlas plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-server-querier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MSSQL Server Querier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../net-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Net usage plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Office 365 Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Openshift monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle VM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ldap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora LDAP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora UX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugin-executor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Plugin Executor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execution-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credentials-and-transport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credentials and transport
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register-the-plugin-in-pandora-fms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Register the plugin in Pandora FMS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understand the results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#module-names-and-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module names and types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sections-you-can-read" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sections you can read
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate-and-troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate and troubleshoot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate and troubleshoot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#everyday-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Everyday operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delivery-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delivery behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addon-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addon identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sap-hana-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Database plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Spark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sybase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sybase monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tomcat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tomcat monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zammad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zammad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zendesk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zendesk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to document
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execution-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credentials-and-transport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credentials and transport
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register-the-plugin-in-pandora-fms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Register the plugin in Pandora FMS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understand the results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#module-names-and-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module names and types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sections-you-can-read" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sections you can read
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate-and-troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate and troubleshoot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate and troubleshoot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#everyday-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Everyday operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delivery-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delivery behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addon-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addon identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="redis-monitoring-plugin">Redis monitoring plugin<a class="headerlink" href="#redis-monitoring-plugin" title="Permanent link">¶</a></h1>
+<p><em>Article last updated: 2026-10-27.</em></p>
+<div class="admonition warning">
+<p class="admonition-title">Discovery integration recommended</p>
+<p>For new installations use <a href="../../discovery/redis/">Redis Discovery</a>, which is the recommended integration for this service. This plugin is the legacy path.</p>
+</div>
+<h2 id="what-it-does">What it does<a class="headerlink" href="#what-it-does" title="Permanent link">¶</a></h2>
+<p>The Redis monitoring plugin turns the statistics of a Redis server into Pandora FMS modules. Each run connects to one Redis instance, reads the <code>INFO</code> sections you select, and publishes every field Redis returns as a module named exactly after that field: server identity and uptime, connected clients, memory, persistence, statistics, replication, CPU, per-command counters, cluster state and keyspace sizes.</p>
+<p>Nothing is installed on the Redis server. The plugin connects over TCP from the host that runs it, with an optional password.</p>
+<p>The plugin supports two execution models:</p>
+<ul>
+<li><strong>Server plugin mode</strong> (default when neither mode key is set): each run builds an agent document and delivers it to Pandora FMS through Tentacle or a local data folder.</li>
+<li><strong>Agent plugin mode</strong> (requires <code>as_agent_plugin=1</code>): each run prints the generated modules as XML on standard output, for the Pandora FMS agent to ingest.</li>
+</ul>
+<p>This page documents the monitoring plugin, which reads the statistics of one instance per run. Discovering Redis instances and generating their agents is a different addon, documented in <a href="../../discovery/redis/">Redis Discovery</a>.</p>
+<h2 id="prepare">Prepare<a class="headerlink" href="#prepare" title="Permanent link">¶</a></h2>
+<h3 id="compatibility">Compatibility<a class="headerlink" href="#compatibility" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>State</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Addon <code>redis</code>, version <code>1.1</code></td>
+<td>Documented target</td>
+<td>The version this page describes. See <a href="#addon-identity">Addon identity</a></td>
+</tr>
+<tr>
+<td>Network access from the host that runs the plugin to the Redis listener (TCP, <code>6379</code> by default in Redis)</td>
+<td><code>Required</code></td>
+<td>The plugin opens a client connection to the address in <code>server</code></td>
+</tr>
+<tr>
+<td>A Redis password, when the instance requires authentication</td>
+<td><code>Required</code> when authentication is enabled</td>
+<td>Prerequisite of the <code>password</code> key, not a compatibility statement</td>
+</tr>
+<tr>
+<td><code>tentacle_client</code> on the host that runs the plugin</td>
+<td><code>Required</code> when <code>mode=tentacle</code></td>
+<td>Server mode delivery</td>
+</tr>
+<tr>
+<td>Redis server versions</td>
+<td><code>Not validated</code></td>
+<td>No version matrix has been recorded. The legacy guide only states the plugin was developed against Redis <code>3.2.12</code>; the plugin itself requires nothing beyond a server that answers <code>INFO</code></td>
+</tr>
+<tr>
+<td>Operating system of the host that runs the plugin</td>
+<td><code>Not validated</code></td>
+<td>No operating system has been recorded for this version</td>
+</tr>
+<tr>
+<td>Pandora FMS versions</td>
+<td><code>Not validated</code></td>
+<td>The Marketplace carries a general banner for all its integrations, not a statement specific to this addon</td>
+</tr>
+</tbody>
+</table>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Network access</strong> from the host that runs the plugin to the Redis host and port.</li>
+<li><strong>A Redis password</strong>, when the instance has authentication enabled. The plugin sends a password only: it has no user name key, so an instance that requires an ACL user name cannot be monitored with it. Use the <code>default</code> user with <code>requirepass</code>, or an ACL user that authenticates with a password alone.</li>
+<li><strong>Pandora FMS</strong> to receive the output: the Pandora FMS server in server plugin mode, or the Pandora FMS agent of the monitored host in agent plugin mode.</li>
+<li><strong>The Tentacle client (<code>tentacle_client</code>) available in <code>PATH</code></strong>, only when server mode delivers through Tentacle.</li>
+</ol>
+<p>The account used by the plugin only reads <code>INFO</code>. No official source identifies a narrower set of Redis permissions; grant only what the instance needs to answer that command.</p>
+<h3 id="install-the-plugin">Install the plugin<a class="headerlink" href="#install-the-plugin" title="Permanent link">¶</a></h3>
+<p>Download the package from the free Marketplace entry:</p>
+<p><a href="https://marketplace.pandorafms.com/entries/redis">https://marketplace.pandorafms.com/entries/redis</a></p>
+<p>Copy the <code>redis_monitor</code> executable to the host that will run the plugin, and create its configuration file next to it (see <a href="#configure">Configure</a>). Nothing is installed on the Redis server, and no Redis client tools are needed on the monitoring host.</p>
+<h2 id="configure">Configure<a class="headerlink" href="#configure" title="Permanent link">¶</a></h2>
+<p>The plugin combines its defaults with two input sources, in increasing precedence:</p>
+<div class="highlight"><pre><span></span><code>defaults &lt; configuration file &lt; command-line arguments
+</code></pre></div>
+<p>The configuration file is optional. When it is used, it must be the <strong>first argument</strong> of the command line: a file path placed after a flag is not read. It is a plain-text file with one <code>key=value</code> pair per line. Blank lines and lines that start with <code>#</code> are skipped, keys and values are trimmed, and the last occurrence of a repeated key wins.</p>
+<p>The file has no sections. The plugin reads only the keys listed in <a href="#configuration-file-keys">Configuration file keys</a>; a bracketed header such as <code>[THRESHOLDS]</code> is stored as an unused key with an empty value and has no effect.</p>
+<p>The two keys that define what is read are:</p>
+<ul>
+<li><strong><code>server</code></strong> — the instance to read, as <code>&lt;REDIS_HOST&gt;:&lt;REDIS_PORT&gt;</code>. Include the port: the sample configuration always does.</li>
+<li><strong><code>metrics</code></strong> — the <code>INFO</code> sections to read, separated by spaces. <code>all</code> reads every section the server reports.</li>
+</ul>
+<h3 id="execution-modes">Execution modes<a class="headerlink" href="#execution-modes" title="Permanent link">¶</a></h3>
+<p>Agent plugin mode is the shortest configuration: the Pandora FMS agent runs the plugin and ingests the module XML it prints.</p>
+<div class="highlight"><pre><span></span><code><span class="na">server</span><span class="o">=</span><span class="s">&lt;REDIS_HOST&gt;:&lt;REDIS_PORT&gt;</span>
+<span class="na">password</span><span class="o">=</span><span class="s">&lt;PASSWORD&gt;</span>
+<span class="na">metrics</span><span class="o">=</span><span class="s">all</span>
+<span class="na">module_group</span><span class="o">=</span><span class="s">Redis</span>
+<span class="na">as_agent_plugin</span><span class="o">=</span><span class="s">1</span>
+<span class="na">as_server_plugin</span><span class="o">=</span><span class="s">0</span>
+</code></pre></div>
+<p>Server plugin mode needs an agent name and a delivery target. With Tentacle:</p>
+<div class="highlight"><pre><span></span><code><span class="na">server</span><span class="o">=</span><span class="s">&lt;REDIS_HOST&gt;:&lt;REDIS_PORT&gt;</span>
+<span class="na">password</span><span class="o">=</span><span class="s">&lt;PASSWORD&gt;</span>
+<span class="na">metrics</span><span class="o">=</span><span class="s">all</span>
+<span class="na">module_group</span><span class="o">=</span><span class="s">Redis</span>
+<span class="na">as_agent_plugin</span><span class="o">=</span><span class="s">0</span>
+<span class="na">as_server_plugin</span><span class="o">=</span><span class="s">1</span>
+<span class="na">agent_name</span><span class="o">=</span><span class="s">redis-monitoring</span>
+<span class="na">temp</span><span class="o">=</span><span class="s">/tmp</span>
+<span class="na">mode</span><span class="o">=</span><span class="s">tentacle</span>
+<span class="na">tentacle_ip</span><span class="o">=</span><span class="s">&lt;PANDORA_FMS_SERVER&gt;</span>
+<span class="na">tentacle_port</span><span class="o">=</span><span class="s">41121</span>
+</code></pre></div>
+<p>Or copy the agent document into a local data folder instead of using Tentacle:</p>
+<div class="highlight"><pre><span></span><code><span class="na">server</span><span class="o">=</span><span class="s">&lt;REDIS_HOST&gt;:&lt;REDIS_PORT&gt;</span>
+<span class="na">password</span><span class="o">=</span><span class="s">&lt;PASSWORD&gt;</span>
+<span class="na">metrics</span><span class="o">=</span><span class="s">all</span>
+<span class="na">as_agent_plugin</span><span class="o">=</span><span class="s">0</span>
+<span class="na">as_server_plugin</span><span class="o">=</span><span class="s">1</span>
+<span class="na">agent_name</span><span class="o">=</span><span class="s">redis-monitoring</span>
+<span class="na">temp</span><span class="o">=</span><span class="s">/tmp</span>
+<span class="na">mode</span><span class="o">=</span><span class="s">local</span>
+<span class="na">local_folder</span><span class="o">=</span><span class="s">/var/spool/pandora/data_in</span>
+</code></pre></div>
+<p>The same agent plugin run with arguments only, without a configuration file:</p>
+<div class="highlight"><pre><span></span><code>./redis_monitor<span class="w"> </span>-server<span class="w"> </span>&lt;REDIS_HOST&gt;:&lt;REDIS_PORT&gt;<span class="w"> </span>-password<span class="w"> </span>&lt;PASSWORD&gt;<span class="w"> </span>-metrics<span class="w"> </span>all<span class="w"> </span>-as_agent_plugin<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p>Key points:</p>
+<ul>
+<li><code>as_agent_plugin</code> and <code>as_server_plugin</code> select the execution model. When neither is set, the plugin runs as a server plugin. When both are set to <code>1</code>, both models run in the same execution: the module XML is printed <strong>and</strong> the agent document is delivered.</li>
+<li><code>agent_name</code> is required in server mode: it is the name of the agent created in Pandora FMS. The plugin sends that name only; it reads no agent interval, agent group or version key.</li>
+<li><code>mode</code> selects the delivery: <code>tentacle</code> uses the Tentacle client, and any other value, including <code>local</code>, copies the agent document into <code>local_folder</code>.</li>
+<li><code>module_group</code> is the name of the module group assigned to every generated module. Pandora FMS resolves it case-insensitively against the existing groups; when the name does not match one, the modules are created without that group.</li>
+<li><code>temp</code> is the folder where the agent document is written before delivery. On Linux it defaults to <code>/tmp</code> when the key is absent.</li>
+<li><code>metrics</code> is a single value: the section names are separated by spaces, so the whole list goes on one line.</li>
+<li>Module names are the Redis field names, with no prefix. Run <strong>one agent per Redis instance</strong>: two instances delivered to the same agent overwrite each other's modules.</li>
+</ul>
+<h3 id="credentials-and-transport">Credentials and transport<a class="headerlink" href="#credentials-and-transport" title="Permanent link">¶</a></h3>
+<ul>
+<li>The Redis connection is not encrypted: the plugin has no TLS option, so the password and the statistics travel in clear text. Keep the connection on a trusted network, or place a TLS tunnel in front of Redis.</li>
+<li>Inline <code>password</code> is stored in the configuration file in plain text: restrict the file permissions to the user that runs the plugin.</li>
+<li>Avoid <code>-password</code> on the command line: the command is stored in the shell history and the operating system process list can expose it while the plugin runs. Prefer the configuration file with restrictive permissions (for example <code>chmod 600</code>).</li>
+<li><code>debug=1</code> prints diagnostic dumps to standard output, including the full <code>INFO</code> response. Treat that output as sensitive: do not paste it into public tickets, and do not enable <code>debug</code> together with agent plugin mode (see <a href="#operate-and-troubleshoot">Operate and troubleshoot</a>).</li>
+</ul>
+<h3 id="register-the-plugin-in-pandora-fms">Register the plugin in Pandora FMS<a class="headerlink" href="#register-the-plugin-in-pandora-fms" title="Permanent link">¶</a></h3>
+<p><code>redis_monitor</code> can also be registered in the Pandora FMS console as a standard server plugin, so Pandora FMS executes it on the server that runs the modules instead of in a command line. Registered this way the plugin keeps server plugin mode: every run builds the agent document and delivers it, and the agent with its modules appears in the console.</p>
+<p>Use the absolute path of the executable as the plugin command, and the documented keys as parameters. The console substitutes its <code>_fieldN_</code> macros at execution time, so per-module values can be supplied without editing the plugin:</p>
+<div class="highlight"><pre><span></span><code>-server _field1_ -password _field2_ -metrics _field3_ -agent_name _field4_ -mode tentacle -tentacle_ip 127.0.0.1 -tentacle_port 41121
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_field1_</code></td>
+<td>Redis address, including the port</td>
+<td><code>&lt;REDIS_HOST&gt;:&lt;REDIS_PORT&gt;</code></td>
+</tr>
+<tr>
+<td><code>_field2_</code></td>
+<td>Redis password. It travels in the module command line, so treat the module definition as sensitive</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>_field3_</code></td>
+<td><code>INFO</code> sections to read, separated by spaces</td>
+<td><code>all</code></td>
+</tr>
+<tr>
+<td><code>_field4_</code></td>
+<td>Name of the agent that will hold the modules</td>
+<td><code>redis-monitoring</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>-tentacle_ip 127.0.0.1</code> delivers to the Tentacle server of the machine that runs the plugin, so the agent lands in the Pandora FMS server that executes the module. To copy the document into a local data folder instead, replace the Tentacle flags with <code>-mode local -local_folder /var/spool/pandora/data_in</code>.</p>
+<!-- SCREENSHOT NEEDED: Pandora FMS console plugin registration form for server plugins, showing the redis_monitor plugin command and its parameter and macro fields. -->
+
+<p>Once registered, the plugin is available when creating plugin modules, and each module fills the fields individually. The module is executed on the server selected for it, including a remote Pandora FMS server, so each Redis instance is monitored from the Pandora FMS server closest to it without installing anything on the Redis host.</p>
+<h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">¶</a></h2>
+<p>Run the plugin manually from a terminal, passing the configuration file as its first argument:</p>
+<div class="highlight"><pre><span></span><code>./redis_monitor<span class="w"> </span>/etc/pandora/plugins/redis_config.conf
+</code></pre></div>
+<p>The relative form <code>./redis_monitor redis_config.conf</code> works when the terminal is already in the directory that contains both files. Each run executes once and exits.</p>
+<p>In agent plugin mode, a successful run prints one XML <code>&lt;module&gt;</code> block per field on standard output, in this form:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[redis_version]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>generic_data_string<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[7.2.4]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;module_group&gt;</span>Redis<span class="nt">&lt;/module_group&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+<span class="nt">&lt;module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[connected_clients]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>generic_data<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[3]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;module_group&gt;</span>Redis<span class="nt">&lt;/module_group&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+<span class="nt">&lt;module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[db0]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>generic_data_string<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[keys=12,expires=4,avg_ttl=0]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;module_group&gt;</span>Redis<span class="nt">&lt;/module_group&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+</code></pre></div>
+<p><code>&lt;module_group&gt;</code> is present only when <code>module_group</code> is set.</p>
+<p>In server plugin mode a successful run prints nothing, and the agent configured in <code>agent_name</code> appears in Pandora FMS with its modules. The plugin does not report the delivery result in its exit status, so confirm the arrival in the console instead of relying on the command.</p>
+<!-- SCREENSHOT NEEDED: Pandora FMS agent view listing the modules generated by redis_monitor for one Redis instance. -->
+
+<h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
+<p>Every module is one field of the Redis <code>INFO</code> response. The plugin reads the sections listed in <code>metrics</code>, and for each field it creates a module named after the field, with a group when <code>module_group</code> is set.</p>
+<h3 id="module-names-and-types">Module names and types<a class="headerlink" href="#module-names-and-types" title="Permanent link">¶</a></h3>
+<ul>
+<li>The module name is the Redis field name exactly as the server returns it: no prefix, no section prefix. <code>used_memory</code> stays <code>used_memory</code>, and a keyspace line arrives as <code>db0</code>.</li>
+<li>A value that contains a letter becomes a <code>generic_data_string</code> module: <code>redis_version</code>, <code>role</code>, <code>maxmemory_policy</code>, <code>used_memory_human</code> (<code>1.05M</code>), <code>rdb_last_bgsave_status</code> and <code>db0</code> (<code>keys=12,expires=4,avg_ttl=0</code>).</li>
+<li>A value with digits only becomes a <code>generic_data</code> module: <code>connected_clients</code>, <code>used_memory</code>, <code>uptime_in_seconds</code>, <code>maxmemory</code>, <code>mem_fragmentation_ratio</code>, and also the numeric flags <code>redis_git_dirty</code> and <code>aof_enabled</code>.</li>
+<li>The plugin adds no description, unit or threshold, and no availability module. The module catalog is exactly the set of fields the selected sections return for your Redis version and configuration.</li>
+</ul>
+<p>There is no connectivity module: when a run cannot read the instance, it publishes no module at all and the existing modules receive no new data.</p>
+<h3 id="sections-you-can-read">Sections you can read<a class="headerlink" href="#sections-you-can-read" title="Permanent link">¶</a></h3>
+<p><code>metrics</code> accepts any section name the Redis server accepts, separated by spaces; the plugin only passes each name to <code>INFO</code>, so names match case-insensitively as Redis does. <code>all</code> reads every section. The sections commonly used with this plugin are:</p>
+<table>
+<thead>
+<tr>
+<th><code>metrics</code> value</th>
+<th>What it reads</th>
+<th>Representative modules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>server</code></td>
+<td>Identity, version and uptime</td>
+<td><code>redis_version</code>, <code>redis_mode</code>, <code>os</code>, <code>arch_bits</code>, <code>process_id</code>, <code>run_id</code>, <code>tcp_port</code>, <code>uptime_in_seconds</code>, <code>uptime_in_days</code>, <code>executable</code>, <code>config_file</code></td>
+</tr>
+<tr>
+<td><code>clients</code></td>
+<td>Client connections</td>
+<td><code>connected_clients</code>, <code>blocked_clients</code>, <code>client_longest_output_list</code>, <code>client_biggest_input_buf</code></td>
+</tr>
+<tr>
+<td><code>memory</code></td>
+<td>Memory</td>
+<td><code>used_memory</code>, <code>used_memory_human</code>, <code>used_memory_rss</code>, <code>used_memory_peak</code>, <code>maxmemory</code>, <code>maxmemory_policy</code>, <code>mem_fragmentation_ratio</code>, <code>mem_allocator</code></td>
+</tr>
+<tr>
+<td><code>persistence</code></td>
+<td>RDB and AOF state</td>
+<td><code>loading</code>, <code>rdb_changes_since_last_save</code>, <code>rdb_last_bgsave_status</code>, <code>rdb_last_save_time</code>, <code>aof_enabled</code>, <code>aof_last_write_status</code>, <code>aof_current_size</code></td>
+</tr>
+<tr>
+<td><code>stats</code></td>
+<td>Counters and rates</td>
+<td><code>total_connections_received</code>, <code>total_commands_processed</code>, <code>instantaneous_ops_per_sec</code>, <code>keyspace_hits</code>, <code>keyspace_misses</code>, <code>evicted_keys</code>, <code>expired_keys</code></td>
+</tr>
+<tr>
+<td><code>replication</code></td>
+<td>Role and replicas</td>
+<td><code>role</code>, <code>connected_slaves</code>, <code>master_replid</code>, <code>master_repl_offset</code>; the <code>master_*</code> and <code>slave*</code> fields depend on the instance role</td>
+</tr>
+<tr>
+<td><code>cpu</code></td>
+<td>CPU consumed by the server</td>
+<td><code>used_cpu_sys</code>, <code>used_cpu_user</code>, <code>used_cpu_sys_children</code>, <code>used_cpu_user_children</code></td>
+</tr>
+<tr>
+<td><code>commandstats</code></td>
+<td>Per-command counters</td>
+<td><code>cmdstat_get</code>, <code>cmdstat_set</code>, with values such as <code>calls=1,usec=2,usec_per_call=2.00</code></td>
+</tr>
+<tr>
+<td><code>cluster</code></td>
+<td>Cluster state</td>
+<td><code>cluster_enabled</code></td>
+</tr>
+<tr>
+<td><code>keyspace</code></td>
+<td>Keys per database</td>
+<td><code>db0</code>, <code>db1</code>, with values such as <code>keys=12,expires=4,avg_ttl=0</code></td>
+</tr>
+<tr>
+<td><code>all</code></td>
+<td>Every section above</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Fields appear or disappear according to the Redis version and the instance configuration (for example, AOF fields exist only when AOF is enabled), so a module that is missing from the output is a field the server did not report in that run.</p>
+<h2 id="operate-and-troubleshoot">Operate and troubleshoot<a class="headerlink" href="#operate-and-troubleshoot" title="Permanent link">¶</a></h2>
+<h3 id="everyday-operation">Everyday operation<a class="headerlink" href="#everyday-operation" title="Permanent link">¶</a></h3>
+<ul>
+<li>The plugin keeps no state: every execution reads the instance at that moment, so it can be run manually at any time.</li>
+<li>In server plugin mode, schedule it from Pandora FMS, for example through the server plugin scheduler or <code>cron</code>. In agent plugin mode, the Pandora FMS agent executes it according to the configured plugin schedule.</li>
+<li>Use <code>debug=1</code> in manual runs to print the connection details, the section list and the complete <code>INFO</code> response. <code>debug</code> writes to standard output, so in agent plugin mode it interleaves with the module XML and the agent cannot parse the output: never enable it in a scheduled agent plugin execution.</li>
+<li>Because module names carry no instance prefix, keep one agent per instance and use <code>module_group</code> to separate these modules from others in the same agent.</li>
+</ul>
+<h3 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>No module XML is printed in agent plugin mode</strong> — check that <code>as_agent_plugin=1</code> is in effect (when both mode keys are empty the plugin runs as a server plugin), that <code>metrics</code> is not empty, and that the configuration file is the first argument of the command.</li>
+<li><strong>The agent never appears in Pandora FMS in server mode</strong> — the delivery failed silently. Run once with <code>debug=1</code> to see the reason: a missing <code>mode</code> and a missing <code>local_folder</code> are reported only with <code>debug</code> enabled, and a Tentacle failure prints the client message only with <code>debug</code> enabled.</li>
+<li><strong><code>tentacle_client</code> cannot be found or cannot connect</strong> — make sure the client is installed and in <code>PATH</code> (or set <code>tentacle_client</code> to its absolute path) and that <code>tentacle_ip</code> and <code>tentacle_port</code> reach the Tentacle server.</li>
+<li><strong>The local folder delivery fails</strong> — check that <code>local_folder</code> exists, is writable by the user that runs the plugin, and names a folder, not a file. The error is printed only with <code>debug=1</code>.</li>
+<li><strong><code>NOAUTH</code> or an authentication error from Redis</strong> — the instance requires a password and <code>password</code> is empty or wrong. If the instance requires an ACL user name as well, this plugin cannot authenticate (it has no user name key).</li>
+<li><strong>Connection refused or timeout</strong> — the plugin cannot reach <code>server</code>. Check the host, the port, the firewall and that Redis is listening on an address reachable from the monitoring host.</li>
+<li><strong>Some older modules stop updating after a Redis upgrade or configuration change</strong> — the field no longer exists in the <code>INFO</code> output. Adjust <code>metrics</code> or the alerting on that module.</li>
+<li><strong>The module list is empty</strong> — <code>metrics</code> is empty or names sections the instance does not report. Start with <code>metrics=all</code> and narrow it once you see which modules arrive.</li>
+</ul>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">¶</a></h2>
+<h3 id="configuration-file-keys">Configuration file keys<a class="headerlink" href="#configuration-file-keys" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>server</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>Redis address, as <code>&lt;REDIS_HOST&gt;:&lt;REDIS_PORT&gt;</code>. Include the port.</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>No</td>
+<td>Empty (no authentication)</td>
+<td>Password sent to Redis. The plugin has no user name key.</td>
+</tr>
+<tr>
+<td><code>metrics</code></td>
+<td>Yes</td>
+<td>—</td>
+<td><code>INFO</code> sections to read, separated by spaces. <code>all</code> reads every section.</td>
+</tr>
+<tr>
+<td><code>as_agent_plugin</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td><code>1</code> (or any value greater than <code>0</code>) prints the module XML on standard output.</td>
+</tr>
+<tr>
+<td><code>as_server_plugin</code></td>
+<td>No</td>
+<td><code>1</code> when neither mode key is set</td>
+<td><code>1</code> (or any value greater than <code>0</code>) builds and delivers the agent document. When both mode keys are <code>1</code>, both models run.</td>
+</tr>
+<tr>
+<td><code>agent_name</code></td>
+<td>Required in server mode</td>
+<td>—</td>
+<td>Name of the agent created in Pandora FMS.</td>
+</tr>
+<tr>
+<td><code>module_group</code></td>
+<td>No</td>
+<td>Empty (no group sent)</td>
+<td>Name of an existing module group assigned to every generated module. Resolved case-insensitively; an unknown name leaves the modules without that group.</td>
+</tr>
+<tr>
+<td><code>mode</code></td>
+<td>Required in server mode</td>
+<td>Empty</td>
+<td><code>tentacle</code> delivers with the Tentacle client; any other value copies the agent document into <code>local_folder</code>.</td>
+</tr>
+<tr>
+<td><code>transfer_mode</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Alternative key for <code>mode</code>, read only when <code>mode</code> is empty.</td>
+</tr>
+<tr>
+<td><code>local_folder</code></td>
+<td>Required when <code>mode</code> is not <code>tentacle</code></td>
+<td>—</td>
+<td>Destination folder for the agent document copy.</td>
+</tr>
+<tr>
+<td><code>temp</code></td>
+<td>No</td>
+<td><code>/tmp</code> on Linux</td>
+<td>Folder where the agent document is written before delivery. <code>tmp</code> is accepted as an alternative key.</td>
+</tr>
+<tr>
+<td><code>tentacle_ip</code></td>
+<td>Required when <code>mode=tentacle</code></td>
+<td>—</td>
+<td>Tentacle server address.</td>
+</tr>
+<tr>
+<td><code>tentacle_port</code></td>
+<td>No</td>
+<td><code>41121</code></td>
+<td>Tentacle server port.</td>
+</tr>
+<tr>
+<td><code>tentacle_client</code></td>
+<td>No</td>
+<td><code>tentacle_client</code></td>
+<td>Tentacle client executable, resolved in <code>PATH</code> or given as an absolute path.</td>
+</tr>
+<tr>
+<td><code>tentacle_opts</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Extra options passed to the Tentacle client, separated by whitespace.</td>
+</tr>
+<tr>
+<td><code>debug</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td><code>1</code> (or any value greater than <code>0</code>) prints connection details, the section list and diagnostic messages on standard output.</td>
+</tr>
+</tbody>
+</table>
+<p>Boolean keys are enabled by any numeric value greater than <code>0</code>; <code>0</code>, an empty value or a non-numeric value means disabled.</p>
+<h3 id="command-line-execution">Command-line execution<a class="headerlink" href="#command-line-execution" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>./redis_monitor<span class="w"> </span><span class="o">[</span>config-file<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-key<span class="w"> </span>value<span class="w"> </span>...<span class="w"> </span><span class="o">]</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The first argument names an existing file</td>
+<td>The plugin reads it as the configuration file and applies the remaining arguments over its values</td>
+</tr>
+<tr>
+<td>The first argument is not a file, or the file path comes after a flag</td>
+<td>The file is not read; the plugin runs from the defaults plus the arguments</td>
+</tr>
+<tr>
+<td><code>-key value</code></td>
+<td>Replaces the value of <code>key</code></td>
+</tr>
+<tr>
+<td><code>--key value</code> or <code>-key=value</code></td>
+<td>Not recognized: the pair is read as a different key that the plugin ignores, so the documented key keeps its default or file value</td>
+</tr>
+<tr>
+<td>Arguments that do not form a <code>-key value</code> pair</td>
+<td>Ignored; a trailing argument without a value is not reported</td>
+</tr>
+<tr>
+<td>The command line is empty</td>
+<td>The plugin runs with the default values; no usage text is printed</td>
+</tr>
+<tr>
+<td><code>-h</code> or <code>--help</code></td>
+<td>No help option exists: it produces no help output and is treated like any other unknown flag</td>
+</tr>
+</tbody>
+</table>
+<p>Unknown keys are accepted and ignored: the plugin does not validate the key set.</p>
+<h3 id="delivery-behavior">Delivery behavior<a class="headerlink" href="#delivery-behavior" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode=tentacle</code> and the Tentacle transfer succeeds</td>
+<td>The temporary file is removed after the transfer</td>
+</tr>
+<tr>
+<td><code>mode=tentacle</code> and the transfer fails</td>
+<td>The document is not delivered; the client message is printed only with <code>debug=1</code></td>
+</tr>
+<tr>
+<td>Any other <code>mode</code></td>
+<td>The document is copied into <code>local_folder</code> and the temporary file is removed</td>
+</tr>
+<tr>
+<td><code>mode</code> empty and no <code>transfer_mode</code> alternative</td>
+<td>Nothing is delivered; the reason is printed only with <code>debug=1</code></td>
+</tr>
+<tr>
+<td>Delivery result</td>
+<td>Not reflected in the exit status; verify in the Pandora FMS console</td>
+</tr>
+</tbody>
+</table>
+<h3 id="addon-identity">Addon identity<a class="headerlink" href="#addon-identity" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Marketplace identifier</td>
+<td><code>redis</code></td>
+</tr>
+<tr>
+<td>Marketplace name</td>
+<td>Redis monitoring</td>
+</tr>
+<tr>
+<td>Addon version</td>
+<td><code>1.1</code></td>
+</tr>
+<tr>
+<td>Marketplace last update</td>
+<td>2025-11-03</td>
+</tr>
+<tr>
+<td>Marketplace package</td>
+<td><code>redis.1.1.zip</code></td>
+</tr>
+<tr>
+<td>License</td>
+<td>Free download</td>
+</tr>
+<tr>
+<td>Marketplace type</td>
+<td>Miscelaneus</td>
+</tr>
+<tr>
+<td>Workflow</td>
+<td>Monitoring plugin, agent or server plugin mode</td>
+</tr>
+<tr>
+<td>Executable</td>
+<td><code>redis_monitor</code></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

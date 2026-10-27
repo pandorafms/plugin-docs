@@ -1,0 +1,5526 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/plugins/azure-storage/">
+      
+      
+        <link rel="prev" href="../azure-sql/">
+      
+      
+        <link rel="next" href="../cisco-inventory-configuration/">
+      
+      
+        
+          <link rel="alternate" href="../../../plugins/azure-storage/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Plugin de monitorización Pandora Azure Storage - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#plugin-de-monitorizacion-pandora-azure-storage" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Plugin de monitorización Pandora Azure Storage
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../plugins/azure-storage/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-cloudwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon CloudWatch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-ec2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon EC2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-rds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon S3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de Azure backup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/db2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/digital-ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Ocean Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasticsearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/google-cloud-compute-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud Compute Engine Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/haproxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HAProxy Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hp-one-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HP One View Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hyper-v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/iot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/jmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JMX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de KVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/meraki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meraki Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Office 365 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/opensearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenSearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/ovh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OVH Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de Proxmox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/rabbitmq-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-hana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-r3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP R3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de VMware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/xenserver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XenServer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/discord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Discord
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/slack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Slack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../active-directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Enterprise Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Azure PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Pandora Azure SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Pandora Azure Storage
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Pandora Azure Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad-y-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad y disponibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prepare-el-acceso-en-azure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare el acceso en Azure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalacion-del-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación del plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modos-de-ejecucion-y-entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modos de ejecución y entrega
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credenciales-y-transporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credenciales y transporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registro-del-plugin-en-la-consola" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro del plugin en la consola
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entienda-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entienda los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entienda los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operacion-y-resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operación y resolución de problemas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operación y resolución de problemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#planificacion-y-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planificación y ejecución
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitaciones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opciones-de-linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opciones de línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#claves-del-archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claves del archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agentes-y-modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes y módulos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agentes y módulos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agente-de-la-cuenta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente de la cuenta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agente-del-servicio-blob" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente del servicio Blob
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agente-del-servicio-queue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente del servicio Queue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agente-del-servicio-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente del servicio File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agente-del-servicio-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente del servicio Table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agente-de-data-lake-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente de Data Lake Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cisco-inventory-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco Inventory configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-netscaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Citrix NetScaler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../db2-remote/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Remote plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Dynamic SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exchange/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exchange
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glpi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GLPI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../google-drive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Google Drive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ibm-z-series-mainframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBM Z Series Mainframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../influxdb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-for-mac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory plugin for MAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-ssh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory SSH plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../journalctl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Journalctl
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kafka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Kafka
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../marklogic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MarkLogic monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-remote-atlas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Pandora MongoDB remote / Atlas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-server-querier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MSSQL Server Querier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../net-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Net usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Office 365 Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Pandora Openshift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Oracle VM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ldap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora LDAP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora UX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugin-executor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Plugin Executor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sap-hana-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin SAP HANA Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Spark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sybase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Sybase
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tomcat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tomcat monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zammad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zammad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zendesk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zendesk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad-y-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad y disponibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prepare-el-acceso-en-azure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare el acceso en Azure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalacion-del-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación del plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modos-de-ejecucion-y-entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modos de ejecución y entrega
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credenciales-y-transporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credenciales y transporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registro-del-plugin-en-la-consola" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro del plugin en la consola
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entienda-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entienda los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entienda los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operacion-y-resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operación y resolución de problemas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operación y resolución de problemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#planificacion-y-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planificación y ejecución
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitaciones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opciones-de-linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opciones de línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#claves-del-archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claves del archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agentes-y-modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes y módulos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agentes y módulos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agente-de-la-cuenta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente de la cuenta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agente-del-servicio-blob" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente del servicio Blob
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agente-del-servicio-queue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente del servicio Queue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agente-del-servicio-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente del servicio File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agente-del-servicio-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente del servicio Table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agente-de-data-lake-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agente de Data Lake Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="plugin-de-monitorizacion-pandora-azure-storage">Plugin de monitorización Pandora Azure Storage<a class="headerlink" href="#plugin-de-monitorizacion-pandora-azure-storage" title="Permanent link">¶</a></h1>
+<p><em>Última actualización del artículo: 2026-10-27.</em></p>
+<div class="admonition warning">
+<p class="admonition-title">Se recomienda la integración de Discovery</p>
+<p>Para instalaciones nuevas use <a href="../../discovery/azure-storage/">Azure Storage Discovery</a>, que es la integración recomendada para este servicio. Este plugin es la ruta heredada.</p>
+</div>
+<h2 id="que-hace">Qué hace<a class="headerlink" href="#que-hace" title="Permanent link">¶</a></h2>
+<p>El plugin Pandora Azure Storage lee las métricas de Azure Monitor de una cuenta
+de almacenamiento de Azure y de los servicios de esa cuenta que habilite —Blob,
+File, Queue, Table y Data Lake Storage— y las publica como módulos de Pandora
+FMS, agrupados en un agente por servicio.</p>
+<p>Cada ejecución trabaja sobre los identificadores de recurso escritos en un
+archivo de configuración: la propia cuenta de almacenamiento y cada servicio
+que quiera leer. El plugin pide a Azure Monitor la última hora de cada métrica
+y construye los módulos con la respuesta. No hay paso de descubrimiento ni
+enumeración de recursos de Azure: la cuenta y los servicios son los que usted
+escribe en ese archivo.</p>
+<p>El plugin tiene tres rutas de ejecución:</p>
+<ul>
+<li><strong>Sin opción de entrega (por defecto).</strong> Imprime un bloque XML <code>&lt;module&gt;</code> por
+  módulo en la salida estándar, para que lo recoja un agente de Pandora FMS.</li>
+<li><strong><code>--as_agent_plugin 1</code>.</strong> Construye un documento XML <code>agent_data</code> por cada
+  servicio habilitado, escribe cada uno en <code>data_dir</code> e imprime <code>1</code>. A pesar de
+  su nombre, esta opción produce la ejecución del lado del servidor.</li>
+<li><strong><code>--tentacle_address</code>.</strong> Construye los mismos documentos <code>agent_data</code>, los
+  entrega con el cliente de Tentacle e imprime <code>1</code>.</li>
+</ul>
+<p>Esta página documenta el plugin <strong><code>pandorafms.azure_storage</code></strong>, distribuido como
+paquete <code>.pspz2</code>. El <strong>Discovery</strong> de Azure Storage es otro addon: se ejecuta
+desde una tarea de Discovery, enumera las cuentas de almacenamiento de una
+suscripción o de un grupo de recursos, crea un agente por cuenta descubierta y
+no necesita archivo de configuración. Consulte
+<a href="../../discovery/azure-storage/">Azure Storage Discovery</a>. La aplicación de
+Discovery usa además <code>pandorafms.azure_storage</code> como nombre corto, así que
+compruebe el tipo de paquete antes de instalar: <code>.pspz2</code> es este plugin,
+<code>.disco</code> es Discovery.</p>
+<h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
+<h3 id="compatibilidad-y-disponibilidad">Compatibilidad y disponibilidad<a class="headerlink" href="#compatibilidad-y-disponibilidad" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Alcance</th>
+<th>Estado</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Addon <code>pandorafms.azure_storage</code>, versión <code>1.0</code></td>
+<td>Objetivo documentado</td>
+<td>Versión de la entrada del Marketplace y del paquete distribuido. Véase <a href="#identidad-del-addon">Identidad del addon</a></td>
+</tr>
+<tr>
+<td>Pandora FMS NG 784 y posteriores</td>
+<td><code>Soportado</code></td>
+<td>El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y posteriores. Es una declaración de catálogo que cubre este addon, no un registro de prueba del mismo</td>
+</tr>
+<tr>
+<td>CentOS 7, Fedora y Rocky Linux como sistema del host</td>
+<td><code>Compatible conocido</code></td>
+<td>La edición anterior de esta guía registra esos sistemas como los que se probaron; no se ha revalidado para la versión <code>1.0</code></td>
+</tr>
+<tr>
+<td>Otros sistemas del host</td>
+<td><code>Sin validar</code></td>
+<td>No hay otro sistema registrado para este addon</td>
+</tr>
+<tr>
+<td>Un registro de aplicación de Microsoft Entra capaz de leer las métricas de Azure Monitor de la cuenta</td>
+<td><code>Requerido</code></td>
+<td>Cada consulta de recolección se autentica con su identificador de inquilino, su identificador de cliente y su secreto</td>
+</tr>
+<tr>
+<td>El identificador de recurso de Azure de la cuenta de almacenamiento y de cada servicio que habilite</td>
+<td><code>Requerido</code></td>
+<td>Cada valor se consulta directamente como recurso de métricas de ese servicio</td>
+</tr>
+<tr>
+<td><code>tentacle_client</code> en <code>PATH</code></td>
+<td><code>Requerido</code> cuando se usa <code>--tentacle_address</code></td>
+<td>La entrega ejecuta el cliente de Tentacle</td>
+</tr>
+<tr>
+<td>Un <code>data_dir</code> con permiso de escritura</td>
+<td><code>Requerido</code> cuando se escribe el documento de agente</td>
+<td>El documento XML se crea en esa carpeta</td>
+</tr>
+<tr>
+<td>Nubes soberanas o personalizadas de Azure</td>
+<td><code>Sin validar</code></td>
+<td>El addon no expone ninguna opción de endpoint, así que los endpoints de Microsoft no se pueden redirigir</td>
+</tr>
+</tbody>
+</table>
+<p>La entrada del Marketplace no declara ningún estado de mantenimiento ni de
+ciclo de vida para este addon.</p>
+<h3 id="requisitos">Requisitos<a class="headerlink" href="#requisitos" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Una instalación de Pandora FMS con el servidor de plugins habilitado</strong>,
+   para ejecutar el plugin, y el servidor de datos para ingerir los documentos
+   <code>agent_data</code> cuando la ejecución los escribe.</li>
+<li><strong>Una suscripción de Azure con al menos una cuenta de almacenamiento</strong> que
+   monitorizar.</li>
+<li><strong>Un registro de aplicación de Microsoft Entra</strong> para el plugin: su
+   identificador de inquilino, su identificador de cliente y un secreto de
+   cliente.</li>
+<li><strong>Los identificadores de recurso de Azure</strong> de la cuenta de almacenamiento y
+   de cada servicio que quiera leer, escritos en el archivo de configuración.</li>
+<li><strong>El cliente de Tentacle (<code>tentacle_client</code>) disponible en <code>PATH</code></strong>, solo
+   cuando la ejecución entrega mediante Tentacle.</li>
+</ol>
+<h3 id="prepare-el-acceso-en-azure">Prepare el acceso en Azure<a class="headerlink" href="#prepare-el-acceso-en-azure" title="Permanent link">¶</a></h3>
+<p>Cree un registro de aplicación en Microsoft Entra ID y anote su
+<strong>identificador de inquilino</strong>, su <strong>identificador de cliente</strong> y el <strong>valor de
+un secreto de cliente</strong>. Estos tres valores van al archivo de configuración.</p>
+<p>El plugin no indica qué rol de Azure asignar. Solo llama a la API de métricas
+de Azure Monitor para los identificadores de recurso de la configuración, así
+que el registro necesita permiso para leer las métricas de esos recursos.
+Asigne el rol más restrictivo que conceda esa lectura sobre la cuenta de
+almacenamiento o sobre su grupo de recursos.</p>
+<p>Hacen falta dos grupos más de valores:</p>
+<ul>
+<li><strong>El identificador de recurso de la cuenta de almacenamiento</strong>, el ámbito de
+  cuenta que el plugin consulta para sus métricas de cuenta. Su forma es
+  <code>/subscriptions/&lt;SUBSCRIPTION_ID&gt;/resourceGroups/&lt;RESOURCE_GROUP&gt;/providers/Microsoft.Storage/storageAccounts/&lt;ACCOUNT&gt;</code>.</li>
+<li><strong>El identificador de recurso de cada servicio</strong> que habilite: Blob, File,
+  Queue, Table y Data Lake Storage. La edición anterior de esta guía obtiene
+  todos ellos de las propias páginas de la cuenta en el portal de Azure.</li>
+</ul>
+<p>El plugin envía cada valor exactamente como está escrito. Un identificador mal
+formado, o uno que el registro de aplicación no pueda leer, hace fallar la
+ejecución con la excepción de Azure; un identificador válido que no tenga datos
+para una métrica solo deja de producir el módulo de esa métrica. Copie los
+identificadores desde Azure en vez de escribirlos a mano.</p>
+<h3 id="instalacion-del-plugin">Instalación del plugin<a class="headerlink" href="#instalacion-del-plugin" title="Permanent link">¶</a></h3>
+<p>Cargue el paquete <code>.pspz2</code> desde la página de registro de plugins de la consola.
+El paquete registra el plugin con la definición descrita en
+<a href="#registro-del-plugin-en-la-consola">Registro del plugin en la consola</a>,
+incluidas las tres macros del formulario de registro.</p>
+<p>El plugin lee un archivo de configuración que debe aportar usted. El valor
+distribuido de la primera macro es
+<code>/var/www/html/pandora_console/attachment/plugin/pandora_azure.conf</code>, así que
+escriba el archivo ahí o cambie la macro a la ruta que use. La sección
+<a href="#archivo-de-configuracion">Archivo de configuración</a> describe su contenido.</p>
+<h2 id="configuracion">Configuración<a class="headerlink" href="#configuracion" title="Permanent link">¶</a></h2>
+<h3 id="archivo-de-configuracion">Archivo de configuración<a class="headerlink" href="#archivo-de-configuracion" title="Permanent link">¶</a></h3>
+<p>El archivo es texto plano y usa líneas <code>clave:valor</code>. Cada valor se recorta.
+Tres reglas deciden qué lee el plugin:</p>
+<ul>
+<li>Una línea que contenga <code>#</code> en cualquier posición se omite, así que los
+  comentarios empiezan en cualquier punto y un valor que contenga <code>#</code> se pierde
+  con su línea.</li>
+<li>La línea se parte por <code>:</code> y solo se conserva el segundo fragmento: un valor
+  que contenga <code>:</code> se trunca en los dos puntos.</li>
+<li>Las claves se buscan por subcadena, no como nombre exacto de clave: una línea
+  que contenga el nombre de una clave conocida se lee como esa clave, una línea
+  que no contenga ninguna se ignora, y una clave repetida conserva el último
+  valor leído.</li>
+</ul>
+<p>Este es el archivo completo que distribuye el addon, con marcadores:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">#credentials</span>
+<span class="na">tenant_id</span><span class="o">:</span><span class="s">&lt;TENANT_ID&gt;</span>
+<span class="na">client_id</span><span class="o">:</span><span class="s">&lt;CLIENT_ID&gt;</span>
+<span class="na">secret</span><span class="o">:</span><span class="s">&lt;CLIENT_SECRET&gt;</span>
+<span class="c1">#id resources</span>
+<span class="na">account_id</span><span class="o">:</span><span class="s">&lt;ACCOUNT_RESOURCE_ID&gt;</span>
+<span class="na">blobservice_id</span><span class="o">:</span><span class="s">&lt;BLOB_SERVICE_RESOURCE_ID&gt;</span>
+<span class="na">fileservice_id</span><span class="o">:</span><span class="s">&lt;FILE_SERVICE_RESOURCE_ID&gt;</span>
+<span class="na">queueservice_id</span><span class="o">:</span><span class="s">&lt;QUEUE_SERVICE_RESOURCE_ID&gt;</span>
+<span class="na">tableservice_id</span><span class="o">:</span><span class="s">&lt;TABLE_SERVICE_RESOURCE_ID&gt;</span>
+<span class="na">datalakestorage_id</span><span class="o">:</span><span class="s">&lt;DATA_LAKE_SERVICE_RESOURCE_ID&gt;</span>
+<span class="c1">#active agents</span>
+<span class="na">account_agent</span><span class="o">:</span><span class="s">1</span>
+<span class="na">blobservice_agent</span><span class="o">:</span><span class="s">1</span>
+<span class="na">fileservice_agent</span><span class="o">:</span><span class="s">1</span>
+<span class="na">queueservice_agent</span><span class="o">:</span><span class="s">1</span>
+<span class="na">tableservice_agent</span><span class="o">:</span><span class="s">1</span>
+<span class="na">datalakestorage_agent</span><span class="o">:</span><span class="s">1</span>
+</code></pre></div>
+<p>Las tres claves de credenciales y los seis interruptores <code>&lt;servicio&gt;_agent</code> son
+obligatorios: el plugin los lee todos antes de recolectar nada, y si falta uno
+la ejecución se detiene con una traza <code>NameError</code>. Cada <code>&lt;servicio&gt;_id</code> solo es
+necesario cuando su interruptor vale <code>1</code>. Un interruptor vale <code>1</code> para
+habilitar el servicio y <code>0</code> para dejarlo fuera; cualquier otro valor detiene la
+ejecución con una <code>ValueError</code>.</p>
+<p>Para monitorizar solo la cuenta y el servicio Blob, por ejemplo:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">#credentials</span>
+<span class="na">tenant_id</span><span class="o">:</span><span class="s">&lt;TENANT_ID&gt;</span>
+<span class="na">client_id</span><span class="o">:</span><span class="s">&lt;CLIENT_ID&gt;</span>
+<span class="na">secret</span><span class="o">:</span><span class="s">&lt;CLIENT_SECRET&gt;</span>
+<span class="c1">#id resources</span>
+<span class="na">account_id</span><span class="o">:</span><span class="s">&lt;ACCOUNT_RESOURCE_ID&gt;</span>
+<span class="na">blobservice_id</span><span class="o">:</span><span class="s">&lt;BLOB_SERVICE_RESOURCE_ID&gt;</span>
+<span class="c1">#active agents</span>
+<span class="na">account_agent</span><span class="o">:</span><span class="s">1</span>
+<span class="na">blobservice_agent</span><span class="o">:</span><span class="s">1</span>
+<span class="na">fileservice_agent</span><span class="o">:</span><span class="s">0</span>
+<span class="na">queueservice_agent</span><span class="o">:</span><span class="s">0</span>
+<span class="na">tableservice_agent</span><span class="o">:</span><span class="s">0</span>
+<span class="na">datalakestorage_agent</span><span class="o">:</span><span class="s">0</span>
+</code></pre></div>
+<p>Un valor vacío se lee como vacío y falla en el momento de la autenticación, no
+al analizar el archivo. Mantenga el archivo legible solo por el usuario que
+ejecuta el plugin: contiene el secreto de cliente en texto claro.</p>
+<h3 id="modos-de-ejecucion-y-entrega">Modos de ejecución y entrega<a class="headerlink" href="#modos-de-ejecucion-y-entrega" title="Permanent link">¶</a></h3>
+<p>El plugin procesa los servicios habilitados en un orden fijo y empieza una
+lista de módulos nueva para cada uno: primero la cuenta y después Blob, Queue,
+File, Table y Data Lake Storage. Cada servicio entrega su propio agente, así
+que una ejecución con los seis interruptores habilitados entrega seis agentes.</p>
+<p>La entrega se elige por servicio, con estas reglas:</p>
+<table>
+<thead>
+<tr>
+<th>Línea de comandos</th>
+<th>Qué hace la ejecución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--tentacle_address &lt;TARGET_HOST&gt;</code></td>
+<td>Escribe el documento <code>agent_data</code> del servicio y lo envía con <code>tentacle_client -v -a &lt;TARGET_HOST&gt; -p &lt;puerto&gt; &lt;archivo&gt;</code>. Imprime <code>1</code> después de cada servicio</td>
+</tr>
+<tr>
+<td><code>--as_agent_plugin 1</code> sin <code>--tentacle_address</code></td>
+<td>Escribe el documento <code>agent_data</code> del servicio en <code>data_dir</code> e imprime <code>1</code></td>
+</tr>
+<tr>
+<td>Ninguna de las dos opciones</td>
+<td>Imprime los módulos del servicio como bloques XML <code>&lt;module&gt;</code> en la salida estándar y no escribe ningún archivo</td>
+</tr>
+</tbody>
+</table>
+<p>La ruta de Tentacle borra el documento local después de un envío correcto, así
+que la carpeta <code>data_dir</code> queda sin archivos cuando la ejecución termina bien.
+El plugin pasa al cliente de Tentacle solo la dirección y el puerto; no tiene
+ninguna opción para una contraseña de Tentacle.</p>
+<p><code>--tentacle_address</code> tiene prioridad sobre <code>--as_agent_plugin</code>, así que una
+ejecución con ambas opciones escribe el documento, lo entrega e imprime <code>1</code>.</p>
+<p>El servicio Data Lake Storage no sigue la misma regla: con <code>--as_agent_plugin 1</code>
+y sin dirección de Tentacle imprime sus módulos en la salida estándar en lugar
+de escribir un documento, y solo escribe el documento cuando
+<code>--as_agent_plugin</code> está ausente o es distinto de <code>1</code>. Véase
+<a href="#limitaciones">Limitaciones</a>.</p>
+<h3 id="credenciales-y-transporte">Credenciales y transporte<a class="headerlink" href="#credenciales-y-transporte" title="Permanent link">¶</a></h3>
+<ul>
+<li>El secreto de cliente se guarda en el archivo de configuración en texto
+  claro. Restrinja los permisos del archivo al usuario que ejecuta el plugin y
+  manténgalo fuera de directorios compartidos y del control de versiones.</li>
+<li>El secreto no es una opción de línea de comandos, así que no aparece en el
+  historial del shell ni en la lista de procesos. Sí aparece en el archivo de
+  configuración al que apunta el comando del plugin de la consola.</li>
+<li>El addon no expone ninguna opción de endpoint: la autenticación y las
+  consultas de métricas van a los endpoints de identidad y de gestión de
+  Microsoft por defecto. No hay ajuste para una nube soberana, un endpoint
+  personalizado ni un proxy.</li>
+</ul>
+<h3 id="registro-del-plugin-en-la-consola">Registro del plugin en la consola<a class="headerlink" href="#registro-del-plugin-en-la-consola" title="Permanent link">¶</a></h3>
+<p>El plugin se puede registrar en la consola de Pandora FMS como plugin de
+servidor, para que Pandora FMS lo ejecute desde el servidor que corre los
+módulos en lugar de desde una línea de comandos. La definición de registro del
+paquete <code>.pspz2</code> fija estos valores:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre del plugin</td>
+<td><code>Pandora Azure Storage</code></td>
+</tr>
+<tr>
+<td>Descripción</td>
+<td><code>Take data from azure storage</code></td>
+</tr>
+<tr>
+<td>Tipo de plugin</td>
+<td><code>Standard</code> (<code>plugin_type = 0</code>)</td>
+</tr>
+<tr>
+<td>Tiempo máximo de espera</td>
+<td><code>20</code> segundos</td>
+</tr>
+<tr>
+<td>Comando del plugin</td>
+<td>El archivo <code>pandora_azure</code> del paquete</td>
+</tr>
+<tr>
+<td>Parámetros del plugin</td>
+<td><code>-c " _field1_ " --agent_name " _field2_ " -g " _field3_ "</code></td>
+</tr>
+<tr>
+<td>Módulos que aporta</td>
+<td><code>0</code> (<code>total_modules_provided = 0</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>La definición declara tres macros. El formato no tiene tipo por macro, y las
+tres tienen <code>hide = 0</code>, así que la consola muestra los tres campos en texto
+claro:</p>
+<table>
+<thead>
+<tr>
+<th>Macro</th>
+<th>¿Obligatoria?</th>
+<th>Valor por defecto</th>
+<th>Ocultar</th>
+<th>Descripción y ayuda</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_field1_</code></td>
+<td>Sí, según su descripción</td>
+<td><code>/var/www/html/pandora_console/attachment/plugin/pandora_azure.conf</code></td>
+<td>No</td>
+<td><code>Conf path (obligatory)</code>. Ayuda: <code>Path conf</code></td>
+</tr>
+<tr>
+<td><code>_field2_</code></td>
+<td>No</td>
+<td><code>_agentname_</code></td>
+<td>No</td>
+<td><code>Agent name (optional)</code>. Ayuda: <code>Name of the agent</code>. El valor por defecto es la macro de consola que se sustituye por el nombre del agente que contiene el módulo</td>
+</tr>
+<tr>
+<td><code>_field3_</code></td>
+<td>No</td>
+<td><code>azure</code></td>
+<td>No</td>
+<td><code>group (optional)</code>. Ayuda: <code>Pandora FMS Target Group</code></td>
+</tr>
+</tbody>
+</table>
+<!-- SCREENSHOT NEEDED: Formulario de módulo de plugin en la consola de Pandora FMS con los tres campos de macro de Pandora Azure Storage, con una ruta de configuración de ejemplo y sin credenciales reales. -->
+
+<p>Los parámetros registrados no incluyen <code>--tentacle_address</code> ni
+<code>--as_agent_plugin</code>, así que una ejecución de módulo lanzada desde esta
+definición imprime el XML de los módulos en la salida estándar. Para que cada
+ejecución entregue sus agentes por sí misma, añada la opción de entrega a
+<strong>Parámetros del plugin</strong>, por ejemplo:</p>
+<div class="highlight"><pre><span></span><code>-c " _field1_ " --agent_name " _field2_ " -g " _field3_ " --tentacle_address 127.0.0.1
+</code></pre></div>
+<p>Cada campo del plugin es un valor de configuración, no una selección de
+servicio: los servicios se habilitan en el archivo de configuración, así que un
+plugin registrado sirve para cualquier cuenta cuyo archivo se referencie. El
+tiempo máximo de espera de <code>20</code> segundos es bajo para una ejecución que
+consulta todos los servicios; auméntelo si la ejecución alcanza el tiempo
+límite. Véase <a href="#planificacion-y-ejecucion">Planificación y ejecución</a>.</p>
+<h2 id="verificacion">Verificación<a class="headerlink" href="#verificacion" title="Permanent link">¶</a></h2>
+<p>Ejecute el plugin a mano desde una terminal, pasando el archivo de
+configuración después de <code>-c</code>. En el modo por defecto imprime los módulos de
+cada servicio habilitado:</p>
+<div class="highlight"><pre><span></span><code>./pandora_azure<span class="w"> </span>-c<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;
+</code></pre></div>
+<p>La ejecución se hace una vez y termina. Una ejecución correcta imprime bloques
+<code>&lt;module&gt;</code> y nada en la salida de error. El ejemplo siguiente muestra la forma
+de la salida para el servicio de cuenta, con un punto de datos por módulo:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[UsedCapacity]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>generic_data<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[1099511627776.0]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;description&gt;</span><span class="cp">&lt;![CDATA[2026-10-26 09:00:00+00:00 The amount of storage used by the storage account.]]&gt;</span><span class="nt">&lt;/description&gt;</span>
+<span class="w">    </span><span class="nt">&lt;unit&gt;</span><span class="cp">&lt;![CDATA[bytes]]&gt;</span><span class="nt">&lt;/unit&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+<span class="nt">&lt;module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[Transactions]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>generic_data_string<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;datalist&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span>
+<span class="w">        </span><span class="nt">&lt;value&gt;</span><span class="cp">&lt;![CDATA[The Transactions at 2026-10-26 09:05:00+00:00 is 142.0]]&gt;</span><span class="nt">&lt;/value&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;description&gt;</span><span class="cp">&lt;![CDATA[The number of requests made to a storage service or the specified API operation.]]&gt;</span><span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+</code></pre></div>
+<p>El ejemplo está construido a partir de las definiciones de módulo del addon;
+no es una ejecución capturada, porque los valores dependen de la cuenta.</p>
+<p>Para comprobar la ruta del lado del servidor, ejecútelo con
+<code>--as_agent_plugin 1</code> y una carpeta de datos desechable, y después inspeccione
+el archivo:</p>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>/tmp/azure-storage-check
+./pandora_azure<span class="w"> </span>-c<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span>--as_agent_plugin<span class="w"> </span><span class="m">1</span><span class="w"> </span>--data_dir<span class="w"> </span>/tmp/azure-storage-check
+ls<span class="w"> </span>/tmp/azure-storage-check
+</code></pre></div>
+<p>Una ejecución correcta imprime <code>1</code> una vez por servicio habilitado, y la
+carpeta contiene un documento <code>&lt;nombre de agente&gt;.&lt;segundos epoch&gt;.data</code> por
+servicio habilitado. El servicio Data Lake Storage es la excepción descrita en
+<a href="#limitaciones">Limitaciones</a>. El nombre del archivo usa el valor de
+<code>--agent_name</code> seguido del sufijo del servicio, así que los nombres por defecto
+son <code>Azure_Monitor.Azure_Storage_Account_Metrics.&lt;epoch&gt;.data</code> y
+<code>Azure_Monitor.Blob_Service_Metrics.&lt;epoch&gt;.data</code>.</p>
+<p>En Pandora FMS, tras la primera ejecución entregada, los agentes aparecen con
+sus módulos. El agente de cuenta lleva <code>UsedCapacity</code> y los seis módulos de
+texto; cada agente de servicio lleva sus módulos de capacidad y sus propios
+seis módulos de texto. Véase <a href="#entienda-los-resultados">Entienda los resultados</a>.</p>
+<h2 id="entienda-los-resultados">Entienda los resultados<a class="headerlink" href="#entienda-los-resultados" title="Permanent link">¶</a></h2>
+<h3 id="agentes">Agentes<a class="headerlink" href="#agentes" title="Permanent link">¶</a></h3>
+<p>Una ejecución crea un agente por servicio habilitado, y el sufijo del servicio
+se añade al valor de <code>--agent_name</code> sin separador:</p>
+<table>
+<thead>
+<tr>
+<th>Interruptor del servicio</th>
+<th>Sufijo del nombre de agente</th>
+<th>Nombre de agente por defecto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>account_agent</code></td>
+<td><code>Azure_Storage_Account_Metrics</code></td>
+<td><code>Azure_Monitor.Azure_Storage_Account_Metrics</code></td>
+</tr>
+<tr>
+<td><code>blobservice_agent</code></td>
+<td><code>Blob_Service_Metrics</code></td>
+<td><code>Azure_Monitor.Blob_Service_Metrics</code></td>
+</tr>
+<tr>
+<td><code>queueservice_agent</code></td>
+<td><code>Queue_Service_Metrics</code></td>
+<td><code>Azure_Monitor.Queue_Service_Metrics</code></td>
+</tr>
+<tr>
+<td><code>fileservice_agent</code></td>
+<td><code>File_Service_Metrics</code></td>
+<td><code>Azure_Monitor.File_Service_Metrics</code></td>
+</tr>
+<tr>
+<td><code>tableservice_agent</code></td>
+<td><code>Tables_Service_Metrics</code></td>
+<td><code>Azure_Monitor.Tables_Service_Metrics</code></td>
+</tr>
+<tr>
+<td><code>datalakestorage_agent</code></td>
+<td><code>Datalake_Storage_Service_Metrics</code></td>
+<td><code>Azure_Monitor.Datalake_Storage_Service_Metrics</code></td>
+</tr>
+</tbody>
+</table>
+<p>La cabecera <code>agent_data</code> fija <code>agent_mode</code> en <code>1</code> y toma el grupo de <code>-g</code>
+(<code>Azure</code> cuando la opción no está), y el alias del mismo valor que el nombre.
+El plugin no fija un intervalo de agente: <code>interval</code> viaja vacío en la
+cabecera.</p>
+<p>El agente del servicio File lleva la descripción <code>Blob Service Metrics</code>, el
+mismo texto que el agente Blob. Véase <a href="#limitaciones">Limitaciones</a>.</p>
+<h3 id="modulos">Módulos<a class="headerlink" href="#modulos" title="Permanent link">¶</a></h3>
+<p>Cada servicio publica dos clases de módulo:</p>
+<ul>
+<li><strong>Los módulos de capacidad y de recuento</strong> son <code>generic_data</code>. Llevan el
+  valor devuelto para una métrica, con la unidad <code>bytes</code> cuando la métrica es
+  un tamaño. Solo aparecen cuando Azure devuelve datos para esa métrica.</li>
+<li><strong>Los módulos de tasa y de latencia</strong> son <code>generic_data_string</code> con un
+  <code>datalist</code>. Cada entrada es el texto <code>The &lt;métrica&gt; at &lt;marca de tiempo&gt; is
+  &lt;valor&gt;</code>, una por punto de datos de la última hora, así que una ejecución
+  escribe normalmente unas doce entradas. Estos módulos se crean aunque Azure
+  no devuelva datos, y en ese caso el <code>datalist</code> llega vacío.</li>
+</ul>
+<p>El conjunto de la cuenta es <code>UsedCapacity</code>, <code>Transactions</code>, <code>Ingress</code>,
+<code>Egress</code>, <code>SucessServerLatency</code>, <code>SuccessE2ELatency</code> y <code>Availity</code>. Cada
+servicio repite los seis módulos de tasa, latencia y disponibilidad con su
+propio sufijo, por ejemplo <code>Transactions_blobs</code> o <code>Availity_tables</code>. La lista
+exhaustiva está en <a href="#agentes-y-modulos">Agentes y módulos</a>.</p>
+<p>Los nombres de módulo son los que publica el addon, incluidas las grafías
+<code>SucessServerLatency</code> y <code>Availity</code>. Las alertas, informes y paneles deben usar
+esos nombres exactos.</p>
+<p>Un módulo de capacidad se crea una vez por cada punto de datos devuelto, y
+todas las entradas tienen el mismo nombre. Una consulta de capacidad sobre una
+hora con granularidad de sesenta minutos devuelve normalmente uno o dos puntos,
+así que el mismo nombre de módulo puede aparecer dos veces en un documento.
+Véase <a href="#limitaciones">Limitaciones</a>.</p>
+<h2 id="operacion-y-resolucion-de-problemas">Operación y resolución de problemas<a class="headerlink" href="#operacion-y-resolucion-de-problemas" title="Permanent link">¶</a></h2>
+<h3 id="planificacion-y-ejecucion">Planificación y ejecución<a class="headerlink" href="#planificacion-y-ejecucion" title="Permanent link">¶</a></h3>
+<ul>
+<li>El plugin no guarda estado entre ejecuciones: cada ejecución consulta Azure
+  en ese momento. La ejecución se puede repetir a mano en cualquier momento.</li>
+<li>Una ejecución con los seis servicios habilitados hace 57 peticiones a Azure
+  Monitor, una por métrica, una detrás de otra: 7 de la cuenta, 10 de Blob, 9
+  de Queue, 12 de File, 9 de Table y 10 de Data Lake Storage. La definición de
+  registro declara un tiempo máximo de espera de <code>20</code> segundos, que una
+  ejecución completa puede superar; aumente el tiempo límite en la consola o
+  habilite solo los servicios que necesite.</li>
+<li>En modo servidor, planifique el plugin desde Pandora FMS o desde <code>cron</code>. El
+  plugin no fija el intervalo del agente: <code>interval</code> viaja vacío en la cabecera
+  <code>agent_data</code>.</li>
+</ul>
+<h3 id="limitaciones">Limitaciones<a class="headerlink" href="#limitaciones" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Sin opción de endpoint.</strong> La autenticación y las consultas de métricas van
+  a los endpoints de Microsoft por defecto, así que no se puede configurar una
+  nube soberana o personalizada.</li>
+<li><strong>Sin opción de proxy, y el plugin no reintenta.</strong> Una petición fallida
+  termina la ejecución con la excepción que la produjo; repetir la recolección
+  queda para la siguiente ejecución planificada.</li>
+<li><strong>La entrega de Data Lake está invertida.</strong> Con <code>--as_agent_plugin 1</code> y sin
+  dirección de Tentacle, el servicio Data Lake Storage imprime sus módulos en
+  la salida estándar en lugar de escribir su documento, mientras que los otros
+  cinco servicios escriben el suyo. Use <code>--tentacle_address</code> para entregar los
+  seis en el lado del servidor.</li>
+<li><strong>La opción de entrega se llama como el modo contrario.</strong>
+  <code>--as_agent_plugin 1</code> produce el documento del lado del servidor; el modo por
+  defecto es el de plugin de agente.</li>
+<li><strong><code>--prefix_module</code> no tiene efecto.</strong> La opción se acepta y se ignora: no
+  prefija los nombres de módulo, y los módulos conservan los nombres de
+  <a href="#agentes-y-modulos">Agentes y módulos</a>.</li>
+<li><strong>Una cuenta por archivo de configuración.</strong> El archivo contiene un juego de
+  identificadores de recurso, así que monitorizar varias cuentas necesita un
+  archivo y una ejecución del plugin por cuenta.</li>
+<li><strong>Sin protección del secreto.</strong> El secreto de cliente se guarda en texto
+  claro en el archivo de configuración.</li>
+<li><strong>Las entradas de capacidad pueden repetirse.</strong> Una métrica que devuelve más
+  de un punto de datos produce varios módulos con el mismo nombre en el mismo
+  documento.</li>
+<li><strong>El agente File lleva la descripción de Blob.</strong> Ambos agentes informan de
+  <code>Blob Service Metrics</code>.</li>
+</ul>
+<h3 id="resolucion-de-problemas">Resolución de problemas<a class="headerlink" href="#resolucion-de-problemas" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>La ejecución imprime una traza y termina con estado 1</strong> — falló una llamada
+  a Azure. Las causas habituales son un secreto de cliente erróneo o caducado,
+  un identificador de inquilino o de cliente equivocado y un identificador de
+  recurso que la identidad no puede leer. La traza nombra la llamada que falla.</li>
+<li><strong>La ejecución se detiene con <code>NameError</code></strong> — falta una clave obligatoria en
+  el archivo de configuración: alguna de <code>tenant_id</code>, <code>client_id</code>, <code>secret</code> o
+  alguno de los seis interruptores <code>&lt;servicio&gt;_agent</code>. Una línea que contenga
+  <code>#</code> se omite como comentario, así que un secreto con <code>#</code> produce este error.</li>
+<li><strong>La ejecución se detiene con <code>ValueError</code></strong> — un valor de <code>&lt;servicio&gt;_agent</code>
+  no es un número entero. Use <code>1</code> o <code>0</code>.</li>
+<li><strong>La ejecución se detiene con <code>IndexError</code></strong> — una línea contiene el nombre de
+  una clave conocida pero no el separador <code>:</code>, así que el plugin no encuentra
+  ningún valor que leer. Use <code>clave:valor</code>.</li>
+<li><strong>La autenticación falla aunque el secreto parezca correcto</strong> — el valor se
+  trunca en los dos puntos porque el analizador solo conserva el segundo
+  fragmento de la línea. Un secreto que contenga <code>:</code> no se puede usar desde
+  este archivo.</li>
+<li><strong>Un servicio no produce módulos de capacidad</strong> — Azure no devolvió datos para
+  esas métricas. Los módulos de tráfico, latencia y disponibilidad aparecen
+  igualmente, con el <code>datalist</code> vacío.</li>
+<li><strong><code>Could not write file: ...</code></strong> — la carpeta <code>data_dir</code> no existe o el usuario
+  que ejecuta el plugin no puede escribir en ella. El documento se crea con un
+  nombre exclusivo <code>&lt;nombre de agente&gt;.&lt;segundos epoch&gt;.data</code>; una segunda
+  ejecución del mismo servicio dentro del mismo segundo falla con este mensaje.</li>
+<li><strong><code>Tentacle error</code> en la salida de error con <code>1</code> en la salida estándar</strong> — la
+  entrega por Tentacle falló, y la ejecución imprime <code>1</code> igualmente y termina
+  con estado 0. Compruebe que <code>tentacle_client</code> está en <code>PATH</code> y que la
+  dirección y el puerto llegan al servidor de Tentacle. El documento permanece
+  en <code>data_dir</code> cuando el envío falla.</li>
+<li><strong>No hay ninguna salida</strong> — todos los interruptores <code>&lt;servicio&gt;_agent</code> valen
+  <code>0</code>.</li>
+</ul>
+<h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
+<h3 id="opciones-de-linea-de-comandos">Opciones de línea de comandos<a class="headerlink" href="#opciones-de-linea-de-comandos" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>./pandora_azure<span class="w"> </span>-c<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span><span class="o">[</span>--agent_name<span class="w"> </span>&lt;AGENT_NAME&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>-g<span class="w"> </span>&lt;GROUP&gt;<span class="o">]</span>
+<span class="w">    </span><span class="o">[</span>--data_dir<span class="w"> </span>&lt;PATH&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--as_agent_plugin<span class="w"> </span>&lt;<span class="m">0</span><span class="p">|</span><span class="m">1</span>&gt;<span class="o">]</span>
+<span class="w">    </span><span class="o">[</span>--tentacle_address<span class="w"> </span>&lt;TARGET_HOST&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--tentacle_port<span class="w"> </span>&lt;PORT&gt;<span class="o">]</span>
+<span class="w">    </span><span class="o">[</span>--prefix_module<span class="w"> </span>&lt;PREFIX&gt;<span class="o">]</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Opción</th>
+<th>¿Obligatoria?</th>
+<th>Valor por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-c</code>, <code>--conf</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Ruta del archivo de configuración. Sin ella la ejecución muestra el resumen de uso y termina con estado 2</td>
+</tr>
+<tr>
+<td><code>--agent_name</code></td>
+<td>No</td>
+<td><code>Azure_Monitor.</code></td>
+<td>Prefijo de los nombres de agente. El sufijo del servicio se añade sin separador</td>
+</tr>
+<tr>
+<td><code>-g</code>, <code>--group</code></td>
+<td>No</td>
+<td><code>Azure</code></td>
+<td>Grupo de Pandora FMS asignado a los agentes creados</td>
+</tr>
+<tr>
+<td><code>--data_dir</code></td>
+<td>No</td>
+<td><code>/var/spool/pandora/data_in/</code></td>
+<td>Carpeta donde se escriben los documentos <code>agent_data</code></td>
+</tr>
+<tr>
+<td><code>--as_agent_plugin</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td><code>1</code> escribe los documentos en <code>data_dir</code> e imprime <code>1</code>; cualquier otro valor imprime los módulos en la salida estándar. El servicio Data Lake Storage invierte esta regla; véase <a href="#limitaciones">Limitaciones</a></td>
+</tr>
+<tr>
+<td><code>--tentacle_address</code></td>
+<td>No</td>
+<td>—</td>
+<td>Dirección del servidor de Tentacle. Cuando se indica, cada documento se entrega con el cliente de Tentacle</td>
+</tr>
+<tr>
+<td><code>--tentacle_port</code></td>
+<td>No</td>
+<td><code>41121</code></td>
+<td>Puerto del servidor de Tentacle, que se pasa al cliente como <code>-p</code></td>
+</tr>
+<tr>
+<td><code>--prefix_module</code></td>
+<td>No</td>
+<td>—</td>
+<td>Se acepta y se ignora. No prefija los nombres de módulo</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>No</td>
+<td>—</td>
+<td>Muestra el resumen de opciones y termina</td>
+</tr>
+</tbody>
+</table>
+<h3 id="claves-del-archivo-de-configuracion">Claves del archivo de configuración<a class="headerlink" href="#claves-del-archivo-de-configuracion" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Clave</th>
+<th>¿Obligatoria?</th>
+<th>Valor por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tenant_id</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Identificador de inquilino de Microsoft Entra del registro de aplicación</td>
+</tr>
+<tr>
+<td><code>client_id</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Identificador de cliente del registro de aplicación</td>
+</tr>
+<tr>
+<td><code>secret</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Valor del secreto de cliente. Se guarda en texto claro</td>
+</tr>
+<tr>
+<td><code>account_id</code></td>
+<td>Cuando <code>account_agent</code> vale <code>1</code></td>
+<td>—</td>
+<td>Identificador de recurso de Azure que se consulta para las métricas de cuenta</td>
+</tr>
+<tr>
+<td><code>blobservice_id</code></td>
+<td>Cuando <code>blobservice_agent</code> vale <code>1</code></td>
+<td>—</td>
+<td>Identificador de recurso de Azure que se consulta para las métricas del servicio Blob</td>
+</tr>
+<tr>
+<td><code>fileservice_id</code></td>
+<td>Cuando <code>fileservice_agent</code> vale <code>1</code></td>
+<td>—</td>
+<td>Identificador de recurso de Azure que se consulta para las métricas del servicio File</td>
+</tr>
+<tr>
+<td><code>queueservice_id</code></td>
+<td>Cuando <code>queueservice_agent</code> vale <code>1</code></td>
+<td>—</td>
+<td>Identificador de recurso de Azure que se consulta para las métricas del servicio Queue</td>
+</tr>
+<tr>
+<td><code>tableservice_id</code></td>
+<td>Cuando <code>tableservice_agent</code> vale <code>1</code></td>
+<td>—</td>
+<td>Identificador de recurso de Azure que se consulta para las métricas del servicio Table</td>
+</tr>
+<tr>
+<td><code>datalakestorage_id</code></td>
+<td>Cuando <code>datalakestorage_agent</code> vale <code>1</code></td>
+<td>—</td>
+<td>Identificador de recurso de Azure que se consulta para las métricas de Data Lake Storage</td>
+</tr>
+<tr>
+<td><code>account_agent</code></td>
+<td>Sí</td>
+<td>—</td>
+<td><code>1</code> recolecta las métricas de cuenta, <code>0</code> las omite</td>
+</tr>
+<tr>
+<td><code>blobservice_agent</code></td>
+<td>Sí</td>
+<td>—</td>
+<td><code>1</code> recolecta las métricas del servicio Blob, <code>0</code> las omite</td>
+</tr>
+<tr>
+<td><code>fileservice_agent</code></td>
+<td>Sí</td>
+<td>—</td>
+<td><code>1</code> recolecta las métricas del servicio File, <code>0</code> las omite</td>
+</tr>
+<tr>
+<td><code>queueservice_agent</code></td>
+<td>Sí</td>
+<td>—</td>
+<td><code>1</code> recolecta las métricas del servicio Queue, <code>0</code> las omite</td>
+</tr>
+<tr>
+<td><code>tableservice_agent</code></td>
+<td>Sí</td>
+<td>—</td>
+<td><code>1</code> recolecta las métricas del servicio Table, <code>0</code> las omite</td>
+</tr>
+<tr>
+<td><code>datalakestorage_agent</code></td>
+<td>Sí</td>
+<td>—</td>
+<td><code>1</code> recolecta las métricas de Data Lake Storage, <code>0</code> las omite</td>
+</tr>
+</tbody>
+</table>
+<p>Cada valor se recorta, una clave repetida conserva el último valor leído y
+cualquier línea que contenga <code>#</code> se omite.</p>
+<h3 id="agentes-y-modulos">Agentes y módulos<a class="headerlink" href="#agentes-y-modulos" title="Permanent link">¶</a></h3>
+<p>Las consultas de métricas cubren la última hora. Las métricas de capacidad usan
+granularidad de sesenta minutos; las de tasa, latencia y disponibilidad usan
+cinco minutos. Todas piden la agregación <code>Average</code>.</p>
+<h4 id="agente-de-la-cuenta">Agente de la cuenta<a class="headerlink" href="#agente-de-la-cuenta" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Métrica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UsedCapacity</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Almacenamiento usado por la cuenta</td>
+</tr>
+<tr>
+<td><code>Transactions</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Peticiones hechas al servicio de almacenamiento o a la operación de la API, correctas y fallidas</td>
+</tr>
+<tr>
+<td><code>Ingress</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Datos de entrada, en bytes, desde clientes externos y desde dentro de Azure</td>
+</tr>
+<tr>
+<td><code>Egress</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Datos de salida, en bytes, hacia clientes externos y dentro de Azure</td>
+</tr>
+<tr>
+<td><code>SucessServerLatency</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Tiempo medio de proceso de una petición correcta, sin la latencia de red</td>
+</tr>
+<tr>
+<td><code>SuccessE2ELatency</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Latencia media extremo a extremo de las peticiones correctas, en milisegundos</td>
+</tr>
+<tr>
+<td><code>Availity</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Porcentaje de disponibilidad del servicio o de la operación de la API</td>
+</tr>
+</tbody>
+</table>
+<h4 id="agente-del-servicio-blob">Agente del servicio Blob<a class="headerlink" href="#agente-del-servicio-blob" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Métrica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BlobCapacity</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Capacidad usada por el servicio Blob</td>
+</tr>
+<tr>
+<td><code>BlobCount</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Número de blobs</td>
+</tr>
+<tr>
+<td><code>ContainerCount</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Número de contenedores</td>
+</tr>
+<tr>
+<td><code>IndexCapacity</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Capacidad usada por el índice</td>
+</tr>
+<tr>
+<td><code>Transactions_blobs</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Peticiones, como en el agente de cuenta</td>
+</tr>
+<tr>
+<td><code>Ingress_blobs</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Datos de entrada</td>
+</tr>
+<tr>
+<td><code>Egress_blobs</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Datos de salida</td>
+</tr>
+<tr>
+<td><code>SucessServerLatency_blobs</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Latencia del servidor</td>
+</tr>
+<tr>
+<td><code>SuccessE2ELatency_blobs</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Latencia extremo a extremo</td>
+</tr>
+<tr>
+<td><code>Availity_blobs</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Disponibilidad</td>
+</tr>
+</tbody>
+</table>
+<h4 id="agente-del-servicio-queue">Agente del servicio Queue<a class="headerlink" href="#agente-del-servicio-queue" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Métrica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>QueueCapacity</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Capacidad usada por el servicio Queue</td>
+</tr>
+<tr>
+<td><code>QueueCount</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Número de colas</td>
+</tr>
+<tr>
+<td><code>QueueMessageCount</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Número de mensajes</td>
+</tr>
+<tr>
+<td><code>Transactions_queues</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Peticiones</td>
+</tr>
+<tr>
+<td><code>Ingress_queues</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Datos de entrada</td>
+</tr>
+<tr>
+<td><code>Egress_queues</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Datos de salida</td>
+</tr>
+<tr>
+<td><code>SucessServerLatency_queues</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Latencia del servidor</td>
+</tr>
+<tr>
+<td><code>SuccessE2ELatency_queues</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Latencia extremo a extremo</td>
+</tr>
+<tr>
+<td><code>Availity_queues</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Disponibilidad</td>
+</tr>
+</tbody>
+</table>
+<h4 id="agente-del-servicio-file">Agente del servicio File<a class="headerlink" href="#agente-del-servicio-file" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Métrica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FileCapacity</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Capacidad usada por el servicio File</td>
+</tr>
+<tr>
+<td><code>FileCount</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Número de archivos</td>
+</tr>
+<tr>
+<td><code>FileShareCount</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Número de recursos compartidos de archivos</td>
+</tr>
+<tr>
+<td><code>FileShareSnapshotCount</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Número de instantáneas de los recursos compartidos</td>
+</tr>
+<tr>
+<td><code>FileShareSnapshotSize</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Tamaño de las instantáneas de los recursos compartidos</td>
+</tr>
+<tr>
+<td><code>FileShareCapacityQuota</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Cuota de los recursos compartidos de archivos</td>
+</tr>
+<tr>
+<td><code>Transactions_files</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Peticiones</td>
+</tr>
+<tr>
+<td><code>Ingress_files</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Datos de entrada</td>
+</tr>
+<tr>
+<td><code>Egress_files</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Datos de salida</td>
+</tr>
+<tr>
+<td><code>SucessServerLatency_files</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Latencia del servidor</td>
+</tr>
+<tr>
+<td><code>SuccessE2ELatency_files</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Latencia extremo a extremo</td>
+</tr>
+<tr>
+<td><code>Availity_files</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Disponibilidad</td>
+</tr>
+</tbody>
+</table>
+<h4 id="agente-del-servicio-table">Agente del servicio Table<a class="headerlink" href="#agente-del-servicio-table" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Métrica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TableCapacity</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Capacidad usada por el servicio Table</td>
+</tr>
+<tr>
+<td><code>TableCount</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Número de tablas</td>
+</tr>
+<tr>
+<td><code>TableEntityCount</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Número de entidades</td>
+</tr>
+<tr>
+<td><code>Transactions_tables</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Peticiones</td>
+</tr>
+<tr>
+<td><code>Ingress_tables</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Datos de entrada</td>
+</tr>
+<tr>
+<td><code>Egress_tables</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Datos de salida</td>
+</tr>
+<tr>
+<td><code>SucessServerLatency_tables</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Latencia del servidor</td>
+</tr>
+<tr>
+<td><code>SuccessE2ELatency_tables</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Latencia extremo a extremo</td>
+</tr>
+<tr>
+<td><code>Availity_tables</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Disponibilidad</td>
+</tr>
+</tbody>
+</table>
+<h4 id="agente-de-data-lake-storage">Agente de Data Lake Storage<a class="headerlink" href="#agente-de-data-lake-storage" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Métrica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BlobCapacity</code></td>
+<td><code>generic_data</code></td>
+<td>bytes</td>
+<td>Capacidad usada por el servicio Data Lake Storage</td>
+</tr>
+<tr>
+<td><code>BlobCount</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Número de blobs</td>
+</tr>
+<tr>
+<td><code>ContainerCount</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Número de contenedores</td>
+</tr>
+<tr>
+<td><code>IndexCapacity</code></td>
+<td><code>generic_data</code></td>
+<td>—</td>
+<td>Capacidad usada por el índice. Este módulo no lleva unidad, a diferencia del de Blob</td>
+</tr>
+<tr>
+<td><code>Transactions_datalake</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Peticiones</td>
+</tr>
+<tr>
+<td><code>Ingress_datalake</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Datos de entrada</td>
+</tr>
+<tr>
+<td><code>Egress_datalake</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Datos de salida</td>
+</tr>
+<tr>
+<td><code>SucessServerLatency_datalake</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Latencia del servidor</td>
+</tr>
+<tr>
+<td><code>SuccessE2ELatency_datalake</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Latencia extremo a extremo</td>
+</tr>
+<tr>
+<td><code>Availity_datalake</code></td>
+<td><code>generic_data_string</code></td>
+<td>—</td>
+<td>Disponibilidad</td>
+</tr>
+</tbody>
+</table>
+<h3 id="identidad-del-addon">Identidad del addon<a class="headerlink" href="#identidad-del-addon" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identificador del Marketplace</td>
+<td><code>pandorafms.azure_storage</code></td>
+</tr>
+<tr>
+<td>Nombre en el Marketplace</td>
+<td>Pandora Azure Storage</td>
+</tr>
+<tr>
+<td>Versión del addon</td>
+<td><code>1.0</code></td>
+</tr>
+<tr>
+<td>Última actualización en el Marketplace</td>
+<td>2026-02-25</td>
+</tr>
+<tr>
+<td>Paquete del Marketplace</td>
+<td><code>pandorafms.azure_storage.1.0.pspz2</code></td>
+</tr>
+<tr>
+<td>Licencia</td>
+<td>One</td>
+</tr>
+<tr>
+<td>Disponibilidad</td>
+<td>Descarga limitada a usuarios con licencia</td>
+</tr>
+<tr>
+<td>Tipo en el Marketplace</td>
+<td>Miscelaneus</td>
+</tr>
+<tr>
+<td>Flujo de trabajo</td>
+<td>Plugin de servidor o de agente: métricas de Azure Monitor de una cuenta de almacenamiento</td>
+</tr>
+<tr>
+<td>Ejecutable</td>
+<td><code>pandora_azure</code></td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://marketplace.pandorafms.com/entries/pandorafms.azure_storage">https://marketplace.pandorafms.com/entries/pandorafms.azure_storage</a></p>
+<!-- SCREENSHOT NEEDED: Los agentes de cuenta y de servicio de Pandora Azure Storage en la consola de Pandora FMS, con sus listas de módulos y sin identificadores de inquilino, suscripción o cuenta visibles. -->
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

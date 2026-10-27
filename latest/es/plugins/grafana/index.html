@@ -1,0 +1,4846 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/plugins/grafana/">
+      
+      
+        <link rel="prev" href="../google-drive/">
+      
+      
+        <link rel="next" href="../ibm-z-series-mainframe/">
+      
+      
+        
+          <link rel="alternate" href="../../../plugins/grafana/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Grafana - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#grafana" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Grafana
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../plugins/grafana/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-cloudwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon CloudWatch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-ec2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon EC2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-rds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon S3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de Azure backup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/db2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/digital-ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Ocean Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasticsearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/google-cloud-compute-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud Compute Engine Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/haproxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HAProxy Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hp-one-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HP One View Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hyper-v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/iot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/jmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JMX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de KVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/meraki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meraki Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Office 365 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/opensearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenSearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/ovh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OVH Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de Proxmox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/rabbitmq-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-hana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-r3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP R3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de VMware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/xenserver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XenServer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/discord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Discord
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/slack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Slack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../active-directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Enterprise Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Azure PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Pandora Azure SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Pandora Azure Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cisco-inventory-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco Inventory configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-netscaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Citrix NetScaler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../db2-remote/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Remote plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Dynamic SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exchange/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exchange
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glpi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GLPI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../google-drive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Google Drive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Requisitos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#en-el-lado-de-pandora-fms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        En el lado de Pandora FMS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#en-el-lado-de-grafana" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        En el lado de Grafana
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#red" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Red
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-origen-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el origen de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permitir-el-plugin-sin-firmar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permitir el plugin sin firmar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crear-el-origen-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crear el origen de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crear-una-consulta-de-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crear una consulta de panel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reglas-de-alerta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reglas de alerta
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verificación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comprobar-la-extension-directamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comprobar la extensión directamente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejecutar-una-consulta-desde-grafana" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecutar una consulta desde Grafana
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operar-y-resolver-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operar y resolver problemas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operar y resolver problemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#operacion-diaria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operación diaria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permisos-y-transporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permisos y transporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fallos-habituales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fallos habituales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitaciones
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ajustes-del-origen-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ajustes del origen de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#campos-de-consulta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Campos de consulta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#puntos-de-entrada-de-la-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Puntos de entrada de la extensión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ibm-z-series-mainframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBM Z Series Mainframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../influxdb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-for-mac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory plugin for MAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-ssh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory SSH plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../journalctl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Journalctl
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kafka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Kafka
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../marklogic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MarkLogic monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-remote-atlas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Pandora MongoDB remote / Atlas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-server-querier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MSSQL Server Querier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../net-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Net usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Office 365 Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Pandora Openshift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Oracle VM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ldap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora LDAP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora UX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugin-executor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Plugin Executor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sap-hana-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin SAP HANA Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Spark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sybase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Sybase
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tomcat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tomcat monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zammad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zammad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zendesk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zendesk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Requisitos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#en-el-lado-de-pandora-fms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        En el lado de Pandora FMS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#en-el-lado-de-grafana" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        En el lado de Grafana
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#red" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Red
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-origen-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el origen de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permitir-el-plugin-sin-firmar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permitir el plugin sin firmar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crear-el-origen-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crear el origen de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crear-una-consulta-de-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crear una consulta de panel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reglas-de-alerta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reglas de alerta
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verificación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comprobar-la-extension-directamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comprobar la extensión directamente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejecutar-una-consulta-desde-grafana" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecutar una consulta desde Grafana
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operar-y-resolver-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operar y resolver problemas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operar y resolver problemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#operacion-diaria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operación diaria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permisos-y-transporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permisos y transporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fallos-habituales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fallos habituales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitaciones
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ajustes-del-origen-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ajustes del origen de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#campos-de-consulta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Campos de consulta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#puntos-de-entrada-de-la-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Puntos de entrada de la extensión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="grafana">Grafana<a class="headerlink" href="#grafana" title="Permanent link">¶</a></h1>
+<p><em>Última actualización del artículo: 2026-10-26.</em></p>
+<h2 id="que-hace">Qué hace<a class="headerlink" href="#que-hace" title="Permanent link">¶</a></h2>
+<p>El addon Grafana es un <strong>plugin de origen de datos para Grafana</strong>. No es un
+plugin de monitorización de Pandora FMS: se instala dentro de Grafana, no
+ejecuta ningún proceso en un servidor de Pandora FMS y no crea agentes ni
+módulos. Añade <strong>Pandorafms Grafana</strong> a la lista de orígenes de datos de
+Grafana, de forma que los paneles de Grafana pueden representar el histórico de
+los módulos numéricos de Pandora FMS.</p>
+<p>Los datos proceden de la <strong>extensión API de Grafana de la consola de Pandora
+FMS</strong>, situada en <code>pandora_console/extensions/grafana</code>. El addon guarda la URL
+base de esa extensión y un usuario y una contraseña de Pandora FMS, pide a la
+extensión los grupos, agentes y módulos que ese usuario puede ver, y después
+solicita los valores de un módulo para el rango de tiempo de cada panel.</p>
+<p>Dos rutas de ejecución usan el origen de datos configurado:</p>
+<ul>
+<li><strong>Los paneles consultan desde el cliente web de Grafana.</strong> El navegador de
+  cada usuario de Grafana envía las peticiones a la consola de Pandora FMS, así
+  que el navegador —no solo el servidor de Grafana— debe poder alcanzarla.</li>
+<li><strong>Las reglas de alerta las evalúa el servidor de Grafana.</strong> El servidor también
+  debe alcanzar la consola, y la ruta del lado del servidor de esta versión no
+  recibe datos (véase <a href="#reglas-de-alerta">Reglas de alerta</a>).</li>
+</ul>
+<h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
+<h3 id="compatibilidad">Compatibilidad<a class="headerlink" href="#compatibilidad" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Ámbito</th>
+<th>Estado</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pandora FMS NG 784 y posteriores</td>
+<td><code>Soportado</code></td>
+<td>El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores</td>
+</tr>
+<tr>
+<td>Grafana <code>10.0.3</code> o posterior</td>
+<td><code>Requerido</code></td>
+<td>El plugin declara <code>grafanaDependency</code> <code>&gt;=10.0.3</code></td>
+</tr>
+<tr>
+<td>Una consola nodo de Pandora FMS con la extensión API de Grafana disponible</td>
+<td><code>Requerido</code></td>
+<td>El addon añade <code>/search</code> y <code>/query</code> a la URL configurada de la extensión, y la extensión responde <code>403</code> en una metaconsola</td>
+</tr>
+<tr>
+<td>Un usuario de Pandora FMS con el privilegio de lectura de agentes (<code>AR</code>)</td>
+<td><code>Requerido</code></td>
+<td>Ambos puntos de la extensión comprueban ese privilegio antes de devolver ningún grupo</td>
+</tr>
+<tr>
+<td>Versiones de Grafana posteriores al mínimo declarado</td>
+<td><code>Sin validar</code></td>
+<td>No hay una matriz de versiones de Grafana registrada para este addon</td>
+</tr>
+<tr>
+<td>Sistema operativo del host de Grafana</td>
+<td><code>Sin validar</code></td>
+<td>El addon se ejecuta dentro de Grafana; no hay un sistema operativo registrado</td>
+</tr>
+</tbody>
+</table>
+<p>La versión de Pandora FMS, la versión de Grafana y la consola nodo son
+requisitos de instalación, no declaraciones de compatibilidad sobre otras
+versiones.</p>
+<h3 id="requisitos">Requisitos<a class="headerlink" href="#requisitos" title="Permanent link">¶</a></h3>
+<h4 id="en-el-lado-de-pandora-fms">En el lado de Pandora FMS<a class="headerlink" href="#en-el-lado-de-pandora-fms" title="Permanent link">¶</a></h4>
+<ol>
+<li><strong>Una consola nodo, no la metaconsola.</strong> La extensión responde <code>403</code> cuando se
+   ejecuta en un nodo de metaconsola. Apunte el origen de datos a la consola nodo
+   que almacena los agentes que quiere representar.</li>
+<li><strong>La extensión API de Grafana servida por esa consola.</strong> Forma parte del
+   directorio de la consola (<code>pandora_console/extensions/grafana</code>) y no necesita
+   una instalación aparte en el lado de Pandora FMS. Responde en
+   <code>https://&lt;PANDORA_FMS_URL&gt;/pandora_console/extensions/grafana/</code>.</li>
+<li><strong>Un usuario de Pandora FMS con el privilegio de lectura de agentes (<code>AR</code>)</strong>
+   y su contraseña. La extensión no devuelve datos cuando el usuario no tiene
+   ese privilegio, y solo devuelve los grupos en los que lo tiene.</li>
+<li><strong>Un origen CORS que permita la URL de Grafana.</strong> La extensión envía
+   <code>Access-Control-Allow-Origin</code> con el valor de
+   <strong>Configuración → General → Seguridad</strong>, campo
+   <strong>Grafana Access-Control-Allow-Origin</strong>. El valor predeterminado es <code>*</code>, que
+   permite cualquier origen. Indique el origen del servidor de Grafana —esquema,
+   host y puerto— para restringirlo.</li>
+</ol>
+<h4 id="en-el-lado-de-grafana">En el lado de Grafana<a class="headerlink" href="#en-el-lado-de-grafana" title="Permanent link">¶</a></h4>
+<ol>
+<li><strong>Grafana <code>10.0.3</code> o posterior.</strong></li>
+<li><strong>Permiso de escritura en el directorio de plugins de Grafana y en
+   <code>grafana.ini</code></strong>, además de permiso para reiniciar Grafana. En los paquetes de
+   Linux el directorio de plugins es <code>/var/lib/grafana/plugins</code>.</li>
+<li><strong>El plugin cargado como plugin sin firmar</strong> (véase
+   <a href="#permitir-el-plugin-sin-firmar">Permitir el plugin sin firmar</a>).</li>
+</ol>
+<h4 id="red">Red<a class="headerlink" href="#red" title="Permanent link">¶</a></h4>
+<ul>
+<li>El navegador de cada usuario de Grafana que abre un panel debe alcanzar la
+  consola de Pandora FMS.</li>
+<li>El servidor de Grafana debe alcanzar la consola para evaluar las reglas de
+  alerta.</li>
+</ul>
+<h3 id="instalar-el-origen-de-datos">Instalar el origen de datos<a class="headerlink" href="#instalar-el-origen-de-datos" title="Permanent link">¶</a></h3>
+<ol>
+<li>Descargue <code>pandorafms.grafana.1.0.zip</code> desde la
+   <a href="https://marketplace.pandorafms.com/entries/pandorafms.grafana">entrada del Marketplace</a>.
+   La descarga está limitada a usuarios con licencia.</li>
+<li>Extraiga el archivo dentro del directorio de plugins de Grafana, de forma que
+   la carpeta del plugin quede directamente debajo de él:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/var/lib/grafana/plugins
+sudo<span class="w"> </span>unzip<span class="w"> </span>/path/to/pandorafms.grafana.1.0.zip
+</code></pre></div>
+<ol>
+<li>Reinicie Grafana para que cargue el plugin.</li>
+</ol>
+<!-- SCREENSHOT NEEDED: Lista de orígenes de datos de Grafana tras la instalación, mostrando el tipo de origen de datos Pandorafms Grafana. -->
+
+<h3 id="permitir-el-plugin-sin-firmar">Permitir el plugin sin firmar<a class="headerlink" href="#permitir-el-plugin-sin-firmar" title="Permanent link">¶</a></h3>
+<p>El plugin no está firmado, así que Grafana solo lo carga cuando su identificador
+figura como permitido. Añada la clave a <code>/etc/grafana/grafana.ini</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[plugins]</span>
+<span class="na">allow_loading_unsigned_plugins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"pandorafms-pandorafmsgrafana-datasource"</span>
+</code></pre></div>
+<p>Si la clave ya enumera otros plugins, añada este identificador a la lista
+separada por comas. Reinicie Grafana de nuevo tras el cambio.</p>
+<p><code>pandorafms-pandorafmsgrafana-datasource</code> es el identificador del plugin de
+origen de datos y debe coincidir exactamente. Sin él, Grafana no carga el plugin
+y <strong>Pandorafms Grafana</strong> no aparece en la lista de orígenes de datos.</p>
+<h2 id="configuracion">Configuración<a class="headerlink" href="#configuracion" title="Permanent link">¶</a></h2>
+<h3 id="crear-el-origen-de-datos">Crear el origen de datos<a class="headerlink" href="#crear-el-origen-de-datos" title="Permanent link">¶</a></h3>
+<ol>
+<li>En Grafana abra <strong>Connections → Data sources</strong> y seleccione
+   <strong>Add data source</strong>.</li>
+<li>Elija <strong>Pandorafms Grafana</strong>.</li>
+<li>Rellene los tres campos:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Obligatorio</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pandora extension</strong></td>
+<td>Sí</td>
+<td>—</td>
+<td>URL base de la extensión API de Grafana de Pandora FMS, con el esquema y sin barra final ni sufijo de punto de entrada: <code>https://&lt;PANDORA_FMS_URL&gt;/pandora_console/extensions/grafana</code>. El addon añade <code>/search</code> y <code>/query</code>.</td>
+</tr>
+<tr>
+<td><strong>Pandora user</strong></td>
+<td>Sí</td>
+<td>—</td>
+<td>Usuario de Pandora FMS con el privilegio <code>AR</code>. Todos los usuarios de Grafana consultan con esta identidad.</td>
+</tr>
+<tr>
+<td><strong>Password</strong></td>
+<td>Sí</td>
+<td>—</td>
+<td>Contraseña de ese usuario. Se guarda en los ajustes JSON del origen de datos, no en los campos seguros cifrados de Grafana, porque el navegador la envía en cada petición.</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Seleccione <strong>Save &amp; Test</strong>. La prueba no contacta con Pandora FMS (véase
+   <a href="#verificacion">Verificación</a>).</li>
+</ol>
+<!-- SCREENSHOT NEEDED: Ajustes del origen de datos Pandorafms Grafana con una URL de extensión de laboratorio, un usuario y una contraseña enmascarada, sin credenciales reales. -->
+
+<p>Notas:</p>
+<ul>
+<li>Use una URL de extensión <code>https</code> siempre que la consola se sirva por TLS. Si
+  Grafana se sirve por HTTPS, el navegador bloquea una URL de extensión <code>http</code>
+  por contenido mixto.</li>
+<li>Cualquier usuario de Pandora FMS con el privilegio <code>AR</code> es válido; no necesita
+  permisos de administración. Sí necesita ver todos los grupos cuyos módulos
+  deban aparecer en los paneles, porque la lista de grupos solo contiene los
+  grupos en los que el usuario tiene <code>AR</code>.</li>
+</ul>
+<h3 id="crear-una-consulta-de-panel">Crear una consulta de panel<a class="headerlink" href="#crear-una-consulta-de-panel" title="Permanent link">¶</a></h3>
+<ol>
+<li>Cree un panel de dashboard, añada un panel y seleccione <strong>Pandorafms Grafana</strong>
+   en <strong>Query</strong>.</li>
+<li>Elija <strong>Group</strong>, después <strong>Agent</strong> y después <strong>Module</strong>. Las listas se
+   estrechan en ese orden, y <strong>Module</strong> permanece vacía hasta que se selecciona
+   un <strong>Agent</strong>.</li>
+<li>El panel muestra una serie por consulta.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Label</strong></td>
+<td>Vacío</td>
+<td>No se usa. El addon no lo envía, y la serie conserva el nombre del módulo.</td>
+</tr>
+<tr>
+<td><strong>Tip</strong></td>
+<td>Desmarcado</td>
+<td>Conmutador de escala completa. Marcado, Pandora FMS devuelve las muestras almacenadas. Desmarcado, devuelve valores compactados (medias) y el nombre de la serie termina en <code>(avg)</code>.</td>
+</tr>
+<tr>
+<td><strong>Group</strong></td>
+<td>Vacío</td>
+<td>Restringe la lista de agentes. <code>All</code> (valor <code>0</code>) enumera todos los agentes. Solo aparecen los grupos en los que el usuario del origen de datos tiene <code>AR</code>.</td>
+</tr>
+<tr>
+<td><strong>Agent</strong></td>
+<td>Vacío</td>
+<td>Restringe la lista de módulos a los agentes habilitados del grupo seleccionado; con <code>All</code>, a todos los agentes habilitados.</td>
+</tr>
+<tr>
+<td><strong>Module</strong></td>
+<td>Vacío</td>
+<td>Módulo que se representa: módulos habilitados y no de cadena del agente seleccionado. La petición lleva el identificador del módulo.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Solo <strong>Module</strong> decide los datos. La extensión lee el identificador del módulo
+  e ignora el valor del agente.</li>
+<li>Cambiar <strong>Group</strong> o <strong>Agent</strong> no borra el <strong>Agent</strong> ni el <strong>Module</strong>
+  seleccionados anteriormente. El panel sigue consultando el módulo antiguo hasta
+  que se elige uno nuevo, así que vuelva a seleccionar el módulo después de
+  restringir las listas.</li>
+<li>Cada cambio en el editor recarga las tres listas completas, y un cambio de
+  <strong>Tip</strong>, <strong>Group</strong>, <strong>Agent</strong> o <strong>Module</strong> ejecuta además la consulta. En
+  instalaciones con muchos grupos, agentes o módulos esto hace más lento el
+  editor.</li>
+<li>El origen de datos devuelve valores numéricos sin metadatos de unidad. Fije la
+  unidad del panel según el módulo.</li>
+<li>Para comparar módulos, añada una consulta por módulo al mismo panel.</li>
+</ul>
+<!-- SCREENSHOT NEEDED: Editor de consulta de un panel de Grafana con el origen de datos Pandorafms Grafana y los campos Label, Tip, Group, Agent y Module con valores de laboratorio. -->
+
+<h3 id="reglas-de-alerta">Reglas de alerta<a class="headerlink" href="#reglas-de-alerta" title="Permanent link">¶</a></h3>
+<p>El origen de datos declara compatibilidad con alertas, así que una regla de
+alerta de Grafana puede usar una consulta de Pandora FMS. Grafana evalúa las
+reglas de alerta en el servidor, no en el navegador. En esta versión la ruta del
+lado del servidor no lleva la URL de la extensión ni la contraseña guardadas en
+el formulario, de modo que una regla evaluada por el servidor no recibe datos.
+Consulte <a href="#limitaciones">Limitaciones</a> antes de crear una, y pruebe cualquier
+regla de extremo a extremo antes de confiar en ella.</p>
+<h2 id="verificacion">Verificación<a class="headerlink" href="#verificacion" title="Permanent link">¶</a></h2>
+<p><strong>Save &amp; Test no comprueba la conexión.</strong> El origen de datos devuelve éxito sin
+contactar con Pandora FMS, así que un resultado correcto solo significa que
+Grafana guardó el formulario. Ejecute las dos comprobaciones siguientes.</p>
+<h3 id="comprobar-la-extension-directamente">Comprobar la extensión directamente<a class="headerlink" href="#comprobar-la-extension-directamente" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sS<span class="w"> </span>-u<span class="w"> </span>&lt;USERNAME&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"type":"group"}'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s1">'https://&lt;PANDORA_FMS_URL&gt;/pandora_console/extensions/grafana/search'</span>
+</code></pre></div>
+<p><code>curl</code> pide la contraseña de forma interactiva, así que no aparece en el
+historial del shell ni en la lista de procesos. La extensión acepta la
+autenticación básica HTTP estándar que envía <code>curl</code>.</p>
+<p>Un usuario con el privilegio <code>AR</code> recibe un array JSON con la entrada <code>All</code> en
+primer lugar, seguida de una entrada por grupo:</p>
+<div class="highlight"><pre><span></span><code><span class="p">[{</span><span class="nt">"value"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="nt">"text"</span><span class="p">:</span><span class="s2">"All"</span><span class="p">},{</span><span class="nt">"value"</span><span class="p">:</span><span class="s2">"&lt;GROUP_ID&gt;"</span><span class="p">,</span><span class="nt">"text"</span><span class="p">:</span><span class="s2">"&lt;GROUP_NAME&gt;"</span><span class="p">}]</span>
+</code></pre></div>
+<p>Interprete el resultado así:</p>
+<table>
+<thead>
+<tr>
+<th>Resultado</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Un array JSON con <code>All</code> y sus grupos</td>
+<td>La extensión, la consola y las credenciales funcionan</td>
+</tr>
+<tr>
+<td><code>[]</code></td>
+<td>La extensión alcanzó Pandora FMS pero rechazó las credenciales, o el usuario no tiene el privilegio <code>AR</code>. Un inicio de sesión rechazado <strong>no</strong> es un error HTTP</td>
+</tr>
+<tr>
+<td><code>403</code></td>
+<td>La URL apunta a un nodo de metaconsola</td>
+</tr>
+<tr>
+<td><code>404</code></td>
+<td>La URL, el directorio de la extensión o la regla de reescritura del servidor web son incorrectos</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ejecutar-una-consulta-desde-grafana">Ejecutar una consulta desde Grafana<a class="headerlink" href="#ejecutar-una-consulta-desde-grafana" title="Permanent link">¶</a></h3>
+<ol>
+<li>Abra un panel o Explore con el origen de datos <strong>Pandorafms Grafana</strong>.</li>
+<li>Seleccione un grupo, un agente y un módulo con datos conocidos en el rango de
+   tiempo elegido.</li>
+<li>El resultado esperado es una serie con el nombre del módulo —con el sufijo
+   <code>(avg)</code> mientras <strong>Tip</strong> esté desmarcado— y puntos a lo largo del rango.</li>
+<li>Marque <strong>Tip</strong> y ejecute la consulta de nuevo. Aparece la misma serie sin el
+   sufijo y con las muestras originales.</li>
+</ol>
+<p>Si la comprobación de la extensión funciona y el panel sigue sin datos, lea
+<a href="#operar-y-resolver-problemas">Operar y resolver problemas</a>.</p>
+<h2 id="entender-los-resultados">Entender los resultados<a class="headerlink" href="#entender-los-resultados" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>Una serie por consulta.</strong> Su nombre es el nombre del módulo que informa
+  Pandora FMS. Con <strong>Tip</strong> desmarcado el addon añade <code>(avg)</code> para indicar que
+  los valores son medias compactadas; con <strong>Tip</strong> marcado la serie conserva las
+  muestras originales. El campo <strong>Label</strong> no renombra la serie.</li>
+<li><strong>El rango de tiempo es el del panel.</strong> La extensión calcula el periodo a
+  partir del rango y devuelve el histórico del módulo dentro de él.</li>
+<li><strong>Los periodos desconocidos son huecos.</strong> Cuando Pandora FMS no tiene valor, o
+  marca los datos del módulo como desconocidos, el punto es nulo y el panel
+  dibuja un hueco en lugar de un cero.</li>
+<li><strong>Solo módulos numéricos.</strong> El selector de módulos excluye los módulos de
+  cadena, así que no se pueden representar con este origen de datos. Los agentes
+  y módulos deshabilitados también quedan fuera de los selectores.</li>
+<li><strong>Los permisos se detienen en la lista de grupos.</strong> La extensión autentica al
+  usuario de Pandora FMS, exige <code>AR</code> en al menos un grupo y filtra la lista de
+  grupos por ese privilegio. Las búsquedas de agentes y módulos y la petición de
+  datos se resuelven con los identificadores que envía el navegador, sin volver a
+  comprobar el permiso de grupo. Considere que cualquier usuario de Grafana que
+  pueda usar este origen de datos puede leer cualquier módulo numérico cuyo
+  identificador se solicite.</li>
+<li><strong>Una sola identidad de Pandora FMS por origen de datos.</strong> Todos los usuarios
+  de Grafana que pueden usar el origen de datos leen los mismos datos con el
+  mismo usuario de Pandora FMS. Los permisos propios de Grafana sobre el origen
+  de datos deciden quién puede usarlo.</li>
+</ul>
+<h2 id="operar-y-resolver-problemas">Operar y resolver problemas<a class="headerlink" href="#operar-y-resolver-problemas" title="Permanent link">¶</a></h2>
+<h3 id="operacion-diaria">Operación diaria<a class="headerlink" href="#operacion-diaria" title="Permanent link">¶</a></h3>
+<ul>
+<li>El addon no tiene planificador: consulta Pandora FMS cuando se carga o se
+  refresca un panel, y cuando se evalúa una regla de alerta. No guarda nada en el
+  lado de Grafana más allá de los ajustes del origen de datos.</li>
+<li>Cada consulta es una petición a la extensión. Un panel con tres consultas de
+  módulo envía tres peticiones.</li>
+<li>Mantenga la URL del origen de datos y la URL de la consola de Pandora FMS
+  accesibles desde el navegador y desde el servidor de Grafana; un cambio en
+  cortafuegos, proxies inversos o certificados TLS rompe los paneles.</li>
+</ul>
+<h3 id="permisos-y-transporte">Permisos y transporte<a class="headerlink" href="#permisos-y-transporte" title="Permanent link">¶</a></h3>
+<ul>
+<li>La contraseña se guarda en los ajustes JSON del origen de datos, porque el
+  navegador la necesita para cada consulta. No se guarda en los campos seguros
+  cifrados de Grafana y se devuelve al cliente web de Grafana. Restrinja quién
+  puede leer o editar orígenes de datos en Grafana y use un usuario dedicado de
+  Pandora FMS para el addon.</li>
+<li>La autenticación básica HTTP codifica las credenciales, no las cifra. Use una
+  URL de extensión <code>https</code> para que las credenciales viajen cifradas.</li>
+<li>El origen CORS predeterminado es <code>*</code>: cualquier origen web puede llamar a la
+  extensión cuando puede enviar credenciales. Indique el origen de Grafana en
+  <strong>Grafana Access-Control-Allow-Origin</strong> para restringirlo.</li>
+<li>El usuario de Pandora FMS solo necesita el privilegio <code>AR</code>. No use una cuenta
+  de administración para el origen de datos.</li>
+</ul>
+<h3 id="fallos-habituales">Fallos habituales<a class="headerlink" href="#fallos-habituales" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Causa y comprobación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Save &amp; Test</strong> informa de éxito pero el panel no muestra datos</td>
+<td>Es lo esperado: la prueba no contacta con Pandora FMS. Compruebe la extensión con el comando <code>curl</code> de <a href="#verificacion">Verificación</a></td>
+</tr>
+<tr>
+<td>La lista <strong>Group</strong> está vacía</td>
+<td>Credenciales rechazadas, un usuario sin <code>AR</code> o un bloqueo CORS. Ejecute la comprobación de la extensión y lea la consola del navegador</td>
+</tr>
+<tr>
+<td>La lista <strong>Module</strong> está vacía</td>
+<td>Todavía no se ha seleccionado ningún <strong>Agent</strong>; los agentes y módulos deshabilitados también quedan excluidos</td>
+</tr>
+<tr>
+<td>El panel muestra <strong>No data</strong></td>
+<td>No hay valores almacenados en el rango de tiempo, el módulo es de cadena, o quedó seleccionado un módulo de un agente anterior. Vuelva a seleccionar el módulo y amplíe el rango</td>
+</tr>
+<tr>
+<td>La consola del navegador muestra un error CORS</td>
+<td><strong>Grafana Access-Control-Allow-Origin</strong> no coincide con el origen de Grafana, o la URL de la extensión es <code>http</code> mientras Grafana es <code>https</code></td>
+</tr>
+<tr>
+<td>La extensión responde <code>403</code></td>
+<td>La URL apunta a un nodo de metaconsola; use la consola nodo</td>
+</tr>
+<tr>
+<td>La extensión responde <code>404</code></td>
+<td>Ruta incorrecta (debe terminar en <code>/pandora_console/extensions/grafana</code>), directorio de la extensión ausente, o un servidor web que no aplica las reglas de reescritura que resuelven <code>/search</code> y <code>/query</code></td>
+</tr>
+<tr>
+<td><strong>Pandorafms Grafana</strong> no aparece en la lista de orígenes de datos</td>
+<td>La carpeta del plugin no está en el directorio de plugins, <code>allow_loading_unsigned_plugins</code> no incluye el identificador, o Grafana no se reinició</td>
+</tr>
+<tr>
+<td>El nombre de la serie termina en <code>(avg)</code></td>
+<td><strong>Tip</strong> está desmarcado; márquelo para recibir las muestras originales</td>
+</tr>
+<tr>
+<td>Una regla de alerta no devuelve datos</td>
+<td>Véase <a href="#limitaciones">Limitaciones</a>: la ruta de evaluación del lado del servidor no usa los datos de conexión guardados en el formulario</td>
+</tr>
+</tbody>
+</table>
+<h3 id="limitaciones">Limitaciones<a class="headerlink" href="#limitaciones" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>El campo <code>Label</code> no hace nada.</strong> La serie siempre se llama como el módulo,
+  con el sufijo <code>(avg)</code> cuando los valores son compactados.</li>
+<li><strong><code>Save &amp; Test</code> siempre informa de éxito.</strong> No abre ninguna conexión con
+  Pandora FMS, así que no puede detectar una URL incorrecta, credenciales
+  rechazadas ni una consola inalcanzable.</li>
+<li><strong>Un inicio de sesión rechazado no es un error.</strong> Cuando el usuario o la
+  contraseña son incorrectos, o el usuario no tiene el privilegio <code>AR</code>, la
+  extensión responde HTTP <code>200</code> con un array vacío. El panel muestra <strong>No data</strong>
+  en lugar de un error de autenticación.</li>
+<li><strong>Las reglas de alerta no alcanzan la consola en esta versión.</strong> Grafana las
+  evalúa en el servidor, y la ruta del lado del servidor construye su petición a
+  partir de los campos de URL y contraseña del origen de datos, mientras que el
+  formulario guarda la URL de la consola y la contraseña en campos propios que el
+  lado del servidor no lee. Por eso una regla falla o se evalúa sin datos. Las
+  consultas de panel no se ven afectadas porque las ejecuta el navegador.</li>
+<li><strong>Los ajustes contienen un único usuario de Pandora FMS, con un único conjunto
+  de permisos.</strong> Todos los usuarios de Grafana que pueden usar el origen de datos
+  ven los mismos datos.</li>
+<li><strong>Los módulos de cadena no se pueden representar</strong> y no se ofrecen en el
+  selector de módulos.</li>
+<li><strong>Los selectores cargan listas completas.</strong> El addon no envía ningún filtro
+  de texto: las listas de grupos, agentes y módulos se descargan enteras cada
+  vez que cambia el editor, y Grafana las filtra en el navegador.</li>
+</ul>
+<h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
+<h3 id="ajustes-del-origen-de-datos">Ajustes del origen de datos<a class="headerlink" href="#ajustes-del-origen-de-datos" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Ajuste</th>
+<th>Obligatorio</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pandora extension</strong></td>
+<td>Sí</td>
+<td>—</td>
+<td>URL base de la extensión, con esquema: <code>https://&lt;PANDORA_FMS_URL&gt;/pandora_console/extensions/grafana</code>. Sin barra final y sin sufijo <code>/search</code> ni <code>/query</code></td>
+</tr>
+<tr>
+<td><strong>Pandora user</strong></td>
+<td>Sí</td>
+<td>—</td>
+<td>Usuario de Pandora FMS con el que consulta cada petición</td>
+</tr>
+<tr>
+<td><strong>Password</strong></td>
+<td>Sí</td>
+<td>—</td>
+<td>Contraseña de ese usuario, guardada en los ajustes JSON del origen de datos</td>
+</tr>
+</tbody>
+</table>
+<h3 id="campos-de-consulta">Campos de consulta<a class="headerlink" href="#campos-de-consulta" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Label</strong></td>
+<td>Vacío</td>
+<td>No se usa</td>
+</tr>
+<tr>
+<td><strong>Tip</strong></td>
+<td>Desmarcado</td>
+<td>Marcado: muestras originales. Desmarcado: medias compactadas con el sufijo <code>(avg)</code> en la serie</td>
+</tr>
+<tr>
+<td><strong>Group</strong></td>
+<td>Vacío</td>
+<td>Filtro de grupo para la lista de agentes; <code>All</code> es el valor <code>0</code></td>
+</tr>
+<tr>
+<td><strong>Agent</strong></td>
+<td>Vacío</td>
+<td>Filtro de agente para la lista de módulos</td>
+</tr>
+<tr>
+<td><strong>Module</strong></td>
+<td>Vacío</td>
+<td>Identificador de módulo que se envía a la extensión</td>
+</tr>
+</tbody>
+</table>
+<h3 id="puntos-de-entrada-de-la-extension">Puntos de entrada de la extensión<a class="headerlink" href="#puntos-de-entrada-de-la-extension" title="Permanent link">¶</a></h3>
+<p>El addon usa dos puntos de entrada relativos a la URL base configurada. Ambos
+aceptan autenticación básica HTTP y devuelven JSON.</p>
+<table>
+<thead>
+<tr>
+<th>Punto de entrada</th>
+<th>Propósito</th>
+<th>Cuerpo de la petición</th>
+<th>Respuesta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;extension&gt;/search</code></td>
+<td>Listas de grupos, agentes y módulos</td>
+<td><code>{"type":"group"}</code>, <code>{"type":"agent","extra":"&lt;group-id&gt;"}</code> o <code>{"type":"module","extra":"&lt;agent-id&gt;"}</code></td>
+<td>Array de <code>{"value": &lt;id&gt;, "text": "&lt;name&gt;"}</code>; los grupos incluyen <code>{"value":0,"text":"All"}</code></td>
+</tr>
+<tr>
+<td><code>&lt;extension&gt;/query</code></td>
+<td>Valores de un módulo para un rango de tiempo</td>
+<td><code>{"targets":[{"target":{"agent":"&lt;agent-id&gt;","module":"&lt;module-id&gt;","tip":&lt;boolean&gt;}}],"range":{"from":"&lt;date&gt;","to":"&lt;date&gt;"}}</code></td>
+<td>Array de objetos con el nombre de la serie en <code>target</code> y pares de <code>[&lt;value&gt;, &lt;timestamp en milisegundos&gt;]</code> en <code>datapoints</code></td>
+</tr>
+</tbody>
+</table>
+<p>En <code>/query</code> solo se leen <code>module</code> y <code>tip</code>: el nombre de la serie es el nombre del
+módulo que informa Pandora FMS, y el valor del agente se ignora. Las fechas se
+aceptan en cualquier formato que Pandora FMS pueda interpretar, por ejemplo
+ISO 8601.</p>
+<h3 id="identidad-del-addon">Identidad del addon<a class="headerlink" href="#identidad-del-addon" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Propiedad</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identificador del Marketplace</td>
+<td><code>pandorafms.grafana</code></td>
+</tr>
+<tr>
+<td>Nombre</td>
+<td>Grafana</td>
+</tr>
+<tr>
+<td>Versión</td>
+<td><code>1.0</code> — la versión del paquete del Marketplace <code>pandorafms.grafana.1.0.zip</code></td>
+</tr>
+<tr>
+<td>Identificador del plugin de origen de datos</td>
+<td><code>pandorafms-pandorafmsgrafana-datasource</code>, el valor que exige <code>allow_loading_unsigned_plugins</code></td>
+</tr>
+<tr>
+<td>Categoría</td>
+<td>Miscelaneus</td>
+</tr>
+<tr>
+<td>Licencia</td>
+<td>One — la descarga está limitada a usuarios con licencia</td>
+</tr>
+<tr>
+<td>Disponibilidad</td>
+<td>Descarga con licencia</td>
+</tr>
+<tr>
+<td>Última actualización del Marketplace</td>
+<td>2025-06-25</td>
+</tr>
+<tr>
+<td>Versión mínima de Grafana</td>
+<td><code>10.0.3</code>, declarada por el plugin</td>
+</tr>
+<tr>
+<td>Entrada del Marketplace</td>
+<td><a href="https://marketplace.pandorafms.com/entries/pandorafms.grafana">pandorafms.grafana</a></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

@@ -1,0 +1,4557 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/plugins/mssql-server-querier/">
+      
+      
+        <link rel="prev" href="../mongodb-remote-atlas/">
+      
+      
+        <link rel="next" href="../net-usage/">
+      
+      
+        
+          <link rel="alternate" href="../../../plugins/mssql-server-querier/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>MSSQL Server Querier Tool - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mssql-server-querier-tool" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              MSSQL Server Querier Tool
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../plugins/mssql-server-querier/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-cloudwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon CloudWatch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-ec2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon EC2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-rds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon S3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de Azure backup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/db2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/digital-ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Ocean Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasticsearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/google-cloud-compute-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud Compute Engine Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/haproxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HAProxy Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hp-one-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HP One View Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hyper-v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/iot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/jmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JMX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de KVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/meraki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meraki Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Office 365 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/opensearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenSearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/ovh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OVH Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de Proxmox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/rabbitmq-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-hana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-r3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP R3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de VMware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/xenserver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XenServer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/discord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Discord
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/slack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Slack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../active-directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Enterprise Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Azure PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Pandora Azure SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Pandora Azure Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cisco-inventory-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco Inventory configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-netscaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Citrix NetScaler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../db2-remote/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Remote plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Dynamic SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exchange/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exchange
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glpi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GLPI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../google-drive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Google Drive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ibm-z-series-mainframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBM Z Series Mainframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../influxdb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-for-mac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory plugin for MAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-ssh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory SSH plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../journalctl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Journalctl
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kafka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Kafka
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../marklogic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MarkLogic monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-remote-atlas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Pandora MongoDB remote / Atlas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MSSQL Server Querier Tool
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MSSQL Server Querier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registrar-el-comando-como-plugin-de-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registrar el comando como plugin de servidor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invocacion-con-opciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invocación con opciones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invocacion-posicional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invocación posicional
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credenciales-y-transporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credenciales y transporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operar-y-resolver-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operar y resolver problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-la-invocacion-con-opciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de la invocación con opciones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-la-invocacion-posicional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de la invocación posicional
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#salida-y-codigo-de-estado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Salida y código de estado
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../net-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Net usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Office 365 Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Pandora Openshift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Oracle VM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ldap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora LDAP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora UX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugin-executor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Plugin Executor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sap-hana-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin SAP HANA Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Spark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sybase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Sybase
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tomcat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tomcat monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zammad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zammad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zendesk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zendesk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registrar-el-comando-como-plugin-de-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registrar el comando como plugin de servidor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invocacion-con-opciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invocación con opciones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invocacion-posicional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invocación posicional
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credenciales-y-transporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credenciales y transporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operar-y-resolver-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operar y resolver problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-la-invocacion-con-opciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de la invocación con opciones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-la-invocacion-posicional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de la invocación posicional
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#salida-y-codigo-de-estado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Salida y código de estado
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="mssql-server-querier-tool">MSSQL Server Querier Tool<a class="headerlink" href="#mssql-server-querier-tool" title="Permanent link">¶</a></h1>
+<p><em>Última actualización del artículo: 2026-10-27.</em></p>
+<div class="admonition warning">
+<p class="admonition-title">Se recomienda la integración de Discovery</p>
+<p>Esta página documenta una herramienta de consulta. Para monitorizar SQL Server use <a href="../../discovery/mssql-discovery/">Microsoft SQL Server Discovery</a>, que es la integración recomendada para este servicio.</p>
+</div>
+<h2 id="que-hace">Qué hace<a class="headerlink" href="#que-hace" title="Permanent link">¶</a></h2>
+<p><code>msql_query</code> ejecuta una consulta SQL contra una base de datos Microsoft SQL
+Server e imprime el resultado en la salida estándar. Pandora FMS lo ejecuta
+como plugin de servidor, por lo que esa salida es el valor del módulo que lo
+llama: un contador, un tamaño, un código de estado o cualquier otro valor
+único que pueda devolver una consulta.</p>
+<p>Cada ejecución abre una conexión, ejecuta una consulta y termina. El comando
+no guarda estado ni crea agentes. El módulo, su intervalo, sus umbrales y sus
+alertas pertenecen a Pandora FMS; la consulta solo aporta el valor.</p>
+<p>El addon documenta dos formas de invocación bajo el mismo nombre <code>msql_query</code>:</p>
+<ul>
+<li><strong>Forma con opciones.</strong> La conexión y la consulta se pasan como opciones
+  (<code>-Q</code>, <code>-U</code>, <code>-P</code>, <code>-H</code>, <code>-D</code>). La salida empieza por una línea de cabecera
+  con los nombres de las columnas y continúa con una línea por fila, separada
+  por tabuladores. La conexión no selecciona ninguna base de datos, por lo que
+  SQL Server usa la base de datos predeterminada del usuario.</li>
+<li><strong>Forma posicional.</strong> La conexión y la consulta se pasan como argumentos
+  ordenados. La salida no tiene línea de cabecera y los campos de cada fila se
+  unen con un delimitador, <code>,</code> por defecto.</li>
+</ul>
+<p>Ambas formas devuelven texto sin formato: los resultados van a la salida
+estándar y los errores al error estándar. Ninguna escribe ficheros, envía
+datos a Pandora FMS por sí misma ni devuelve el resultado en un formato
+estructurado.</p>
+<p>La entrada del Marketplace indica que este addon ya no se mantiene ni
+actualiza activamente.</p>
+<p>Esta página no describe el addon Microsoft SQL Server Discovery
+(<code>pandorafms.mssql</code>), que crea agentes y módulos a partir de tareas de
+Discovery; consulte <a href="../../discovery/mssql-discovery/">Microsoft SQL Server Discovery</a>.</p>
+<h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
+<h3 id="compatibilidad">Compatibilidad<a class="headerlink" href="#compatibilidad" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Alcance</th>
+<th>Estado</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Addon <code>pandorafms.mssql_querier</code>, versión <code>1.0</code></td>
+<td>Objetivo documentado</td>
+<td>La versión del paquete del Marketplace que describe esta página. Consulte <a href="#identidad-del-addon">Identidad del addon</a></td>
+</tr>
+<tr>
+<td>Pandora FMS NG 784 y posteriores</td>
+<td><code>Soportado</code></td>
+<td>El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores</td>
+</tr>
+<tr>
+<td>Acceso de red desde el servidor de Pandora FMS a la instancia de SQL Server (TCP, <code>1433</code> por defecto)</td>
+<td><code>Requerido</code></td>
+<td>Ambas formas abren una conexión TCP a SQL Server. La forma posicional usa siempre el puerto <code>1433</code></td>
+</tr>
+<tr>
+<td>Un usuario de SQL Server autorizado a ejecutar la consulta</td>
+<td><code>Requerido</code></td>
+<td>El comando se autentica con el usuario y la contraseña que se le pasan</td>
+</tr>
+<tr>
+<td>Microsoft ODBC Driver 18 for SQL Server en el servidor de Pandora FMS</td>
+<td><code>Requerido</code></td>
+<td>La forma posicional solicita ese controlador por su nombre</td>
+</tr>
+<tr>
+<td>Un controlador ODBC para SQL Server y el paquete DBI ODBC en el servidor de Pandora FMS</td>
+<td><code>Requerido</code></td>
+<td>La forma con opciones se conecta mediante DBI sobre ODBC</td>
+</tr>
+<tr>
+<td>Versiones de Microsoft SQL Server</td>
+<td><code>Sin validar</code></td>
+<td>No se ha registrado una matriz de versiones de SQL Server para este addon</td>
+</tr>
+<tr>
+<td>Sistema operativo del servidor de Pandora FMS</td>
+<td><code>Sin validar</code></td>
+<td>No se ha registrado ningún sistema operativo para esta versión</td>
+</tr>
+</tbody>
+</table>
+<h3 id="requisitos">Requisitos<a class="headerlink" href="#requisitos" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Un servidor de Pandora FMS</strong> que pueda alcanzar la instancia de SQL
+   Server por red. El comando se ejecuta en el servidor de Pandora FMS, no en
+   el host de la base de datos.</li>
+<li><strong>Un usuario y una contraseña de SQL Server</strong> que puedan conectarse a la
+   base de datos y ejecutar la consulta configurada. No se publica un conjunto
+   de permisos más concreto para este addon: conceda al usuario solo aquello
+   que lean las consultas.</li>
+<li><strong>Los componentes de conectividad que exige la forma de invocación
+   utilizada</strong>, según <a href="#compatibilidad">Compatibilidad</a>.</li>
+<li><strong>El ejecutable <code>msql_query</code></strong> del paquete del addon, copiado al servidor
+   de Pandora FMS.</li>
+</ol>
+<p>El comando no lee ningún fichero de configuración ni variables de entorno:
+toda su configuración son argumentos de línea de comandos.</p>
+<h3 id="instalar-el-addon">Instalar el addon<a class="headerlink" href="#instalar-el-addon" title="Permanent link">¶</a></h3>
+<p>Descargue el paquete desde la entrada del Marketplace, cuya descarga está
+limitada a usuarios con licencia, y extraiga el ejecutable. La documentación
+del fabricante llama al comando <code>msql_query</code>.</p>
+<p>Cópielo al servidor de Pandora FMS y dele permisos de ejecución:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>cp<span class="w"> </span>msql_query<span class="w"> </span>/usr/share/pandora_server/util/plugin/msql_query
+sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">0755</span><span class="w"> </span>/usr/share/pandora_server/util/plugin/msql_query
+</code></pre></div>
+<p>No hay que instalar nada en el host de SQL Server y no interviene ningún
+agente.</p>
+<h2 id="configuracion">Configuración<a class="headerlink" href="#configuracion" title="Permanent link">¶</a></h2>
+<p>Toda la configuración es una línea de comandos: la forma de invocación, los
+valores de conexión y la consulta. Pandora FMS ejecuta el comando de dos
+maneras:</p>
+<ul>
+<li><strong>Como plugin de servidor.</strong> Registre el ejecutable una vez en la consola y
+  cree el módulo que lo llama. La salida estándar de cada ejecución pasa a ser
+  el valor del módulo.</li>
+<li><strong>Manual o desde un planificador</strong> como <code>cron</code>, para probar el comando u
+  obtener el valor fuera de un módulo de la consola.</li>
+</ul>
+<h3 id="registrar-el-comando-como-plugin-de-servidor">Registrar el comando como plugin de servidor<a class="headerlink" href="#registrar-el-comando-como-plugin-de-servidor" title="Permanent link">¶</a></h3>
+<ol>
+<li>Abra <strong>Servers → Plugins</strong> y registre un plugin de servidor nuevo.</li>
+<li>Establezca su comando en la ruta absoluta del ejecutable, por ejemplo
+   <code>/usr/share/pandora_server/util/plugin/msql_query</code>.</li>
+<li>Escriba los parámetros con las opciones de la forma que utilice y sustituya
+   la consulta y las credenciales por campos del plugin: <code>_field1_</code>,
+   <code>_field2_</code>, ...</li>
+</ol>
+<div class="highlight"><pre><span></span><code>-Q _field1_ -U _field2_ -P _field3_ -H _field4_
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_field1_</code></td>
+<td>Consulta SQL</td>
+</tr>
+<tr>
+<td><code>_field2_</code></td>
+<td>Usuario de SQL Server</td>
+</tr>
+<tr>
+<td><code>_field3_</code></td>
+<td>Contraseña de ese usuario; marque el valor como oculto</td>
+</tr>
+<tr>
+<td><code>_field4_</code></td>
+<td>Host de SQL Server, incluida la instancia cuando sea necesaria</td>
+</tr>
+</tbody>
+</table>
+<p>El mismo registro sirve para todas las consultas: cada módulo rellena los
+campos con su propia consulta y sus propias credenciales. Para la forma
+posicional, escriba los argumentos en su orden y use los campos en las mismas
+posiciones.</p>
+<!-- SCREENSHOT NEEDED: formulario de registro de plugin de servidor para msql_query, con la ruta del comando y los campos de parámetros, una consulta y credenciales enmascaradas. -->
+
+<h3 id="invocacion-con-opciones">Invocación con opciones<a class="headerlink" href="#invocacion-con-opciones" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>./msql_query<span class="w"> </span>-Q<span class="w"> </span><span class="s2">"SELECT 1 AS total"</span><span class="w"> </span>-U<span class="w"> </span>&lt;USERNAME&gt;<span class="w"> </span>-P<span class="w"> </span>&lt;PASSWORD&gt;<span class="w"> </span>-H<span class="w"> </span>&lt;TARGET_HOST&gt;
+</code></pre></div>
+<ul>
+<li><code>-Q</code> es la consulta. Sin esta opción, el comando imprime su resumen de uso y
+  termina sin conectarse.</li>
+<li><code>-H</code> toma <code>localhost</code> por defecto.</li>
+<li><code>-D</code> establece el nombre del controlador ODBC y toma
+  <code>ODBC Driver 17 for SQL Server</code> por defecto.</li>
+<li>No hay opción de base de datos: la conexión no selecciona ninguna y SQL
+  Server usa la base de datos predeterminada del usuario. Cualifique los
+  objetos como <code>base_de_datos.esquema.tabla</code> cuando la consulta deba leer otra
+  base de datos.</li>
+<li>Las opciones se leen por parejas y su letra no distingue mayúsculas de
+  minúsculas. Un argumento que el comando no reconoce hace que imprima el
+  resumen de uso y termine.</li>
+<li>La salida contiene una primera línea con los nombres de las columnas y
+  después una línea por fila, separada por tabuladores.</li>
+</ul>
+<h3 id="invocacion-posicional">Invocación posicional<a class="headerlink" href="#invocacion-posicional" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>./msql_query<span class="w"> </span><span class="s2">"&lt;TARGET_HOST&gt;"</span><span class="w"> </span><span class="s2">"&lt;USERNAME&gt;"</span><span class="w"> </span><span class="s2">"&lt;PASSWORD&gt;"</span><span class="w"> </span><span class="s2">"&lt;DB_NAME&gt;"</span><span class="w"> </span><span class="s2">"SELECT 1 AS total"</span><span class="w"> </span><span class="s2">"none"</span>
+</code></pre></div>
+<ul>
+<li>El orden es host, usuario, contraseña, base de datos, consulta, texto para
+  resultado vacío y delimitador.</li>
+<li>En la práctica se requieren seis argumentos. Con menos, el comando imprime
+  <code>Not enough arguments in call.</code> y el resumen de uso, aunque la documentación
+  del fabricante marca el texto para resultado vacío como opcional. Pase
+  cualquier valor, por ejemplo <code>none</code>, cuando no lo necesite.</li>
+<li>El texto para resultado vacío se acepta pero nunca se imprime en esta
+  versión: cuando la consulta no devuelve filas, el comando no imprime nada.</li>
+<li>El puerto está fijado en <code>1433</code>. Esta forma no tiene ningún argumento para
+  cambiarlo.</li>
+<li>El delimitador es <code>,</code> salvo que se pase un séptimo argumento. Un delimitador
+  pasado como sexto argumento se lee como texto para resultado vacío y no
+  tiene efecto.</li>
+<li>La salida no tiene línea de cabecera: cada fila se imprime con sus campos
+  unidos por el delimitador.</li>
+<li>La conexión establece <code>TrustServerCertificate=yes</code> y acepta cualquier
+  certificado del servidor.</li>
+</ul>
+<p>La misma ejecución con <code>;</code> como delimitador de campos:</p>
+<div class="highlight"><pre><span></span><code>./msql_query<span class="w"> </span><span class="s2">"&lt;TARGET_HOST&gt;"</span><span class="w"> </span><span class="s2">"&lt;USERNAME&gt;"</span><span class="w"> </span><span class="s2">"&lt;PASSWORD&gt;"</span><span class="w"> </span><span class="s2">"&lt;DB_NAME&gt;"</span><span class="w"> </span><span class="s2">"SELECT 1 AS total"</span><span class="w"> </span><span class="s2">"none"</span><span class="w"> </span><span class="s2">";"</span>
+</code></pre></div>
+<h3 id="credenciales-y-transporte">Credenciales y transporte<a class="headerlink" href="#credenciales-y-transporte" title="Permanent link">¶</a></h3>
+<ul>
+<li>Ambas formas reciben la contraseña como argumento de línea de comandos. Es
+  visible en la lista de procesos mientras el comando se ejecuta y permanece
+  en el historial de comandos. En la consola se guarda con la definición del
+  plugin o del módulo. Use un usuario dedicado, limitado a lo que lean las
+  consultas, y restrinja quién puede leer las definiciones de los módulos y
+  quién puede inspeccionar los procesos del servidor.</li>
+<li>Si invoca el comando desde un script o una entrada de <code>cron</code>, ese fichero
+  contiene la contraseña en texto plano. Protéjalo con permisos de fichero.</li>
+<li>La cadena de conexión se compone por concatenación: un usuario o una
+  contraseña que contenga <code>;</code> la rompe y la conexión falla. Use credenciales
+  que no incluyan ese carácter.</li>
+<li>La forma con opciones no pasa ninguna opción de cifrado. El cifrado y la
+  validación de certificados dependen de la configuración del controlador
+  ODBC en el servidor de Pandora FMS.</li>
+<li>La forma posicional establece siempre <code>TrustServerCertificate=yes</code>: el
+  cliente acepta cualquier certificado que presente el servidor, por lo que la
+  conexión no autentica a SQL Server. Úsela solo en una red de confianza o
+  contra una instancia cuya identidad verifique por otro medio.</li>
+</ul>
+<h2 id="verificacion">Verificación<a class="headerlink" href="#verificacion" title="Permanent link">¶</a></h2>
+<p>Ejecute manualmente la forma que haya configurado antes de confiar en el
+módulo. Una consulta escalar sin dependencias de tablas demuestra a la vez la
+conectividad, la autenticación y la forma de la salida.</p>
+<p>Forma con opciones:</p>
+<div class="highlight"><pre><span></span><code>./msql_query<span class="w"> </span>-Q<span class="w"> </span><span class="s2">"SELECT 1 AS total"</span><span class="w"> </span>-U<span class="w"> </span>&lt;USERNAME&gt;<span class="w"> </span>-P<span class="w"> </span>&lt;PASSWORD&gt;<span class="w"> </span>-H<span class="w"> </span>&lt;TARGET_HOST&gt;
+</code></pre></div>
+<p>Salida esperada: el nombre de la columna y después el valor.</p>
+<div class="highlight"><pre><span></span><code>total
+1
+</code></pre></div>
+<p>Forma posicional:</p>
+<div class="highlight"><pre><span></span><code>./msql_query<span class="w"> </span><span class="s2">"&lt;TARGET_HOST&gt;"</span><span class="w"> </span><span class="s2">"&lt;USERNAME&gt;"</span><span class="w"> </span><span class="s2">"&lt;PASSWORD&gt;"</span><span class="w"> </span><span class="s2">"&lt;DB_NAME&gt;"</span><span class="w"> </span><span class="s2">"SELECT 1 AS total"</span><span class="w"> </span><span class="s2">"none"</span>
+</code></pre></div>
+<p>Salida esperada:</p>
+<div class="highlight"><pre><span></span><code>1
+</code></pre></div>
+<p>Repita la ejecución con una contraseña incorrecta. La forma con opciones
+imprime <code>Can't connect to &lt;TARGET_HOST&gt;: ...</code> en el error estándar y termina
+con un código de salida distinto de cero. La forma posicional imprime el error
+del controlador de base de datos en el error estándar y termina con un código
+de salida distinto de cero.</p>
+<p>En la consola, el módulo que llama al comando muestra el valor que vio en la
+ejecución manual. Confirme que el módulo usa la misma consulta y el mismo
+usuario.</p>
+<h2 id="entender-los-resultados">Entender los resultados<a class="headerlink" href="#entender-los-resultados" title="Permanent link">¶</a></h2>
+<p>El comando devuelve texto, y ese texto es todo el valor del módulo. No
+clasifica el resultado, no añade unidades ni compara umbrales: los umbrales,
+las alertas y la configuración de gráficas se definen en el módulo de Pandora
+FMS, y la consulta solo aporta el valor sobre el que actúan.</p>
+<ul>
+<li><strong>Un valor por ejecución.</strong> Un módulo guarda un valor. Escriba consultas que
+  devuelvan una sola fila y, para módulos numéricos, una sola columna. Ambas
+  formas imprimen todas las filas que devuelve la consulta, así que una
+  consulta con varias filas produce varias líneas de salida.</li>
+<li><strong>Línea de cabecera (solo forma con opciones).</strong> La primera línea de salida
+  contiene los nombres de las columnas, por lo que un resultado de una fila
+  ocupa dos líneas. La forma posicional imprime solo los datos de la fila.</li>
+<li><strong>Delimitador (solo forma posicional).</strong> Los campos de una fila se unen con
+  <code>,</code> salvo que se pase otro delimitador. Con varias columnas, el valor del
+  módulo contiene los campos unidos.</li>
+<li><strong>Resultado vacío.</strong> La forma con opciones imprime solo la línea de
+  cabecera; la forma posicional no imprime nada. El argumento para resultado
+  vacío de la forma posicional no tiene efecto.</li>
+<li><strong>Valores <code>NULL</code>.</strong> Un valor <code>NULL</code> se imprime como <code>None</code> en la forma
+  posicional y como un campo vacío en la forma con opciones. Use <code>ISNULL()</code> o
+  <code>COALESCE()</code> en la consulta cuando un módulo numérico deba recibir siempre
+  un número.</li>
+<li><strong>Código de salida.</strong> Una ejecución correcta termina con <code>0</code>. Un error de
+  conexión o de SQL termina con un código distinto de cero. Un error de
+  argumentos imprime el resumen de uso y termina con <code>0</code>, por lo que el módulo
+  puede recibir el texto de uso como valor.</li>
+</ul>
+<h2 id="operar-y-resolver-problemas">Operar y resolver problemas<a class="headerlink" href="#operar-y-resolver-problemas" title="Permanent link">¶</a></h2>
+<ul>
+<li>Cada ejecución es independiente: el comando se conecta, ejecuta la consulta
+  y termina. No hay demonio, caché ni estado que reiniciar.</li>
+<li>El comando no tiene un tiempo de espera propio. Una consulta que se bloquea
+  mantiene la ejecución abierta hasta que SQL Server o quien la invocó la
+  detengan. Configure un tiempo de espera en el plugin o en el módulo de
+  Pandora FMS cuando una consulta pueda tardar.</li>
+<li>Evite ejecutar el comando desde un intérprete interactivo con la contraseña
+  real cuando ese intérprete guarde el historial. Use el módulo de la consola o
+  un script protegido.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Causa y solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aparece el resumen de uso en lugar de un valor (forma con opciones)</td>
+<td>Falta <code>-Q</code> o un argumento no se reconoció como opción. Revise las letras de las opciones y que cada una tenga su valor. El comando termina con <code>0</code>, por lo que el módulo puede guardar el texto de uso.</td>
+</tr>
+<tr>
+<td><code>Not enough arguments in call.</code> o <code>Too much arguments in call.</code> (forma posicional)</td>
+<td>Hay menos de seis argumentos o más de siete. Añada el argumento para resultado vacío aunque no lo necesite, elimine los argumentos sobrantes y escriba la consulta como un solo argumento.</td>
+</tr>
+<tr>
+<td><code>Can't connect to &lt;TARGET_HOST&gt;: ...</code> (forma con opciones)</td>
+<td>El host, la instancia, el usuario o la contraseña son incorrectos, el puerto <code>1433</code> no es alcanzable o la instancia no acepta inicios de sesión de SQL Server.</td>
+</tr>
+<tr>
+<td><code>Can't prepare statement: ...</code> o <code>Problem while executing: ...</code> (forma con opciones)</td>
+<td>La consulta no es válida para el usuario o para la base de datos predeterminada. Ejecute la misma consulta con el mismo usuario en otro cliente SQL.</td>
+</tr>
+<tr>
+<td>Un error del controlador de base de datos en el error estándar (forma posicional)</td>
+<td>La conexión falló o la consulta fue rechazada. El mensaje indica el error del controlador; revise el host, las credenciales, la base de datos y la sintaxis SQL.</td>
+</tr>
+<tr>
+<td>Un error de controlador o de origen de datos de la capa ODBC</td>
+<td>El nombre del controlador ODBC no existe en el servidor. Instale el controlador o indique en <code>-D</code> el nombre exacto que tenga el servidor.</td>
+</tr>
+<tr>
+<td>El módulo no tiene valor</td>
+<td>La consulta no devolvió filas o solo devolvió valores <code>NULL</code>. Revise la consulta y los datos.</td>
+</tr>
+<tr>
+<td>Un módulo numérico no tiene datos o tiene un valor inesperado</td>
+<td>La salida contiene una línea de cabecera, más de una fila, columnas unidas o <code>None</code>. Devuelva un único escalar numérico en una única fila.</td>
+</tr>
+<tr>
+<td>La conexión falla con una contraseña que contiene <code>;</code></td>
+<td>El punto y coma termina el valor en la cadena de conexión. Use una contraseña sin <code>;</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
+<h3 id="identidad-del-addon">Identidad del addon<a class="headerlink" href="#identidad-del-addon" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Propiedad</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identificador del Marketplace</td>
+<td><code>pandorafms.mssql_querier</code></td>
+</tr>
+<tr>
+<td>Nombre</td>
+<td>MSSQL Server Querier Tool</td>
+</tr>
+<tr>
+<td>Versión</td>
+<td><code>1.0</code></td>
+</tr>
+<tr>
+<td>Última actualización en el Marketplace</td>
+<td>2025-06-27</td>
+</tr>
+<tr>
+<td>Categoría</td>
+<td>Miscelaneous</td>
+</tr>
+<tr>
+<td>Licencia</td>
+<td>One; la descarga está limitada a usuarios con licencia</td>
+</tr>
+<tr>
+<td>Estado de mantenimiento</td>
+<td>Ya no se mantiene ni actualiza activamente, según el Marketplace</td>
+</tr>
+<tr>
+<td>Entrada del Marketplace</td>
+<td><a href="https://marketplace.pandorafms.com/entries/pandorafms.mssql_querier">pandorafms.mssql_querier</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="parametros-de-la-invocacion-con-opciones">Parámetros de la invocación con opciones<a class="headerlink" href="#parametros-de-la-invocacion-con-opciones" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Opción</th>
+<th>Obligatoria</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-Q</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Consulta SQL que se ejecuta</td>
+</tr>
+<tr>
+<td><code>-U</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Usuario de SQL Server</td>
+</tr>
+<tr>
+<td><code>-P</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Contraseña del usuario</td>
+</tr>
+<tr>
+<td><code>-H</code></td>
+<td>No</td>
+<td><code>localhost</code></td>
+<td>Host de SQL Server, o <code>host\instance</code></td>
+</tr>
+<tr>
+<td><code>-D</code></td>
+<td>No</td>
+<td><code>ODBC Driver 17 for SQL Server</code></td>
+<td>Nombre del controlador ODBC usado en la conexión</td>
+</tr>
+</tbody>
+</table>
+<p><code>-D</code> indica el controlador ODBC, no la base de datos. El comando no tiene
+opción de base de datos ni opción de ayuda propia: imprime su resumen de uso
+cuando falta la opción de consulta o cuando encuentra un argumento que no
+reconoce.</p>
+<h3 id="parametros-de-la-invocacion-posicional">Parámetros de la invocación posicional<a class="headerlink" href="#parametros-de-la-invocacion-posicional" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Posición</th>
+<th>Argumento</th>
+<th>Obligatorio</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>host</td>
+<td>Sí</td>
+<td>—</td>
+<td><code>host</code> o <code>host\instance</code>. La conexión usa siempre el puerto TCP <code>1433</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>usuario</td>
+<td>Sí</td>
+<td>—</td>
+<td>Usuario de SQL Server</td>
+</tr>
+<tr>
+<td>3</td>
+<td>contraseña</td>
+<td>Sí</td>
+<td>—</td>
+<td>Contraseña del usuario</td>
+</tr>
+<tr>
+<td>4</td>
+<td>base de datos</td>
+<td>Sí</td>
+<td>—</td>
+<td>Base de datos que selecciona la conexión</td>
+</tr>
+<tr>
+<td>5</td>
+<td>consulta</td>
+<td>Sí</td>
+<td>—</td>
+<td>Consulta SQL que se ejecuta</td>
+</tr>
+<tr>
+<td>6</td>
+<td>texto para resultado vacío</td>
+<td>Sí en la práctica</td>
+<td>—</td>
+<td>Se acepta y nunca se imprime en esta versión; pase cualquier valor</td>
+</tr>
+<tr>
+<td>7</td>
+<td>delimitador</td>
+<td>No</td>
+<td><code>,</code></td>
+<td>Separador de campos de cada fila</td>
+</tr>
+</tbody>
+</table>
+<h3 id="salida-y-codigo-de-estado">Salida y código de estado<a class="headerlink" href="#salida-y-codigo-de-estado" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Condición</th>
+<th>Forma con opciones</th>
+<th>Forma posicional</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>La consulta devuelve filas</td>
+<td>Una línea de cabecera con los nombres de las columnas y después una línea por fila separada por tabuladores; código de salida <code>0</code></td>
+<td>Una línea por fila separada por el delimitador, sin cabecera; código de salida <code>0</code></td>
+</tr>
+<tr>
+<td>La consulta no devuelve filas</td>
+<td>Solo la línea de cabecera; código de salida <code>0</code></td>
+<td>Ninguna salida; código de salida <code>0</code></td>
+</tr>
+<tr>
+<td>La conexión falla</td>
+<td><code>Can't connect to ...</code> en el error estándar; código de salida distinto de cero</td>
+<td>El error del controlador en el error estándar; código de salida distinto de cero</td>
+</tr>
+<tr>
+<td>La consulta falla</td>
+<td><code>Can't prepare statement: ...</code> o <code>Problem while executing: ...</code> en el error estándar; código de salida distinto de cero</td>
+<td>El error del controlador en el error estándar; código de salida distinto de cero</td>
+</tr>
+<tr>
+<td>Faltan argumentos o no se reconocen</td>
+<td>El resumen de uso en la salida estándar; código de salida <code>0</code></td>
+<td>El resumen de uso en la salida estándar; código de salida <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ambas formas devuelven solo texto: los resultados en la salida estándar y los
+errores en el error estándar. El comando no lee ningún fichero de
+configuración ni variables de entorno y no guarda estado entre ejecuciones.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

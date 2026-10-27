@@ -1,0 +1,5117 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/plugins/sybase/">
+      
+      
+        <link rel="prev" href="../spark/">
+      
+      
+        <link rel="next" href="../tomcat/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../../es/plugins/sybase/" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Sybase monitoring plugin - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sybase-monitoring-plugin" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sybase monitoring plugin
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/plugins/sybase/" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-cloudwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon CloudWatch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-ec2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon EC2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-rds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon S3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/db2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/digital-ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Ocean Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasticsearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/google-cloud-compute-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud Compute Engine Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/haproxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HAProxy Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hp-one-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HP One View Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hyper-v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/iot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/jmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JMX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/meraki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meraki Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Office 365 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/opensearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenSearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/ovh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OVH Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proxmox Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/rabbitmq-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-hana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-r3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP R3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/xenserver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XenServer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/discord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discord integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Chat integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/slack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Slack integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft Teams integration (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegram integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../active-directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Enterprise Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure PostgreSQL monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Azure SQL plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Azure Storage monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cisco-inventory-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco Inventory configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-netscaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix NetScaler monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../db2-remote/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Remote plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic SNMP plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exchange/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exchange
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glpi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GLPI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../google-drive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Drive monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ibm-z-series-mainframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBM Z Series Mainframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../influxdb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-for-mac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory plugin for MAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-ssh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory SSH plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../journalctl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Journalctl plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kafka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kafka monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../marklogic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MarkLogic monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-remote-atlas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora MongoDB remote / Atlas plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-server-querier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MSSQL Server Querier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../net-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Net usage plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Office 365 Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Openshift monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle VM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ldap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora LDAP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora UX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugin-executor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Plugin Executor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sap-hana-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Database plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Spark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sybase monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sybase monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility-and-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility and availability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sybase-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sybase login
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-database-checks-and-login-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-database checks and login checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-the-modules-you-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable the modules you need
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register-the-plugin-in-the-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Register the plugin in the agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credentials-and-transport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credentials and transport
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate-and-troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate and troubleshoot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate and troubleshoot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#known-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known limitations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-switches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module switches
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thresholds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addon-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addon identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tomcat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tomcat monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zammad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zammad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zendesk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zendesk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to document
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility-and-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility and availability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sybase-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sybase login
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-database-checks-and-login-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-database checks and login checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-the-modules-you-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable the modules you need
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register-the-plugin-in-the-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Register the plugin in the agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credentials-and-transport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credentials and transport
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate-and-troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate and troubleshoot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate and troubleshoot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#known-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known limitations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-switches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module switches
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thresholds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addon-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addon identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="sybase-monitoring-plugin">Sybase monitoring plugin<a class="headerlink" href="#sybase-monitoring-plugin" title="Permanent link">¶</a></h1>
+<p><em>Article last updated: 2026-10-26.</em></p>
+<h2 id="what-it-does">What it does<a class="headerlink" href="#what-it-does" title="Permanent link">¶</a></h2>
+<p>The Sybase monitoring plugin monitors a Sybase ASE (Adaptive Server Enterprise) server from Pandora FMS. Each execution collects two kinds of data and turns them into Pandora FMS modules:</p>
+<ul>
+<li><strong>Server state, read with SQL.</strong> Through the Sybase <code>isql</code> utility the plugin reads the Adaptive Server catalogs: databases and their allocated and used space, transaction log and segment usage, user connections, locks, blocked processes, offline engines, suspect databases and suspect indexes.</li>
+<li><strong>Local process state.</strong> From the process list of the host the plugin reports whether the Adaptive Server and the backup server processes are running, and the memory and CPU they consume.</li>
+</ul>
+<p>The plugin runs as a Pandora FMS agent plugin: every execution prints one XML <code>&lt;module&gt;</code> block per generated module on standard output, and the Pandora FMS agent installed on that host ingests them into the endpoint's agent. The plugin creates no agent and delivers no data by itself, so it is not a server plugin.</p>
+<p>Because the process modules read the local process list, run the plugin on the host where the ASE server runs. Executed against a remote server, it reports the processes of the machine it runs on.</p>
+<h2 id="prepare">Prepare<a class="headerlink" href="#prepare" title="Permanent link">¶</a></h2>
+<h3 id="compatibility-and-availability">Compatibility and availability<a class="headerlink" href="#compatibility-and-availability" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>State</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Addon <code>pandorafms.sybase</code>, version <code>1.0</code></td>
+<td>Documented target</td>
+<td>Marketplace entry; see <a href="#addon-identity">Addon identity</a></td>
+</tr>
+<tr>
+<td>Windows 10</td>
+<td><code>Known compatible</code></td>
+<td>The previous edition of this guide records Windows 10 as the tested system, and the Marketplace package is a Windows executable. Not re-validated for version <code>1.0</code></td>
+</tr>
+<tr>
+<td>Operating systems other than Windows</td>
+<td><code>Not validated</code></td>
+<td>No test record; the Marketplace entry distributes a single Windows executable</td>
+</tr>
+<tr>
+<td>Sybase ASE versions and editions</td>
+<td><code>Not validated</code></td>
+<td>No version matrix has been recorded for this addon</td>
+</tr>
+<tr>
+<td>Pandora FMS versions</td>
+<td><code>Not validated</code></td>
+<td>No version matrix has been recorded. The Marketplace states that all its integrations are compatible with Pandora FMS NG 784 and later</td>
+</tr>
+<tr>
+<td>A Sybase environment script that exists on the host</td>
+<td><code>Required</code></td>
+<td>The plugin stops with exit status <code>1</code> when <code>sybase_env_script</code> does not name an existing file</td>
+</tr>
+<tr>
+<td>The Sybase <code>isql</code> utility reachable from the host</td>
+<td><code>Required</code></td>
+<td>Every SQL check is executed through <code>isql</code></td>
+</tr>
+<tr>
+<td>A Pandora FMS agent on the ASE host</td>
+<td><code>Required</code></td>
+<td>The plugin is executed as an agent plugin</td>
+</tr>
+</tbody>
+</table>
+<p>The addon is published in the Pandora FMS Marketplace, with free download:</p>
+<p><a href="https://marketplace.pandorafms.com/entries/pandorafms.sybase">https://marketplace.pandorafms.com/entries/pandorafms.sybase</a></p>
+<h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>A Sybase ASE server</strong> reachable from the host that runs the plugin, with the server name and port you configure.</li>
+<li><strong>The Sybase <code>isql</code> utility and the Sybase environment script</strong> on that host. <code>isql</code> resolves from <code>PATH</code> by default, and on Unix-like systems the environment script is sourced before every query.</li>
+<li><strong>A Sybase login</strong> that can read the catalogs and run the procedures of the checks you enable; see <a href="#sybase-login">Sybase login</a>.</li>
+<li><strong>A Pandora FMS agent on the same host</strong>, which executes the plugin and ingests its modules.</li>
+<li><strong>On Windows, the command-line utilities the plugin calls</strong>: <code>grep</code>, <code>wc</code>, <code>tail</code>, <code>head</code>, <code>sed</code> and <code>gawk</code> in <code>PATH</code>, together with <code>tasklist</code> and <code>typeperf</code> from Windows.</li>
+</ol>
+<h3 id="sybase-login">Sybase login<a class="headerlink" href="#sybase-login" title="Permanent link">¶</a></h3>
+<p>Each check reads ASE system tables or runs an ASE stored procedure. The login needs access to the objects of the checks you enable:</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Reads</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Sybase Databases in &lt;server&gt;</code></td>
+<td><code>sp_helpdb</code></td>
+</tr>
+<tr>
+<td><code>Sybase Max Size Available</code>, <code>Sybase Used Size global</code>, <code>Used size&lt;database&gt;</code></td>
+<td><code>master..sysdatabases</code>, <code>master..sysusages</code>, <code>curunreservedpgs</code>, <code>@@maxpagesize</code></td>
+</tr>
+<tr>
+<td><code>Sybase Connections Used Ratio</code>, <code>Sybase Connections Remaining</code></td>
+<td><code>master..sysprocesses</code>, <code>master..syslogins</code>, <code>sp_configure 'number of user connections'</code></td>
+</tr>
+<tr>
+<td><code>Sybase Num Blocked Processes</code></td>
+<td><code>sp_who</code></td>
+</tr>
+<tr>
+<td><code>Sybase Blocker Processes</code></td>
+<td><code>master..sysprocesses</code></td>
+</tr>
+<tr>
+<td><code>Sybase Engines Offline</code></td>
+<td><code>master..sysengines</code></td>
+</tr>
+<tr>
+<td><code>Sybase Suspect Databases</code></td>
+<td><code>master..sysdatabases</code></td>
+</tr>
+<tr>
+<td><code>Sybase Mirror Devices</code></td>
+<td><code>master..sysdevices</code></td>
+</tr>
+<tr>
+<td><code>Sybase Locks Remaining</code></td>
+<td><code>sysconfigures</code>, <code>syslocks</code></td>
+</tr>
+<tr>
+<td><code>Sybase Suspect Index</code></td>
+<td><code>sysindexes</code></td>
+</tr>
+<tr>
+<td><code>Log Space Used &lt;database&gt;</code></td>
+<td><code>sp_helpsegment logsegment</code></td>
+</tr>
+<tr>
+<td><code>Sybase Segment space [&lt;segment&gt;][&lt;database&gt;]</code></td>
+<td><code>sp_helpsegment</code></td>
+</tr>
+</tbody>
+</table>
+<p>No official source defines a narrower grant list than these reads; grant only what the checks you enable need, and use a dedicated login for Pandora FMS.</p>
+<p>The password is stored in the configuration file in plain text and passed to <code>isql</code> on its command line, so it is visible in the host process list while a query runs. Restrict the configuration file to the account that runs the agent and use a dedicated Sybase login.</p>
+<h3 id="install-the-addon">Install the addon<a class="headerlink" href="#install-the-addon" title="Permanent link">¶</a></h3>
+<p>Download the addon from its Marketplace entry. The entry distributes the executable <code>pandorafms.sybase.1.0.exe</code>: copy it to the plugins directory of the Pandora FMS agent on the ASE host, for example <code>C:\Program Files\Pandora_Agent\plugins\</code>, and create the <code>pandora_sybase.conf</code> configuration file next to it. The complete file is documented in <a href="#example-configuration">Example configuration</a>.</p>
+<h2 id="configure">Configure<a class="headerlink" href="#configure" title="Permanent link">¶</a></h2>
+<h3 id="configuration-file">Configuration file<a class="headerlink" href="#configuration-file" title="Permanent link">¶</a></h3>
+<p>The plugin receives its configuration file as its only positional argument:</p>
+<div class="highlight"><pre><span></span><code>pandorafms.sybase.1.0.exe <span class="p">&lt;</span>PATH_TO_CONFIG&gt;
+</code></pre></div>
+<p>The file is plain text with one <code>key = value</code> per line. Blank lines and lines that start with <code>#</code> are skipped, keys and values are trimmed, and when a key is repeated the last value wins.</p>
+<p>Every scalar key can also be overridden on the command line without editing the file, with <code>-key value</code> pairs after the file path:</p>
+<div class="highlight"><pre><span></span><code>pandorafms.sybase.1.0.exe <span class="p">&lt;</span>PATH_TO_CONFIG<span class="p">&gt;</span> -debug 1 -username <span class="p">&lt;</span>USERNAME&gt;
+</code></pre></div>
+<p>The per-target lists and the thresholds are read only from the file: passing them as flags has no effect (see <a href="#command-line-execution">Command-line execution</a>).</p>
+<h3 id="connection-settings">Connection settings<a class="headerlink" href="#connection-settings" title="Permanent link">¶</a></h3>
+<p>These keys identify the client environment and the main login:</p>
+<div class="highlight"><pre><span></span><code><span class="na">GLOBAL_SERVERNAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;ASE_SERVER_NAME&gt;</span>
+<span class="na">sybase_env_script</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/opt/sybase/SYBASE.sh</span>
+<span class="na">isql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">isql</span>
+<span class="na">encryption</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+
+<span class="na">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;USERNAME&gt;</span>
+<span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;PASSWORD&gt;</span>
+<span class="na">servername</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;ASE_SERVER_NAME&gt;</span>
+<span class="na">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5000</span>
+</code></pre></div>
+<ul>
+<li><code>GLOBAL_SERVERNAME</code> identifies the local Adaptive Server. It must appear in the command line of the local <code>dataserver</code> process, because the two status modules look for that process by this value.</li>
+<li><code>sybase_env_script</code> is the Sybase environment script. The plugin requires the file to exist on every platform and stops with <code>Error, cannot found sybase environment script at [...]</code> and exit status <code>1</code> when it does not. On Unix-like systems it is sourced before each <code>isql</code> call, so it must be safe to source in a non-interactive shell. On Windows it is not sourced, and the Sybase environment must already be present in the environment of the Pandora FMS agent.</li>
+<li><code>isql</code> is the command or full path of the Sybase <code>isql</code> utility. The default, <code>isql</code>, resolves it from <code>PATH</code>.</li>
+<li><code>encryption = 1</code> adds the <code>-X</code> option to the <code>isql</code> invocation, which requests an encrypted connection. It requires the Sybase client to be configured for it.</li>
+<li><code>username</code> and <code>password</code> are the login used by every check that does not define its own credentials.</li>
+<li><code>servername</code> and <code>port</code> are passed to <code>isql</code> as <code>-S &lt;servername&gt;:&lt;port&gt;</code>. When the <code>port</code> key is absent, only the server name is passed.</li>
+</ul>
+<h3 id="per-database-checks-and-login-checks">Per-database checks and login checks<a class="headerlink" href="#per-database-checks-and-login-checks" title="Permanent link">¶</a></h3>
+<p>Three numbered lists add checks on top of the server-wide modules. Each entry has a numeric suffix and its own format:</p>
+<table>
+<thead>
+<tr>
+<th>List</th>
+<th>Format</th>
+<th>Generated module</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>check_dbsizeNN</code></td>
+<td><code>&lt;database&gt;</code></td>
+<td>Used percentage, log space, availability, and one segment module per segment of that database</td>
+</tr>
+<tr>
+<td><code>check_instanceNN</code></td>
+<td><code>&lt;user&gt;;&lt;password&gt;;&lt;database&gt;</code></td>
+<td><code>Sybase Instance '&lt;database&gt;' availability</code></td>
+</tr>
+<tr>
+<td><code>custom_checkNN</code></td>
+<td><code>&lt;user&gt;;&lt;password&gt;;&lt;database&gt;</code></td>
+<td><code>Sybase Login check &lt;database&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="na">check_dbsize01</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;DB_NAME&gt;</span>
+<span class="na">check_instance01</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;USERNAME&gt;</span><span class="c1">;&lt;PASSWORD&gt;;&lt;DB_NAME&gt;</span>
+<span class="na">custom_check01</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;USERNAME&gt;</span><span class="c1">;&lt;PASSWORD&gt;;&lt;DB_NAME&gt;</span>
+</code></pre></div>
+<ul>
+<li>The suffix only distinguishes entries; the reference file numbers them from <code>01</code> upward. There is no total-count key: every entry present in the file is read.</li>
+<li>Two entries that name the same database produce a single set of modules.</li>
+<li>The third field of <code>check_instanceNN</code> and <code>custom_checkNN</code> is a <strong>database</strong> name, not an ASE server name: the plugin logs in to that database to test the credentials. The reference configuration file labels that field as an instance.</li>
+<li><code>check_dbsizeNN</code> entries use the main <code>username</code> and <code>password</code>, never their own.</li>
+<li>The per-database modules of <code>check_dbsizeNN</code>, and the <code>check_instanceNN</code> modules, are generated only when the main login succeeds (see <a href="#understand-the-results">Understand the results</a>). <code>custom_checkNN</code> modules are generated even when it fails.</li>
+</ul>
+<h3 id="enable-the-modules-you-need">Enable the modules you need<a class="headerlink" href="#enable-the-modules-you-need" title="Permanent link">¶</a></h3>
+<p>Every server-wide and local module has its own switch. The value <code>1</code> enables the module; <code>0</code>, an empty value or a missing key disables it. All switches are disabled by default, so the configuration file states explicitly which modules you want:</p>
+<div class="highlight"><pre><span></span><code><span class="na">sybase_main_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_backup_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_memuse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_cpuusage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_count_databases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_max_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_used_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_connections_used_ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_available_connections</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_blocked_processes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_offline_engines</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_suspects_databases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+</code></pre></div>
+<p>The full list, with the module each switch enables, is in <a href="#module-switches">Module switches</a>.</p>
+<h3 id="register-the-plugin-in-the-agent">Register the plugin in the agent<a class="headerlink" href="#register-the-plugin-in-the-agent" title="Permanent link">¶</a></h3>
+<p>The Pandora FMS agent executes agent plugins declared in its configuration file, <code>pandora_agent.conf</code>. Add one <code>module_plugin</code> line with the executable and the configuration file:</p>
+<div class="highlight"><pre><span></span><code><span class="na">module_plugin "C</span><span class="o">:</span><span class="s">\Program Files\Pandora_Agent\plugins\pandorafms.sybase.1.0.exe" "C:\Program Files\Pandora_Agent\plugins\pandora_sybase.conf"</span>
+</code></pre></div>
+<p>Restart the agent after the change. The agent executes the plugin at every agent interval and ingests the modules it prints, so the module interval is the interval of the agent that holds them. When the agent configuration is managed from the console, add the same line through the console instead of editing the file on the host.</p>
+<p>Only one agent should run the plugin for a given ASE server: two agents executing it against the same server create two separate sets of modules.</p>
+<h3 id="credentials-and-transport">Credentials and transport<a class="headerlink" href="#credentials-and-transport" title="Permanent link">¶</a></h3>
+<ul>
+<li>The configuration file holds the main password and the password of every <code>check_instanceNN</code> and <code>custom_checkNN</code> entry in plain text. Restrict its permissions to the account that runs the agent.</li>
+<li>Every query passes the password to <code>isql</code> as a command-line argument, so the password is visible in the process list of the host while a query runs. Keep the credentials in the configuration file: a <code>-username</code> or <code>-password</code> override typed on the command line also remains in the shell history of the host.</li>
+<li><code>encryption = 1</code> adds <code>-X</code> to every <code>isql</code> call, which asks the Sybase client for an encrypted connection. Confirm that the client and the server are configured for it before enabling the option; otherwise the login checks fail.</li>
+</ul>
+<h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">¶</a></h2>
+<p>Run the plugin manually, passing the configuration file as its only positional argument:</p>
+<div class="highlight"><pre><span></span><code>pandorafms.sybase.1.0.exe <span class="p">&lt;</span>PATH_TO_CONFIG&gt;
+</code></pre></div>
+<p>A successful run prints one XML <code>&lt;module&gt;</code> block per generated module on standard output and exits with status <code>0</code>. The excerpt below shows four of them; the values are illustrative:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[Sybase ASE status]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>generic_proc<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[1]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;description&gt;</span><span class="cp">&lt;![CDATA[The status of the Adaptive Server]]&gt;</span><span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+<span class="nt">&lt;module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[Sybase Memory Use]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>generic_data<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[120.63]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;description&gt;</span><span class="cp">&lt;![CDATA[Sybase memory use in MB]]&gt;</span><span class="nt">&lt;/description&gt;</span>
+<span class="w">    </span><span class="nt">&lt;unit&gt;</span><span class="cp">&lt;![CDATA[MB]]&gt;</span><span class="nt">&lt;/unit&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+<span class="nt">&lt;module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[Sybase Database &lt;DB_NAME&gt; availability]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>generic_proc<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[1]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;description&gt;</span><span class="cp">&lt;![CDATA[Availability for &lt;DB_NAME&gt;]]&gt;</span><span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+<span class="nt">&lt;module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[Log Space Used &lt;DB_NAME&gt;]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>generic_data<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[18.40]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;unit&gt;</span><span class="cp">&lt;![CDATA[%]]&gt;</span><span class="nt">&lt;/unit&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+</code></pre></div>
+<ul>
+<li><code>pandorafms.sybase.1.0.exe -h</code> prints the usage summary and exits with status <code>0</code>. The summary goes to standard error, not standard output, and <code>-h</code> is recognised only as the first argument.</li>
+<li>A run that cannot find the environment script prints <code>Error, cannot found sybase environment script at [...]</code> on standard error, followed by the usage summary, and exits with status <code>1</code>.</li>
+<li>A run whose queries fail still exits with status <code>0</code>: the failing modules are simply missing from the output. Use <code>debug = 1</code> to see the reason (see <a href="#operate-and-troubleshoot">Operate and troubleshoot</a>).</li>
+</ul>
+<p>Once the agent is restarted, the modules appear in the console under the endpoint's agent:</p>
+<!-- SCREENSHOT NEEDED: Agent module list in the Pandora FMS console after a successful Sybase plugin run, showing the local and server-wide modules. -->
+
+<h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
+<p>The modules fall into four groups:</p>
+<ul>
+<li><strong>Local host.</strong> <code>Sybase ASE status</code> and <code>Sybase ASE Backup server status</code> report <code>1</code> while the local <code>dataserver</code> and <code>backupserver</code> processes are running, and <code>0</code> otherwise. They are process checks, not connectivity checks: they say nothing about whether <code>isql</code> can reach the server. <code>Sybase Memory Use</code> and <code>Sybase CPU Busy</code> describe the local Adaptive Server process.</li>
+<li><strong>Server-wide.</strong> <code>Sybase Databases in &lt;server&gt;</code>, <code>Sybase Max Size Available</code>, <code>Sybase Used Size global</code>, <code>Sybase Connections Used Ratio</code>, <code>Sybase Connections Remaining</code>, <code>Sybase Num Blocked Processes</code>, <code>Sybase Blocker Processes</code>, <code>Sybase Engines Offline</code>, <code>Sybase Suspect Databases</code>, <code>Sybase Mirror Devices</code>, <code>Sybase Locks Remaining</code>, <code>Sybase Suspect Index</code> and <code>Used size all databases</code> are read with SQL from the configured server.</li>
+<li><strong>Per database.</strong> Every <code>check_dbsizeNN</code> entry adds <code>Used size&lt;database&gt;</code>, <code>Log Space Used &lt;database&gt;</code>, <code>Sybase Database &lt;database&gt; availability</code> and one <code>Sybase Segment space [&lt;segment&gt;][&lt;database&gt;]</code> module per segment of the database.</li>
+<li><strong>Login checks.</strong> Every <code>check_instanceNN</code> entry adds an availability module and every <code>custom_checkNN</code> entry adds a login check module, both reporting <code>1</code> when the login succeeds and <code>0</code> otherwise.</li>
+</ul>
+<p><strong>The main login gates the SQL modules.</strong> Before the server-wide checks, the plugin logs in with <code>username</code> and <code>password</code>. When that login fails, the server-wide modules and the <code>check_dbsizeNN</code> and <code>check_instanceNN</code> modules are not generated at all, and no module reports the failure; only the local modules and the <code>custom_checkNN</code> checks still appear. Use <code>debug = 1</code> to see the <code>isql</code> error.</p>
+<p><strong>Thresholds.</strong> Numeric modules carry the warning and critical thresholds defined in the configuration file under <code>thresholds.&lt;key&gt;.&lt;wmin|wmax|cmin|cmax&gt;</code>; Pandora FMS evaluates them as any other module threshold. See <a href="#thresholds">Thresholds</a> for the keys and the reference values.</p>
+<p><strong>Order.</strong> The modules generated from <code>check_dbsizeNN</code>, <code>check_instanceNN</code> and <code>custom_checkNN</code> are not emitted in configuration order and their order varies between runs.</p>
+<h2 id="operate-and-troubleshoot">Operate and troubleshoot<a class="headerlink" href="#operate-and-troubleshoot" title="Permanent link">¶</a></h2>
+<p>The plugin keeps no state between runs: every execution queries the server and the local process list at that moment, so it can be executed manually at any time without affecting the next scheduled run.</p>
+<p>Set <code>debug = 1</code> to publish diagnostics on standard error. Every message is prefixed with a timestamp, and the channel reports the <code>isql</code> error text and the segment parsing failures; without it the plugin stays silent about failed queries.</p>
+<h3 id="known-limitations">Known limitations<a class="headerlink" href="#known-limitations" title="Permanent link">¶</a></h3>
+<p>These behaviours belong to the current version:</p>
+<ul>
+<li><strong>Error-log modules.</strong> <code>sybase_errorlog_size</code>, <code>sybase_errorlog</code> and <code>sybase_errorlog_updates</code> exist as switches, but no configuration key sets the Sybase log directory in this version. The size module reports <code>0.00</code>, the path module reports an empty value and the update counter receives no directory, so leave the three switches disabled.</li>
+<li><strong><code>sybase_logsize</code>.</strong> The reference configuration file sets this key, but no check reads it.</li>
+<li><strong>Per-database percentage name.</strong> The module concatenates the prefix and the database name without a separating space: a database named <code>master</code> produces <code>Used sizemaster</code>.</li>
+<li><strong>Per-database percentages.</strong> <code>sybase_used_size_percent</code> enables only <code>Used size all databases</code>; the per-database percentages are created by <code>check_dbsizeNN</code>.</li>
+<li><strong>Memory unit.</strong> <code>Sybase Memory Use</code> publishes the value with unit <code>MB</code>; on Unix-like systems the value is the sum of the <code>%MEM</code> column of the process list.</li>
+<li><strong>No failure module.</strong> A failing main login leaves no module behind; diagnose it with <code>debug = 1</code>.</li>
+</ul>
+<h3 id="common-failures">Common failures<a class="headerlink" href="#common-failures" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong><code>Error, cannot found sybase environment script at [...]</code> and exit status <code>1</code></strong> — <code>sybase_env_script</code> is empty or does not name an existing file. Point it at the Sybase environment script of the host, for example <code>C:\SAP\...\SYBASE.bat</code> on Windows or <code>/opt/sybase/SYBASE.sh</code> on Unix-like systems. The plugin requires the file even on Windows, where it does not source it.</li>
+<li><strong>The plugin prints the usage summary and no module XML</strong> — <code>-h</code> was passed as the first argument, or the configuration file path does not exist. A path that does not exist is not reported as a missing file: it is read as a configuration override, and the run then stops with the environment-script error.</li>
+<li><strong>No server-wide module appears, but the local modules do</strong> — the main login failed, so every SQL module was skipped. Run with <code>debug = 1</code> and check the <code>isql</code> error: wrong <code>username</code> or <code>password</code>, a <code>servername</code> or <code>port</code> that does not resolve, or a login without access to the catalogs.</li>
+<li><strong><code>Sybase ASE status</code> is <code>0</code> while the server is running</strong> — <code>GLOBAL_SERVERNAME</code> does not appear in the command line of the local <code>dataserver</code> process. Set it to the name that the process reports.</li>
+<li><strong><code>Sybase Memory Use</code> and <code>Sybase CPU Busy</code> report <code>0</code></strong> — the plugin is not running on the host of the ASE server, or the local account cannot see the server process in the process list.</li>
+<li><strong>A <code>check_dbsizeNN</code> database has no modules</strong> — the main login failed, or the database name in the entry does not exist. A missing database produces the availability module with value <code>0</code>; the segment modules are then omitted and, with <code>debug = 1</code>, the segment parsing error is reported.</li>
+<li><strong><code>Sybase Segment space [...]</code> modules are missing for a database</strong> — system databases <code>sybsystemprocs</code>, <code>sybsystemdb</code>, <code>model</code> and <code>tempdb</code> are skipped by design, and a database whose segments cannot be read produces no segment module.</li>
+<li><strong><code>Used size&lt;database&gt;</code> or <code>Log Space Used &lt;database&gt;</code> reports <code>0</code></strong> — the login cannot read <code>master..sysusages</code> or run <code>sp_helpsegment</code>, or the database does not exist.</li>
+<li><strong>The error-log modules report <code>0.00</code>, an empty path or nothing</strong> — this version does not read the Sybase log directory from the configuration, so <code>sybase_errorlog_size</code>, <code>sybase_errorlog</code> and <code>sybase_errorlog_updates</code> cannot produce a value. Leave them disabled; see <a href="#known-limitations">Known limitations</a>.</li>
+<li><strong>The modules are not in the console</strong> — check that the <code>module_plugin</code> line points to the executable and the configuration file, that the agent was restarted, and that the agent can execute the file. The agent log records the execution result.</li>
+</ul>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">¶</a></h2>
+<h3 id="configuration-file_1">Configuration file<a class="headerlink" href="#configuration-file_1" title="Permanent link">¶</a></h3>
+<p>The file uses <code>key = value</code> lines. Blank lines and lines that start with <code>#</code> are skipped, keys and values are trimmed, and the last occurrence of a repeated key wins. Numbers are read as text, so write <code>1</code> to enable a switch and <code>0</code> to disable it.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GLOBAL_SERVERNAME</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>Name of the local Adaptive Server. It must appear in the command line of the local <code>dataserver</code> process and it is used in the error-log module name.</td>
+</tr>
+<tr>
+<td><code>sybase_env_script</code></td>
+<td>Yes</td>
+<td>Empty</td>
+<td>Sybase environment script. Sourced before every <code>isql</code> call on Unix-like systems; the file must exist on every platform.</td>
+</tr>
+<tr>
+<td><code>isql</code></td>
+<td>No</td>
+<td><code>isql</code></td>
+<td>Command or full path of the Sybase <code>isql</code> utility.</td>
+</tr>
+<tr>
+<td><code>encryption</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td><code>1</code> adds the <code>-X</code> option to every <code>isql</code> call.</td>
+</tr>
+<tr>
+<td><code>username</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>Login for the main checks and for <code>check_dbsizeNN</code>.</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>Password of <code>username</code>.</td>
+</tr>
+<tr>
+<td><code>servername</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>ASE server name, passed to <code>isql</code> with <code>-S</code>.</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td>No</td>
+<td>Absent (no port)</td>
+<td>Port passed to <code>isql</code> as <code>&lt;servername&gt;:&lt;port&gt;</code>. When the key is absent, only the server name is passed.</td>
+</tr>
+<tr>
+<td><code>debug</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td><code>1</code> prints timestamped diagnostics on standard error.</td>
+</tr>
+<tr>
+<td><code>check_dbsizeNN</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>&lt;database&gt;</code>. Adds the used percentage, log space, availability and segment modules of that database.</td>
+</tr>
+<tr>
+<td><code>check_instanceNN</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>&lt;user&gt;;&lt;password&gt;;&lt;database&gt;</code>. Adds <code>Sybase Instance '&lt;database&gt;' availability</code>.</td>
+</tr>
+<tr>
+<td><code>custom_checkNN</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>&lt;user&gt;;&lt;password&gt;;&lt;database&gt;</code>. Adds <code>Sybase Login check &lt;database&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>grep_log</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Path of the <code>grep_log</code> helper used by the error-log update check. That check cannot produce a value in this version.</td>
+</tr>
+<tr>
+<td><code>custom_error_terms</code></td>
+<td>No</td>
+<td>Built-in term list</td>
+<td>Regular expression of terms counted by the error-log update check.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="module-switches">Module switches<a class="headerlink" href="#module-switches" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Module enabled</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sybase_main_status</code></td>
+<td><code>Sybase ASE status</code></td>
+</tr>
+<tr>
+<td><code>sybase_backup_status</code></td>
+<td><code>Sybase ASE Backup server status</code></td>
+</tr>
+<tr>
+<td><code>sybase_memuse</code></td>
+<td><code>Sybase Memory Use</code></td>
+</tr>
+<tr>
+<td><code>sybase_cpuusage</code></td>
+<td><code>Sybase CPU Busy</code></td>
+</tr>
+<tr>
+<td><code>sybase_count_databases</code></td>
+<td><code>Sybase Databases in &lt;server&gt;</code></td>
+</tr>
+<tr>
+<td><code>sybase_max_size</code></td>
+<td><code>Sybase Max Size Available</code></td>
+</tr>
+<tr>
+<td><code>sybase_used_size</code></td>
+<td><code>Sybase Used Size global</code></td>
+</tr>
+<tr>
+<td><code>sybase_used_size_percent</code></td>
+<td><code>Used size all databases</code>; the per-database percentages come from <code>check_dbsizeNN</code></td>
+</tr>
+<tr>
+<td><code>sybase_connections_used_ratio</code></td>
+<td><code>Sybase Connections Used Ratio</code></td>
+</tr>
+<tr>
+<td><code>sybase_available_connections</code></td>
+<td><code>Sybase Connections Remaining</code></td>
+</tr>
+<tr>
+<td><code>sybase_blocked_processes</code></td>
+<td><code>Sybase Num Blocked Processes</code></td>
+</tr>
+<tr>
+<td><code>sybase_blocker_processes</code></td>
+<td><code>Sybase Blocker Processes</code></td>
+</tr>
+<tr>
+<td><code>sybase_offline_engines</code></td>
+<td><code>Sybase Engines Offline</code></td>
+</tr>
+<tr>
+<td><code>sybase_suspects_databases</code></td>
+<td><code>Sybase Suspect Databases</code></td>
+</tr>
+<tr>
+<td><code>sybase_mirror_devices</code></td>
+<td><code>Sybase Mirror Devices</code></td>
+</tr>
+<tr>
+<td><code>sybase_locks_remaining</code></td>
+<td><code>Sybase Locks Remaining</code></td>
+</tr>
+<tr>
+<td><code>sybase_suspect_index</code></td>
+<td><code>Sybase Suspect Index</code></td>
+</tr>
+<tr>
+<td><code>sybase_errorlog_size</code></td>
+<td><code>Error Log Size</code>; cannot produce a value in this version</td>
+</tr>
+<tr>
+<td><code>sybase_errorlog</code></td>
+<td><code>Sybase ErrorLog path</code>; cannot produce a value in this version</td>
+</tr>
+<tr>
+<td><code>sybase_errorlog_updates</code></td>
+<td>Error-log update counter; cannot produce a value in this version</td>
+</tr>
+</tbody>
+</table>
+<p>The reference configuration file enables twelve of these switches and also sets <code>sybase_logsize</code>, a key that no check reads. To enable the error-log size module, use <code>sybase_errorlog_size</code>.</p>
+<h3 id="thresholds">Thresholds<a class="headerlink" href="#thresholds" title="Permanent link">¶</a></h3>
+<p>Each numeric module publishes the thresholds defined for its key. A key whose value is empty leaves the threshold unset; <code>0</code> is a real value. These are the values in the reference configuration file:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Module</th>
+<th><code>wmin</code></th>
+<th><code>wmax</code></th>
+<th><code>cmin</code></th>
+<th><code>cmax</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sybase_used_size</code></td>
+<td><code>Used size&lt;database&gt;</code></td>
+<td><code>90</code></td>
+<td><code>95</code></td>
+<td><code>95</code></td>
+<td><code>100</code></td>
+</tr>
+<tr>
+<td><code>sybase_used_size_all</code></td>
+<td><code>Used size all databases</code></td>
+<td><code>85</code></td>
+<td><code>90</code></td>
+<td><code>90</code></td>
+<td><code>100</code></td>
+</tr>
+<tr>
+<td><code>sybase_memuse</code></td>
+<td><code>Sybase Memory Use</code></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>sybase_cpuusage</code></td>
+<td><code>Sybase CPU Busy</code></td>
+<td>—</td>
+<td>—</td>
+<td><code>90</code></td>
+<td><code>100</code></td>
+</tr>
+<tr>
+<td><code>sybase_connections_used_ratio</code></td>
+<td><code>Sybase Connections Used Ratio</code></td>
+<td><code>85</code></td>
+<td>—</td>
+<td><code>90</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>sybase_available_connections</code></td>
+<td><code>Sybase Connections Remaining</code></td>
+<td><code>5</code></td>
+<td><code>15</code></td>
+<td><code>0</code></td>
+<td><code>5</code></td>
+</tr>
+<tr>
+<td><code>sybase_blocked_processes</code></td>
+<td><code>Sybase Num Blocked Processes</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>sybase_blocker_processes</code></td>
+<td><code>Sybase Blocker Processes</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>sybase_offline_engines</code></td>
+<td><code>Sybase Engines Offline</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>sybase_suspects_databases</code></td>
+<td><code>Sybase Suspect Databases</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>sybase_locks_remaining</code></td>
+<td><code>Sybase Locks Remaining</code></td>
+<td><code>50</code></td>
+<td><code>100</code></td>
+<td><code>0</code></td>
+<td><code>50</code></td>
+</tr>
+<tr>
+<td><code>sybase_segment_space</code></td>
+<td><code>Sybase Segment space [...]</code></td>
+<td><code>80</code></td>
+<td><code>0</code></td>
+<td><code>90</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>sybase_suspect_index</code></td>
+<td><code>Sybase Suspect Index</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>sybase_errorlog_size</code></td>
+<td><code>Error Log Size</code></td>
+<td><code>100</code></td>
+<td>—</td>
+<td><code>250</code></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>The threshold keys have no effect on modules that do not publish thresholds, such as <code>Sybase Max Size Available</code> and <code>Sybase Used Size global</code>.</p>
+<h3 id="command-line-execution">Command-line execution<a class="headerlink" href="#command-line-execution" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>pandorafms.sybase.1.0.exe [config-file] [-key value ...]
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The first argument is <code>-h</code></td>
+<td>Prints the usage summary on standard error and exits with status <code>0</code></td>
+</tr>
+<tr>
+<td>No argument at all</td>
+<td>Prints the environment-script error and the usage summary on standard error and exits with status <code>1</code></td>
+</tr>
+<tr>
+<td>The first argument names an existing file</td>
+<td>Runs with that file and the remaining flags</td>
+</tr>
+<tr>
+<td>The first argument names a file that does not exist</td>
+<td>Treats the path as a configuration override and stops with the environment-script error; exit status <code>1</code></td>
+</tr>
+<tr>
+<td><code>-key value</code></td>
+<td>Overrides the configuration value with the same key</td>
+</tr>
+<tr>
+<td><code>-key=value</code></td>
+<td>Not an override: the whole token becomes a configuration key and has no effect</td>
+</tr>
+<tr>
+<td>An odd trailing argument</td>
+<td>Ignored</td>
+</tr>
+<tr>
+<td><code>check_dbsizeNN</code>, <code>check_instanceNN</code>, <code>custom_checkNN</code> or <code>thresholds.*</code> as a flag</td>
+<td>No effect; these are read only from the configuration file</td>
+</tr>
+</tbody>
+</table>
+<p>The plugin leaves the exit status at <code>0</code> when individual queries fail, and reports the failure only through the missing modules and the <code>debug = 1</code> diagnostics.</p>
+<h3 id="generated-modules">Generated modules<a class="headerlink" href="#generated-modules" title="Permanent link">¶</a></h3>
+<p>In the names below, <code>&lt;server&gt;</code> is the value of <code>servername</code>, <code>&lt;database&gt;</code> a database of a <code>check_dbsizeNN</code> entry and <code>&lt;segment&gt;</code> a segment of that database:</p>
+<table>
+<thead>
+<tr>
+<th>Module name</th>
+<th>Type</th>
+<th>Enabled by</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Sybase ASE status</code></td>
+<td><code>generic_proc</code></td>
+<td><code>sybase_main_status</code></td>
+<td><code>1</code> while the local <code>dataserver</code> process matching <code>GLOBAL_SERVERNAME</code> runs, <code>0</code> otherwise</td>
+</tr>
+<tr>
+<td><code>Sybase ASE Backup server status</code></td>
+<td><code>generic_proc</code></td>
+<td><code>sybase_backup_status</code></td>
+<td><code>1</code> while the local <code>backupserver</code> process matching <code>GLOBAL_SERVERNAME</code> runs, <code>0</code> otherwise. On Windows the process is <code>bcksrvr.exe</code></td>
+</tr>
+<tr>
+<td><code>Sybase Memory Use</code></td>
+<td><code>generic_data</code>, unit <code>MB</code></td>
+<td><code>sybase_memuse</code></td>
+<td>Memory used by the local Adaptive Server process, as reported by the process list</td>
+</tr>
+<tr>
+<td><code>Sybase CPU Busy</code></td>
+<td><code>generic_data</code>, unit <code>%</code></td>
+<td><code>sybase_cpuusage</code></td>
+<td>CPU used by the local Adaptive Server process</td>
+</tr>
+<tr>
+<td><code>Sybase Databases in &lt;server&gt;</code></td>
+<td><code>generic_data</code></td>
+<td><code>sybase_count_databases</code></td>
+<td>Databases listed by <code>sp_helpdb</code>, excluding those marked <code>dbo use only</code></td>
+</tr>
+<tr>
+<td><code>Sybase Max Size Available</code></td>
+<td><code>generic_data</code>, unit <code>MB</code></td>
+<td><code>sybase_max_size</code></td>
+<td>Space allocated to all databases, excluding log segments</td>
+</tr>
+<tr>
+<td><code>Sybase Used Size global</code></td>
+<td><code>generic_data</code>, unit <code>MB</code></td>
+<td><code>sybase_used_size</code></td>
+<td>Used space of all databases, excluding log segments</td>
+</tr>
+<tr>
+<td><code>Used size all databases</code></td>
+<td><code>generic_data</code>, unit <code>%</code></td>
+<td><code>sybase_used_size_percent</code></td>
+<td>Used percentage of the space allocated to all databases; <code>0</code> when the allocated size cannot be read</td>
+</tr>
+<tr>
+<td><code>Sybase Connections Used Ratio</code></td>
+<td><code>generic_data</code>, unit <code>%</code></td>
+<td><code>sybase_connections_used_ratio</code></td>
+<td>User connections in use against the configured maximum</td>
+</tr>
+<tr>
+<td><code>Sybase Connections Remaining</code></td>
+<td><code>generic_data</code></td>
+<td><code>sybase_available_connections</code></td>
+<td>Configured maximum minus the connections in use</td>
+</tr>
+<tr>
+<td><code>Sybase Num Blocked Processes</code></td>
+<td><code>generic_data</code></td>
+<td><code>sybase_blocked_processes</code></td>
+<td><code>sp_who</code> entries in <code>lock sleep</code> state</td>
+</tr>
+<tr>
+<td><code>Sybase Blocker Processes</code></td>
+<td><code>generic_data</code></td>
+<td><code>sybase_blocker_processes</code></td>
+<td>Processes holding locks and blocking other processes</td>
+</tr>
+<tr>
+<td><code>Sybase Engines Offline</code></td>
+<td><code>generic_data</code></td>
+<td><code>sybase_offline_engines</code></td>
+<td>Engines reported as offline in <code>master..sysengines</code></td>
+</tr>
+<tr>
+<td><code>Sybase Suspect Databases</code></td>
+<td><code>generic_data</code></td>
+<td><code>sybase_suspects_databases</code></td>
+<td>Databases with status <code>256</code> or <code>320</code></td>
+</tr>
+<tr>
+<td><code>Sybase Mirror Devices</code></td>
+<td><code>generic_data</code></td>
+<td><code>sybase_mirror_devices</code></td>
+<td>Devices configured for mirroring that are not currently mirrored</td>
+</tr>
+<tr>
+<td><code>Sybase Locks Remaining</code></td>
+<td><code>generic_data</code></td>
+<td><code>sybase_locks_remaining</code></td>
+<td>Configured locks minus the locks in <code>syslocks</code></td>
+</tr>
+<tr>
+<td><code>Sybase Suspect Index</code></td>
+<td><code>generic_data</code></td>
+<td><code>sybase_suspect_index</code></td>
+<td>Indexes marked as suspect</td>
+</tr>
+<tr>
+<td><code>Used size&lt;database&gt;</code></td>
+<td><code>generic_data</code>, unit <code>%</code></td>
+<td><code>check_dbsizeNN</code></td>
+<td>Used percentage of the space allocated to the database</td>
+</tr>
+<tr>
+<td><code>Log Space Used &lt;database&gt;</code></td>
+<td><code>generic_data</code>, unit <code>%</code></td>
+<td><code>check_dbsizeNN</code></td>
+<td>Used percentage of the transaction log segment of the database</td>
+</tr>
+<tr>
+<td><code>Sybase Database &lt;database&gt; availability</code></td>
+<td><code>generic_proc</code></td>
+<td><code>check_dbsizeNN</code></td>
+<td><code>1</code> when <code>isql</code> logs in to the database, <code>0</code> otherwise</td>
+</tr>
+<tr>
+<td><code>Sybase Segment space [&lt;segment&gt;][&lt;database&gt;]</code></td>
+<td><code>generic_data</code>, unit <code>%</code></td>
+<td><code>check_dbsizeNN</code></td>
+<td>Used percentage of each segment of the database</td>
+</tr>
+<tr>
+<td><code>Sybase Instance '&lt;database&gt;' availability</code></td>
+<td><code>generic_proc</code></td>
+<td><code>check_instanceNN</code></td>
+<td><code>1</code> when the entry credentials log in to the database, <code>0</code> otherwise</td>
+</tr>
+<tr>
+<td><code>Sybase Login check &lt;database&gt;</code></td>
+<td><code>generic_proc</code></td>
+<td><code>custom_checkNN</code></td>
+<td><code>1</code> when the entry credentials log in to the database, <code>0</code> otherwise</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-configuration">Example configuration<a class="headerlink" href="#example-configuration" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Local server identification</span>
+<span class="na">GLOBAL_SERVERNAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;ASE_SERVER_NAME&gt;</span>
+
+<span class="c1"># Sybase client environment</span>
+<span class="na">sybase_env_script</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/opt/sybase/SYBASE.sh</span>
+<span class="na">isql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">isql</span>
+<span class="na">encryption</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+
+<span class="c1"># Main login</span>
+<span class="na">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;USERNAME&gt;</span>
+<span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;PASSWORD&gt;</span>
+<span class="na">servername</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;ASE_SERVER_NAME&gt;</span>
+<span class="na">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5000</span>
+
+<span class="c1"># Per-database checks</span>
+<span class="na">check_dbsize01</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;DB_NAME&gt;</span>
+
+<span class="c1"># Login checks</span>
+<span class="na">custom_check01</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;USERNAME&gt;</span><span class="c1">;&lt;PASSWORD&gt;;&lt;DB_NAME&gt;</span>
+
+<span class="c1"># Modules</span>
+<span class="na">sybase_main_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_backup_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_memuse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_cpuusage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_count_databases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_max_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_used_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_connections_used_ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_available_connections</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_blocked_processes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_offline_engines</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">sybase_suspects_databases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+
+<span class="c1"># Thresholds</span>
+<span class="na">thresholds.sybase_used_size.wmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">90</span>
+<span class="na">thresholds.sybase_used_size.wmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">95</span>
+<span class="na">thresholds.sybase_used_size.cmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">95</span>
+<span class="na">thresholds.sybase_used_size.cmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100</span>
+<span class="na">thresholds.sybase_segment_space.wmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">80</span>
+<span class="na">thresholds.sybase_segment_space.cmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">90</span>
+</code></pre></div>
+<h3 id="addon-identity">Addon identity<a class="headerlink" href="#addon-identity" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Marketplace identifier</td>
+<td><code>pandorafms.sybase</code></td>
+</tr>
+<tr>
+<td>Name</td>
+<td>Sybase</td>
+</tr>
+<tr>
+<td>Version</td>
+<td><code>1.0</code></td>
+</tr>
+<tr>
+<td>Marketplace last update</td>
+<td>2026-05-25</td>
+</tr>
+<tr>
+<td>Distributed file</td>
+<td><code>pandorafms.sybase.1.0.exe</code></td>
+</tr>
+<tr>
+<td>License</td>
+<td>Free download</td>
+</tr>
+<tr>
+<td>Author</td>
+<td>Pandora FMS</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

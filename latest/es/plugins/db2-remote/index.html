@@ -1,0 +1,4960 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/plugins/db2-remote/">
+      
+      
+        <link rel="prev" href="../citrix-netscaler/">
+      
+      
+        <link rel="next" href="../docker/">
+      
+      
+        
+          <link rel="alternate" href="../../../plugins/db2-remote/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>DB2 Remote plugin - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#db2-remote-plugin" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              DB2 Remote plugin
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../plugins/db2-remote/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-cloudwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon CloudWatch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-ec2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon EC2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-rds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon S3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de Azure backup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/db2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/digital-ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Ocean Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasticsearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/google-cloud-compute-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud Compute Engine Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/haproxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HAProxy Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hp-one-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HP One View Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hyper-v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/iot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/jmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JMX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de KVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/meraki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meraki Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Office 365 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/opensearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenSearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/ovh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OVH Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de Proxmox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/rabbitmq-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-hana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-r3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP R3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de VMware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/xenserver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XenServer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/discord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Discord
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/slack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Slack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../active-directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Enterprise Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Azure PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Pandora Azure SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Pandora Azure Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cisco-inventory-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco Inventory configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-netscaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Citrix NetScaler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Remote plugin
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Remote plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad-y-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad y disponibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acceso-a-la-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceso a la base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conexion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conexión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elegir-el-modo-de-entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elegir el modo de entrega
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definir-las-consultas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definir las consultas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registrar-el-plugin-en-la-consola" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registrar el plugin en la consola
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entender los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modulos-de-consulta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos de consulta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-de-rendimiento-predeterminados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos de rendimiento predeterminados
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operacion-y-diagnostico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operación y diagnóstico
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operación y diagnóstico">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comportamiento-en-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comportamiento en ejecución
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitaciones-conocidas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitaciones conocidas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagnostico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnóstico
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opciones-de-linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opciones de línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-consultas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de consultas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#estado-de-salida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estado de salida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Dynamic SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exchange/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exchange
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glpi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GLPI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../google-drive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Google Drive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ibm-z-series-mainframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBM Z Series Mainframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../influxdb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-for-mac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory plugin for MAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-ssh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory SSH plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../journalctl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Journalctl
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kafka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Kafka
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../marklogic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MarkLogic monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-remote-atlas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Pandora MongoDB remote / Atlas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-server-querier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MSSQL Server Querier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../net-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Net usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Office 365 Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Pandora Openshift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Oracle VM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ldap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora LDAP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora UX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugin-executor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Plugin Executor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sap-hana-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin SAP HANA Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Spark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sybase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Sybase
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tomcat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tomcat monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zammad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zammad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zendesk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zendesk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad-y-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad y disponibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acceso-a-la-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceso a la base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conexion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conexión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elegir-el-modo-de-entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elegir el modo de entrega
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definir-las-consultas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definir las consultas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registrar-el-plugin-en-la-consola" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registrar el plugin en la consola
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entender los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modulos-de-consulta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos de consulta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-de-rendimiento-predeterminados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos de rendimiento predeterminados
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operacion-y-diagnostico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operación y diagnóstico
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operación y diagnóstico">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comportamiento-en-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comportamiento en ejecución
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitaciones-conocidas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitaciones conocidas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagnostico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnóstico
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opciones-de-linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opciones de línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivo-de-consultas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivo de consultas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#estado-de-salida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estado de salida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="db2-remote-plugin">DB2 Remote plugin<a class="headerlink" href="#db2-remote-plugin" title="Permanent link">¶</a></h1>
+<p><em>Última actualización del artículo: 2026-10-27.</em></p>
+<div class="admonition warning">
+<p class="admonition-title">Se recomienda la integración de Discovery</p>
+<p>Para instalaciones nuevas use <a href="../../discovery/db2/">DB2 Discovery</a>, que es la integración recomendada para este servicio. Este plugin es la ruta heredada. La entrada del Marketplace indica que este addon ya no recibe mantenimiento activo.</p>
+</div>
+<h2 id="que-hace">Qué hace<a class="headerlink" href="#que-hace" title="Permanent link">¶</a></h2>
+<p>El addon DB2 Remote monitoriza bases de datos IBM Db2 desde Pandora FMS por
+TCP/IP. No se instala nada en el servidor de base de datos: cada ejecución abre
+una conexión desde el host que ejecuta el addon, lanza las sentencias que
+guarde en un archivo de consultas y publica el resultado como módulos de
+Pandora FMS.</p>
+<p>Una ejecución produce dos tipos de salida:</p>
+<ul>
+<li><strong>Módulos de consulta.</strong> Un módulo por cada sentencia del archivo de
+  consultas, con una entrada de lista de datos por cada fila que devuelve la
+  sentencia.</li>
+<li><strong>Módulos de rendimiento predeterminados.</strong> Un conjunto fijo de métricas de
+  buffer pools y de log de transacciones, leídas de vistas administrativas de
+  Db2. Están habilitados salvo que los desactive.</li>
+</ul>
+<p>Cada ejecución es independiente: conecta, recoge, entrega y termina. El addon
+no guarda estado entre ejecuciones, de modo que una ejecución en cualquier
+momento informa de los valores que la base de datos tiene en ese momento.</p>
+<p>Los módulos llegan a Pandora FMS como XML de módulos por la salida estándar,
+para que los ingiera un agente de Pandora FMS, o como documentos de datos de
+agente escritos en una carpeta de datos de Pandora FMS (consulte
+<a href="#configuracion">Configuración</a>).</p>
+<p>DB2 Discovery (<code>pandorafms.db2</code>) es otro addon: se ejecuta desde el asistente de
+tareas de Discovery y genera automáticamente un agente por base de datos. El
+plugin DB2 Remote se configura en cada ejecución y publica los módulos que
+producen las sentencias que usted escribe. Consulte
+<a href="../../discovery/db2/">DB2 Discovery</a>.</p>
+<h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
+<h3 id="compatibilidad-y-disponibilidad">Compatibilidad y disponibilidad<a class="headerlink" href="#compatibilidad-y-disponibilidad" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Ámbito</th>
+<th>Estado</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Addon <code>pandorafms.db2_remote</code>, versión <code>1.0</code></td>
+<td>Objetivo documentado</td>
+<td>Versión de la entrada del Marketplace, que el addon imprime además en su resumen de uso. Consulte <a href="#identidad-del-addon">Identidad del addon</a></td>
+</tr>
+<tr>
+<td>Acceso TCP desde el host que ejecuta el addon hasta el listener de Db2 (puerto <code>50000</code> por defecto)</td>
+<td><code>Requerido</code></td>
+<td>El addon conecta con <code>--hostname</code>, <code>--port</code> y <code>--protocol</code></td>
+</tr>
+<tr>
+<td>Un usuario de Db2 con permiso de lectura sobre cada objeto que lean sus sentencias</td>
+<td><code>Requerido</code></td>
+<td>Es un requisito previo, no una declaración de compatibilidad</td>
+</tr>
+<tr>
+<td>Un intérprete <code>python3</code> con el driver <code>ibm-db</code> <code>3.1.4</code></td>
+<td><code>Requerido</code></td>
+<td>El <code>requirements.txt</code> del paquete fija <code>ibm-db==3.1.4</code></td>
+</tr>
+<tr>
+<td>Versiones y plataformas del servidor Db2</td>
+<td><code>Sin validar</code></td>
+<td>No hay matriz de versiones registrada para este addon</td>
+</tr>
+<tr>
+<td>Sistema operativo del host que ejecuta el addon</td>
+<td><code>Sin validar</code></td>
+<td>No hay sistema operativo registrado para la versión <code>1.0</code></td>
+</tr>
+<tr>
+<td>Versión de Pandora FMS</td>
+<td><code>Sin validar</code></td>
+<td>No existe un registro de validación por versión. El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y posteriores</td>
+</tr>
+</tbody>
+</table>
+<p>La entrada del Marketplace indica que este addon ya no se mantiene ni se
+actualiza activamente y remite a las alternativas publicadas en su biblioteca.</p>
+<h3 id="requisitos">Requisitos<a class="headerlink" href="#requisitos" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Acceso de red</strong> desde el host que ejecuta el addon hasta el listener de
+   Db2, por defecto en el puerto TCP <code>50000</code>.</li>
+<li><strong>Un usuario de Db2 y su contraseña</strong>, con permiso de lectura sobre cada
+   objeto que lean sus sentencias y, cuando los módulos de rendimiento
+   predeterminados están habilitados, sobre las vistas administrativas que se
+   indican en <a href="#acceso-a-la-base-de-datos">Acceso a la base de datos</a>.</li>
+<li><strong>Un host para ejecutar el addon</strong>: el servidor de Pandora FMS para un
+   plugin de servidor en la consola, un host con un agente de Pandora FMS para
+   el modo plugin de agente, o cualquier host cuya carpeta de datos lea el
+   servidor de datos de Pandora FMS.</li>
+<li><strong>Un intérprete <code>python3</code></strong> con el driver <code>ibm-db</code> instalado, en la versión
+   que fija el <code>requirements.txt</code> del paquete.</li>
+<li><strong>Una instalación de Pandora FMS</strong> que reciba la salida: el servidor de
+   plugins que ejecuta el plugin registrado, el agente que lo ejecuta, o el
+   servidor de datos que lee la carpeta de datos.</li>
+<li><strong>Permiso de escritura en la carpeta de datos</strong> para el usuario que ejecuta
+   el addon, cuando los documentos se entregan allí.</li>
+<li><strong>Un archivo de consultas.</strong> El addon lo lee en cada ejecución, incluidas
+   las ejecuciones que solo necesitan los módulos de rendimiento
+   predeterminados (consulte <a href="#limitaciones-conocidas">Limitaciones conocidas</a>).</li>
+</ol>
+<h3 id="acceso-a-la-base-de-datos">Acceso a la base de datos<a class="headerlink" href="#acceso-a-la-base-de-datos" title="Permanent link">¶</a></h3>
+<p>El addon lee únicamente lo que piden sus sentencias y los módulos de
+rendimiento predeterminados:</p>
+<table>
+<thead>
+<tr>
+<th>Lectura</th>
+<th>Cuándo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Los objetos que leen sus propias sentencias</td>
+<td>En cada ejecución</td>
+</tr>
+<tr>
+<td><code>SYSCAT.BUFFERPOOLS</code>, <code>SYSIBMADM.BP_HITRATIO</code>, <code>SYSIBMADM.LOG_UTILIZATION</code></td>
+<td>Con los módulos de rendimiento predeterminados habilitados, que es lo predeterminado</td>
+</tr>
+</tbody>
+</table>
+<p>Db2 define qué autoridad exige cada vista administrativa. Ninguna fuente
+oficial de este addon documenta un permiso más restrictivo, así que conceda al
+usuario el mínimo que Db2 acepte para las lecturas que habilite.</p>
+<p>El addon ejecuta el texto de la sentencia tal como está escrito y no lo limita a
+<code>SELECT</code>. Use un usuario dedicado con acceso de solo lectura y mantenga
+únicamente sentencias de lectura en el archivo de consultas.</p>
+<h3 id="instalar-el-addon">Instalar el addon<a class="headerlink" href="#instalar-el-addon" title="Permanent link">¶</a></h3>
+<p>Descargue el paquete desde la entrada del Marketplace de Pandora FMS, que está
+limitada a usuarios con licencia:</p>
+<p><a href="https://marketplace.pandorafms.com/entries/pandorafms.db2_remote">https://marketplace.pandorafms.com/entries/pandorafms.db2_remote</a></p>
+<p>Copie el script del addon <code>pandora_db2.py</code> y su archivo de consultas de ejemplo
+<code>db2.conf</code> al host que lo vaya a ejecutar. Para un plugin de servidor en la
+consola, la carpeta recomendada es <code>/usr/share/pandora_server/util/plugin/</code>.</p>
+<p>Instale el driver que fija el <code>requirements.txt</code> del paquete (<code>ibm-db==3.1.4</code>)
+para el intérprete que vaya a ejecutar el addon.</p>
+<h2 id="configuracion">Configuración<a class="headerlink" href="#configuracion" title="Permanent link">¶</a></h2>
+<p>El addon no tiene archivo de configuración propio: todo es opción de línea de
+comandos, y las consultas viven en el archivo separado que indica <code>--conf</code>.</p>
+<h3 id="conexion">Conexión<a class="headerlink" href="#conexion" title="Permanent link">¶</a></h3>
+<p>Una ejecución necesita el host, la base de datos, un usuario y una contraseña:</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>pandora_db2.py<span class="w"> </span>--hostname<span class="w"> </span>&lt;TARGET_HOST&gt;<span class="w"> </span>--port<span class="w"> </span><span class="m">50000</span><span class="w"> </span>--database<span class="w"> </span>&lt;DB_NAME&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--uid<span class="w"> </span>&lt;USERNAME&gt;<span class="w"> </span>--password<span class="w"> </span>&lt;PASSWORD&gt;<span class="w"> </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span>--as_agent_plugin<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p><code>--port</code> vale <code>50000</code> por defecto y <code>--protocol</code> vale <code>TCPIP</code>, así que ambos
+pueden omitirse. El addon construye una cadena de conexión completa a partir de
+estas opciones, por lo que no necesita un cliente Db2 local, una entrada de
+catálogo ni un DSN en el host que lo ejecuta.</p>
+<p>La opción <code>--password</code> en la línea de comandos queda en el historial del shell y
+es visible en la lista de procesos mientras dura la ejecución. El addon no
+tiene opción de archivo de credenciales en esta versión; en la consola, marque
+como oculto el campo que contiene la contraseña (consulte
+<a href="#registrar-el-plugin-en-la-consola">Registrar el plugin en la consola</a>).</p>
+<h3 id="elegir-el-modo-de-entrega">Elegir el modo de entrega<a class="headerlink" href="#elegir-el-modo-de-entrega" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Modo</th>
+<th>Opción</th>
+<th>Comportamiento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Carpeta de datos (predeterminado)</td>
+<td>ninguna</td>
+<td>Escribe un documento <code>&lt;agent_name&gt;.&lt;timestamp&gt;.data</code> en <code>--data_dir</code> (<code>/var/spool/pandora/data_in/</code> por defecto) por cada documento que produce, e imprime <code>1</code> por documento</td>
+</tr>
+<tr>
+<td>Plugin de agente</td>
+<td><code>--as_agent_plugin 1</code></td>
+<td>Imprime un bloque <code>&lt;module&gt;</code> por módulo en la salida estándar y no escribe archivos</td>
+</tr>
+<tr>
+<td>Tentacle</td>
+<td><code>--tentacle_address &lt;ADDRESS&gt;</code></td>
+<td>Se configura con <code>--tentacle_address</code> y <code>--tentacle_port</code>; no entrega en la versión <code>1.0</code> (consulte <a href="#limitaciones-conocidas">Limitaciones conocidas</a>)</td>
+</tr>
+</tbody>
+</table>
+<p><code>--tentacle_address</code> tiene prioridad sobre <code>--as_agent_plugin</code>; cualquier valor
+de <code>--as_agent_plugin</code> distinto de <code>1</code> selecciona la carpeta de datos.</p>
+<p>Use el modo plugin de agente cuando un agente de Pandora FMS ejecute el addon:
+el agente ingiere los módulos impresos. Use la carpeta de datos cuando lo
+ejecute el servidor de plugins en la consola y el servidor de datos local
+recoja los documentos.</p>
+<p><code>--default_metrics</code> vale <code>1</code> por defecto; cualquier otro valor publica solo los
+módulos de consulta.</p>
+<h3 id="definir-las-consultas">Definir las consultas<a class="headerlink" href="#definir-las-consultas" title="Permanent link">¶</a></h3>
+<p>El archivo de consultas tiene una sentencia por línea, dividida en campos
+separados por dos puntos:</p>
+<div class="highlight"><pre><span></span><code>name:statement:module_type[:description]
+</code></pre></div>
+<p>Este es el ejemplo que incluye el paquete:</p>
+<div class="highlight"><pre><span></span><code>query_test:select * from department:generic_data:testing query
+</code></pre></div>
+<ul>
+<li><code>name</code> se convierte en el nombre del módulo, <code>module_type</code> en el tipo de
+  módulo y el cuarto campo opcional en la descripción del módulo. Los tres
+  primeros campos son obligatorios.</li>
+<li>La sentencia no puede contener dos puntos. La línea se divide por cada dos
+  puntos, de modo que un <code>:</code> dentro de la sentencia desplaza el tipo y la
+  descripción y produce un módulo distinto sin avisar.</li>
+<li>Una línea que contiene <code>#</code> en cualquier posición se omite como comentario, no
+  solo las que empiezan por <code>#</code>.</li>
+<li>Las líneas en blanco se ignoran.</li>
+<li><code>_database_</code> se sustituye por el nombre de la base de datos conectada entre
+  comillas simples, así que puede usarse donde se espera un literal de cadena.
+  Con <code>--database &lt;DB_NAME&gt;</code>, la línea <code>select * from syscat.tables where
+  tabschema = _database_</code> llega a la base de datos como <code>select * from
+  syscat.tables where tabschema = '&lt;DB_NAME&gt;'</code>.</li>
+<li>Cada sentencia produce un módulo. Cada fila devuelta se convierte en una
+  entrada de la lista de datos del módulo, con la fila como correspondencia de
+  columna y valor.</li>
+<li>Todas las sentencias del archivo se ejecutan en cada ejecución.</li>
+</ul>
+<h3 id="registrar-el-plugin-en-la-consola">Registrar el plugin en la consola<a class="headerlink" href="#registrar-el-plugin-en-la-consola" title="Permanent link">¶</a></h3>
+<p>Un plugin de servidor en la consola ejecuta el addon desde el servidor de
+Pandora FMS. El servidor de plugins lo ejecuta, el addon escribe sus documentos
+en la carpeta de datos y el servidor de datos los ingiere, de modo que los
+agentes y sus módulos aparecen en la consola.</p>
+<ol>
+<li>Abra <strong>Servers → Plugins</strong> y haga clic en <strong>Register Plugin</strong>.</li>
+<li>Indique el nombre, el tipo de plugin <strong>Standard</strong>, un tiempo máximo de
+   ejecución opcional y una descripción.</li>
+<li>En <strong>Plugin command</strong>, escriba la ruta a <code>pandora_db2.py</code> en el servidor de
+   Pandora FMS, por ejemplo
+   <code>/usr/share/pandora_server/util/plugin/pandora_db2.py</code>.</li>
+<li>En <strong>Plugin parameters</strong>, pase la conexión con las macros de plugin
+   <code>_field1_</code>, <code>_field2_</code>, ... y mantenga el archivo de consultas en una ruta
+   fija del servidor:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>--hostname _field1_ --port 50000 --database _field2_ --uid _field3_ --password _field4_ --conf /etc/pandora/plugins/db2.queries --agent_name db2-remote
+</code></pre></div>
+<ol>
+<li>En <strong>Macro parameters</strong>, describa cada campo. El ejemplo usa estos valores:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Descripción</th>
+<th>Valor de ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_field1_</code></td>
+<td>Nombre o dirección IP del host Db2</td>
+<td><code>&lt;TARGET_HOST&gt;</code></td>
+</tr>
+<tr>
+<td><code>_field2_</code></td>
+<td>Nombre de la base de datos</td>
+<td><code>&lt;DB_NAME&gt;</code></td>
+</tr>
+<tr>
+<td><code>_field3_</code></td>
+<td>Usuario de Db2 que ejecuta las sentencias</td>
+<td><code>&lt;USERNAME&gt;</code></td>
+</tr>
+<tr>
+<td><code>_field4_</code></td>
+<td>Contraseña de ese usuario; marque <strong>Hide value</strong></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<!-- SCREENSHOT NEEDED: Formulario de registro en Servers → Plugins del addon DB2 Remote, con la ruta del comando y los cuatro parámetros _fieldN_. -->
+
+<p><code>--agent_name</code> da nombre al agente que recibe los módulos de consulta; sin él,
+el addon usa <code>DB2</code> y el agente de métricas es <code>&lt;agent_name&gt;_metrics</code>.</p>
+<p>En este modo el valor del módulo es el texto que imprime el addon, normalmente
+<code>1</code> por documento entregado. Una ejecución que deba entregar varios documentos
+está sujeta a la limitación de la carpeta de datos descrita en
+<a href="#limitaciones-conocidas">Limitaciones conocidas</a>.</p>
+<h2 id="verificacion">Verificación<a class="headerlink" href="#verificacion" title="Permanent link">¶</a></h2>
+<p>Ejecute el addon manualmente con <code>--as_agent_plugin 1</code>, para que imprima los
+módulos en lugar de escribir archivos:</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>pandora_db2.py<span class="w"> </span>--hostname<span class="w"> </span>&lt;TARGET_HOST&gt;<span class="w"> </span>--database<span class="w"> </span>&lt;DB_NAME&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--uid<span class="w"> </span>&lt;USERNAME&gt;<span class="w"> </span>--password<span class="w"> </span>&lt;PASSWORD&gt;<span class="w"> </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span>--as_agent_plugin<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p>Una ejecución correcta imprime un bloque <code>&lt;module&gt;</code> por módulo y termina con
+estado <code>0</code>. Los valores siguientes son ilustrativos; los suyos proceden de su
+base de datos. Este es el módulo que produce la consulta de ejemplo:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[query_test]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>generic_data<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;datalist&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span>
+<span class="w">        </span><span class="nt">&lt;value&gt;</span><span class="cp">&lt;![CDATA[{'DEPTNO': 'A00', 'DEPTNAME': 'SPIFFY COMPUTER SERVICE DIV.'}]]&gt;</span><span class="nt">&lt;/value&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/datalist&gt;</span>
+<span class="w">    </span><span class="nt">&lt;description&gt;</span><span class="cp">&lt;![CDATA[testing query]]&gt;</span><span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+</code></pre></div>
+<p>Cuando los módulos de rendimiento predeterminados están habilitados se imprimen
+después de los módulos de consulta, un bloque por métrica:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[no_of_bufferpools_&lt;DB_NAME&gt;]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>generic_data<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[3]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;description&gt;</span><span class="cp">&lt;![CDATA[]]&gt;</span><span class="nt">&lt;/description&gt;</span>
+<span class="w">    </span><span class="nt">&lt;unit&gt;</span><span class="cp">&lt;![CDATA[count]]&gt;</span><span class="nt">&lt;/unit&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+</code></pre></div>
+<p>Con la entrega predeterminada en la carpeta de datos, la misma ejecución imprime
+<code>1</code> una vez por documento y escribe archivos con el nombre
+<code>&lt;agent_name&gt;.&lt;timestamp&gt;.data</code> en <code>--data_dir</code>:</p>
+<div class="highlight"><pre><span></span><code>/var/spool/pandora/data_in/db2-remote.&lt;timestamp&gt;.data
+</code></pre></div>
+<p>Después de la primera ejecución programada, compruebe la consola:</p>
+<ol>
+<li>El agente indicado por <code>--agent_name</code> (<code>DB2</code> por defecto), con un módulo por
+   cada sentencia del archivo de consultas.</li>
+<li>El agente <code>&lt;agent_name&gt;_metrics</code>, con los módulos de rendimiento
+   predeterminados.</li>
+<li>El valor del módulo de plugin que lanzó la ejecución.</li>
+</ol>
+<!-- SCREENSHOT NEEDED: Lista de módulos del agente DB2 Remote tras una ejecución correcta, con un módulo de consulta y el agente de métricas separado. -->
+
+<p>El addon imprime su resumen de uso, con un ejemplo de ejecución manual, cuando
+se ejecuta con <code>-h</code>.</p>
+<h2 id="entender-los-resultados">Entender los resultados<a class="headerlink" href="#entender-los-resultados" title="Permanent link">¶</a></h2>
+<p>Una ejecución crea como máximo dos agentes. Ambos se asignan al grupo indicado
+con <code>--group</code> y ambos llevan la descripción <code>Agent generated by pandora_db2</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Agente</th>
+<th>Nombre</th>
+<th>Alias</th>
+<th>Contenido</th>
+<th>Condición</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agente de consulta</td>
+<td><code>--agent_name</code> (<code>DB2</code> por defecto)</td>
+<td>Igual que el nombre</td>
+<td>Un módulo por cada sentencia del archivo de consultas</td>
+<td>El archivo de consultas tiene al menos una sentencia</td>
+</tr>
+<tr>
+<td>Agente de métricas</td>
+<td><code>&lt;agent_name&gt;_metrics</code></td>
+<td><code>&lt;agent_name&gt;</code></td>
+<td>Los módulos de rendimiento predeterminados</td>
+<td><code>--default_metrics 1</code></td>
+</tr>
+</tbody>
+</table>
+<p>El agente de métricas repite el alias del agente de consulta, así que la consola
+muestra el mismo alias para los dos agentes.</p>
+<h3 id="modulos-de-consulta">Módulos de consulta<a class="headerlink" href="#modulos-de-consulta" title="Permanent link">¶</a></h3>
+<p>Cada módulo toma el nombre del primer campo de su línea y el tipo del tercer
+campo. Su valor es una lista de datos con una entrada por fila, y cada entrada
+mantiene visibles en los datos del módulo los nombres de columna de la fila. La
+descripción del módulo es el cuarto campo, y queda vacía cuando ese campo no
+está.</p>
+<h3 id="modulos-de-rendimiento-predeterminados">Módulos de rendimiento predeterminados<a class="headerlink" href="#modulos-de-rendimiento-predeterminados" title="Permanent link">¶</a></h3>
+<p>Las métricas cubren tres grupos: el número de buffer pools, los contadores de
+lectura de los buffer pools y la utilización del log de transacciones. Todos los
+nombres de módulo terminan con el nombre de la base de datos. La lista completa
+está en <a href="#modulos-generados">Módulos generados</a>.</p>
+<h2 id="operacion-y-diagnostico">Operación y diagnóstico<a class="headerlink" href="#operacion-y-diagnostico" title="Permanent link">¶</a></h2>
+<h3 id="comportamiento-en-ejecucion">Comportamiento en ejecución<a class="headerlink" href="#comportamiento-en-ejecucion" title="Permanent link">¶</a></h3>
+<ul>
+<li>Una ejecución conecta una vez, lanza en orden todas las sentencias del
+  archivo de consultas, después los módulos de rendimiento predeterminados,
+  entrega y termina.</li>
+<li>Los módulos de consulta se entregan antes que las métricas, de modo que un
+  fallo de las métricas no deshace lo que ya publicaron las sentencias.</li>
+<li>El addon no tiene opción de verbose ni de depuración. Su salida es el XML de
+  módulos con <code>--as_agent_plugin 1</code>, un <code>1</code> por documento en el modo de carpeta
+  de datos, o un mensaje de error.</li>
+<li>El addon no guarda estado entre ejecuciones. El archivo de consultas se lee
+  de nuevo en cada ejecución.</li>
+</ul>
+<h3 id="limitaciones-conocidas">Limitaciones conocidas<a class="headerlink" href="#limitaciones-conocidas" title="Permanent link">¶</a></h3>
+<p>Estos son comportamientos de la versión <code>1.0</code>, documentados tal como son.</p>
+<ul>
+<li><strong>El archivo de consultas es obligatorio en la práctica.</strong> Cada ejecución lee
+  <code>--conf</code> antes que nada. Sin él, la ejecución imprime <code>Error al conectarse ...</code>
+  y <code>0</code>, termina con estado <code>0</code> y no publica nada, tampoco los módulos de
+  rendimiento predeterminados. Para recoger solo los módulos de rendimiento,
+  pase un archivo de consultas vacío.</li>
+<li><strong>La entrega por Tentacle no funciona.</strong> Con <code>--tentacle_address</code> la ejecución
+  escribe el documento en <code>--data_dir</code> y después se detiene con un error no
+  controlado antes de enviar nada, de modo que ningún documento llega al
+  servidor de Tentacle. Use la carpeta de datos o el modo plugin de agente.</li>
+<li><strong>Los documentos de la carpeta de datos pueden colisionar.</strong> Los nombres de
+  documento tienen resolución de un segundo
+  (<code>&lt;agent_name&gt;.&lt;timestamp&gt;.data</code>) y se crean de forma exclusiva. Cuando una
+  ejecución produce varios documentos para el mismo agente dentro del mismo
+  segundo y Pandora FMS todavía no ha recogido el archivo anterior, la escritura
+  falla con <code>ERROR - Could not write file: ... please check directory
+  permissions</code> y se pierden los documentos restantes de la ejecución. Una
+  ejecución con los módulos de rendimiento predeterminados produce, con todas las
+  métricas disponibles, diecisiete documentos para el agente de métricas, diez
+  de ellos con un módulo, así que esto es probable en ese modo. Mantenga un
+  documento por ejecución (<code>--default_metrics 0</code> y una sola sentencia) o ejecute
+  el addon en modo plugin de agente, que no escribe archivos.</li>
+<li><strong>Cuatro métricas recogidas no se publican.</strong> <code>total_hit_ratio_percent</code>,
+  <code>data_hit_ratio_percent</code>, <code>index_hit_ratio_percent</code> y
+  <code>xda_hit_ratio_percent</code> se leen de la base de datos, pero no se crea ningún
+  módulo para ellas.</li>
+<li><strong>Una sentencia no puede contener dos puntos.</strong> El formato de línea usa los
+  dos puntos como separador, así que una sentencia con dos puntos se
+  interpreta mal sin avisar.</li>
+<li><strong>Una línea de consulta mal formada detiene la ejecución con estado <code>0</code>.</strong> Una
+  línea con menos de tres campos imprime
+  <code>It is mandatory to specify name, query and type!</code> y termina la ejecución,
+  incluidas las sentencias que aún no se habían lanzado.</li>
+<li><strong>Una consulta fallida de los módulos de rendimiento detiene esa fase.</strong> Si el
+  usuario no puede leer una de las tres vistas, la fase termina con un error no
+  controlado después de que los módulos de consulta ya se hayan entregado.
+  Desactive las métricas con <code>--default_metrics 0</code> o conceda las lecturas.</li>
+<li><strong>El resumen de uso muestra un comando que no se ejecuta tal cual.</strong> <code>-h</code>
+  imprime la ejecución manual como <code>./pandora_db2</code>, pero el script distribuido no
+  es ejecutable por sí mismo: invóquelo con <code>python3 pandora_db2.py</code>.</li>
+</ul>
+<h3 id="diagnostico">Diagnóstico<a class="headerlink" href="#diagnostico" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Causa y acción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>no connection:</code> seguido del error del driver, estado <code>1</code></td>
+<td>La conexión falló. Compruebe el host, el puerto, el nombre de la base de datos, el usuario y la contraseña, y la ruta de red hasta el listener de Db2</td>
+</tr>
+<tr>
+<td><code>Error al conectarse ...</code> y después <code>0</code>, estado <code>0</code></td>
+<td>No se pudo abrir el archivo de consultas. Compruebe <code>--conf</code>, su ruta y sus permisos de lectura</td>
+</tr>
+<tr>
+<td><code>It is mandatory to specify name, query and type!</code></td>
+<td>Una línea del archivo de consultas tiene menos de tres campos separados por dos puntos</td>
+</tr>
+<tr>
+<td><code>error with the query:&lt;statement&gt;.&lt;error&gt;</code> en la salida de error estándar</td>
+<td>La base de datos rechazó esa sentencia. Las líneas siguientes se siguen procesando</td>
+</tr>
+<tr>
+<td><code>ERROR - Could not write file: ...</code></td>
+<td>La carpeta de datos no permite escritura, o ya existe un documento con el mismo nombre (consulte <a href="#limitaciones-conocidas">Limitaciones conocidas</a>)</td>
+</tr>
+<tr>
+<td>No se imprime nada y no se escribe ningún archivo</td>
+<td><code>--as_agent_plugin 1</code> imprime los módulos y no escribe nada; sin esa opción el addon escribe en <code>--data_dir</code> e imprime <code>1</code> por documento</td>
+</tr>
+<tr>
+<td>Falta un módulo de rendimiento</td>
+<td>La base de datos no devolvió valor para esa métrica, o la fase de métricas falló (consulte <a href="#limitaciones-conocidas">Limitaciones conocidas</a>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
+<h3 id="opciones-de-linea-de-comandos">Opciones de línea de comandos<a class="headerlink" href="#opciones-de-linea-de-comandos" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Opción</th>
+<th>Obligatoria</th>
+<th>Valor por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--hostname</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Nombre o dirección IP del host Db2</td>
+</tr>
+<tr>
+<td><code>--port</code></td>
+<td>No</td>
+<td><code>50000</code></td>
+<td>Puerto del listener de Db2</td>
+</tr>
+<tr>
+<td><code>--protocol</code></td>
+<td>No</td>
+<td><code>TCPIP</code></td>
+<td>Protocolo usado en la cadena de conexión</td>
+</tr>
+<tr>
+<td><code>--database</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Nombre de la base de datos en el servidor Db2</td>
+</tr>
+<tr>
+<td><code>--uid</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Usuario que ejecuta las sentencias</td>
+</tr>
+<tr>
+<td><code>--password</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Contraseña de ese usuario</td>
+</tr>
+<tr>
+<td><code>--conf</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Archivo de consultas. El addon lo lee en cada ejecución, antes de los módulos de rendimiento predeterminados</td>
+</tr>
+<tr>
+<td><code>--default_metrics</code></td>
+<td>No</td>
+<td><code>1</code></td>
+<td><code>1</code> publica los módulos de rendimiento predeterminados; cualquier otro valor los desactiva</td>
+</tr>
+<tr>
+<td><code>--agent_name</code></td>
+<td>No</td>
+<td><code>DB2</code></td>
+<td>Nombre del agente de consulta; el agente de métricas es <code>&lt;agent_name&gt;_metrics</code></td>
+</tr>
+<tr>
+<td><code>-g</code>, <code>--group</code></td>
+<td>No</td>
+<td><code>db2</code></td>
+<td>Grupo escrito en los datos de agente de ambos agentes</td>
+</tr>
+<tr>
+<td><code>--data_dir</code></td>
+<td>No</td>
+<td><code>/var/spool/pandora/data_in/</code></td>
+<td>Carpeta de los documentos de datos de agente en el modo de carpeta de datos</td>
+</tr>
+<tr>
+<td><code>--as_agent_plugin</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td><code>1</code> imprime los módulos en la salida estándar; cualquier otro valor escribe documentos en <code>--data_dir</code></td>
+</tr>
+<tr>
+<td><code>--tentacle_address</code></td>
+<td>No</td>
+<td>—</td>
+<td>Dirección del servidor de Tentacle. Tiene prioridad sobre <code>--as_agent_plugin</code>, y la entrega no funciona en la versión <code>1.0</code></td>
+</tr>
+<tr>
+<td><code>--tentacle_port</code></td>
+<td>No</td>
+<td><code>41121</code></td>
+<td>Puerto del servidor de Tentacle</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>No</td>
+<td>—</td>
+<td>Imprime el resumen de uso y termina</td>
+</tr>
+</tbody>
+</table>
+<h3 id="archivo-de-consultas">Archivo de consultas<a class="headerlink" href="#archivo-de-consultas" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Obligatorio</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>Sí</td>
+<td>Nombre del módulo</td>
+</tr>
+<tr>
+<td><code>statement</code></td>
+<td>Sí</td>
+<td>Sentencia ejecutada contra la base de datos conectada. No puede contener dos puntos</td>
+</tr>
+<tr>
+<td><code>module_type</code></td>
+<td>Sí</td>
+<td>Tipo de módulo de Pandora FMS, escrito tal cual en el módulo</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>No</td>
+<td>Descripción del módulo</td>
+</tr>
+</tbody>
+</table>
+<p>El campo <code>_database_</code> de una sentencia se sustituye por el nombre de la base de
+datos conectada entre comillas simples.</p>
+<h3 id="modulos-generados">Módulos generados<a class="headerlink" href="#modulos-generados" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Agente</th>
+<th>Módulo</th>
+<th>Tipo</th>
+<th>Unidad</th>
+<th>Origen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Consulta</td>
+<td>Según el archivo de consultas</td>
+<td>Según el archivo de consultas</td>
+<td>—</td>
+<td>Un módulo por sentencia</td>
+</tr>
+<tr>
+<td>Métricas</td>
+<td><code>no_of_bufferpools_&lt;DB_NAME&gt;</code></td>
+<td><code>generic_data</code></td>
+<td><code>count</code></td>
+<td>Número de buffer pools definidos en la base de datos</td>
+</tr>
+<tr>
+<td>Métricas</td>
+<td><code>total_logical_reads_&lt;DB_NAME&gt;</code></td>
+<td><code>generic_data</code></td>
+<td><code>count</code></td>
+<td>Suma de las lecturas lógicas totales informadas por los buffer pools</td>
+</tr>
+<tr>
+<td>Métricas</td>
+<td><code>total_physical_reads_&lt;DB_NAME&gt;</code></td>
+<td><code>generic_data</code></td>
+<td><code>count</code></td>
+<td>Suma de las lecturas físicas totales informadas por los buffer pools</td>
+</tr>
+<tr>
+<td>Métricas</td>
+<td><code>data_logical_reads_&lt;DB_NAME&gt;</code></td>
+<td><code>generic_data</code></td>
+<td><code>count</code></td>
+<td>Suma de las lecturas lógicas de datos</td>
+</tr>
+<tr>
+<td>Métricas</td>
+<td><code>data_physical_reads_&lt;DB_NAME&gt;</code></td>
+<td><code>generic_data</code></td>
+<td><code>count</code></td>
+<td>Suma de las lecturas físicas de datos</td>
+</tr>
+<tr>
+<td>Métricas</td>
+<td><code>index_logical_reads_&lt;DB_NAME&gt;</code></td>
+<td><code>generic_data</code></td>
+<td><code>count</code></td>
+<td>Suma de las lecturas lógicas de índices</td>
+</tr>
+<tr>
+<td>Métricas</td>
+<td><code>xda_logical_reads_&lt;DB_NAME&gt;</code></td>
+<td><code>generic_data</code></td>
+<td><code>count</code></td>
+<td>Suma de las lecturas lógicas XDA</td>
+</tr>
+<tr>
+<td>Métricas</td>
+<td><code>log_utilization_percent_&lt;DB_NAME&gt;</code></td>
+<td><code>generic_data</code></td>
+<td><code>%</code></td>
+<td>Utilización media del log de transacciones</td>
+</tr>
+<tr>
+<td>Métricas</td>
+<td><code>total_log_used_kb_&lt;DB_NAME&gt;</code></td>
+<td><code>generic_data</code></td>
+<td><code>KB</code></td>
+<td>Espacio total del log de transacciones en uso</td>
+</tr>
+<tr>
+<td>Métricas</td>
+<td><code>total_log_available_kb_&lt;DB_NAME&gt;</code></td>
+<td><code>generic_data</code></td>
+<td><code>KB</code></td>
+<td>Espacio total disponible del log de transacciones</td>
+</tr>
+</tbody>
+</table>
+<h3 id="estado-de-salida">Estado de salida<a class="headerlink" href="#estado-de-salida" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Estado</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>Ejecución correcta. También se usa cuando no se puede abrir el archivo de consultas o una línea de este está mal formada</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>Falló la conexión, falló una consulta de los módulos de rendimiento o no se pudo escribir un documento</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>Una opción recibió un valor de tipo incorrecto, por ejemplo un <code>--as_agent_plugin</code> que no es entero</td>
+</tr>
+</tbody>
+</table>
+<h3 id="identidad-del-addon">Identidad del addon<a class="headerlink" href="#identidad-del-addon" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Propiedad</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identificador en el Marketplace</td>
+<td><code>pandorafms.db2_remote</code></td>
+</tr>
+<tr>
+<td>Nombre</td>
+<td>DB2 Remote</td>
+</tr>
+<tr>
+<td>Versión</td>
+<td><code>1.0</code></td>
+</tr>
+<tr>
+<td>Categoría</td>
+<td>Miscelaneus</td>
+</tr>
+<tr>
+<td>Licencia</td>
+<td>One</td>
+</tr>
+<tr>
+<td>Última actualización en el Marketplace</td>
+<td>2025-06-25</td>
+</tr>
+<tr>
+<td>Disponibilidad</td>
+<td>Descarga limitada a usuarios con licencia</td>
+</tr>
+<tr>
+<td>Mantenimiento</td>
+<td>La entrada del Marketplace indica que el addon ya no se mantiene ni se actualiza activamente</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

@@ -1,0 +1,5037 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/plugins/tomcat/">
+      
+      
+        <link rel="prev" href="../sybase/">
+      
+      
+        <link rel="next" href="../zammad/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../../es/plugins/tomcat/" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Tomcat monitoring plugin - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tomcat-monitoring-plugin" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Tomcat monitoring plugin
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/plugins/tomcat/" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-cloudwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon CloudWatch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-ec2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon EC2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-rds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon S3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/db2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/digital-ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Ocean Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasticsearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/google-cloud-compute-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud Compute Engine Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/haproxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HAProxy Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hp-one-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HP One View Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hyper-v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/iot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/jmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JMX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/meraki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meraki Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Office 365 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/opensearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenSearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/ovh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OVH Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proxmox Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/rabbitmq-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-hana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-r3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP R3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/xenserver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XenServer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/discord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discord integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Chat integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/slack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Slack integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft Teams integration (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegram integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../active-directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Enterprise Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure PostgreSQL monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Azure SQL plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Azure Storage monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cisco-inventory-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco Inventory configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-netscaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix NetScaler monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../db2-remote/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Remote plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic SNMP plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exchange/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exchange
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glpi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GLPI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../google-drive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Drive monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ibm-z-series-mainframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBM Z Series Mainframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../influxdb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-for-mac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory plugin for MAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-ssh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory SSH plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../journalctl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Journalctl plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kafka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kafka monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../marklogic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MarkLogic monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-remote-atlas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora MongoDB remote / Atlas plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-server-querier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MSSQL Server Querier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../net-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Net usage plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Office 365 Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Openshift monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle VM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ldap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora LDAP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora UX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugin-executor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Plugin Executor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sap-hana-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Database plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Spark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sybase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sybase monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tomcat monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tomcat monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-the-tomcat-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create the Tomcat user
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection-to-tomcat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection to Tomcat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-what-to-collect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose what to collect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-the-metric-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter the metric names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delivery-to-pandora-fms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delivery to Pandora FMS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-it-from-pandora-fms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it from Pandora FMS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate-and-troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate and troubleshoot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate and troubleshoot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scheduled-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduled execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-behaviour" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run behaviour
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-limitations-of-this-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known limitations of this version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated modules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Generated modules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#jvm-memory-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JVM memory modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connector-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connector modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jvm-information-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JVM information modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addon-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addon identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zammad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zammad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zendesk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zendesk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to document
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-the-tomcat-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create the Tomcat user
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection-to-tomcat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection to Tomcat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-what-to-collect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose what to collect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-the-metric-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter the metric names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delivery-to-pandora-fms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delivery to Pandora FMS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-it-from-pandora-fms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it from Pandora FMS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate-and-troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate and troubleshoot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate and troubleshoot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scheduled-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduled execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-behaviour" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run behaviour
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-limitations-of-this-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known limitations of this version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated modules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Generated modules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#jvm-memory-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JVM memory modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connector-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connector modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jvm-information-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JVM information modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addon-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addon identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="tomcat-monitoring-plugin">Tomcat monitoring plugin<a class="headerlink" href="#tomcat-monitoring-plugin" title="Permanent link">¶</a></h1>
+<p><em>Article last updated: 2026-10-26.</em></p>
+<h2 id="what-it-does">What it does<a class="headerlink" href="#what-it-does" title="Permanent link">¶</a></h2>
+<p>The plugin monitors an Apache Tomcat instance from Pandora FMS. Each run
+authenticates against the Tomcat Manager web application, reads the connector
+and JVM status document and the JVM information report, and builds <strong>one
+Pandora FMS agent</strong> whose modules are the metrics it collected. The agent
+document is then delivered to Pandora FMS with Tentacle or copied into a local
+data folder.</p>
+<p>Nothing is installed on the Tomcat host: the plugin runs on a host that can
+reach the Manager application, and it keeps no state between runs. Every
+execution reads the current state again.</p>
+<p>The plugin is a standalone command that delivers its own agent. It is not an
+agent plugin and prints no module XML for a Pandora FMS agent to collect; it
+prints <code>1</code> when a run completes and <code>0</code> when it stops with an error. See
+<a href="#verify">Verify</a> for what that output does and does not prove.</p>
+<p>Two reads are configured independently, and each one produces its own group of
+modules:</p>
+<ul>
+<li><strong>Status document</strong> (<code>/manager/status/all?XML=true</code>): free, total and maximum
+  JVM memory, plus the thread and request counters of a connector.</li>
+<li><strong>JVM information report</strong> (<code>/manager/text/vminfo</code>): runtime, operating
+  system, thread, class loading, compilation, garbage collector and memory pool
+  metrics of the JVM that runs Tomcat.</li>
+</ul>
+<h2 id="prepare">Prepare<a class="headerlink" href="#prepare" title="Permanent link">¶</a></h2>
+<h3 id="compatibility">Compatibility<a class="headerlink" href="#compatibility" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>State</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Addon <code>pandorafms.tomcat</code>, version <code>1.0</code></td>
+<td>Documented target</td>
+<td>The Marketplace package version this page describes. See <a href="#addon-identity">Addon identity</a></td>
+</tr>
+<tr>
+<td>The Tomcat Manager web application deployed at <code>&lt;TARGET_HOST&gt;:&lt;port&gt;</code></td>
+<td><code>Required</code></td>
+<td>Every read is an HTTP request to <code>/manager/status/all?XML=true</code> or <code>/manager/text/vminfo</code></td>
+</tr>
+<tr>
+<td>A Tomcat user with the <code>manager-script</code> role</td>
+<td><code>Required</code></td>
+<td>The Manager application restricts <code>/manager/text/*</code> to that role and also admits it on <code>/manager/status/*</code></td>
+</tr>
+<tr>
+<td>Network access from the plugin host to the Tomcat connector</td>
+<td><code>Required</code></td>
+<td>The plugin connects from the host where it runs</td>
+</tr>
+<tr>
+<td>Network access to the Tentacle port, <code>41121</code> by default</td>
+<td><code>Required</code> when the delivery is not a local copy</td>
+<td>Tentacle delivery is the default</td>
+</tr>
+<tr>
+<td>A writable <code>/var/spool/pandora/data_in/</code> on the plugin host</td>
+<td><code>Required</code> for the local copy</td>
+<td><code>transfer_mode=local</code> moves the document into that folder</td>
+</tr>
+<tr>
+<td>Tomcat versions</td>
+<td><code>Not validated</code></td>
+<td>No version matrix has been recorded for version <code>1.0</code></td>
+</tr>
+<tr>
+<td>Operating system of the plugin host</td>
+<td><code>Not validated</code></td>
+<td>No operating system has been recorded for version <code>1.0</code></td>
+</tr>
+<tr>
+<td>Pandora FMS NG 784 and later</td>
+<td><code>Not validated</code></td>
+<td>No release-specific validation record exists. The Marketplace states that its integrations are compatible with Pandora FMS NG 784 and later</td>
+</tr>
+</tbody>
+</table>
+<h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>A Tomcat installation with the Manager web application deployed.</strong> Every
+   read targets a <code>/manager/...</code> path, so a Tomcat without the Manager
+   application cannot be monitored by this plugin.</li>
+<li><strong>A Tomcat user with the <code>manager-script</code> role</strong> in <code>tomcat-users.xml</code>, as
+   described in <a href="#create-the-tomcat-user">Create the Tomcat user</a>.</li>
+<li><strong>Network access</strong> from the plugin host to the connector that answers the
+   Manager application.</li>
+<li><strong>A destination for the generated agent</strong>: the Pandora FMS Tentacle service,
+   or a local data folder that the Pandora FMS server reads.</li>
+<li><strong>A host to run the plugin.</strong> The Pandora FMS server itself is the usual
+   choice, because the agent is delivered from there.</li>
+</ol>
+<h3 id="create-the-tomcat-user">Create the Tomcat user<a class="headerlink" href="#create-the-tomcat-user" title="Permanent link">¶</a></h3>
+<p>The plugin authenticates with HTTP Basic against the Manager application. Add a
+user with the <code>manager-script</code> role to the Tomcat user file:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;tomcat-users&gt;</span>
+<span class="w">  </span><span class="nt">&lt;role</span><span class="w"> </span><span class="na">rolename=</span><span class="s">"manager-script"</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;user</span><span class="w"> </span><span class="na">username=</span><span class="s">"&lt;USERNAME&gt;"</span><span class="w"> </span><span class="na">password=</span><span class="s">"&lt;PASSWORD&gt;"</span><span class="w"> </span><span class="na">roles=</span><span class="s">"manager-script"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/tomcat-users&gt;</span>
+</code></pre></div>
+<p><code>manager-script</code> is the only role the plugin needs: the Manager application
+maps the <code>/text/*</code> interface to that role and also accepts it on the <code>/status/*</code>
+interface. Apply the change and restart Tomcat.</p>
+<p>Credentials travel with every request:</p>
+<ul>
+<li>Over plain HTTP the user and the password are sent unencrypted, in a header
+  that is only encoded, not encrypted. Use <code>https=1</code> when the path between the
+  plugin host and Tomcat is not trusted.</li>
+<li>The password is stored in the plugin configuration file in plain text.
+  Restrict the file permissions to the user that runs the plugin.</li>
+</ul>
+<h3 id="install-the-plugin">Install the plugin<a class="headerlink" href="#install-the-plugin" title="Permanent link">¶</a></h3>
+<p>Download the addon from the Pandora FMS Marketplace entry, which is limited to
+licensed users:</p>
+<p><a href="https://marketplace.pandorafms.com/entries/pandorafms.tomcat">https://marketplace.pandorafms.com/entries/pandorafms.tomcat</a></p>
+<p>Install the executable on the host that will run it and keep its configuration
+file next to it. The plugin takes that file as its only argument, so any
+location is valid as long as the execution uses the same path. Give the
+executable permission to run.</p>
+<h2 id="configure">Configure<a class="headerlink" href="#configure" title="Permanent link">¶</a></h2>
+<p>The plugin takes a single option, <code>--conf</code>, with the path of its configuration
+file:</p>
+<div class="highlight"><pre><span></span><code>./pandora_tomcat<span class="w"> </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;
+</code></pre></div>
+<p>The configuration file is an INI file with a single section named <code>CONF</code>. The
+values in it override the built-in defaults. These rules apply:</p>
+<ul>
+<li><strong>The <code>[CONF]</code> header is mandatory.</strong> A file with only <code>key=value</code> lines, as
+  the previous generation of the addon used, is rejected: the plugin prints the
+  parser message and <code>0</code> and exits (see <a href="#troubleshooting">Troubleshooting</a>).</li>
+<li><strong>Only the keys inside <code>[CONF]</code> are read.</strong> A key written outside the section
+  is ignored and its default applies.</li>
+<li><strong>A missing key keeps its default.</strong> The default of every key is listed in
+  <a href="#configuration-file">Configuration file</a>.</li>
+<li><strong>Do not put comments after a value.</strong> Everything after the <code>=</code> reaches the
+  plugin as part of the value; use whole lines that start with <code>#</code> for comments.</li>
+<li><strong>A repeated key keeps its last value.</strong></li>
+</ul>
+<p>Use <code>password</code>, not <code>pass</code>: the plugin reads the key <code>password</code> only. Keys from
+the previous generation of the addon — <code>pass</code>, <code>instance</code>, <code>custom_url</code>,
+<code>threads</code>, <code>MODULE_GROUP</code>, <code>enable_thread_monitoring</code>,
+<code>enable_jvm_memory_monitoring</code> and the rest — are read by nothing and change
+nothing.</p>
+<h3 id="connection-to-tomcat">Connection to Tomcat<a class="headerlink" href="#connection-to-tomcat" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">[CONF]</span>
+<span class="na">host</span><span class="o">=</span><span class="s">&lt;TARGET_HOST&gt;</span>
+<span class="na">port</span><span class="o">=</span><span class="s">8080</span>
+<span class="na">user</span><span class="o">=</span><span class="s">&lt;USERNAME&gt;</span>
+<span class="na">password</span><span class="o">=</span><span class="s">&lt;PASSWORD&gt;</span>
+<span class="na">https</span><span class="o">=</span><span class="s">0</span>
+</code></pre></div>
+<ul>
+<li><code>host</code> is a bare host name or IP address. It takes no scheme and no port: the
+  plugin builds <code>http://&lt;host&gt;:&lt;port&gt;/manager/...</code> itself, so a value such as
+  <code>http://&lt;TARGET_HOST&gt;</code> is taken as a host named <code>http</code> and the run fails to
+  connect.</li>
+<li><code>port</code> is the connector that serves the Manager application, <code>8080</code> by
+  default. A non-numeric value is read as <code>0</code>.</li>
+<li><code>https</code> switches the scheme to <code>https</code> only when its value is exactly <code>1</code>.
+  Any other value, including <code>true</code>, keeps <code>http</code>.</li>
+<li>The Manager context path is fixed to <code>/manager</code>. A Tomcat whose Manager
+  application is deployed under another path cannot be configured here.</li>
+</ul>
+<h3 id="choose-what-to-collect">Choose what to collect<a class="headerlink" href="#choose-what-to-collect" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="na">enable_status_monitoring</span><span class="o">=</span><span class="s">1</span>
+<span class="na">enable_vminfo_monitoring</span><span class="o">=</span><span class="s">1</span>
+</code></pre></div>
+<p>Each switch enables its read only when its value is exactly <code>1</code>; <code>0</code>, <code>2</code>, an
+empty value or a non-numeric value disables it. This is not the "any value
+greater than zero" rule of some other addons.</p>
+<ul>
+<li><code>enable_status_monitoring</code> collects the status document. It produces the
+  three JVM memory modules and the thread and request modules of a connector.</li>
+<li><code>enable_vminfo_monitoring</code> collects the JVM information report.</li>
+</ul>
+<p>With both switches disabled the plugin still builds and delivers an agent, but
+the agent has no modules.</p>
+<h3 id="filter-the-metric-names">Filter the metric names<a class="headerlink" href="#filter-the-metric-names" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="na">allow_regexp</span><span class="o">=</span>
+<span class="na">deny_regexp</span><span class="o">=</span>
+</code></pre></div>
+<p>Both values are regular expressions matched anywhere in the metric name:</p>
+<ul>
+<li><code>allow_regexp</code>: when it is not empty, only the metrics whose name contains a
+  match are published. <code>allow_regexp=bytes</code> keeps <code>bytesReceived</code> and
+  <code>bytesSent</code> and drops the rest.</li>
+<li><code>deny_regexp</code>: metrics whose name contains a match are dropped.</li>
+<li>Both empty, the default, applies no filter.</li>
+</ul>
+<p>The filters apply to the connector thread and request metrics and to the JVM
+information metrics. They do not apply to <code>memory_free</code>, <code>memory_total</code> or
+<code>memory_max</code>.</p>
+<h3 id="agent-identity">Agent identity<a class="headerlink" href="#agent-identity" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="na">agent_name</span><span class="o">=</span><span class="s">Tomcat</span>
+<span class="na">agents_group_name</span><span class="o">=</span><span class="s">tomcat</span>
+<span class="na">interval</span><span class="o">=</span><span class="s">300</span>
+<span class="na">module_prefix</span><span class="o">=</span>
+</code></pre></div>
+<ul>
+<li><code>agent_name</code> is the alias of the generated agent. The agent name that Pandora
+  FMS stores is a 32-character hash derived from this value, so the configured
+  text identifies the agent as its alias and never as its name. Changing
+  <code>agent_name</code> changes the hash and creates a different agent, leaving the
+  previous one without data.</li>
+<li><code>agents_group_name</code> is the group of the agent, by name.</li>
+<li><code>interval</code> is the agent interval in seconds. A non-numeric value is read as
+  <code>0</code>.</li>
+<li><code>module_prefix</code> is prepended to every module name with no separator, so
+  <code>module_prefix=tc01</code> turns <code>maxThreads</code> into <code>tc01maxThreads</code>. Leave it empty
+  unless the modules of several Tomcat instances must be told apart.</li>
+</ul>
+<h3 id="delivery-to-pandora-fms">Delivery to Pandora FMS<a class="headerlink" href="#delivery-to-pandora-fms" title="Permanent link">¶</a></h3>
+<p>Tentacle is the default. It needs the Tentacle server address:</p>
+<div class="highlight"><pre><span></span><code><span class="na">transfer_mode</span><span class="o">=</span><span class="s">tentacle</span>
+<span class="na">tentacle_ip</span><span class="o">=</span><span class="s">&lt;PANDORA_FMS_URL&gt;</span>
+<span class="na">tentacle_port</span><span class="o">=</span><span class="s">41121</span>
+</code></pre></div>
+<p>The local copy writes the document into the Pandora FMS data folder, which is
+the usual choice when the plugin runs on the Pandora FMS server itself:</p>
+<div class="highlight"><pre><span></span><code><span class="na">transfer_mode</span><span class="o">=</span><span class="s">local</span>
+</code></pre></div>
+<ul>
+<li><code>transfer_mode</code> selects the local copy only when its value is exactly
+  <code>local</code>. Any other value, including the default <code>tentacle</code> and a misspelling
+  such as <code>tentacle_</code>, delivers with the Tentacle client.</li>
+<li>The Tentacle client is the <code>tentacle_client</code> executable found in <code>PATH</code>. The
+  client errors are written to standard error.</li>
+<li><code>temporal</code>, <code>data_dir</code>, <code>tentacle_client</code> and <code>tentacle_opts</code> are accepted
+  and ignored. The document is always written to <code>/tmp</code>, the local copy always
+  goes to <code>/var/spool/pandora/data_in/</code>, and no extra Tentacle options are
+  passed. Create <code>/var/spool/pandora/data_in/</code> before the first local run.</li>
+</ul>
+<h3 id="run-it-from-pandora-fms">Run it from Pandora FMS<a class="headerlink" href="#run-it-from-pandora-fms" title="Permanent link">¶</a></h3>
+<p>The plugin delivers its own agent, so it runs as a scheduled command on a host,
+not as a module of a Pandora FMS agent:</p>
+<ul>
+<li><strong>As a server plugin.</strong> Register the executable in the console as a standard
+  server plugin and pass <code>--conf &lt;PATH_TO_CONFIG&gt;</code> as its parameters. Pandora
+  FMS then runs it on the server that owns the module, at the plugin interval.</li>
+<li><strong>As a scheduled job.</strong> Add the command to the <code>cron</code> of the plugin host, as
+  described in <a href="#scheduled-execution">Scheduled execution</a>.</li>
+</ul>
+<p>Do not register it as an agent plugin expecting module XML: it prints <code>1</code> or
+<code>0</code>, not modules. Running it from an agent command produces that single value
+as a module while the Tomcat agent is delivered separately.</p>
+<!-- SCREENSHOT NEEDED: Pandora FMS server plugin registration form with the path to the pandora_tomcat executable and --conf <PATH_TO_CONFIG> as parameters, no real hostnames or credentials. -->
+
+<h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">¶</a></h2>
+<p>Run the plugin manually from a terminal, passing the configuration file:</p>
+<div class="highlight"><pre><span></span><code>./pandora_tomcat<span class="w"> </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;
+</code></pre></div>
+<p>Each run executes once and exits.</p>
+<ul>
+<li><code>1</code> on standard output means the run reached the end without an exception.
+  It does <strong>not</strong> prove that the agent reached Pandora FMS.</li>
+<li><code>0</code> on standard output means the run stopped with an error it handled. The
+  error message is printed on the line before the <code>0</code>.</li>
+<li>A traceback on standard error, with no <code>1</code> and no <code>0</code>, means the run stopped
+  before delivering anything: the Manager application could not be reached, the
+  credentials were rejected, or the answer was not the expected document.</li>
+</ul>
+<p>A run with no argument, or with <code>--conf</code> and no value, prints the usage summary
+and exits with status <code>2</code>. <code>-h</code> prints the same summary and exits with status
+<code>0</code>.</p>
+<p>Then confirm the arrival in the console: an agent with the configured
+<code>agent_name</code> as its alias — its stored name is the 32-character hash described
+in <a href="#agent-identity">Agent identity</a> — carrying the modules described in
+<a href="#understand-the-results">Understand the results</a> once the interval has passed.</p>
+<!-- SCREENSHOT NEEDED: Pandora FMS agent detail view of the Tomcat agent, showing the configured alias and the connector thread and request modules with data, no real hostnames or credentials. -->
+
+<p>A run that prints <code>1</code> does not prove that every collection worked either: see
+<a href="#known-limitations-of-this-version">Known limitations of this version</a>.</p>
+<h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
+<p>The plugin always produces <strong>one agent</strong>. Its modules fall into four groups:</p>
+<ul>
+<li><strong>JVM memory.</strong> <code>memory_free</code>, <code>memory_total</code> and <code>memory_max</code> report the
+  values of the <code>&lt;memory&gt;</code> element of the status document, in bytes. Their
+  value is written with braces and quotes, so they are not usable as numbers in
+  this version; see the limitations below.</li>
+<li><strong>Connector threads.</strong> One module per attribute of the first connector's
+  thread information: <code>maxThreads</code>, <code>currentThreadCount</code> and
+  <code>currentThreadsBusy</code> in a current Tomcat.</li>
+<li><strong>Connector requests.</strong> One module per attribute of the first connector's
+  request information: <code>maxTime</code>, <code>processingTime</code>, <code>requestCount</code>,
+  <code>errorCount</code>, <code>bytesReceived</code> and <code>bytesSent</code>.</li>
+<li><strong>JVM information.</strong> One module per line of the JVM information report that
+  survives the plugin filter, named after the line label with the spaces
+  replaced by underscores, for example <code>heap_used</code> or <code>availableprocessors</code>.</li>
+</ul>
+<p>Every module is declared as <code>generic_data</code>, including the ones whose value is
+text, and none of them carries a unit, a threshold or a module group. Values
+that describe bytes are therefore published as plain numbers.</p>
+<p>The agent is created with the configured group and interval, an empty operating
+system, an empty address and the timestamp of the run. It has no parent agent.</p>
+<h2 id="operate-and-troubleshoot">Operate and troubleshoot<a class="headerlink" href="#operate-and-troubleshoot" title="Permanent link">¶</a></h2>
+<h3 id="scheduled-execution">Scheduled execution<a class="headerlink" href="#scheduled-execution" title="Permanent link">¶</a></h3>
+<p>The plugin has no internal scheduler, so an external one runs it: the server
+plugin scheduler of Pandora FMS, or a <code>cron</code> entry on the plugin host:</p>
+<div class="highlight"><pre><span></span><code>*/5 * * * * root /usr/share/pandora_server/util/plugin/pandora_tomcat --conf &lt;PATH_TO_CONFIG&gt;
+</code></pre></div>
+<p>Match the schedule to the agent interval so the agent receives data at the rate
+the console expects for it.</p>
+<h3 id="run-behaviour">Run behaviour<a class="headerlink" href="#run-behaviour" title="Permanent link">¶</a></h3>
+<ul>
+<li>The plugin keeps no state between runs and can be executed manually at any
+  time.</li>
+<li>It sets no request timeout. A Manager application that accepts the connection
+  and never answers keeps the run waiting; bound the execution externally when
+  that risk exists, for example by running the command through <code>timeout</code>.</li>
+<li>When it receives <code>SIGTERM</code> it prints <code>Received SIGTERM signal. Cleaning up...</code>
+  and exits with status <code>0</code>. A run cut short this way is not distinguished from
+  a completed one by its exit status.</li>
+</ul>
+<h3 id="known-limitations-of-this-version">Known limitations of this version<a class="headerlink" href="#known-limitations-of-this-version" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>The three JVM memory modules carry a wrapped value.</strong> <code>memory_free</code>,
+  <code>memory_total</code> and <code>memory_max</code> are written as <code>{'&lt;number&gt;'}</code>, braces and
+  quotes included, instead of a bare number. Pandora FMS cannot read them as a
+  numeric series. The connector and JVM information modules are not affected.</li>
+<li><strong>Only the first connector is read.</strong> The plugin takes the first <code>&lt;threadInfo&gt;</code>
+  and the first <code>&lt;requestInfo&gt;</code> of the status document and names their modules
+  after the attribute alone. On a Tomcat with several connectors, only the one
+  that appears first is collected, and the modules do not identify which
+  connector they belong to.</li>
+<li><strong>The agent name is a hash.</strong> Pandora FMS stores the agent under a
+  32-character hash; <code>agent_name</code> is sent as the alias. Plan the name before the
+  first run, because changing it creates a new agent.</li>
+<li><strong><code>temporal</code>, <code>data_dir</code>, <code>tentacle_client</code> and <code>tentacle_opts</code> do nothing.</strong>
+  The write folder is always <code>/tmp</code>, the local copy always goes to
+  <code>/var/spool/pandora/data_in/</code>, and the Tentacle client is always the one in
+  <code>PATH</code> without extra options.</li>
+<li><strong>Delivery failures are not reported in the output.</strong> With Tentacle, a failed
+  transfer writes the client error to standard error, deletes the generated
+  document and still prints <code>1</code>. With the local copy, a failure prints the error
+  and <code>0</code>.</li>
+<li><strong>The exit status does not describe the run.</strong> <code>1</code> and <code>0</code> are printed on
+  standard output and the process exits with status <code>0</code> in both cases. Only
+  command-line errors (status <code>2</code>) and uncaught connection, authentication or
+  parse failures (status <code>1</code> with a traceback) differ.</li>
+<li><strong>The Manager path is fixed.</strong> The plugin always requests <code>/manager/...</code>;
+  there is no custom URL setting.</li>
+<li><strong>HTTPS has no certificate override.</strong> With <code>https=1</code> the certificate of the
+  Tomcat connector must be trusted by the plugin host. There is no option to
+  skip the verification, so a self-signed certificate stops the run.</li>
+<li><strong>Every JVM information module is <code>generic_data</code>.</strong> Text values such as
+  <code>vmname</code>, <code>vmversion</code> or <code>vmvendor</code> are sent as text inside a numeric module,
+  so they cannot be read as a series.</li>
+<li><strong>JVM information names repeat.</strong> The report has one block per garbage
+  collector and per memory pool, and the plugin uses only the line label, so
+  names such as <code>getcollectioncount</code>, <code>current_used</code> or <code>peak_max</code> appear once
+  per collector or pool in the same document, with no way to tell them apart.</li>
+<li><strong>No application, session or worker modules.</strong> This version reads the status
+  and JVM information reports only. It does not query the application list, so
+  it produces no per-application status or session modules, no <code>[workers]</code>
+  totals and no threading usage percentage.</li>
+</ul>
+<h3 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>A traceback ending in an invalid-URL error that mentions <code>No host
+  supplied</code></strong> — <code>host</code> is empty. The <code>[CONF]</code> section or the <code>host</code> key is
+  missing, or the configuration file path is wrong and the built-in defaults
+  were used.</li>
+<li><strong>The plugin prints a parser message and <code>0</code>, and no module is generated</strong> —
+  the configuration file has no <code>[CONF]</code> header. Add the header.</li>
+<li><strong>A traceback ending in an XML parse error</strong> — the Manager application
+  answered with something that is not the status document. Check the
+  credentials, the <code>user</code> and <code>password</code> keys, and that the Manager application
+  is deployed. A rejected authentication produces an error page, not the
+  document.</li>
+<li><strong>A traceback ending in a connection error</strong> — Tomcat is not listening on
+  <code>host:port</code>, the port is wrong, or <code>https</code> does not match the connector. Check
+  the connector configuration of Tomcat.</li>
+<li><strong>A traceback ending in an SSL error</strong> — <code>https=1</code> and the certificate is not
+  trusted by the plugin host. Import the CA into the trust store of the host, or
+  serve the Manager application over a trusted certificate.</li>
+<li><strong>The three memory modules carry <code>{'...'}</code> values</strong> — expected in this
+  version; see the limitations above. Use the connector and JVM information
+  modules for memory analysis.</li>
+<li><strong>Fewer modules than expected</strong> — <code>enable_status_monitoring</code> or
+  <code>enable_vminfo_monitoring</code> is not exactly <code>1</code>, or <code>allow_regexp</code> and
+  <code>deny_regexp</code> are filtering names out. Check both.</li>
+<li><strong>The thread and request modules cover a single connector</strong> — expected; the
+  plugin reads the first connector only.</li>
+<li><strong>The agent does not appear in the console after a run that printed <code>1</code></strong> —
+  the delivery failed. Check the Tentacle client in <code>PATH</code>, <code>tentacle_ip</code> and
+  <code>tentacle_port</code>, or that <code>transfer_mode=local</code> was really selected and
+  <code>/var/spool/pandora/data_in/</code> is writable.</li>
+</ul>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">¶</a></h2>
+<h3 id="configuration-file">Configuration file<a class="headerlink" href="#configuration-file" title="Permanent link">¶</a></h3>
+<p>The file is passed with <code>--conf</code> and holds <code>key=value</code> lines inside a <code>CONF</code>
+section. Values in the file override the built-in defaults shown below.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>host</code></td>
+<td>Yes</td>
+<td>Empty</td>
+<td>Host name or IP address of Tomcat, without scheme and without port</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td>No</td>
+<td><code>8080</code></td>
+<td>Connector port that serves the Manager application; a non-numeric value is read as <code>0</code></td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td>Yes</td>
+<td>Empty</td>
+<td>Tomcat user with the <code>manager-script</code> role</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>Yes</td>
+<td>Empty</td>
+<td>Password of <code>user</code>, stored in plain text</td>
+</tr>
+<tr>
+<td><code>https</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Only <code>1</code> queries <code>https://</code>; any other value queries <code>http://</code></td>
+</tr>
+<tr>
+<td><code>enable_status_monitoring</code></td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Only <code>1</code> collects the status document: memory, connector threads and connector requests</td>
+</tr>
+<tr>
+<td><code>enable_vminfo_monitoring</code></td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Only <code>1</code> collects the JVM information report</td>
+</tr>
+<tr>
+<td><code>allow_regexp</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Regular expression; only metric names that contain a match are published. Does not apply to the memory modules</td>
+</tr>
+<tr>
+<td><code>deny_regexp</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Regular expression; metric names that contain a match are dropped. Same scope as <code>allow_regexp</code></td>
+</tr>
+<tr>
+<td><code>agent_name</code></td>
+<td>No</td>
+<td><code>Tomcat</code></td>
+<td>Alias of the generated agent; the stored agent name is a 32-character hash of this value</td>
+</tr>
+<tr>
+<td><code>agents_group_name</code></td>
+<td>No</td>
+<td><code>tomcat</code></td>
+<td>Group of the generated agent, by name</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>No</td>
+<td><code>300</code></td>
+<td>Agent interval in seconds; a non-numeric value is read as <code>0</code></td>
+</tr>
+<tr>
+<td><code>module_prefix</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Text prepended to every module name, with no separator</td>
+</tr>
+<tr>
+<td><code>transfer_mode</code></td>
+<td>No</td>
+<td><code>tentacle</code></td>
+<td>Only <code>local</code> copies the document into <code>/var/spool/pandora/data_in/</code>; any other value delivers with Tentacle</td>
+</tr>
+<tr>
+<td><code>tentacle_ip</code></td>
+<td>No</td>
+<td><code>127.0.0.1</code></td>
+<td>Tentacle server address; used unless <code>transfer_mode=local</code></td>
+</tr>
+<tr>
+<td><code>tentacle_port</code></td>
+<td>No</td>
+<td><code>41121</code></td>
+<td>Tentacle server port</td>
+</tr>
+<tr>
+<td><code>temporal</code></td>
+<td>No</td>
+<td>—</td>
+<td>Accepted and ignored; the document is always written to <code>/tmp</code></td>
+</tr>
+<tr>
+<td><code>data_dir</code></td>
+<td>No</td>
+<td>—</td>
+<td>Accepted and ignored; the local copy always goes to <code>/var/spool/pandora/data_in/</code></td>
+</tr>
+<tr>
+<td><code>tentacle_client</code></td>
+<td>No</td>
+<td>—</td>
+<td>Accepted and ignored; the client is always <code>tentacle_client</code> from <code>PATH</code></td>
+</tr>
+<tr>
+<td><code>tentacle_opts</code></td>
+<td>No</td>
+<td>—</td>
+<td>Accepted and ignored; no extra Tentacle options are passed</td>
+</tr>
+</tbody>
+</table>
+<h3 id="command-line-execution">Command-line execution<a class="headerlink" href="#command-line-execution" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>./pandora_tomcat<span class="w"> </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No argument, or <code>--conf</code> without a value</td>
+<td>The usage summary on standard error and exit status <code>2</code></td>
+</tr>
+<tr>
+<td><code>-h</code> or <code>--help</code></td>
+<td>The usage summary and exit status <code>0</code></td>
+</tr>
+<tr>
+<td><code>--conf</code> names a readable file with a <code>[CONF]</code> section</td>
+<td>The run uses that configuration</td>
+</tr>
+<tr>
+<td><code>--conf</code> names a file that does not exist</td>
+<td>The file is ignored, the defaults apply and the run stops with an invalid-URL error, exit status <code>1</code></td>
+</tr>
+<tr>
+<td>The file has no <code>[CONF]</code> section</td>
+<td>The parser message and <code>0</code> on standard output, exit status <code>0</code></td>
+</tr>
+<tr>
+<td>The run reaches the end</td>
+<td><code>1</code>, or <code>0</code> after an error it handled, and exit status <code>0</code></td>
+</tr>
+<tr>
+<td>The Manager request fails or its answer cannot be parsed</td>
+<td>A traceback on standard error and exit status <code>1</code></td>
+</tr>
+<tr>
+<td><code>SIGTERM</code> is received</td>
+<td><code>Received SIGTERM signal. Cleaning up...</code> and exit status <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="generated-modules">Generated modules<a class="headerlink" href="#generated-modules" title="Permanent link">¶</a></h3>
+<p>Every module is declared as <code>generic_data</code>, carries no unit and receives the
+<code>module_prefix</code> value in front of its name. The descriptions the plugin writes
+are <code>Metrics type: JVM</code> for the memory modules, <code>Metrics type: THREADS</code> for the
+thread modules, <code>Metrics type: REQUESTS</code> for the request modules and
+<code>Metrics type: VMINFO</code> for the JVM information modules.</p>
+<h4 id="jvm-memory-modules">JVM memory modules<a class="headerlink" href="#jvm-memory-modules" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>When</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>memory_free</code></td>
+<td><code>enable_status_monitoring=1</code></td>
+<td>Free memory reported by the JVM, in bytes, wrapped as <code>{'&lt;number&gt;'}</code></td>
+</tr>
+<tr>
+<td><code>memory_total</code></td>
+<td><code>enable_status_monitoring=1</code></td>
+<td>Total memory reported by the JVM, in bytes, wrapped as <code>{'&lt;number&gt;'}</code></td>
+</tr>
+<tr>
+<td><code>memory_max</code></td>
+<td><code>enable_status_monitoring=1</code></td>
+<td>Maximum memory reported by the JVM, in bytes, wrapped as <code>{'&lt;number&gt;'}</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="connector-modules">Connector modules<a class="headerlink" href="#connector-modules" title="Permanent link">¶</a></h4>
+<p>One module per attribute, named after the attribute alone, from the first
+<code>&lt;threadInfo&gt;</code> and the first <code>&lt;requestInfo&gt;</code> of the status document:</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Source</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>maxThreads</code></td>
+<td><code>threadInfo</code></td>
+<td>Maximum threads of the connector</td>
+</tr>
+<tr>
+<td><code>currentThreadCount</code></td>
+<td><code>threadInfo</code></td>
+<td>Threads in the connector pool</td>
+</tr>
+<tr>
+<td><code>currentThreadsBusy</code></td>
+<td><code>threadInfo</code></td>
+<td>Threads serving a request</td>
+</tr>
+<tr>
+<td><code>maxTime</code></td>
+<td><code>requestInfo</code></td>
+<td>Longest request processing time</td>
+</tr>
+<tr>
+<td><code>processingTime</code></td>
+<td><code>requestInfo</code></td>
+<td>Total request processing time</td>
+</tr>
+<tr>
+<td><code>requestCount</code></td>
+<td><code>requestInfo</code></td>
+<td>Requests handled</td>
+</tr>
+<tr>
+<td><code>errorCount</code></td>
+<td><code>requestInfo</code></td>
+<td>Requests that ended in an error</td>
+</tr>
+<tr>
+<td><code>bytesReceived</code></td>
+<td><code>requestInfo</code></td>
+<td>Bytes received by the connector</td>
+</tr>
+<tr>
+<td><code>bytesSent</code></td>
+<td><code>requestInfo</code></td>
+<td>Bytes sent by the connector</td>
+</tr>
+</tbody>
+</table>
+<p>The list is the set of attributes a current Tomcat publishes in the status
+document; an attribute the connector does not publish produces no module.</p>
+<h4 id="jvm-information-modules">JVM information modules<a class="headerlink" href="#jvm-information-modules" title="Permanent link">¶</a></h4>
+<p>The report is filtered before it becomes modules: lines without a value, keys
+that start with <code>org.</code>, <code>java.</code>, <code>sun.</code>, <code>user.</code>, <code>package.</code>, <code>tomcat.</code>,
+<code>catalina.</code>, <code>awt.</code> or <code>jdk.</code>, keys that contain <code>classpath</code>, <code>librarypath</code>,
+<code>loader</code>, <code>path</code>, <code>separator</code>, <code>vendor.url</code>, <code>level=</code> or <code>parent=</code>, and keys
+that contain none of <code>vm</code>, <code>heap</code>, <code>non-heap</code>,
+<code>current</code>, <code>peak</code>, <code>collection</code>, <code>uptime</code>, <code>processor</code>, <code>load</code>, <code>thread</code>,
+<code>compilation</code>, <code>gc</code> or <code>memory</code> are dropped. The module name is the remaining
+label, lowercased, with spaces replaced by underscores.</p>
+<p>For a current Tomcat the surviving modules are:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Modules</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Runtime</td>
+<td><code>vmname</code>, <code>vmversion</code>, <code>vmvendor</code>, <code>uptime</code></td>
+<td>JVM name, version and vendor; JVM uptime in milliseconds</td>
+</tr>
+<tr>
+<td>Operating system</td>
+<td><code>availableprocessors</code>, <code>systemloadaverage</code></td>
+<td>Processors available to the JVM and system load average</td>
+</tr>
+<tr>
+<td>Threads</td>
+<td><code>iscurrentthreadcputimesupported</code>, <code>isthreadcputimesupported</code>, <code>isthreadcputimeenabled</code>, <code>isthreadcontentionmonitoringsupported</code>, <code>isthreadcontentionmonitoringenabled</code>, <code>peak</code></td>
+<td>JVM capability flags and peak thread count</td>
+</tr>
+<tr>
+<td>Class loading</td>
+<td><code>totalloaded</code></td>
+<td>Classes loaded since the JVM started</td>
+</tr>
+<tr>
+<td>Compilation</td>
+<td><code>totalcompilationtime</code>, <code>iscompilationtimemonitoringsupported</code></td>
+<td>Just-in-time compilation time and its support flag</td>
+</tr>
+<tr>
+<td>Garbage collectors</td>
+<td><code>getcollectioncount</code>, <code>getcollectiontime</code></td>
+<td>Collections and collection time, once per collector under the same name</td>
+</tr>
+<tr>
+<td>Heap and non-heap</td>
+<td><code>heap_init</code>, <code>heap_used</code>, <code>heap_committed</code>, <code>heap_max</code>, <code>non-heap_init</code>, <code>non-heap_used</code>, <code>non-heap_committed</code>, <code>non-heap_max</code></td>
+<td>Heap and non-heap memory usage, in bytes</td>
+</tr>
+<tr>
+<td>Memory pools</td>
+<td><code>current_init</code>, <code>current_used</code>, <code>current_committed</code>, <code>current_max</code>, <code>collection_init</code>, <code>collection_used</code>, <code>collection_committed</code>, <code>collection_max</code>, <code>peak_init</code>, <code>peak_used</code>, <code>peak_committed</code>, <code>peak_max</code>, <code>getcollectionusagethreshold</code>, <code>getcollectionusagethresholdcount</code></td>
+<td>Usage thresholds and usage of each memory pool, once per pool under the same name</td>
+</tr>
+</tbody>
+</table>
+<p>The exact module set depends on the garbage collectors and memory pools of the
+JVM, so a different JVM can add or remove names.</p>
+<h3 id="addon-identity">Addon identity<a class="headerlink" href="#addon-identity" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Marketplace identifier</td>
+<td><code>pandorafms.tomcat</code></td>
+</tr>
+<tr>
+<td>Name</td>
+<td>Tomcat monitoring plugin</td>
+</tr>
+<tr>
+<td>Version</td>
+<td><code>1.0</code></td>
+</tr>
+<tr>
+<td>Category</td>
+<td>Miscelaneus</td>
+</tr>
+<tr>
+<td>License</td>
+<td>One</td>
+</tr>
+<tr>
+<td>Marketplace last update</td>
+<td>2026-05-25</td>
+</tr>
+<tr>
+<td>Availability</td>
+<td>Download limited to licensed users</td>
+</tr>
+<tr>
+<td>Executable</td>
+<td><code>pandora_tomcat</code></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

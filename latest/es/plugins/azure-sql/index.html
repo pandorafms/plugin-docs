@@ -1,0 +1,4908 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/plugins/azure-sql/">
+      
+      
+        <link rel="prev" href="../azure-postgresql/">
+      
+      
+        <link rel="next" href="../azure-storage/">
+      
+      
+        
+          <link rel="alternate" href="../../../plugins/azure-sql/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Plugin Pandora Azure SQL - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#plugin-pandora-azure-sql" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Plugin Pandora Azure SQL
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../plugins/azure-sql/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-cloudwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon CloudWatch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-ec2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon EC2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-rds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon S3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de Azure backup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/db2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/digital-ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Ocean Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasticsearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/google-cloud-compute-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud Compute Engine Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/haproxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HAProxy Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hp-one-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HP One View Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hyper-v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/iot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/jmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JMX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de KVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/meraki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meraki Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Office 365 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/opensearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenSearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/ovh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OVH Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de Proxmox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/rabbitmq-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-hana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-r3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP R3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de VMware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/xenserver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XenServer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/discord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Discord
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/slack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Slack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../active-directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Enterprise Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Azure PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Pandora Azure SQL
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Pandora Azure SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preparar-el-acceso-a-azure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparar el acceso a Azure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#el-archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-por-linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución por línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registrar-el-plugin-en-la-consola" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registrar el plugin en la consola
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entender los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-publica-cada-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué publica cada ejecución
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#por-que-cada-modulo-es-una-lista-de-texto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Por qué cada módulo es una lista de texto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#un-agente-por-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Un agente por base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparacion-con-azure-sql-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparación con Azure SQL Discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operacion-y-resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operación y resolución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opciones-de-linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opciones de línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#claves-del-archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claves del archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-ejecutor-de-consultas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El ejecutor de consultas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Pandora Azure Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cisco-inventory-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco Inventory configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-netscaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Citrix NetScaler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../db2-remote/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Remote plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Dynamic SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exchange/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exchange
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glpi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GLPI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../google-drive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Google Drive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ibm-z-series-mainframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBM Z Series Mainframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../influxdb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-for-mac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory plugin for MAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-ssh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory SSH plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../journalctl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Journalctl
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kafka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Kafka
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../marklogic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MarkLogic monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-remote-atlas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Pandora MongoDB remote / Atlas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-server-querier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MSSQL Server Querier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../net-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Net usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Office 365 Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Pandora Openshift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Oracle VM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ldap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora LDAP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora UX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugin-executor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Plugin Executor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sap-hana-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin SAP HANA Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Spark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sybase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Sybase
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tomcat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tomcat monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zammad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zammad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zendesk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zendesk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-hace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué hace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preparar-el-acceso-a-azure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparar el acceso a Azure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#el-archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-por-linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecución por línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registrar-el-plugin-en-la-consola" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registrar el plugin en la consola
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entender-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entender los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entender los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-publica-cada-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué publica cada ejecución
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#por-que-cada-modulo-es-una-lista-de-texto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Por qué cada módulo es una lista de texto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#un-agente-por-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Un agente por base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparacion-con-azure-sql-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparación con Azure SQL Discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operacion-y-resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operación y resolución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opciones-de-linea-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opciones de línea de comandos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#claves-del-archivo-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claves del archivo de configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos generados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-ejecutor-de-consultas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El ejecutor de consultas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="plugin-pandora-azure-sql">Plugin Pandora Azure SQL<a class="headerlink" href="#plugin-pandora-azure-sql" title="Permanent link">¶</a></h1>
+<p><em>Última actualización del artículo: 2026-10-26.</em></p>
+<div class="admonition warning">
+<p class="admonition-title">Se recomienda la integración de Discovery</p>
+<p>Para instalaciones nuevas use <a href="../../discovery/azure-sql/">Azure SQL Discovery</a>, que es la integración recomendada para este servicio. Este plugin es la ruta heredada.</p>
+</div>
+<h2 id="que-hace">Qué hace<a class="headerlink" href="#que-hace" title="Permanent link">¶</a></h2>
+<p>El plugin Pandora Azure SQL convierte las métricas de Azure Monitor de una base de datos Azure SQL en módulos de Pandora FMS. Cada ejecución se autentica en Microsoft Entra con una entidad de servicio, lee 23 métricas de la base de datos de la última hora con resolución de cinco minutos y las publica como un agente nuevo con 23 módulos.</p>
+<p>La base de datos se identifica por su ID de recurso completo de Azure, que usted escribe en un archivo de configuración local junto con las credenciales. El plugin nunca abre una conexión SQL: lee las métricas que Azure Monitor ya almacena para el recurso, así que no se instala nada en el servidor de base de datos y no hace falta que ningún puerto sea accesible en él.</p>
+<p>Cada ejecución cubre una base de datos y produce un agente. Monitorizar varias bases de datos significa una ejecución por base de datos, cada una con su propio archivo de configuración y su propio nombre de agente.</p>
+<p>El addon admite los dos modelos de ejecución de un plugin de Pandora FMS:</p>
+<ul>
+<li><strong>Modo plugin de servidor</strong> (por defecto): cada ejecución construye el documento de agente y lo copia en el directorio de datos de Pandora FMS o lo envía con Tentacle.</li>
+<li><strong>Modo plugin de agente</strong> (<code>--as_agent_plugin 1</code>): cada ejecución imprime el XML de los módulos en la salida estándar, para que lo ingiera el agente de Pandora FMS.</li>
+</ul>
+<blockquote>
+<p><strong>Esta página documenta dos líneas de comandos distintas.</strong> El registro del Marketplace y el archivo de registro del paquete describen únicamente el colector de métricas, <code>pandora_azuresql</code>, que es el objeto de esta página. Un segundo ejecutable, <code>pandora_azuresqlquery</code>, ejecuta sentencias SQL contra la misma base de datos mediante ODBC, con sus propias opciones, su propio formato de configuración y su propia salida. El registro del Marketplace no lo describe ni indica si su paquete lo contiene. Se documenta por separado en <a href="#el-ejecutor-de-consultas">El ejecutor de consultas</a> para que nunca se confundan los dos.</p>
+</blockquote>
+<h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
+<h3 id="compatibilidad">Compatibilidad<a class="headerlink" href="#compatibilidad" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Ámbito</th>
+<th>Estado</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Addon del Marketplace <code>pandorafms.azuresql</code>, versión <code>1.0</code></td>
+<td>Objetivo documentado</td>
+<td>La versión que describe esta página. Consulte <a href="#identidad-del-addon">Identidad del addon</a></td>
+</tr>
+<tr>
+<td>Pandora FMS NG 784 y posteriores</td>
+<td><code>Soportado</code></td>
+<td>El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores. Es una declaración pública general que cubre todas las entradas, no un registro de pruebas de este addon</td>
+</tr>
+<tr>
+<td>Una base de datos Azure SQL, identificada por su ID de recurso completo</td>
+<td><code>Requerido</code></td>
+<td>El archivo de configuración lleva un único <code>database_id</code> y todas las consultas de métricas se hacen contra él. Prerrequisito, no una declaración de compatibilidad</td>
+</tr>
+<tr>
+<td>Una entidad de servicio de Microsoft Entra con permiso de lectura sobre ese recurso de base de datos y sus métricas</td>
+<td><code>Requerido</code></td>
+<td>El plugin se autentica con un inquilino, un identificador de aplicación y un secreto de cliente, y lee métricas de Azure Monitor del recurso. Ninguna fuente oficial identifica un rol más restrictivo para este addon</td>
+</tr>
+<tr>
+<td>Acceso HTTPS a los puntos de conexión públicos de Azure</td>
+<td><code>Requerido</code></td>
+<td>El plugin no tiene opción de punto de conexión, así que solo se autentica y consulta la nube pública. Las nubes soberanas o personalizadas quedan como <code>Sin validar</code></td>
+</tr>
+<tr>
+<td><code>tentacle_client</code> en el host que ejecuta el plugin</td>
+<td><code>Requerido</code> cuando se usa <code>--tentacle_address</code></td>
+<td>Entrega mediante Tentacle</td>
+</tr>
+<tr>
+<td>Microsoft ODBC Driver 18 for SQL Server en el host que ejecuta el plugin</td>
+<td><code>Requerido</code> cuando se usa el ejecutor de consultas</td>
+<td>El ejecutor de consultas solicita ese controlador por su nombre y no tiene opción para cambiarlo. Consulte <a href="#el-ejecutor-de-consultas">El ejecutor de consultas</a></td>
+</tr>
+<tr>
+<td>Nivel de servicio y edición de Azure SQL</td>
+<td><code>Sin validar</code></td>
+<td>Algunas métricas solo están disponibles en bases de datos basadas en vCore o sin servidor, y otras no se aplican en absoluto a almacenes de datos. El plugin solicita las 23 independientemente del nivel</td>
+</tr>
+<tr>
+<td>Sistema operativo del host que ejecuta el plugin</td>
+<td><code>Sin validar</code></td>
+<td>La guía heredada indica CentOS 7, Fedora y Rocky Linux como probados y «cualquier Linux» como esperado. Ningún registro de pruebas respalda ninguna de las dos afirmaciones</td>
+</tr>
+</tbody>
+</table>
+<h3 id="requisitos">Requisitos<a class="headerlink" href="#requisitos" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Una base de datos Azure SQL</strong> y su ID de recurso completo.</li>
+<li><strong>Una entidad de servicio de Microsoft Entra</strong>: identificador de inquilino, identificador de aplicación (cliente) y un secreto de cliente.</li>
+<li><strong>Permiso de lectura para esa entidad de servicio</strong> sobre el recurso de base de datos y sus métricas de Azure Monitor. Conceda el acceso de lectura en el ámbito más pequeño que cubra la base de datos.</li>
+<li><strong>Acceso HTTPS de salida</strong> desde el host que ejecuta el plugin hasta los puntos de conexión públicos de Azure.</li>
+<li><strong>Pandora FMS</strong> para recibir la salida: el servidor de Pandora FMS en modo plugin de servidor, o el agente de Pandora FMS del host monitorizado en modo plugin de agente.</li>
+<li><strong>El cliente de Tentacle (<code>tentacle_client</code>) disponible en el <code>PATH</code></strong>, solo cuando entregue con <code>--tentacle_address</code>.</li>
+</ol>
+<p>Las métricas se leen de Azure Monitor y nunca de la propia base de datos, así que la cuenta que las lee es una identidad de Azure, no un usuario de base de datos.</p>
+<h3 id="instalar-el-plugin">Instalar el plugin<a class="headerlink" href="#instalar-el-plugin" title="Permanent link">¶</a></h3>
+<p>Descargue el paquete <code>pandorafms.azuresql.1.0.pspz2</code> desde la entrada del Marketplace:</p>
+<p><a href="https://marketplace.pandorafms.com/entries/pandorafms.azuresql">https://marketplace.pandorafms.com/entries/pandorafms.azuresql</a></p>
+<p>Registre el paquete desde el gestor de plugins de la consola de Pandora FMS. El paquete incluye un archivo de registro que declara el comando del plugin y sus tres campos de módulo, documentados en <a href="#registrar-el-plugin-en-la-consola">Registrar el plugin en la consola</a>.</p>
+<p>El ejecutable también puede desplegarse por separado y ejecutarse desde un terminal o desde un planificador; consulte <a href="#ejecucion-por-linea-de-comandos">Ejecución por línea de comandos</a>.</p>
+<h3 id="preparar-el-acceso-a-azure">Preparar el acceso a Azure<a class="headerlink" href="#preparar-el-acceso-a-azure" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Cree o seleccione un registro de aplicación</strong> en Microsoft Entra ID y genere un secreto de cliente para él.</li>
+<li><strong>Anote tres valores</strong>: el identificador del inquilino (directorio), el identificador de la aplicación (cliente) y el <strong>valor</strong> del secreto. Copie el valor, no el identificador del secreto: el plugin lo envía tal cual al punto de conexión de autenticación.</li>
+<li><strong>Conceda a la entidad de servicio permiso de lectura</strong> sobre el recurso de base de datos y sus métricas.</li>
+<li><strong>Copie el ID de recurso completo de la base de datos.</strong> Tiene esta forma:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>/subscriptions/&lt;SUBSCRIPTION_ID&gt;/resourceGroups/&lt;RESOURCE_GROUP&gt;/providers/Microsoft.Sql/servers/&lt;SQL_SERVER&gt;/databases/&lt;DATABASE&gt;
+</code></pre></div>
+<p>El plugin envía esa cadena como URI del recurso en todas las consultas de métricas, así que debe ser el recurso de la <strong>base de datos</strong>, no el del servidor.</p>
+<h2 id="configuracion">Configuración<a class="headerlink" href="#configuracion" title="Permanent link">¶</a></h2>
+<p>El plugin toma las credenciales y el destino de un único archivo de configuración, y todo lo demás de la línea de comandos. No hay precedencia entre ambos: ningún ajuste de entrega puede escribirse en el archivo y ninguna credencial puede pasarse como opción.</p>
+<h3 id="el-archivo-de-configuracion">El archivo de configuración<a class="headerlink" href="#el-archivo-de-configuracion" title="Permanent link">¶</a></h3>
+<p>El archivo es obligatorio y se pasa con <code>-c</code>/<code>--conf</code>. Contiene un par <code>key:value</code> por línea:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Azure credentials</span>
+<span class="na">tenant_id</span><span class="o">:</span><span class="s">&lt;TENANT_ID&gt;</span>
+<span class="na">client_id</span><span class="o">:</span><span class="s">&lt;CLIENT_ID&gt;</span>
+<span class="na">secret</span><span class="o">:</span><span class="s">&lt;CLIENT_SECRET&gt;</span>
+<span class="c1"># Target database</span>
+<span class="na">database_id</span><span class="o">:</span><span class="s">/subscriptions/&lt;SUBSCRIPTION_ID&gt;/resourceGroups/&lt;RESOURCE_GROUP&gt;/providers/Microsoft.Sql/servers/&lt;SQL_SERVER&gt;/databases/&lt;DATABASE&gt;</span>
+</code></pre></div>
+<p>El analizador aplica estas reglas:</p>
+<ul>
+<li>El separador es <strong>dos puntos</strong>, no el signo igual.</li>
+<li>Las líneas en blanco se omiten.</li>
+<li><strong>Se omite toda línea que contenga <code>#</code> en cualquier posición</strong>, no solo las que empiezan por él. No añada comentarios al final de una línea de valor.</li>
+<li>Un valor termina en los siguientes dos puntos: un secreto de cliente que contenga <code>:</code> se trunca y la autenticación falla.</li>
+<li>Una clave repetida conserva su último valor.</li>
+<li>Las cuatro claves se buscan por nombre. Si falta una, la ejecución termina con una traza de <code>NameError</code> en lugar de un mensaje que nombre la clave ausente.</li>
+</ul>
+<p>El archivo contiene el secreto de cliente en texto plano. Restrínjalo a la cuenta que ejecuta el plugin (por ejemplo con <code>chmod 600</code>) y mantenlo fuera de directorios compartidos y del control de versiones.</p>
+<h3 id="ejecucion-por-linea-de-comandos">Ejecución por línea de comandos<a class="headerlink" href="#ejecucion-por-linea-de-comandos" title="Permanent link">¶</a></h3>
+<p>La ejecución mínima en modo plugin de servidor, que escribe el documento de agente en el directorio de datos de Pandora FMS:</p>
+<div class="highlight"><pre><span></span><code>./pandora_azuresql<span class="w"> </span>-c<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;
+</code></pre></div>
+<p>La misma ejecución entregada con Tentacle, con nombre de agente y grupo explícitos:</p>
+<div class="highlight"><pre><span></span><code>./pandora_azuresql<span class="w"> </span>-c<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--agent_name<span class="w"> </span>&lt;AGENT_NAME&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;GROUP&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--tentacle_address<span class="w"> </span>&lt;PANDORA_FMS_SERVER&gt;<span class="w"> </span>--tentacle_port<span class="w"> </span><span class="m">41121</span>
+</code></pre></div>
+<p>Modo plugin de agente, que imprime el XML de los módulos en lugar de construir un agente:</p>
+<div class="highlight"><pre><span></span><code>./pandora_azuresql<span class="w"> </span>-c<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span>--as_agent_plugin<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p>La línea de comandos selecciona una de tres ramas de salida. <code>--tentacle_address</code> tiene precedencia sobre la opción de modo:</p>
+<table>
+<thead>
+<tr>
+<th>Línea de comandos</th>
+<th>Qué hace la ejecución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--tentacle_address</code> está definido, con o sin <code>--as_agent_plugin</code></td>
+<td>Construye el documento de agente, lo envía con <code>tentacle_client</code> e imprime <code>1</code></td>
+</tr>
+<tr>
+<td>Sin <code>--tentacle_address</code> y con <code>--as_agent_plugin</code> ausente o distinto de <code>1</code></td>
+<td>Construye el documento de agente, lo escribe en <code>--data_dir</code> e imprime <code>1</code></td>
+</tr>
+<tr>
+<td><code>--as_agent_plugin 1</code> sin <code>--tentacle_address</code></td>
+<td>Imprime el XML de los módulos en la salida estándar y no escribe ningún archivo</td>
+</tr>
+</tbody>
+</table>
+<p>Puntos clave:</p>
+<ul>
+<li><strong><code>--as_agent_plugin 1</code> selecciona el modo plugin de agente; el valor por defecto es el modo plugin de servidor.</strong> El nombre de la opción es el inverso del valor por defecto, así que confirme el modo antes de interpretar cualquier salida.</li>
+<li><strong><code>--data_dir</code>, <code>--agent_name</code> y <code>-g</code> no tienen efecto en modo plugin de agente.</strong> No se construye ningún archivo ni documento de agente, así que el nombre de agente y el grupo nunca llegan a Pandora FMS.</li>
+<li><strong><code>--prefix_module</code> se acepta y se ignora.</strong> Ningún nombre de módulo recibe prefijo en este colector; consulte <a href="#modulos-generados">Módulos generados</a>.</li>
+<li>El grupo se escribe por nombre en el documento de agente, así que debe ser un grupo que exista en la consola. El archivo de registro sugiere <code>azuresql</code>; el valor por defecto interno es <code>Azure</code>.</li>
+<li>El documento de agente siempre declara modo de agente <code>1</code> e intervalo vacío, así que el intervalo lo aplica la consola, no el plugin.</li>
+<li>El plugin no guarda estado entre ejecuciones, así que cualquier ejecución puede repetirse manualmente.</li>
+</ul>
+<h3 id="registrar-el-plugin-en-la-consola">Registrar el plugin en la consola<a class="headerlink" href="#registrar-el-plugin-en-la-consola" title="Permanent link">¶</a></h3>
+<ol>
+<li>Abra <strong>Servidores → Plugins</strong> y registre el paquete <code>pandorafms.azuresql.1.0.pspz2</code>, o añada el plugin manualmente con la ruta del ejecutable <code>pandora_azuresql</code> como comando.</li>
+<li>Los parámetros que ya declara el paquete son:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>-c " _field1_ " --agent_name " _field2_ " -g " _field3_ "
+</code></pre></div>
+<ol>
+<li>El paquete define tres campos:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Descripción en el paquete</th>
+<th>Valor que debe indicar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_field1_</code></td>
+<td><code>Conf path (obligatory)</code></td>
+<td>Ruta absoluta del archivo de configuración en el servidor de Pandora FMS</td>
+</tr>
+<tr>
+<td><code>_field2_</code></td>
+<td><code>Agent name (optional)</code></td>
+<td>Nombre del agente que contendrá los 23 módulos</td>
+</tr>
+<tr>
+<td><code>_field3_</code></td>
+<td>Sin definición en el paquete</td>
+<td>Nombre de un grupo de Pandora FMS existente</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Los parámetros del paquete rompen la ruta de configuración</p>
+<p>Cada macro va entre comillas con un espacio dentro de ellas: <code>-c " _field1_ "</code>. Cuando la consola sustituye el valor del campo, el argumento conserva un espacio inicial y otro final, y el plugin abre esa ruta sin recortarla, así que la ejecución falla con <code>FileNotFoundError</code>. Elimine los espacios al registrar el plugin, por ejemplo <code>-c "_field1_" --agent_name "_field2_" -g "_field3_"</code>.</p>
+<p>El archivo de registro declara <code>total_macros_provided = 3</code> pero define <code>[macro_1]</code>, <code>[macro_2]</code> y <code>[macro_4]</code>. No existe <code>[macro_3]</code>, así que el tercer campo, que la línea de comandos usa como <code>_field3_</code>, es el que el paquete deja sin descripción, y la definición de <code>group</code> es la que no se usa.</p>
+</div>
+<ol>
+<li>Dé un valor a cada campo por módulo. El módulo del plugin es solo el disparador: en modo plugin de servidor su propio valor es <code>1</code>, y los 23 módulos de métricas llegan al agente indicado en <code>--agent_name</code>, no al agente que contiene el módulo disparador.</li>
+<li>Cada módulo del plugin se ejecuta en el servidor de Pandora FMS seleccionado para él, incluido un servidor remoto, así que varias bases de datos pueden monitorizarse desde el servidor más cercano a cada una sin instalar nada en el host de la base de datos.</li>
+</ol>
+<!-- SCREENSHOT NEEDED: Pantalla de parámetros del plugin ya registrado en la consola de Pandora FMS, mostrando los tres campos de macro y cuál de ellos tiene descripción. -->
+
+<h2 id="verificacion">Verificación<a class="headerlink" href="#verificacion" title="Permanent link">¶</a></h2>
+<p>Ejecute el plugin manualmente en modo plugin de agente para ver la salida sin publicar nada:</p>
+<div class="highlight"><pre><span></span><code>./pandora_azuresql<span class="w"> </span>-c<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span>--as_agent_plugin<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p>Una ejecución correcta imprime 23 bloques <code>&lt;module&gt;</code> en la salida estándar. Todos los bloques son módulos <code>generic_data_string</code> cuyo valor es una <code>&lt;datalist&gt;</code> con una entrada por cada punto de datos de la última hora:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[cpu_percent]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>generic_data_string<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;datalist&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span>
+<span class="w">        </span><span class="nt">&lt;value&gt;</span><span class="cp">&lt;![CDATA[The cpu_percent at 2026-10-27 09:05:00+00:00 is 2.4]]&gt;</span><span class="nt">&lt;/value&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span>
+<span class="w">        </span><span class="nt">&lt;value&gt;</span><span class="cp">&lt;![CDATA[The cpu_percent at 2026-10-27 09:10:00+00:00 is 3.1]]&gt;</span><span class="nt">&lt;/value&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/datalist&gt;</span>
+<span class="w">    </span><span class="nt">&lt;description&gt;</span><span class="cp">&lt;![CDATA[CPU percentage]]&gt;</span><span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+</code></pre></div>
+<p>Este fragmento muestra la estructura del documento que produce el plugin; no se capturó de una base de datos real.</p>
+<p>Después ejecute el plugin sin <code>--as_agent_plugin</code> para entregar el agente:</p>
+<div class="highlight"><pre><span></span><code>./pandora_azuresql<span class="w"> </span>-c<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span>--agent_name<span class="w"> </span>&lt;AGENT_NAME&gt;
+</code></pre></div>
+<p>Una ejecución correcta en modo plugin de servidor imprime <code>1</code> y escribe <code>&lt;AGENT_NAME&gt;.&lt;epoch&gt;.data</code> en el directorio de datos, o lo envía con Tentacle. Cuando el servidor de datos procesa el archivo, el agente llamado <code>&lt;AGENT_NAME&gt;</code> aparece en Pandora FMS con sus 23 módulos.</p>
+<p>El plugin imprime su resumen de uso con <code>./pandora_azuresql -h</code>.</p>
+<!-- SCREENSHOT NEEDED: Vista de detalle del agente en la consola de Pandora FMS con los 23 módulos generados por el plugin y un módulo de tipo datalist desplegado. -->
+
+<h2 id="entender-los-resultados">Entender los resultados<a class="headerlink" href="#entender-los-resultados" title="Permanent link">¶</a></h2>
+<h3 id="que-publica-cada-ejecucion">Qué publica cada ejecución<a class="headerlink" href="#que-publica-cada-ejecucion" title="Permanent link">¶</a></h3>
+<p>Un agente con 23 módulos, siempre el mismo conjunto, agrupados por la parte del servicio que describen:</p>
+<table>
+<thead>
+<tr>
+<th>Familia</th>
+<th>Módulos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cómputo</td>
+<td><code>cpu_percent</code>, <code>cpu_limit</code>, <code>cpu_used</code>, <code>sqlserver_process_core_percent</code>, <code>app_cpu_percent</code>, <code>app_cpu_billed</code></td>
+</tr>
+<tr>
+<td>Almacenamiento</td>
+<td><code>storage</code>, <code>storage_percent</code>, <code>allocated_data_storage</code></td>
+</tr>
+<tr>
+<td>E/S y registro</td>
+<td><code>physical_data_read_percent</code>, <code>log_write_percent</code></td>
+</tr>
+<tr>
+<td>Conexiones y sesiones</td>
+<td><code>connection_successful</code>, <code>connection_failed</code>, <code>blocked_by_firewall</code>, <code>sessions_percent</code>, <code>workers_percent</code>, <code>sqlserver_process_memory_percent</code>, <code>app_memory_percent</code></td>
+</tr>
+<tr>
+<td>TempDB y OLTP en memoria</td>
+<td><code>tempdb_data_size</code>, <code>tempdb_log_size</code>, <code>tempdb_log_used_percent</code>, <code>xtp_storage_percent</code></td>
+</tr>
+<tr>
+<td>Contención</td>
+<td><code>deadlock</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="por-que-cada-modulo-es-una-lista-de-texto">Por qué cada módulo es una lista de texto<a class="headerlink" href="#por-que-cada-modulo-es-una-lista-de-texto" title="Permanent link">¶</a></h3>
+<p>Cada módulo es un <code>generic_data_string</code> cuyo valor es una <code>&lt;datalist&gt;</code>, y cada entrada dice <code>The &lt;metric&gt; at &lt;timestamp&gt; is &lt;value&gt;</code>. Esto tiene consecuencias que conviene conocer antes de construir nada sobre los datos:</p>
+<ul>
+<li><strong>El valor es texto, no un número.</strong> Pandora FMS no puede representar el módulo como una serie numérica ni aplicarle umbrales numéricos, y el plugin no define unidad, intervalo ni umbral en ningún módulo.</li>
+<li><strong>Cada ejecución vuelve a publicar la hora completa.</strong> Con un intervalo de ejecución de cinco minutos, cada punto de datos aparece en el valor de módulo de 12 ejecuciones consecutivas.</li>
+<li><strong>Un punto sin valor se publica como <code>None</code>.</strong> Azure Monitor no rellena todos los puntos de todas las métricas, y el plugin escribe lo que recibe.</li>
+<li><strong>Los 23 módulos se crean en todas las ejecuciones</strong>, incluidas las métricas que la base de datos no informa. Ese módulo aparece con una <code>&lt;datalist&gt;</code> vacía. Un módulo vacío no es prueba de un fallo.</li>
+<li><strong>Los contadores se promedian igual que las magnitudes.</strong> <code>connection_successful</code>, <code>connection_failed</code>, <code>blocked_by_firewall</code> y <code>deadlock</code> se solicitan con la agregación <code>Average</code> sobre la granularidad de cinco minutos, así que los números publicados son medias por intervalo, no totales.</li>
+<li><strong>No hay módulo de disponibilidad.</strong> Nada en la salida indica si la ejecución pudo contactar con Azure. Una ejecución fallida no publica nada, y la ausencia de datos es la única señal.</li>
+</ul>
+<h3 id="un-agente-por-base-de-datos">Un agente por base de datos<a class="headerlink" href="#un-agente-por-base-de-datos" title="Permanent link">¶</a></h3>
+<p>El nombre de agente y la base de datos de destino son ajustes de cada ejecución, así que monitorizar varias bases de datos significa un archivo de configuración por base de datos (con un <code>database_id</code> distinto) y una ejecución por base de datos (con un <code>--agent_name</code> distinto). Reutilizar el mismo nombre de agente para dos bases de datos mezcla ambos conjuntos de módulos en un solo agente, y la segunda ejecución sobrescribe la primera.</p>
+<h3 id="comparacion-con-azure-sql-discovery">Comparación con Azure SQL Discovery<a class="headerlink" href="#comparacion-con-azure-sql-discovery" title="Permanent link">¶</a></h3>
+<p><a href="../../discovery/azure-sql/">Azure SQL Discovery</a> atiende el mismo servicio mediante una tarea de Discovery. Las diferencias que importan al elegir:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Este plugin</th>
+<th>Azure SQL Discovery</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bases de datos monitorizadas</td>
+<td>Una, indicada por su ID de recurso en el archivo de configuración</td>
+<td>Todas las de la suscripción o el grupo de recursos, o las que coincidan con los filtros de nombre</td>
+</tr>
+<tr>
+<td>Agentes</td>
+<td>Un agente por ejecución, con el nombre de <code>--agent_name</code></td>
+<td>Un agente por base de datos, o un único agente de destino</td>
+</tr>
+<tr>
+<td>Módulos</td>
+<td>23 listas de datos de texto que cubren la última hora</td>
+<td>Módulos numéricos, uno por familia de métricas habilitada</td>
+</tr>
+<tr>
+<td>Credenciales</td>
+<td>Un archivo de texto plano en el host que ejecuta el plugin</td>
+<td>El almacén de credenciales de Pandora FMS, referenciado por la tarea</td>
+</tr>
+<tr>
+<td>Configuración</td>
+<td>Opciones de línea de comandos</td>
+<td>Una tarea de Discovery</td>
+</tr>
+<tr>
+<td>Recomendado para instalaciones nuevas</td>
+<td>No</td>
+<td>Sí</td>
+</tr>
+</tbody>
+</table>
+<h2 id="operacion-y-resolucion-de-problemas">Operación y resolución de problemas<a class="headerlink" href="#operacion-y-resolucion-de-problemas" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>23 peticiones secuenciales por ejecución.</strong> El paquete declara un tiempo de espera del plugin de <code>20</code> segundos. Con una conexión lenta, o cuando el cliente reintenta una petición, la ejecución puede cortarse antes de terminar; fuerce el módulo y compruebe la marca de tiempo de los datos del agente.</li>
+<li><strong>Una ejecución correcta en modo plugin de servidor imprime <code>1</code>.</strong> Ese <code>1</code> es el valor del módulo disparador, no un resumen de la entrega. Con Tentacle, una transferencia fallida también imprime <code>1</code>: el plugin ignora el resultado del envío e imprime <code>1</code> incondicionalmente, y deja el archivo <code>.data</code> en <code>--data_dir</code> porque solo lo borra tras una transferencia correcta. Compruebe los datos del agente en la consola, no el <code>1</code>.</li>
+<li><strong>El archivo de datos se abre en modo exclusivo.</strong> Dos ejecuciones del mismo nombre de agente dentro del mismo segundo terminan con <code>ERROR - Could not write file: ... please check directory permissions</code>, que es además el mensaje de un problema real de permisos.</li>
+<li><strong>No hay modo de depuración.</strong> Los errores llegan a la salida de error como una traza, y los mensajes de la tabla siguiente son los que hay que buscar.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Causa y acción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>La ejecución termina con estado <code>2</code> y un error de uso en la salida de error</td>
+<td>Falta <code>-c</code>. Es un argumento obligatorio.</td>
+</tr>
+<tr>
+<td>Traza que acaba en <code>NameError</code> nombrando <code>tenant_id</code>, <code>client_id</code>, <code>secret</code> o <code>database_id</code></td>
+<td>El archivo de configuración no tiene línea para esa clave, o la línea se omitió porque contiene <code>#</code>. El plugin no tiene mensaje para una clave ausente.</td>
+</tr>
+<tr>
+<td><code>FileNotFoundError</code> sobre la ruta de configuración</td>
+<td>La ruta es incorrecta, o llegó con espacios alrededor por la plantilla de parámetros del paquete. Consulte el aviso en <a href="#registrar-el-plugin-en-la-consola">Registrar el plugin en la consola</a>.</td>
+</tr>
+<tr>
+<td><code>ERROR - Could not write file</code></td>
+<td><code>--data_dir</code> no es escribible por el usuario del plugin, o otra ejecución del mismo agente escribió en el mismo segundo.</td>
+</tr>
+<tr>
+<td>Se imprime <code>1</code> pero no aparece ningún agente en la consola</td>
+<td>Con <code>--tentacle_address</code>, la transferencia falló. Compruebe la dirección, el puerto y el registro del servidor de Tentacle. Sin Tentacle, compruebe que el servidor de datos está en marcha y leyendo <code>--data_dir</code>.</td>
+</tr>
+<tr>
+<td>Traza en el paso de autenticación</td>
+<td>El inquilino, el identificador de cliente o el secreto son incorrectos, el secreto ha caducado, o la entidad de servicio no tiene acceso de lectura al recurso.</td>
+</tr>
+<tr>
+<td>Traza que nombra una métrica o un error de respuesta de Azure</td>
+<td>Azure rechazó una de las 23 peticiones. La ejecución no tiene manejo de errores, así que se detiene y no publica nada. Compruebe el nivel de la base de datos y el ID de recurso.</td>
+</tr>
+<tr>
+<td>Un módulo muestra solo valores <code>None</code></td>
+<td>Azure Monitor no tiene puntos de datos para esa métrica y esa base de datos.</td>
+</tr>
+<tr>
+<td>Se define <code>--prefix_module</code> pero los nombres de módulo no cambian</td>
+<td>La opción no tiene efecto en este colector.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
+<h3 id="opciones-de-linea-de-comandos">Opciones de línea de comandos<a class="headerlink" href="#opciones-de-linea-de-comandos" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Opción</th>
+<th>Obligatoria</th>
+<th>Valor por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-c</code>, <code>--conf</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Ruta del archivo de configuración con las credenciales y el ID de recurso de la base de datos</td>
+</tr>
+<tr>
+<td><code>--agent_name</code></td>
+<td>No</td>
+<td><code>Azure_SQL</code></td>
+<td>Nombre del agente creado en Pandora FMS. No tiene efecto en modo plugin de agente</td>
+</tr>
+<tr>
+<td><code>-g</code>, <code>--group</code></td>
+<td>No</td>
+<td><code>Azure</code></td>
+<td>Nombre del grupo de Pandora FMS asignado al agente. No tiene efecto en modo plugin de agente</td>
+</tr>
+<tr>
+<td><code>--data_dir</code></td>
+<td>No</td>
+<td><code>/var/spool/pandora/data_in/</code></td>
+<td>Directorio donde se escribe el documento de agente. No tiene efecto en modo plugin de agente</td>
+</tr>
+<tr>
+<td><code>--tentacle_address</code></td>
+<td>No</td>
+<td>—</td>
+<td>Dirección del servidor de Tentacle. Cuando se define, se envía el documento de agente y se ignoran los otros dos modos de entrega</td>
+</tr>
+<tr>
+<td><code>--tentacle_port</code></td>
+<td>No</td>
+<td><code>41121</code></td>
+<td>Puerto del servidor de Tentacle</td>
+</tr>
+<tr>
+<td><code>--as_agent_plugin</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td><code>1</code> imprime el XML de los módulos en la salida estándar. Cualquier otro valor construye el documento de agente</td>
+</tr>
+<tr>
+<td><code>--prefix_module</code></td>
+<td>No</td>
+<td>—</td>
+<td>Se acepta y se ignora</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>No</td>
+<td>—</td>
+<td>Imprime el resumen de uso y termina</td>
+</tr>
+</tbody>
+</table>
+<h3 id="claves-del-archivo-de-configuracion">Claves del archivo de configuración<a class="headerlink" href="#claves-del-archivo-de-configuracion" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Clave</th>
+<th>Obligatoria</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tenant_id</code></td>
+<td>Sí</td>
+<td>Identificador del inquilino (directorio) de Microsoft Entra</td>
+</tr>
+<tr>
+<td><code>client_id</code></td>
+<td>Sí</td>
+<td>Identificador de aplicación (cliente) de la entidad de servicio</td>
+</tr>
+<tr>
+<td><code>secret</code></td>
+<td>Sí</td>
+<td>Valor del secreto de cliente</td>
+</tr>
+<tr>
+<td><code>database_id</code></td>
+<td>Sí</td>
+<td>ID de recurso completo de la base de datos Azure SQL</td>
+</tr>
+</tbody>
+</table>
+<p>El archivo usa líneas <code>key:value</code>. Consulte <a href="#el-archivo-de-configuracion">El archivo de configuración</a> para las reglas de análisis, incluidas las líneas que se omiten.</p>
+<h3 id="modulos-generados">Módulos generados<a class="headerlink" href="#modulos-generados" title="Permanent link">¶</a></h3>
+<p>Todos los módulos son <code>generic_data_string</code> con una <code>&lt;datalist&gt;</code> de los puntos de datos de la última hora, muestreados cada cinco minutos. El plugin no define unidad ni umbral; la descripción es el texto que escribe en el módulo.</p>
+<table>
+<thead>
+<tr>
+<th>Nombre del módulo</th>
+<th>Familia</th>
+<th>Descripción escrita por el plugin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cpu_percent</code></td>
+<td>Cómputo</td>
+<td>CPU percentage</td>
+</tr>
+<tr>
+<td><code>cpu_limit</code></td>
+<td>Cómputo</td>
+<td>CPU limit. Applies to vCore-based databases</td>
+</tr>
+<tr>
+<td><code>cpu_used</code></td>
+<td>Cómputo</td>
+<td>CPU used. Applies to vCore-based databases</td>
+</tr>
+<tr>
+<td><code>sqlserver_process_core_percent</code></td>
+<td>Cómputo</td>
+<td>CPU usage as a percentage of the SQL DB process. Not applicable to data warehouses</td>
+</tr>
+<tr>
+<td><code>app_cpu_percent</code></td>
+<td>Cómputo</td>
+<td>App CPU percentage. Applies to serverless databases</td>
+</tr>
+<tr>
+<td><code>app_cpu_billed</code></td>
+<td>Cómputo</td>
+<td>App CPU billed. Applies to serverless databases</td>
+</tr>
+<tr>
+<td><code>storage</code></td>
+<td>Almacenamiento</td>
+<td>Data space used. Not applicable to data warehouses</td>
+</tr>
+<tr>
+<td><code>storage_percent</code></td>
+<td>Almacenamiento</td>
+<td>Data space used percent. Not applicable to data warehouses or hyperscale databases</td>
+</tr>
+<tr>
+<td><code>allocated_data_storage</code></td>
+<td>Almacenamiento</td>
+<td>Allocated data storage. Not applicable to data warehouses</td>
+</tr>
+<tr>
+<td><code>physical_data_read_percent</code></td>
+<td>E/S y registro</td>
+<td>Data IO percentage</td>
+</tr>
+<tr>
+<td><code>log_write_percent</code></td>
+<td>E/S y registro</td>
+<td>Log IO percentage. Not applicable to data warehouses</td>
+</tr>
+<tr>
+<td><code>connection_successful</code></td>
+<td>Conexiones</td>
+<td>Successful connections</td>
+</tr>
+<tr>
+<td><code>connection_failed</code></td>
+<td>Conexiones</td>
+<td>Failed connections</td>
+</tr>
+<tr>
+<td><code>blocked_by_firewall</code></td>
+<td>Conexiones</td>
+<td>Blocked by firewall</td>
+</tr>
+<tr>
+<td><code>sessions_percent</code></td>
+<td>Conexiones</td>
+<td>Sessions percentage. Not applicable to data warehouses</td>
+</tr>
+<tr>
+<td><code>workers_percent</code></td>
+<td>Conexiones</td>
+<td>Workers percentage. Not applicable to data warehouses</td>
+</tr>
+<tr>
+<td><code>sqlserver_process_memory_percent</code></td>
+<td>Conexiones</td>
+<td>Memory usage as a percentage of the SQL DB process. Not applicable to data warehouses</td>
+</tr>
+<tr>
+<td><code>app_memory_percent</code></td>
+<td>Conexiones</td>
+<td>App memory percentage. Applies to serverless databases</td>
+</tr>
+<tr>
+<td><code>tempdb_data_size</code></td>
+<td>TempDB y XTP</td>
+<td>Space used in tempdb data files, in kilobytes. Not applicable to data warehouses</td>
+</tr>
+<tr>
+<td><code>tempdb_log_size</code></td>
+<td>TempDB y XTP</td>
+<td>Space used in the tempdb transaction log file, in kilobytes. Not applicable to data warehouses</td>
+</tr>
+<tr>
+<td><code>tempdb_log_used_percent</code></td>
+<td>TempDB y XTP</td>
+<td>Space used percentage in the tempdb transaction log file. Not applicable to data warehouses</td>
+</tr>
+<tr>
+<td><code>xtp_storage_percent</code></td>
+<td>TempDB y XTP</td>
+<td>In-Memory OLTP storage percent. Not applicable to data warehouses</td>
+</tr>
+<tr>
+<td><code>deadlock</code></td>
+<td>Contención</td>
+<td>Not applicable to data warehouses</td>
+</tr>
+</tbody>
+</table>
+<h3 id="el-ejecutor-de-consultas">El ejecutor de consultas<a class="headerlink" href="#el-ejecutor-de-consultas" title="Permanent link">¶</a></h3>
+<p>Un segundo ejecutable, <code>pandora_azuresqlquery</code>, es una herramienta distinta: ejecuta sentencias SQL contra la base de datos mediante ODBC y convierte sus filas en módulos. No comparte ni las opciones ni el formato de configuración del colector de métricas descrito más arriba. El registro del Marketplace no lo describe ni indica si su paquete lo contiene; confirme que el archivo existe antes de confiar en él.</p>
+<div class="highlight"><pre><span></span><code>./pandora_azuresqlquery<span class="w"> </span>-s<span class="w"> </span>&lt;TARGET_HOST&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;DATABASE&gt;<span class="w"> </span>-u<span class="w"> </span>&lt;USERNAME&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;PASSWORD&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span>--agent_name<span class="w"> </span>&lt;AGENT_NAME&gt;
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Opción</th>
+<th>Obligatoria</th>
+<th>Valor por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-s</code>, <code>--servidor</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Nombre del servidor, que se pasa al controlador como <code>tcp:&lt;TARGET_HOST&gt;</code></td>
+</tr>
+<tr>
+<td><code>-d</code>, <code>--database</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Nombre de la base de datos</td>
+</tr>
+<tr>
+<td><code>-u</code>, <code>--user</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Usuario de la base de datos</td>
+</tr>
+<tr>
+<td><code>-p</code>, <code>--password</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Contraseña de ese usuario</td>
+</tr>
+<tr>
+<td><code>--conf</code></td>
+<td>Sí</td>
+<td>—</td>
+<td>Ruta del archivo con las consultas</td>
+</tr>
+<tr>
+<td><code>--agent_name</code></td>
+<td>No</td>
+<td><code>AzureSQL</code></td>
+<td>Nombre del agente creado en Pandora FMS</td>
+</tr>
+<tr>
+<td><code>-g</code>, <code>--group</code></td>
+<td>No</td>
+<td><code>Azure</code></td>
+<td>Nombre del grupo de Pandora FMS</td>
+</tr>
+<tr>
+<td><code>--data_dir</code></td>
+<td>No</td>
+<td><code>/var/spool/pandora/data_in/</code></td>
+<td>Directorio donde se escribe el documento de agente</td>
+</tr>
+<tr>
+<td><code>--tentacle_address</code></td>
+<td>No</td>
+<td>—</td>
+<td>Dirección del servidor de Tentacle; tiene precedencia sobre <code>--as_agent_plugin</code></td>
+</tr>
+<tr>
+<td><code>--tentacle_port</code></td>
+<td>No</td>
+<td><code>41121</code></td>
+<td>Puerto del servidor de Tentacle</td>
+</tr>
+<tr>
+<td><code>--as_agent_plugin</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td><code>1</code> imprime el XML de los módulos en la salida estándar</td>
+</tr>
+<tr>
+<td><code>--prefix_module</code></td>
+<td>No</td>
+<td>—</td>
+<td>Prefijo que se antepone a cada nombre de módulo, seguido de <code>_</code></td>
+</tr>
+</tbody>
+</table>
+<p>El archivo de consultas contiene una consulta por línea, con esta forma:</p>
+<div class="highlight"><pre><span></span><code>&lt;nombre del módulo&gt;:&lt;sentencia SQL&gt;:&lt;tipo de módulo&gt;:&lt;descripción&gt;
+</code></pre></div>
+<p>El tercer campo se escribe tal cual como tipo de módulo, sin validación, y el cuarto es opcional. Un ejemplo de la configuración que se distribuye con la herramienta:</p>
+<div class="highlight"><pre><span></span><code>User_connections:SELECT count(*) FROM sys.dm_exec_connections:generic_data_string:shows user connections.
+</code></pre></div>
+<p>El analizador aplica las reglas del colector de métricas con las mismas consecuencias: se omite toda línea que contenga <code>#</code> en cualquier posición, y un valor termina en los siguientes dos puntos, así que <strong>una sentencia SQL que contenga dos puntos se trunca</strong>. Una línea con menos de tres campos detiene la ejecución y descarta todas las consultas posteriores. Una consulta que falla imprime su error en la salida de error, se omite y la ejecución continúa con la siguiente.</p>
+<p>El valor de cada módulo es una <code>&lt;datalist&gt;</code> en la que cada fila es una cadena con las columnas devueltas unidas por <code>;</code>, así que estos módulos también son de texto. El token <code>_database_</code> de una consulta se sustituye por el nombre de la base de datos, entrecomillado.</p>
+<p>Hay dos comportamientos que conviene conocer antes de usarlo en producción:</p>
+<ul>
+<li><strong>Un fallo de conexión se informa como una ejecución correcta.</strong> La herramienta imprime <code>Error while creating PostgreSQL table</code> y el error del controlador, después una segunda línea <code>Error:</code> en la salida de error, después <code>0</code>, y termina con estado <code>0</code>. Los mensajes nombran PostgreSQL, no Azure SQL: la descripción del agente que escribe es literalmente <code>PostgreSQL agent</code>.</li>
+<li><strong>La contraseña de la base de datos es un argumento de línea de comandos.</strong> Es visible en la lista de procesos y en el historial de shell de la cuenta que ejecuta la herramienta.</li>
+</ul>
+<h3 id="identidad-del-addon">Identidad del addon<a class="headerlink" href="#identidad-del-addon" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identificador en el Marketplace</td>
+<td><code>pandorafms.azuresql</code></td>
+</tr>
+<tr>
+<td>Nombre en el Marketplace</td>
+<td>Pandora Azure SQL</td>
+</tr>
+<tr>
+<td>Versión del addon</td>
+<td><code>1.0</code></td>
+</tr>
+<tr>
+<td>Última actualización en el Marketplace</td>
+<td>2025-06-26</td>
+</tr>
+<tr>
+<td>Paquete del Marketplace</td>
+<td><code>pandorafms.azuresql.1.0.pspz2</code></td>
+</tr>
+<tr>
+<td>Licencia</td>
+<td>Descarga limitada a usuarios con licencia (etiqueta <code>One</code> del Marketplace)</td>
+</tr>
+<tr>
+<td>Tipo del Marketplace</td>
+<td>Miscelaneus</td>
+</tr>
+<tr>
+<td>Flujo de trabajo</td>
+<td>Plugin de monitorización, en modo plugin de servidor o de agente</td>
+</tr>
+<tr>
+<td>Ejecutable</td>
+<td><code>pandora_azuresql</code></td>
+</tr>
+<tr>
+<td>Ejecutable secundario</td>
+<td><code>pandora_azuresqlquery</code>, ejecutor de consultas no descrito por el registro del Marketplace</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

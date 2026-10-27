@@ -1,0 +1,4845 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/plugins/journalctl/">
+      
+      
+        <link rel="prev" href="../inventory-ssh/">
+      
+      
+        <link rel="next" href="../kafka/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../../es/plugins/journalctl/" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Journalctl plugin - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#journalctl-plugin" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Journalctl plugin
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/plugins/journalctl/" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-cloudwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon CloudWatch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-ec2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon EC2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-rds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon S3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/db2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/digital-ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Ocean Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasticsearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/google-cloud-compute-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud Compute Engine Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/haproxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HAProxy Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hp-one-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HP One View Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hyper-v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/iot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/jmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JMX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/meraki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meraki Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Office 365 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/opensearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenSearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/ovh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OVH Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proxmox Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/rabbitmq-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-hana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-r3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP R3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/xenserver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XenServer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/discord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discord integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Chat integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/slack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Slack integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft Teams integration (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegram integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../active-directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Enterprise Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure PostgreSQL monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Azure SQL plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Azure Storage monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cisco-inventory-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco Inventory configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-netscaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix NetScaler monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../db2-remote/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Remote plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic SNMP plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exchange/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exchange
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glpi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GLPI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../google-drive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Drive monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ibm-z-series-mainframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBM Z Series Mainframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../influxdb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-for-mac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory plugin for MAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-ssh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory SSH plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Journalctl plugin
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Journalctl plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-the-plugin-to-the-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add the plugin to the agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quote-the-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quote the patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-the-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose the source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-the-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter the lines
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understand the results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#log-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log entries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-agent-does-with-the-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the agent does with the output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coverage-and-the-collection-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coverage and the collection position
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-collection-position-per-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One collection position per host
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First run
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate-and-troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate and troubleshoot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate and troubleshoot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#everyday-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Everyday operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#command-line-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collection-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collection position
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addon-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addon identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kafka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kafka monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../marklogic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MarkLogic monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-remote-atlas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora MongoDB remote / Atlas plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-server-querier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MSSQL Server Querier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../net-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Net usage plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Office 365 Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Openshift monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle VM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ldap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora LDAP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora UX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugin-executor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Plugin Executor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sap-hana-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Database plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Spark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sybase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sybase monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tomcat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tomcat monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zammad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zammad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zendesk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zendesk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to document
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-the-plugin-to-the-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add the plugin to the agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quote-the-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quote the patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-the-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose the source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-the-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter the lines
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understand the results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#log-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log entries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-agent-does-with-the-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the agent does with the output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coverage-and-the-collection-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coverage and the collection position
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-collection-position-per-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One collection position per host
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First run
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate-and-troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate and troubleshoot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate and troubleshoot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#everyday-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Everyday operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#command-line-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collection-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collection position
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addon-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addon identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="journalctl-plugin">Journalctl plugin<a class="headerlink" href="#journalctl-plugin" title="Permanent link">¶</a></h1>
+<p><em>Article last updated: 2026-10-26.</em></p>
+<h2 id="what-it-does">What it does<a class="headerlink" href="#what-it-does" title="Permanent link">¶</a></h2>
+<p>The Journalctl plugin forwards the systemd journal of a Linux host to Pandora
+FMS. On every run it asks <code>journalctl</code> for the entries written since the
+previous run, filters them with regular expressions and prints them as Pandora
+FMS log entries on standard output.</p>
+<p>It is an <strong>agent plugin</strong>: the Pandora FMS agent runs it as one of its
+<code>module_plugin</code> lines, at every agent interval, and appends the entries it
+prints to its own data. The plugin creates no agent, opens no network
+connection and needs no credential: it only reads the journal of the machine
+where it runs.</p>
+<p>Collection is incremental. The plugin keeps the time of its last successful run
+in a single file under <code>/tmp</code> and asks for the journal written after that
+moment, so each run delivers the new entries instead of the whole journal. A
+regular expression narrows what is delivered, either by keeping only the lines
+that match or by dropping the ones that match.</p>
+<h2 id="prepare">Prepare<a class="headerlink" href="#prepare" title="Permanent link">¶</a></h2>
+<h3 id="compatibility">Compatibility<a class="headerlink" href="#compatibility" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>State</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Addon <code>pandorafms.journalctl</code>, version <code>1.0</code></td>
+<td>Documented target</td>
+<td>The version of the Marketplace package <code>pandorafms.journalctl.1.0.zip</code>. See <a href="#addon-identity">Addon identity</a></td>
+</tr>
+<tr>
+<td>A Linux host with systemd and <code>journalctl</code> in the <code>PATH</code></td>
+<td><code>Required</code></td>
+<td><code>journalctl</code> is the only data source of the plugin: when the command is not available the run ends with an error and prints no entries</td>
+</tr>
+<tr>
+<td>An account allowed to read the journal</td>
+<td><code>Required</code></td>
+<td>The plugin reads the journal through <code>journalctl</code> with the permissions of the account that runs the agent; when the journal cannot be read the command fails and the run ends with an error</td>
+</tr>
+<tr>
+<td>A Pandora FMS agent installed on the monitored host</td>
+<td><code>Required</code></td>
+<td>The plugin is executed by the agent and its output is consumed as agent plugin output</td>
+</tr>
+<tr>
+<td>Pandora FMS NG 784 and later</td>
+<td><code>Supported</code></td>
+<td>The Marketplace states that all its integrations are compatible with Pandora FMS NG 784 and later versions. It is a general Marketplace statement, not a statement specific to this addon</td>
+</tr>
+<tr>
+<td>Individual Linux distributions and versions</td>
+<td><code>Not validated</code></td>
+<td>No distribution or version matrix is recorded for this addon</td>
+</tr>
+</tbody>
+</table>
+<p>The plugin runs on the monitored host itself: it reports the journal of that
+host only, and it has no remote execution mode and no connection to another
+system.</p>
+<h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>systemd, with the <code>journalctl</code> command available in the <code>PATH</code> of the
+   account that runs the agent.</strong> The plugin has no fallback: without the
+   command there is nothing to read.</li>
+<li><strong>Journal read access for that account.</strong> The agent runs the plugin as its
+   own user and the plugin does not elevate privileges. Grant that user the
+   journal read access of your distribution — commonly through the
+   <code>systemd-journal</code> group — or run the agent under an account that already has
+   it. When the account cannot read the journal, <code>journalctl</code> fails and the run
+   aborts.</li>
+<li><strong>A writable <code>/tmp</code>.</strong> The plugin checks it at the start of every run and
+   aborts when it cannot write there, because it keeps its collection position
+   in <code>/tmp/journalctl_logs.index</code>.</li>
+<li><strong>A Pandora FMS agent on the host.</strong> The agent is what turns the printed
+   entries into log data in the console.</li>
+<li><strong>A Marketplace account with a licence.</strong> The download of this addon is
+   limited to licensed users.</li>
+</ol>
+<h3 id="install-the-plugin">Install the plugin<a class="headerlink" href="#install-the-plugin" title="Permanent link">¶</a></h3>
+<p>Download the package from the Marketplace entry:</p>
+<p><a href="https://marketplace.pandorafms.com/entries/pandorafms.journalctl">https://marketplace.pandorafms.com/entries/pandorafms.journalctl</a></p>
+<p>The package distributes the <code>grep_journalctl</code> executable — that is the file
+name, not the addon identifier — and no configuration file. Copy it to the
+plugins directory of the agent and make it executable. On a Linux agent the
+plugins directory is <code>/usr/share/pandora_agent/plugins</code>, which is also reachable
+as <code>/etc/pandora/plugins</code>:</p>
+<div class="highlight"><pre><span></span><code>cp<span class="w"> </span>grep_journalctl<span class="w"> </span>/usr/share/pandora_agent/plugins/
+chmod<span class="w"> </span><span class="m">755</span><span class="w"> </span>/usr/share/pandora_agent/plugins/grep_journalctl
+</code></pre></div>
+<p>The agent adds its plugins directory to the <code>PATH</code>, so the bare executable name
+is enough in the <code>module_plugin</code> line. An absolute path also works and is the
+safer choice when more than one copy of the file exists.</p>
+<p>Instead of copying the file by hand, the agent can distribute it to its hosts
+as a file collection; the destination is the same plugins directory.</p>
+<h2 id="configure">Configure<a class="headerlink" href="#configure" title="Permanent link">¶</a></h2>
+<h3 id="add-the-plugin-to-the-agent">Add the plugin to the agent<a class="headerlink" href="#add-the-plugin-to-the-agent" title="Permanent link">¶</a></h3>
+<p>The plugin is configured in the agent configuration file (<code>pandora_agent.conf</code>)
+as one <code>module_plugin</code> line. Without options it delivers every new journal line
+of the host:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">module_plugin</span><span class="w"> </span>grep_journalctl
+</code></pre></div>
+<p>The line runs once per agent interval, so the coverage of each run is the time
+elapsed since the previous run. Restart or reload the agent after editing the
+file.</p>
+<p>Narrow the delivery with an inclusion filter, and name the source that will
+group the entries in the console:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">module_plugin</span><span class="w"> </span>grep_journalctl<span class="w"> </span>-in<span class="w"> </span>'Failed<span class="w"> </span>password|authentication<span class="w"> </span>failure'<span class="w"> </span>-s<span class="w"> </span>AuthErrors
+</code></pre></div>
+<p>Or drop the lines you do not want and keep everything else:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">module_plugin</span><span class="w"> </span>grep_journalctl<span class="w"> </span>-out<span class="w"> </span>'session<span class="w"> </span>opened|session<span class="w"> </span>closed'<span class="w"> </span>-s<span class="w"> </span>SystemLog
+</code></pre></div>
+<p>A single <code>module_plugin</code> line per host is enough: see
+<a href="#one-collection-position-per-host">One collection position per host</a> before
+adding a second one.</p>
+<p>To bound the duration of the run, use the block form and add a module timeout.
+The block needs no <code>module_name</code>: the plugin prints its own entries and the
+agent appends them unchanged.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">module_begin</span>
+<span class="nb">module_plugin</span><span class="w"> </span>grep_journalctl<span class="w"> </span>-in<span class="w"> </span>'error|critical'<span class="w"> </span>-s<span class="w"> </span>SystemErrors
+<span class="nb">module_timeout</span><span class="w"> </span><span class="m">120</span>
+<span class="nb">module_end</span>
+</code></pre></div>
+<p>The single-line form has no timeout, which means a run that reads a long
+backlog can last longer than the agent interval. <code>module_timeout</code> is expressed
+in seconds and applies to that line only.</p>
+<p>When the agent reads its configuration from the console (remote configuration),
+the <code>module_plugin</code> line belongs to the agent configuration stored there, and a
+local edit of <code>pandora_agent.conf</code> is overwritten by the agent.</p>
+<h3 id="quote-the-patterns">Quote the patterns<a class="headerlink" href="#quote-the-patterns" title="Permanent link">¶</a></h3>
+<p>The agent executes the <code>module_plugin</code> line through a shell, before the plugin
+sees it. A pattern that contains characters such as <code>|</code>, <code>(</code>, <code>)</code>, <code>$</code>, <code>*</code> or
+<code>&amp;</code> must be quoted, or the shell interprets it and the plugin receives something
+else:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">module_plugin</span><span class="w"> </span>grep_journalctl<span class="w"> </span>-in<span class="w"> </span>'Failed<span class="w"> </span>password|authentication<span class="w"> </span>failure'
+</code></pre></div>
+<p>Use single quotes: they protect every character except a single quote of its
+own. Double quotes also work, but the shell still expands <code>$</code> inside them, so a
+pattern such as <code>end$</code> must be written with single quotes.</p>
+<h3 id="choose-the-source">Choose the source<a class="headerlink" href="#choose-the-source" title="Permanent link">¶</a></h3>
+<p><code>-s</code> / <code>--source</code> sets the source name that the console uses to group the
+entries of this line. The default is <code>Journalctl</code>, with a capital J. Always set
+a non-empty value: an empty <code>-s ''</code> is accepted and produces entries with an
+empty source, which makes them hard to find and to tell apart.</p>
+<p>Changing the source does not reset the collection position. Entries delivered
+before the change stay under the previous source, and new entries appear under
+the new one, so a renamed source looks like a new journal in the console.</p>
+<h3 id="filter-the-lines">Filter the lines<a class="headerlink" href="#filter-the-lines" title="Permanent link">¶</a></h3>
+<p>Both filters take a regular expression that is searched anywhere in the line.
+They are optional and only one of them can act:</p>
+<ul>
+<li><strong><code>-in</code> / <code>--regex_in</code></strong> keeps only the lines that match.</li>
+<li><strong><code>-out</code> / <code>--regex_out</code></strong> drops the lines that match.</li>
+</ul>
+<p>When both are given, <code>-in</code> wins and <code>-out</code> is ignored without any warning. An
+empty value (<code>-in ''</code>) counts as absent, so it does not filter anything.</p>
+<p>Matching rules:</p>
+<ul>
+<li>The expression is a search, not a full-line match: <code>error</code> matches any line
+  that contains <code>error</code>.</li>
+<li>Matching is case-sensitive unless the pattern turns it off with <code>(?i)</code>:
+  <code>-in '(?i)error'</code> matches <code>ERROR</code> and <code>Error</code>.</li>
+<li>The whole journal line is matched, including the date, the host name and the
+  unit prefix that <code>journalctl</code> writes in its default output format. A pattern
+  anchored with <code>^</code> therefore sees the timestamp, not the message text: <code>^error</code>
+  matches almost nothing, while <code>: error</code> or <code>(?i)error</code> work as expected.</li>
+<li>Each physical line is matched and delivered separately. An entry whose
+  message spans several lines arrives as several entries, and a pattern cannot
+  match across them.</li>
+<li>A pattern that is not a valid regular expression aborts the run before the
+  journal is read, with an error message and exit status <code>1</code>.</li>
+</ul>
+<p>The filter acts on the collected lines, after the collection position has
+advanced: a line that the filter drops is not delivered later and is never
+reconsidered. Changing the pattern does not replay the past.</p>
+<h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">¶</a></h2>
+<p>Run the plugin by hand before wiring it into the agent. From the plugins
+directory:</p>
+<div class="highlight"><pre><span></span><code>./grep_journalctl
+</code></pre></div>
+<p>Each run executes once and exits. A successful run prints one <code>&lt;log_module&gt;</code>
+block per delivered line on standard output, and writes the collection position
+to <code>/tmp/journalctl_logs.index</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;log_module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;source&gt;</span><span class="cp">&lt;![CDATA[Journalctl]]&gt;</span><span class="nt">&lt;/source&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span>"Tm92IDExIDEyOjUzOjAyIGhvc3QwMSBzc2hkWzEzODJdOiBGYWlsZWQgcGFzc3dvcmQgZm9yIGludmFsaWQgdXNlciBhZG1pbiBmcm9tIDE5Mi4wLjIuMTA="<span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;encoding&gt;</span>base64<span class="nt">&lt;/encoding&gt;</span>
+<span class="nt">&lt;/log_module&gt;</span>
+
+<span class="nt">&lt;log_module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;source&gt;</span><span class="cp">&lt;![CDATA[Journalctl]]&gt;</span><span class="nt">&lt;/source&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span>"Tm92IDExIDEyOjUzOjAzIGhvc3QwMSBzeXN0ZW1kWzFdOiBTdGFydGVkIFNlc3Npb24gNDIgb2YgdXNlciBtb25pdG9yaW5nLg=="<span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;encoding&gt;</span>base64<span class="nt">&lt;/encoding&gt;</span>
+<span class="nt">&lt;/log_module&gt;</span>
+</code></pre></div>
+<p>The value of <code>&lt;data&gt;</code> is the journal line encoded in Base64, between double
+quotes. Decode it to confirm what was captured:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">printf</span><span class="w"> </span><span class="s1">'Tm92IDExIDEyOjUzOjAzIGhvc3QwMSBzeXN0ZW1kWzFdOiBTdGFydGVkIFNlc3Npb24gNDIgb2YgdXNlciBtb25pdG9yaW5nLg=='</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Nov 11 12:53:03 host01 systemd[1]: Started Session 42 of user monitoring.
+</code></pre></div>
+<p>Run the same command again immediately. When no journal line was written in
+between, the run prints nothing on standard output, prints <code>No new logs.</code> on
+standard error and exits with status <code>0</code>:</p>
+<div class="highlight"><pre><span></span><code>19:51:45 [INFO] No new logs.
+</code></pre></div>
+<p>The collection position that was written by the successful run can be read
+directly:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>/tmp/journalctl_logs.index
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>2026-10-26 19:51:45
+</code></pre></div>
+<p>A manual run behaves exactly like an agent run, including the advance of that
+file. Use it to install, to test patterns and to diagnose, and take it into
+account when the agent is already running the same plugin on that host (see
+<a href="#everyday-operation">Everyday operation</a>).</p>
+<p>Once the <code>module_plugin</code> line is in place and the agent has run it, the entries
+appear in the console log viewer under the agent that runs the plugin and the
+source you configured:</p>
+<!-- SCREENSHOT NEEDED: Pandora FMS log viewer filtered by the agent that runs the plugin and by the source Journalctl, listing several journal entries, with no real customer data. -->
+
+<h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
+<h3 id="log-entries">Log entries<a class="headerlink" href="#log-entries" title="Permanent link">¶</a></h3>
+<p>Each delivered journal line becomes one <code>log_module</code> entry with three fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>source</code></td>
+<td>The value of <code>-s</code> / <code>--source</code>, verbatim. The console groups the entries by this name. Default <code>Journalctl</code></td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>The journal line encoded in Base64, between double quotes</td>
+</tr>
+<tr>
+<td><code>encoding</code></td>
+<td>Always <code>base64</code></td>
+</tr>
+</tbody>
+</table>
+<p>Base64 is what keeps the generated XML valid: the journal can contain angle
+brackets, quotes and control characters, and the encoding carries them without
+breaking the document. The console decodes the value, so the log viewer shows
+the original line.</p>
+<p>The plugin sends no module with a numeric value, no availability check and no
+alert template: log entries are its only output. Nothing appears in the
+monitoring views of the agent as a graph or as a status, so any alerting is
+configured in the console on top of the log data.</p>
+<h3 id="what-the-agent-does-with-the-output">What the agent does with the output<a class="headerlink" href="#what-the-agent-does-with-the-output" title="Permanent link">¶</a></h3>
+<ul>
+<li>The agent appends the plugin output to the data it sends to the server, so
+  the <code>&lt;log_module&gt;</code> blocks reach Pandora FMS unchanged.</li>
+<li><strong>When the plugin exits with a status other than <code>0</code>, the agent discards its
+  entire output</strong> and records the error code in its own log. A run that fails
+  after printing part of its entries delivers none of them.</li>
+<li>The agent sends the standard error of a plugin to <code>/dev/null</code>. Every
+  diagnostic of this plugin — the regex error, the <code>journalctl</code> failure, the
+  missing <code>/tmp</code> permission, the <code>No new logs.</code> notice and the <code>-v</code> line — is
+  therefore invisible in a scheduled run. Run the command by hand to read it.</li>
+</ul>
+<h3 id="coverage-and-the-collection-position">Coverage and the collection position<a class="headerlink" href="#coverage-and-the-collection-position" title="Permanent link">¶</a></h3>
+<p>The plugin stores one timestamp, in the format <code>YYYY-MM-DD HH:MM:SS</code>, in
+<code>/tmp/journalctl_logs.index</code>. Each run asks <code>journalctl</code> for the entries since
+that moment:</p>
+<div class="highlight"><pre><span></span><code>journalctl --since "&lt;stored timestamp&gt;" --no-pager
+</code></pre></div>
+<p>The window of a run therefore starts where the previous successful run ended
+and finishes when the current run writes its own timestamp. That position is
+written at the very end of the run and only when the run completes. Three
+consequences follow, and they are worth knowing before you rely on the log for
+auditing:</p>
+<ul>
+<li><strong>The run covers everything since the last completed run.</strong> This includes
+  entries written while the plugin was stopped, so a host whose agent was down
+  for a day delivers a day of journal in the first run after it starts. There
+  is no line limit: the whole window is read into memory and printed one entry
+  per line.</li>
+<li><strong>A run that fails does not advance the position.</strong> Nothing is lost, but the
+  next successful run repeats the same window, so entries can be delivered
+  twice: after a failed <code>journalctl</code>, after an invalid regular expression, and
+  after a run interrupted with <code>Ctrl+C</code> or killed before it finishes.</li>
+<li><strong>A small part of the window is never delivered.</strong> The position is the time
+  at the end of the run, while the journal was read earlier in the same run.
+  Entries written between the read and the write of the timestamp are older
+  than the stored position when the next run starts, so they are skipped. The
+  gap is short, but it exists.</li>
+</ul>
+<p>Two smaller effects of the same design:</p>
+<ul>
+<li>The timestamp has a resolution of one second and the query includes the
+  entries written in that exact second, so a line written in the same second in
+  which the previous run ended can be delivered twice.</li>
+<li>The timestamp carries no time zone and <code>journalctl</code> reads it in the local
+  time of the host. If the host changes its time zone or crosses a
+  daylight-saving transition, the window between two runs shifts accordingly.</li>
+</ul>
+<h3 id="one-collection-position-per-host">One collection position per host<a class="headerlink" href="#one-collection-position-per-host" title="Permanent link">¶</a></h3>
+<p>The file name is fixed: every execution of the plugin on the same host uses
+<code>/tmp/journalctl_logs.index</code>, whatever source, filter or account it uses. There
+is no per-module or per-source state.</p>
+<ul>
+<li>Two <code>module_plugin</code> lines on the same host share the position. The second
+  line finds an almost empty window, because the first one already consumed it,
+  and each of them receives an arbitrary part of the journal. Do not run two
+  lines: keep one and use <code>-in</code> to select what you need.</li>
+<li>A manual run and the scheduled run share it too, so a manual run consumes the
+  window that the agent would have delivered.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">The position file lives in a shared directory</p>
+<p><code>/tmp</code> is world-writable and the file name is fixed, so any local account
+can create that file first, replace it, or turn it into a symbolic link. The
+plugin writes its timestamp with the privileges of the agent account, so a
+symbolic link placed there makes the run overwrite another file that this
+account can write. Run the agent with an unprivileged account where your
+installation allows it, and do not treat the content of the file as a
+tamper-proof record.</p>
+</div>
+<h3 id="first-run">First run<a class="headerlink" href="#first-run" title="Permanent link">¶</a></h3>
+<p>When <code>/tmp/journalctl_logs.index</code> does not exist, or its content cannot be read
+or is not a valid timestamp, the run collects <strong>the last five minutes</strong> of the
+journal. This is also what happens after a reboot that clears <code>/tmp</code>: journal
+entries of the five minutes before the reboot can be delivered a second time,
+because the journal may survive the reboot while the position does not.</p>
+<p>To force that five-minute window again, delete the file:</p>
+<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>-f<span class="w"> </span>/tmp/journalctl_logs.index
+</code></pre></div>
+<p>The next run starts from five minutes before it, whatever happened in between.</p>
+<h2 id="operate-and-troubleshoot">Operate and troubleshoot<a class="headerlink" href="#operate-and-troubleshoot" title="Permanent link">¶</a></h2>
+<h3 id="everyday-operation">Everyday operation<a class="headerlink" href="#everyday-operation" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>One line per host.</strong> The single collection position makes a second line
+  useless (see <a href="#one-collection-position-per-host">One collection position per host</a>).</li>
+<li><strong>The interval sets the coverage.</strong> The agent runs the line at the agent
+  interval, and each run covers what happened since the previous one. A shorter
+  interval delivers more often and in smaller batches; it does not change which
+  entries are delivered.</li>
+<li><strong>Bound long runs.</strong> After a long stop, the first run reads the whole window.
+  Set <code>module_timeout</code> in a block so that a large backlog cannot delay the agent
+  beyond the interval, and run the plugin by hand first to drain it.</li>
+<li><strong>Manual runs consume data.</strong> A manual run prints the entries to your terminal
+  and advances the position, so the agent does not deliver them afterwards.
+  Use the manual run for installation, for trying a pattern and for diagnosis,
+  and expect the next agent run to be empty.</li>
+<li><strong><code>-v</code> only reports the position write.</strong> The verbose mode raises the
+  diagnostic level, but the only message it adds is the line that records the
+  new collection position, for example
+  <code>19:51:53 [DEBUG] Saved execution time: 2026-10-26 19:51:53 -&gt; /tmp/journalctl_logs.index</code>.
+  It does not report the applied filters, the number of lines read or the
+  number of entries delivered.</li>
+<li><strong>Keep the patterns stable.</strong> A filter change applies from the next run on;
+  the lines already dropped are gone, and a line the new pattern would have
+  kept is not recovered.</li>
+</ul>
+<h3 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No entries in the console, and the manual run prints nothing</td>
+<td>The window is empty: another run (the agent, or your own earlier manual run) has already consumed it, or the filter drops everything</td>
+<td>Run the plugin by hand with the same options, right after writing a matching test line with <code>logger 'test journalctl'</code></td>
+</tr>
+<tr>
+<td><code>No new logs.</code> at every run</td>
+<td>The position advances but no line passes the filter, or a second execution consumes the window first</td>
+<td>Check the filters against real lines with <code>journalctl --since '10 minutes ago' --no-pager</code>; keep one <code>module_plugin</code> line</td>
+</tr>
+<tr>
+<td>Entries appear under the wrong source</td>
+<td><code>-s</code> is missing (default <code>Journalctl</code>), or it was changed and the old entries stayed under their old source</td>
+<td>Set <code>-s</code> explicitly, and look for the previous source in the log viewer</td>
+</tr>
+<tr>
+<td>A pattern that works elsewhere matches nothing</td>
+<td>The line carries <code>journalctl</code>'s date and host prefix, or the case does not match</td>
+<td>Remove the <code>^</code> anchor, or add <code>(?i)</code></td>
+</tr>
+<tr>
+<td><code>Invalid regex: ...</code> and no entries</td>
+<td>The pattern is not a valid regular expression</td>
+<td>Fix the pattern; the run stops before reading the journal, so nothing is lost</td>
+</tr>
+<tr>
+<td><code>Error: 'journalctl' command not found...</code></td>
+<td><code>journalctl</code> is not installed or not in the <code>PATH</code> of the agent</td>
+<td>Install systemd, or make sure the <code>PATH</code> of the agent includes the directory that contains <code>journalctl</code></td>
+</tr>
+<tr>
+<td><code>Error executing journalctl: ...</code> followed by the command error</td>
+<td><code>journalctl</code> failed: the account cannot read the journal, or the journal is unreadable</td>
+<td>Run <code>journalctl --since '5 minutes ago' --no-pager</code> as the agent user</td>
+</tr>
+<tr>
+<td><code>No write permissions for /tmp</code></td>
+<td><code>/tmp</code> is not writable by the account that runs the plugin</td>
+<td>Fix the permissions or the mount options of <code>/tmp</code></td>
+</tr>
+<tr>
+<td>The run ends with status <code>2</code> and a usage message</td>
+<td>An unknown option, or an option without a value</td>
+<td>Compare the line with <a href="#command-line-parameters">Command-line parameters</a></td>
+</tr>
+<tr>
+<td>Entries disappear after a run that also failed</td>
+<td>The exit status was not <code>0</code>, so the agent discarded the whole output</td>
+<td>Look for the error in a manual run: the agent already turned the standard error into <code>/dev/null</code></td>
+</tr>
+<tr>
+<td>Some entries are missing between two runs</td>
+<td>They were written while the run was in progress, or the filter dropped them</td>
+<td>This is expected: the window ends at the moment the position is written</td>
+</tr>
+<tr>
+<td>The same entries arrive twice</td>
+<td>The previous run did not complete, the position was deleted, <code>/tmp</code> was cleared, or the two runs ended in the same second</td>
+<td>Accept it, or use the entry timestamp in the console to identify the duplicate</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">¶</a></h2>
+<h3 id="command-line-parameters">Command-line parameters<a class="headerlink" href="#command-line-parameters" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-in &lt;regex&gt;</code>, <code>--regex_in &lt;regex&gt;</code></td>
+<td>No</td>
+<td>None (every line)</td>
+<td>Delivers only the journal lines that match the expression. An empty value counts as absent. Takes precedence over <code>-out</code></td>
+</tr>
+<tr>
+<td><code>-out &lt;regex&gt;</code>, <code>--regex_out &lt;regex&gt;</code></td>
+<td>No</td>
+<td>None (nothing excluded)</td>
+<td>Drops the journal lines that match the expression. Ignored when <code>-in</code> is set</td>
+</tr>
+<tr>
+<td><code>-s &lt;name&gt;</code>, <code>--source &lt;name&gt;</code></td>
+<td>No</td>
+<td><code>Journalctl</code></td>
+<td>Value of the <code>source</code> field of every entry. An empty value produces entries with an empty source</td>
+</tr>
+<tr>
+<td><code>-v</code>, <code>--verbose</code></td>
+<td>No</td>
+<td>Off</td>
+<td>Raises the diagnostic level. The only additional message is the one that records the new collection position</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>No</td>
+<td>—</td>
+<td>Prints the usage summary and exits with status <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p>Values are given as <code>-in &lt;value&gt;</code> or <code>--regex_in &lt;value&gt;</code>; the forms
+<code>-in=&lt;value&gt;</code> and <code>--regex_in=&lt;value&gt;</code> are also accepted. Options can be given
+in any order.</p>
+<p>The agent adds two directives of its own around the same line, in the block
+form: <code>module_timeout &lt;seconds&gt;</code> to bound the run and <code>module_end</code> to close the
+block. They belong to the agent configuration, not to the plugin.</p>
+<h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Standard output</th>
+<th>Standard error</th>
+<th>Exit status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>At least one line survives the filters</td>
+<td>One <code>&lt;log_module&gt;</code> block per line, each followed by a blank line</td>
+<td>Nothing</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td>The journal holds no entry in the window</td>
+<td>Nothing</td>
+<td><code>HH:MM:SS [INFO] No new logs.</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td>Every collected line is filtered out</td>
+<td>Nothing</td>
+<td>Nothing</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td>The regular expression is invalid</td>
+<td>Nothing</td>
+<td><code>HH:MM:SS [ERROR] Invalid regex: &lt;reason&gt;</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>journalctl</code> is not available</td>
+<td>Nothing</td>
+<td><code>HH:MM:SS [ERROR] Error: 'journalctl' command not found...</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>journalctl</code> fails</td>
+<td>Nothing</td>
+<td><code>HH:MM:SS [ERROR] Error executing journalctl: ...</code> and the command error</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>/tmp</code> is not writable</td>
+<td>Nothing</td>
+<td><code>HH:MM:SS [ERROR] No write permissions for /tmp</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td>A processing error while building the entries</td>
+<td>The entries printed so far</td>
+<td><code>HH:MM:SS [ERROR] Error processing logs: &lt;reason&gt;</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td>Interrupted with <code>Ctrl+C</code> during the processing</td>
+<td>The entries printed so far</td>
+<td><code>HH:MM:SS [INFO] Execution interrupted.</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Usage summary</td>
+<td>Nothing</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td>Unknown option or missing value</td>
+<td>Nothing</td>
+<td>Usage message and the error</td>
+<td><code>2</code></td>
+</tr>
+</tbody>
+</table>
+<p>The <code>HH:MM:SS</code> prefix is the local time of the message. Every diagnostic of the
+plugin goes to standard error, and standard output carries only the entry XML.</p>
+<h3 id="collection-position">Collection position<a class="headerlink" href="#collection-position" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Path</td>
+<td><code>/tmp/journalctl_logs.index</code></td>
+</tr>
+<tr>
+<td>Content</td>
+<td>A single line with the timestamp of the end of the last successful run, in the format <code>YYYY-MM-DD HH:MM:SS</code>, local time without a time zone</td>
+</tr>
+<tr>
+<td>Written when</td>
+<td>At the end of a run that completes, including a run whose lines were all filtered out</td>
+</tr>
+<tr>
+<td>Not written when</td>
+<td><code>journalctl</code> fails, the regular expression is invalid, <code>/tmp</code> is not writable, or the run is interrupted</td>
+</tr>
+<tr>
+<td>Read when</td>
+<td>At the start of every run. A missing file, or a content that is not a valid timestamp, starts the window five minutes before the run</td>
+</tr>
+<tr>
+<td>Scope</td>
+<td>One file per host, shared by every execution of the plugin on that host, whatever source, filter or account</td>
+</tr>
+</tbody>
+</table>
+<h3 id="addon-identity">Addon identity<a class="headerlink" href="#addon-identity" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Marketplace identifier</td>
+<td><code>pandorafms.journalctl</code></td>
+</tr>
+<tr>
+<td>Name</td>
+<td>Journalctl</td>
+</tr>
+<tr>
+<td>Version</td>
+<td><code>1.0</code> — the version of the Marketplace package <code>pandorafms.journalctl.1.0.zip</code></td>
+</tr>
+<tr>
+<td>Category</td>
+<td>Miscelaneus</td>
+</tr>
+<tr>
+<td>License</td>
+<td>One; the download is limited to licensed users</td>
+</tr>
+<tr>
+<td>Marketplace last update</td>
+<td>2026-02-05</td>
+</tr>
+<tr>
+<td>Marketplace entry</td>
+<td><a href="https://marketplace.pandorafms.com/entries/pandorafms.journalctl">pandorafms.journalctl</a></td>
+</tr>
+<tr>
+<td>Workflow</td>
+<td>Agent plugin, executed by the Pandora FMS agent on the monitored host</td>
+</tr>
+<tr>
+<td>Executable</td>
+<td><code>grep_journalctl</code></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

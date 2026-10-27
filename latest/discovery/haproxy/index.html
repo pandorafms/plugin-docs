@@ -1,0 +1,5503 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/discovery/haproxy/">
+      
+      
+        <link rel="prev" href="../google-cloud-compute-engine/">
+      
+      
+        <link rel="next" href="../hp-one-view/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../../es/discovery/haproxy/" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>HAProxy Discovery - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#haproxy-discovery" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              HAProxy Discovery
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/discovery/haproxy/" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../amazon-cloudwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon CloudWatch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../amazon-ec2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon EC2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../amazon-rds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../amazon-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon S3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../db2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital-ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Ocean Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasticsearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../google-cloud-compute-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud Compute Engine Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HAProxy Discovery
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HAProxy Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-monitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it monitors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-the-statistics-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable the statistics endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Enable the statistics endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimal-configuration-no-authentication-no-ssl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal configuration (no authentication, no SSL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ssltls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSL/TLS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ssl-and-authentication-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSL and authentication together
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confirm-the-endpoint-responds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confirm the endpoint responds
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-the-discovery-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure the Discovery task
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-the-first-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify the first run
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understand the results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agents-generated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents generated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modules-generated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modules generated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-status-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The status module
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtering-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-url-is-normalized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the URL is normalized
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshoot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#haproxy-basic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HAProxy Basic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#haproxy-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HAProxy Advanced
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modules-by-statistic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modules by statistic
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modules by statistic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sessions-traffic-and-rates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sessions, traffic and rates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#queue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Queue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#denied-requests-errors-and-aborts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Denied requests, errors and aborts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#servers-weight-and-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Servers, weight and health checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-responses-and-timings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP responses and timings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compression
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statistics-that-do-not-create-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Statistics that do not create modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addon-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addon identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hp-one-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HP One View Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hyper-v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JMX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../meraki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meraki Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Office 365 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../opensearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenSearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OVH Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proxmox Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sap-hana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sap-r3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP R3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../xenserver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XenServer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/discord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discord integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Chat integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/slack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Slack integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft Teams integration (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegram integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/active-directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/apache-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Enterprise Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/azure-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure PostgreSQL monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Azure SQL plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Azure Storage monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/cisco-inventory-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco Inventory configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/citrix-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/citrix-netscaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix NetScaler monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/db2-remote/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Remote plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic SNMP plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/exchange/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exchange
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/glpi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GLPI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/google-drive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Drive monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/ibm-z-series-mainframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBM Z Series Mainframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/influxdb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/inventory-for-mac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory plugin for MAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/inventory-ssh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory SSH plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/journalctl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Journalctl plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/kafka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kafka monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/marklogic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MarkLogic monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/mongodb-remote-atlas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora MongoDB remote / Atlas plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/mssql-server-querier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MSSQL Server Querier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/net-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Net usage plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Office 365 Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Openshift monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/oracle-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle VM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/pandora-ldap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora LDAP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/pandora-ux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora UX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/plugin-executor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Plugin Executor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/rabbitmq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/sap-hana-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Database plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/spark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Spark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/sybase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sybase monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/tomcat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tomcat monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/zammad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zammad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/zendesk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zendesk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to document
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-monitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it monitors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-addon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the addon
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-the-statistics-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable the statistics endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Enable the statistics endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimal-configuration-no-authentication-no-ssl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal configuration (no authentication, no SSL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ssltls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSL/TLS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ssl-and-authentication-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSL and authentication together
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confirm-the-endpoint-responds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confirm the endpoint responds
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-the-discovery-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure the Discovery task
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-the-first-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify the first run
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understand the results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agents-generated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents generated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modules-generated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modules generated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-status-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The status module
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtering-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-url-is-normalized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the URL is normalized
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshoot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#haproxy-basic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HAProxy Basic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#haproxy-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HAProxy Advanced
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modules-by-statistic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modules by statistic
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modules by statistic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sessions-traffic-and-rates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sessions, traffic and rates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#queue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Queue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#denied-requests-errors-and-aborts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Denied requests, errors and aborts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#servers-weight-and-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Servers, weight and health checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-responses-and-timings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP responses and timings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compression
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statistics-that-do-not-create-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Statistics that do not create modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addon-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addon identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="haproxy-discovery">HAProxy Discovery<a class="headerlink" href="#haproxy-discovery" title="Permanent link">¶</a></h1>
+<p><em>Article last updated: 2026-10-26.</em></p>
+<h2 id="what-it-monitors">What it monitors<a class="headerlink" href="#what-it-monitors" title="Permanent link">¶</a></h2>
+<p>The HAProxy Discovery addon monitors HAProxy load balancers through the CSV export of the HAProxy statistics endpoint (<code>/stats;csv</code>). It reads that export and turns each statistic of each proxy into a Pandora FMS module: sessions, bytes transferred, queues, errors, health checks, HTTP response classes, timings and the operational status of every frontend, backend and server.</p>
+<p>The addon creates <strong>one agent per HAProxy URL</strong>. A Discovery task accepts several URLs at once, so a single task covers a whole set of HAProxy instances. Each agent contains one module per available statistic and per proxy row, plus a numeric <code>status</code> module for every row that you can use to alert on <code>DOWN</code>, <code>MAINT</code> or <code>STOP</code> states.</p>
+<h2 id="prepare">Prepare<a class="headerlink" href="#prepare" title="Permanent link">¶</a></h2>
+<h3 id="compatibility">Compatibility<a class="headerlink" href="#compatibility" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>State</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Addon <code>pandorafms.haproxy</code>, version <code>1.0</code></td>
+<td>Documented target</td>
+<td>The version this page describes. See <a href="#addon-identity">Addon identity</a></td>
+</tr>
+<tr>
+<td>HAProxy statistics endpoint serving the CSV export, over HTTP or HTTPS, with or without basic authentication</td>
+<td><code>Required</code></td>
+<td>Prerequisite, not a compatibility statement. See <a href="#enable-the-statistics-endpoint">Enable the statistics endpoint</a></td>
+</tr>
+<tr>
+<td>Network reachability from the Discovery server to the statistics endpoint</td>
+<td><code>Required</code></td>
+<td>The addon performs one HTTP request per URL</td>
+</tr>
+<tr>
+<td>Specific HAProxy releases</td>
+<td><code>Not validated</code></td>
+<td>No version matrix has been recorded for this addon</td>
+</tr>
+<tr>
+<td>Operating system of the Discovery server</td>
+<td><code>Not validated</code></td>
+<td>No operating system has been recorded for this version</td>
+</tr>
+<tr>
+<td>Specific Pandora FMS versions</td>
+<td><code>Not validated</code></td>
+<td>No version matrix has been recorded for this addon</td>
+</tr>
+</tbody>
+</table>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>The statistics endpoint must be enabled and reachable</strong> from the machine that runs the addon. Enabling it is covered in <a href="#enable-the-statistics-endpoint">Enable the statistics endpoint</a>.</li>
+<li><strong>Credentials</strong>, only when the endpoint is protected with HTTP basic authentication.</li>
+<li><strong>Pandora FMS</strong>: a Discovery server to run the task and the console to define it.</li>
+</ol>
+<p>The addon is distributed as a self-contained executable, <code>bin/pandora_haproxy</code>, so nothing else has to be installed on the Discovery server to run a task.</p>
+<h3 id="install-the-addon">Install the addon<a class="headerlink" href="#install-the-addon" title="Permanent link">¶</a></h3>
+<p>Download the <code>.disco</code> package from the Pandora FMS Marketplace entry, which is limited to licensed users:</p>
+<p><a href="https://marketplace.pandorafms.com/entries/pandorafms.haproxy">https://marketplace.pandorafms.com/entries/pandorafms.haproxy</a></p>
+<p>Load it into Pandora FMS. Once loaded, <strong>HAProxy</strong> is available in <strong>Management → Discovery → Application</strong> when creating Discovery tasks.</p>
+<h3 id="enable-the-statistics-endpoint">Enable the statistics endpoint<a class="headerlink" href="#enable-the-statistics-endpoint" title="Permanent link">¶</a></h3>
+<p>For the addon to obtain the statistics, HAProxy must expose its statistics page. Enabling it is done by editing the HAProxy configuration file, <code>haproxy.cfg</code> (by default <code>/etc/haproxy/haproxy.cfg</code>). Pick the variant that matches how the endpoint should be protected. None of them needs the <code>stats admin</code> option, because the addon only reads data.</p>
+<h4 id="minimal-configuration-no-authentication-no-ssl">Minimal configuration (no authentication, no SSL)<a class="headerlink" href="#minimal-configuration-no-authentication-no-ssl" title="Permanent link">¶</a></h4>
+<p>Add a dedicated <code>frontend</code> for the statistics:</p>
+<div class="highlight"><pre><span></span><code>frontend stats
+    bind *:8404
+    stats enable
+    stats uri /stats
+    stats refresh 10s
+</code></pre></div>
+<p>The URL to give to the addon is the host and port, without a path:</p>
+<div class="highlight"><pre><span></span><code>http://&lt;HAPROXY_HOST&gt;:8404
+</code></pre></div>
+<p>The addon appends <code>/stats;csv</code> to the path you provide instead of replacing it, so the address of the statistics page does not work as it is: <code>http://&lt;HAPROXY_HOST&gt;:8404/stats</code> is requested as <code>http://&lt;HAPROXY_HOST&gt;:8404/stats/stats;csv</code> and HAProxy answers <code>404</code>. Enter the host and port alone, or a URL that already ends in <code>stats;csv</code>. See <a href="#how-the-url-is-normalized">How the URL is normalized</a>.</p>
+<h4 id="basic-authentication">Basic authentication<a class="headerlink" href="#basic-authentication" title="Permanent link">¶</a></h4>
+<p>Define a <code>userlist</code> and require authentication in the statistics frontend:</p>
+<div class="highlight"><pre><span></span><code>frontend stats
+    bind *:8404
+    stats enable
+    stats uri /stats
+    stats refresh 10s
+
+    acl auth_ok http_auth(stats_users)
+    http-request auth realm stats if !auth_ok
+
+userlist stats_users
+    user &lt;USERNAME&gt; password &lt;PASSWORD_HASH&gt;
+</code></pre></div>
+<p>Generate the password hash, which HAProxy reads in <code>crypt(3)</code> format, with:</p>
+<div class="highlight"><pre><span></span><code>openssl<span class="w"> </span>passwd<span class="w"> </span>-6<span class="w"> </span>&lt;PASSWORD&gt;
+</code></pre></div>
+<p>Give the addon the same user name and password in the <strong>Username</strong> and <strong>Password</strong> fields.</p>
+<h4 id="ssltls">SSL/TLS<a class="headerlink" href="#ssltls" title="Permanent link">¶</a></h4>
+<p>Serve the statistics over HTTPS by adding <code>ssl crt</code> to the <code>bind</code> line:</p>
+<div class="highlight"><pre><span></span><code>frontend stats
+    bind *:8404 ssl crt /etc/haproxy/certs/stats.pem
+    stats enable
+    stats uri /stats
+    stats refresh 10s
+</code></pre></div>
+<p>To create a self-signed certificate for testing:</p>
+<div class="highlight"><pre><span></span><code>openssl<span class="w"> </span>req<span class="w"> </span>-x509<span class="w"> </span>-nodes<span class="w"> </span>-days<span class="w"> </span><span class="m">365</span><span class="w"> </span>-newkey<span class="w"> </span>rsa:2048<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-keyout<span class="w"> </span>/etc/haproxy/certs/stats.key<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-out<span class="w"> </span>/etc/haproxy/certs/stats.crt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-subj<span class="w"> </span><span class="s2">"/CN=localhost"</span>
+cat<span class="w"> </span>/etc/haproxy/certs/stats.crt<span class="w"> </span>/etc/haproxy/certs/stats.key<span class="w"> </span>&gt;<span class="w"> </span>/etc/haproxy/certs/stats.pem
+</code></pre></div>
+<p>Use a URL with the <code>https://</code> scheme in the task. Enable <strong>Verify SSL</strong> only when the certificate is valid for the host name in the URL and its issuer is trusted by the Discovery server; leave it disabled for self-signed certificates.</p>
+<h4 id="ssl-and-authentication-together">SSL and authentication together<a class="headerlink" href="#ssl-and-authentication-together" title="Permanent link">¶</a></h4>
+<p>Combine both blocks in the statistics frontend:</p>
+<div class="highlight"><pre><span></span><code>frontend stats
+    bind *:8404 ssl crt /etc/haproxy/certs/stats.pem
+    stats enable
+    stats uri /stats
+    stats refresh 10s
+
+    acl auth_ok http_auth(stats_users)
+    http-request auth realm stats if !auth_ok
+
+userlist stats_users
+    user &lt;USERNAME&gt; password &lt;PASSWORD_HASH&gt;
+</code></pre></div>
+<p>After editing <code>haproxy.cfg</code>, reload the service:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>haproxy
+</code></pre></div>
+<h3 id="confirm-the-endpoint-responds">Confirm the endpoint responds<a class="headerlink" href="#confirm-the-endpoint-responds" title="Permanent link">¶</a></h3>
+<p>Before creating the task, request the CSV export by hand from the Discovery server. Quote the URL, because <code>;</code> is a special character in the shell:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-u<span class="w"> </span>&lt;USERNAME&gt;:&lt;PASSWORD&gt;<span class="w"> </span><span class="s1">'http://&lt;HAPROXY_HOST&gt;:8404/stats;csv'</span>
+</code></pre></div>
+<p>Passing a password on the command line exposes it in the shell history and in the operating system process list. Omit <code>-u</code> when the endpoint has no authentication. For an HTTPS endpoint with a self-signed certificate add <code>-k</code>.</p>
+<p>The first line of the answer must be a header that starts with <code># pxname,svname,qcur,qmax,...</code>, followed by one row per frontend, backend and server. If this request fails, the task fails too: fix it here rather than in the console.</p>
+<h2 id="configure-the-discovery-task">Configure the Discovery task<a class="headerlink" href="#configure-the-discovery-task" title="Permanent link">¶</a></h2>
+<p>Create the task from <strong>Management → Discovery → Application → HAProxy</strong>. After the generic task-definition step, the console presents the fields in two steps. Every field is documented in <a href="#task-parameters">Task parameters</a>.</p>
+<ol>
+<li>
+<p><strong>HAProxy Basic</strong> — the endpoints and how to reach them:</p>
+<ul>
+<li><strong>HAProxy Stats URLs</strong>: statistics URLs, separated by commas or one per line. <strong>Each URL generates one agent.</strong> Mandatory.</li>
+<li><strong>Username</strong> and <strong>Password</strong>: only when the endpoint requires HTTP basic authentication. Authentication is sent only when both are filled in.</li>
+<li><strong>Verify SSL</strong>: validate the certificate of an <code>https://</code> URL. Disabled by default.</li>
+<li><strong>Transfer mode</strong>, <strong>Tentacle IP</strong> and <strong>Tentacle port</strong>: how the data reaches Pandora FMS. <code>native</code> lets the Discovery server read the data directly; <code>tentacle</code> sends it with the Tentacle client. The Tentacle fields only matter in <code>tentacle</code> mode.</li>
+</ul>
+<!-- SCREENSHOT NEEDED: HAProxy Basic wizard step showing the URL textarea, Username, Password, Verify SSL and Transfer mode with Tentacle fields, using documentation placeholders (for example http://<HAPROXY_HOST>:8404) and no private IP addresses. -->
+</li>
+<li>
+<p><strong>HAProxy Advanced</strong> — optional shaping of the result:</p>
+<ul>
+<li><strong>Module prefix</strong>: prepended to every created module name.</li>
+<li><strong>Monitor frontends</strong>, <strong>Monitor backends</strong> and <strong>Monitor servers</strong>: choose which kinds of proxy rows produce modules. All three are enabled by default.</li>
+<li><strong>Allow list</strong> and <strong>Deny list</strong>: regular expressions to include or exclude modules by name.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/haproxy/haproxy-advanced-step.png" data-desc-position="bottom"><img alt="HAProxy Advanced wizard step with the Module prefix, Monitor frontends, Monitor backends, Monitor servers, Allow list and Deny list fields" src="../../assets/images/discovery/haproxy/haproxy-advanced-step.png"></a></p>
+</li>
+</ol>
+<p>The task's own group and interval come from the generic task-definition step: they are applied to the agents the task creates.</p>
+<h2 id="verify-the-first-run">Verify the first run<a class="headerlink" href="#verify-the-first-run" title="Permanent link">¶</a></h2>
+<p>Force the task from <strong>Management → Discovery → Task list</strong> and check the result in this order.</p>
+<ol>
+<li>
+<p><strong>The task summary.</strong> A task that completes successfully reports:</p>
+<ul>
+<li><strong>Total Agents</strong>: the number of agents generated by the task.</li>
+<li><strong>Total Modules</strong>: the number of modules generated by the task.</li>
+</ul>
+<p>Expect one agent per URL you entered. A URL that could not be read is reported as an error in the execution information instead.</p>
+<!-- SCREENSHOT NEEDED: Discovery task execution summary for a HAProxy task showing Total Agents and Total Modules. -->
+</li>
+<li>
+<p><strong>The agents.</strong> One per URL, with the alias set to the <code>host:port</code> of the URL, for example <code>&lt;HAPROXY_HOST&gt;:8404</code>.</p>
+</li>
+<li>
+<p><strong>The modules on each agent.</strong> Modules are named <code>&lt;prefix&gt;&lt;proxy&gt;_&lt;server&gt;_&lt;statistic&gt;</code>, for example <code>app_FRONTEND_scur</code> or <code>app_BACKEND_status</code>. Every proxy row has a <code>status</code> module, whose value follows the mapping in <a href="#the-status-module">The status module</a>.</p>
+</li>
+</ol>
+<p>If the task reports no agents, work back through <a href="#confirm-the-endpoint-responds">Confirm the endpoint responds</a> and then <a href="#troubleshoot">Troubleshoot</a>.</p>
+<h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
+<h3 id="agents-generated">Agents generated<a class="headerlink" href="#agents-generated" title="Permanent link">¶</a></h3>
+<p>The addon creates <strong>one agent per HAProxy URL</strong>. The agent name is the MD5 hash of the URL's <code>host:port</code>, and the alias is that <code>host:port</code> itself, for example <code>&lt;HAPROXY_HOST&gt;:8404</code>. When a URL has no <code>host:port</code>, the whole URL is used instead. The agent description is <code>HAProxy stats agent created by discovery plugin</code>.</p>
+<p>Because the identity comes from the endpoint and not from the task, moving a URL between tasks keeps reporting to the same agent and preserves its history. Two URLs with the same <code>host:port</code> therefore resolve to the same agent.</p>
+<h3 id="modules-generated">Modules generated<a class="headerlink" href="#modules-generated" title="Permanent link">¶</a></h3>
+<p>HAProxy reports one CSV row per frontend, one per backend and one per server, and the addon creates modules from each row:</p>
+<ul>
+<li><strong><code>status</code> module</strong>: created for every row, regardless of the <strong>Monitor frontends</strong>, <strong>Monitor backends</strong> and <strong>Monitor servers</strong> options, so that you can always alert on <code>DOWN</code>, <code>MAINT</code> and <code>STOP</code>. See <a href="#the-status-module">The status module</a>.</li>
+<li><strong>Statistic modules</strong>: one module per statistic of the row that has a value. Numeric values are created as <code>generic_data</code> modules and text values as <code>generic_data_string</code>. Statistics with an empty value are not created.</li>
+</ul>
+<p>A statistic module is created only when its row type is enabled: rows of type frontend (<code>type=0</code>), backend (<code>type=1</code>) or server (<code>type=2</code>) follow <strong>Monitor frontends</strong>, <strong>Monitor backends</strong> and <strong>Monitor servers</strong>. Rows of any other type, such as sockets (<code>type=3</code>), are not governed by those options.</p>
+<p>Module names have the form <code>&lt;prefix&gt;&lt;proxy&gt;_&lt;server&gt;_&lt;statistic&gt;</code>, where <code>&lt;proxy&gt;</code> and <code>&lt;server&gt;</code> are the <code>pxname</code> and <code>svname</code> columns of the row. For frontend and backend rows <code>svname</code> is <code>FRONTEND</code> or <code>BACKEND</code>. Apostrophes and double quotes are removed from names and descriptions.</p>
+<p>The addon creates a module for every column the endpoint returns, apart from the columns listed in <a href="#statistics-that-do-not-create-modules">Statistics that do not create modules</a>. A HAProxy release that exports additional numeric columns therefore produces additional modules. The <a href="#modules-by-statistic">Reference</a> describes the columns the addon documents.</p>
+<h3 id="the-status-module">The status module<a class="headerlink" href="#the-status-module" title="Permanent link">¶</a></h3>
+<p>The <code>status</code> module is <code>generic_data</code> and converts the HAProxy status text into a number, from best to worst:</p>
+<table>
+<thead>
+<tr>
+<th>HAProxy status</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UP</code></td>
+<td><code>5</code></td>
+</tr>
+<tr>
+<td><code>OPEN</code></td>
+<td><code>4</code></td>
+</tr>
+<tr>
+<td><code>NOLB</code></td>
+<td><code>3</code></td>
+</tr>
+<tr>
+<td><code>MAINT</code></td>
+<td><code>2</code></td>
+</tr>
+<tr>
+<td><code>STOP</code>, <code>STOPPING</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>DOWN</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td>Any other status</td>
+<td><code>-1</code></td>
+</tr>
+</tbody>
+</table>
+<p>Only the first word of the HAProxy status is used, so <code>UP 2/3</code> is read as <code>UP</code>. The module is created with the thresholds warning <code>2</code> to <code>4</code> and critical <code>0</code> to <code>2</code>, so a <code>DOWN</code> or <code>MAINT</code> row raises a critical state and a <code>NOLB</code> row a warning, without further configuration.</p>
+<h3 id="filtering-modules">Filtering modules<a class="headerlink" href="#filtering-modules" title="Permanent link">¶</a></h3>
+<p>The <strong>Allow list</strong> and <strong>Deny list</strong> are regular expressions searched (not anchored) in the module name as built from the row, <code>&lt;proxy&gt;_&lt;server&gt;_&lt;statistic&gt;</code>, without the <strong>Module prefix</strong>. For example, <code>.*_wredis|.*_wretr</code> matches every <code>wredis</code> and <code>wretr</code> module and <code>status|scur|smax</code> matches every module whose name contains one of those three words.</p>
+<ul>
+<li>The allow list is applied first, then the deny list.</li>
+<li>An empty list does nothing. An invalid regular expression is ignored: an invalid allow list allows everything and an invalid deny list excludes nothing.</li>
+<li>Both lists also apply to the <code>status</code> module. An allow list that does not match <code>status</code> removes it.</li>
+</ul>
+<h3 id="how-the-url-is-normalized">How the URL is normalized<a class="headerlink" href="#how-the-url-is-normalized" title="Permanent link">¶</a></h3>
+<p>For each URL, the addon requests the CSV export. It appends <code>/stats;csv</code> to the path of the URL when the path does not already end in <code>stats;csv</code>, and it adds the <code>norefresh</code> parameter to the query when it is missing. Each request has a fixed timeout of 10 seconds. Because the suffix is appended and not substituted, <code>http://&lt;HAPROXY_HOST&gt;:8404</code> is requested as <code>http://&lt;HAPROXY_HOST&gt;:8404/stats;csv?norefresh</code>, whereas <code>http://&lt;HAPROXY_HOST&gt;:8404/stats</code> is requested as <code>http://&lt;HAPROXY_HOST&gt;:8404/stats/stats;csv?norefresh</code> and fails with <code>404</code>.</p>
+<h2 id="operate">Operate<a class="headerlink" href="#operate" title="Permanent link">¶</a></h2>
+<h3 id="manual-execution">Manual execution<a class="headerlink" href="#manual-execution" title="Permanent link">¶</a></h3>
+<p>The addon can run outside a Discovery task, which is the fastest way to confirm an endpoint before wiring it into a task. It has two input modes:</p>
+<ul>
+<li><strong>Simple mode</strong> passes the URLs on the command line with <code>--urls</code>.</li>
+<li><strong>Advanced mode</strong> passes a configuration file with <code>--conf</code> plus a targets file with <code>--conf_targets</code>. This is the mode the Discovery task itself uses.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Simple mode</span>
+./pandora_haproxy<span class="w"> </span>--urls<span class="w"> </span>http://&lt;HAPROXY_HOST_1&gt;:8404,http://&lt;HAPROXY_HOST_2&gt;:8404<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--user<span class="w"> </span>&lt;USERNAME&gt;<span class="w"> </span>--password<span class="w"> </span>&lt;PASSWORD&gt;<span class="w"> </span>--ssl<span class="w"> </span><span class="nb">false</span>
+
+<span class="c1"># Advanced mode</span>
+./pandora_haproxy<span class="w"> </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span>--conf_targets<span class="w"> </span>&lt;PATH_TO_TARGETS&gt;
+</code></pre></div>
+<p>Passing a password on the command line exposes it in the shell history and in the operating system process list. Prefer the configuration file for anything but a one-off check, and protect that file with restrictive permissions.</p>
+<p>The run prints a JSON summary of the execution. In <code>native</code> mode the collected data is exposed in the summary's <code>monitoring_data</code> field, for the Discovery server to consume; in <code>tentacle</code> mode the addon generates one XML file per agent and sends it to the Pandora FMS server with the Tentacle client. When errors occur, the summary includes them in its <code>info</code> field.</p>
+<p><code>--as_server_plugin true</code> replaces the summary with a single <code>1</code> (at least one agent was created without errors) or <code>0</code>, so the addon can be wired as a server plugin.</p>
+<blockquote>
+<p>In simple mode (<code>--urls</code>), the module prefix, transfer mode, Tentacle address and interval parameters are accepted but not applied: the addon uses the defaults (no prefix, <code>native</code>, <code>127.0.0.1:41121</code> and <code>300</code> seconds), and no agent group is sent with the agents. To change them, use advanced mode with <code>--conf</code>.</p>
+</blockquote>
+<h2 id="troubleshoot">Troubleshoot<a class="headerlink" href="#troubleshoot" title="Permanent link">¶</a></h2>
+<p>The addon has no verbose or debug flag. Its diagnostic channel is the execution information of the task (the <code>info</code> field of the JSON summary in a manual run), which names the failing URL.</p>
+<ul>
+<li><strong><code>HTTP error for &lt;url&gt;: HTTP Error &lt;code&gt; for &lt;url&gt;</code></strong> — the endpoint answered with an error status. <code>401</code> means that the credentials are missing or wrong: check <strong>Username</strong> and <strong>Password</strong> (both must be filled in for authentication to be sent) against the <code>userlist</code>. <code>404</code> usually means that the URL and the <code>stats uri</code> of HAProxy do not combine: the addon appends <code>/stats;csv</code> to the path you give, so a URL that already ends in <code>/stats</code> requests <code>/stats/stats;csv</code>. Enter the host and port alone, or a URL that already ends in <code>stats;csv</code>.</li>
+<li><strong><code>Request error for &lt;url&gt;: ...</code></strong> — the request could not be completed: connection refused or timed out (10 seconds), wrong port, firewall, or a certificate error. For a certificate error on an HTTPS endpoint, disable <strong>Verify SSL</strong> for a self-signed certificate or install the issuing CA on the Discovery server.</li>
+<li><strong><code>Error parsing CSV for &lt;url&gt;</code> or <code>No stats data returned for &lt;url&gt;</code></strong> — the URL answered but not with the CSV export, or with no rows. Check it with the <code>curl</code> command in <a href="#confirm-the-endpoint-responds">Confirm the endpoint responds</a>.</li>
+<li><strong><code>No modules created for &lt;url&gt;</code></strong> — the row filters removed everything. Review <strong>Allow list</strong>, <strong>Deny list</strong> and the <strong>Monitor</strong> options.</li>
+<li><strong><code>All requests failed when trying to obtain HAProxy stats</code></strong> — no URL produced an agent.</li>
+<li><strong><code>No URLs provided</code> or <code>No valid URLs after parsing</code></strong> — <strong>HAProxy Stats URLs</strong> is empty after splitting on commas and line breaks.</li>
+<li><strong><code>Error: --conf_targets is required when using --conf</code> or <code>Error: no valid targets found in &lt;file&gt;</code></strong> — in a manual advanced-mode run, the targets file is missing or empty.</li>
+<li><strong>The endpoint answers by hand but not from the task</strong> — the request leaves from the Discovery server, not from your workstation. Check the network path and any <code>acl</code> rules of the statistics frontend.</li>
+<li><strong>Module prefix, transfer mode, Tentacle address or interval seem ignored in a manual run</strong> — see the note in <a href="#manual-execution">Manual execution</a>.</li>
+<li><strong>A <code>status</code> module has value <code>-1</code></strong> — HAProxy reported a status that is not in the table of <a href="#the-status-module">The status module</a>, for example a row with no health check.</li>
+<li><strong>Fewer modules than expected</strong> — check the row-type options and the allow and deny lists, and remember that empty statistics and the columns in <a href="#statistics-that-do-not-create-modules">Statistics that do not create modules</a> never create modules.</li>
+</ul>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">¶</a></h2>
+<h3 id="task-parameters">Task parameters<a class="headerlink" href="#task-parameters" title="Permanent link">¶</a></h3>
+<p>The console presents the task fields in two steps.</p>
+<h4 id="haproxy-basic">HAProxy Basic<a class="headerlink" href="#haproxy-basic" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Macro</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HAProxy Stats URLs</td>
+<td><code>_haproxyUrls_</code></td>
+<td>textarea</td>
+<td>—</td>
+<td>Mandatory. Comma separated or one per line. Each URL creates one agent</td>
+</tr>
+<tr>
+<td>Username</td>
+<td><code>_haproxyUser_</code></td>
+<td>string</td>
+<td>empty</td>
+<td>HTTP basic authentication user, optional</td>
+</tr>
+<tr>
+<td>Password</td>
+<td><code>_haproxyPassword_</code></td>
+<td>password</td>
+<td>empty</td>
+<td>HTTP basic authentication password, optional. Authentication is sent only when both user and password are set</td>
+</tr>
+<tr>
+<td>Verify SSL</td>
+<td><code>_verifySSL_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Validate the certificate of an HTTPS URL. Leave off for self-signed certificates</td>
+</tr>
+<tr>
+<td>Transfer mode</td>
+<td><code>_transferMode_</code></td>
+<td>select</td>
+<td><code>native</code></td>
+<td><code>native</code>: the Discovery server reads the agent data directly. <code>tentacle</code>: the addon sends the data with the Tentacle client</td>
+</tr>
+<tr>
+<td>Tentacle IP</td>
+<td><code>_tentacleIp_</code></td>
+<td>string</td>
+<td><code>127.0.0.1</code></td>
+<td>Tentacle server address, used in <code>tentacle</code> mode</td>
+</tr>
+<tr>
+<td>Tentacle port</td>
+<td><code>_tentaclePort_</code></td>
+<td>number</td>
+<td><code>41121</code></td>
+<td>Tentacle server port, used in <code>tentacle</code> mode</td>
+</tr>
+</tbody>
+</table>
+<h4 id="haproxy-advanced">HAProxy Advanced<a class="headerlink" href="#haproxy-advanced" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Macro</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Module prefix</td>
+<td><code>_prefixModules_</code></td>
+<td>string</td>
+<td>empty</td>
+<td>Prepended to every module name</td>
+</tr>
+<tr>
+<td>Monitor frontends</td>
+<td><code>_monitorFrontends_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Create statistic modules for frontend rows (<code>type=0</code>)</td>
+</tr>
+<tr>
+<td>Monitor backends</td>
+<td><code>_monitorBackends_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Create statistic modules for backend rows (<code>type=1</code>)</td>
+</tr>
+<tr>
+<td>Monitor servers</td>
+<td><code>_monitorServers_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Create statistic modules for server rows (<code>type=2</code>)</td>
+</tr>
+<tr>
+<td>Allow list</td>
+<td><code>_allowList_</code></td>
+<td>string</td>
+<td>empty (all)</td>
+<td>Regular expression; only modules whose name matches are created</td>
+</tr>
+<tr>
+<td>Deny list</td>
+<td><code>_denyList_</code></td>
+<td>string</td>
+<td>empty (none)</td>
+<td>Regular expression; modules whose name matches are not created</td>
+</tr>
+</tbody>
+</table>
+<h3 id="command-line-parameters">Command-line parameters<a class="headerlink" href="#command-line-parameters" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>./pandora_haproxy<span class="w"> </span>--urls<span class="w"> </span>&lt;URLs&gt;<span class="w"> </span><span class="o">[</span>options<span class="o">]</span>
+./pandora_haproxy<span class="w"> </span>--conf<span class="w"> </span>&lt;path&gt;<span class="w"> </span>--conf_targets<span class="w"> </span>&lt;path&gt;
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--urls</code></td>
+<td>—</td>
+<td>HAProxy statistics URLs, separated by commas. Each URL generates one agent. Either <code>--urls</code> or <code>--conf</code> is required</td>
+</tr>
+<tr>
+<td><code>--user</code></td>
+<td>—</td>
+<td>User for HTTP basic authentication, optional</td>
+</tr>
+<tr>
+<td><code>--password</code></td>
+<td>—</td>
+<td>Password for HTTP basic authentication, optional</td>
+</tr>
+<tr>
+<td><code>--ssl</code></td>
+<td><code>true</code></td>
+<td>Verify the HTTPS certificate (<code>true</code> or <code>false</code>)</td>
+</tr>
+<tr>
+<td><code>--prefix</code></td>
+<td>empty</td>
+<td>Prefix for module names. Not applied in simple mode</td>
+</tr>
+<tr>
+<td><code>-tm</code>, <code>--transfer_mode</code></td>
+<td><code>native</code></td>
+<td><code>native</code> or <code>tentacle</code>. Not applied in simple mode</td>
+</tr>
+<tr>
+<td><code>-ti</code>, <code>--tentacle_ip</code></td>
+<td><code>127.0.0.1</code></td>
+<td>Tentacle server address. Not applied in simple mode</td>
+</tr>
+<tr>
+<td><code>-tp</code>, <code>--tentacle_port</code></td>
+<td><code>41121</code></td>
+<td>Tentacle server port. Not applied in simple mode</td>
+</tr>
+<tr>
+<td><code>-in</code>, <code>--interval</code></td>
+<td><code>300</code></td>
+<td>Monitoring interval in seconds. Not applied in simple mode</td>
+</tr>
+<tr>
+<td><code>--allow_list</code></td>
+<td>empty (all)</td>
+<td>Regular expression to include only modules whose name matches</td>
+</tr>
+<tr>
+<td><code>--deny_list</code></td>
+<td>empty (none)</td>
+<td>Regular expression to exclude modules whose name matches</td>
+</tr>
+<tr>
+<td><code>--monitor_frontends</code></td>
+<td><code>true</code></td>
+<td>Create statistic modules for frontend rows (<code>type=0</code>)</td>
+</tr>
+<tr>
+<td><code>--monitor_backends</code></td>
+<td><code>true</code></td>
+<td>Create statistic modules for backend rows (<code>type=1</code>)</td>
+</tr>
+<tr>
+<td><code>--monitor_servers</code></td>
+<td><code>true</code></td>
+<td>Create statistic modules for server rows (<code>type=2</code>)</td>
+</tr>
+<tr>
+<td><code>--as_server_plugin</code></td>
+<td><code>false</code></td>
+<td>Return a single <code>1</code> or <code>0</code> instead of the JSON summary</td>
+</tr>
+<tr>
+<td><code>--conf</code></td>
+<td>—</td>
+<td>Path to the configuration file</td>
+</tr>
+<tr>
+<td><code>--conf_targets</code></td>
+<td>—</td>
+<td>Path to the file with the HAProxy URLs. Mandatory when <code>--conf</code> is used</td>
+</tr>
+</tbody>
+</table>
+<p>Boolean values accept <code>true</code>, <code>yes</code>, <code>t</code>, <code>y</code> and <code>1</code> (any letter case) as true; anything else is false.</p>
+<h3 id="configuration-file">Configuration file<a class="headerlink" href="#configuration-file" title="Permanent link">¶</a></h3>
+<p>The Discovery task builds this file from its own fields; a manual advanced-mode run supplies it with <code>--conf</code>. Use a <code>[CONF]</code> section with one <code>key=value</code> per line. The URLs are not read from this file but from the targets file.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default when missing</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>username</code></td>
+<td>empty</td>
+<td>HTTP basic authentication user</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>empty</td>
+<td>HTTP basic authentication password</td>
+</tr>
+<tr>
+<td><code>verify_ssl</code></td>
+<td><code>false</code></td>
+<td>Verify the HTTPS certificate</td>
+</tr>
+<tr>
+<td><code>prefix</code></td>
+<td>empty</td>
+<td>Prefix for module names</td>
+</tr>
+<tr>
+<td><code>transfer_mode</code></td>
+<td>none</td>
+<td><code>native</code> or <code>tentacle</code>. Always set it: when the key is missing, the run does not use <code>native</code></td>
+</tr>
+<tr>
+<td><code>tentacle_ip</code></td>
+<td>empty</td>
+<td>Tentacle server address, used in <code>tentacle</code> mode</td>
+</tr>
+<tr>
+<td><code>tentacle_port</code></td>
+<td>empty</td>
+<td>Tentacle server port, used in <code>tentacle</code> mode</td>
+</tr>
+<tr>
+<td><code>agents_group</code></td>
+<td>empty</td>
+<td>Name of the agent group, used in <code>tentacle</code> mode</td>
+</tr>
+<tr>
+<td><code>agents_group_id</code></td>
+<td>empty</td>
+<td>Id of the agent group, used in <code>native</code> mode</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td><code>0</code></td>
+<td>Monitoring interval in seconds. Always set it</td>
+</tr>
+<tr>
+<td><code>allow_list</code></td>
+<td>empty</td>
+<td>Regular expression to include only modules whose name matches</td>
+</tr>
+<tr>
+<td><code>deny_list</code></td>
+<td>empty</td>
+<td>Regular expression to exclude modules whose name matches</td>
+</tr>
+<tr>
+<td><code>monitor_frontends</code></td>
+<td><code>true</code></td>
+<td>Create statistic modules for frontend rows</td>
+</tr>
+<tr>
+<td><code>monitor_backends</code></td>
+<td><code>true</code></td>
+<td>Create statistic modules for backend rows</td>
+</tr>
+<tr>
+<td><code>monitor_servers</code></td>
+<td><code>true</code></td>
+<td>Create statistic modules for server rows</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[CONF]</span>
+<span class="na">username</span><span class="o">=</span><span class="s">&lt;USERNAME&gt;</span>
+<span class="na">password</span><span class="o">=</span><span class="s">&lt;PASSWORD&gt;</span>
+<span class="na">verify_ssl</span><span class="o">=</span><span class="s">true</span>
+<span class="na">prefix</span><span class="o">=</span><span class="s">haproxy_</span>
+<span class="na">transfer_mode</span><span class="o">=</span><span class="s">native</span>
+<span class="na">tentacle_ip</span><span class="o">=</span><span class="s">127.0.0.1</span>
+<span class="na">tentacle_port</span><span class="o">=</span><span class="s">41121</span>
+<span class="na">interval</span><span class="o">=</span><span class="s">300</span>
+<span class="na">agents_group_id</span><span class="o">=</span><span class="s">&lt;GROUP_ID&gt;</span>
+<span class="na">allow_list</span><span class="o">=</span>
+<span class="na">deny_list</span><span class="o">=</span><span class="s">.*_wredis|.*_wretr</span>
+<span class="na">monitor_frontends</span><span class="o">=</span><span class="s">true</span>
+<span class="na">monitor_backends</span><span class="o">=</span><span class="s">true</span>
+<span class="na">monitor_servers</span><span class="o">=</span><span class="s">true</span>
+</code></pre></div>
+<p>Targets file (<code>--conf_targets</code>), one URL per line, comma separated, or both:</p>
+<div class="highlight"><pre><span></span><code>http://&lt;HAPROXY_HOST_1&gt;:8404
+http://&lt;HAPROXY_HOST_2&gt;:8404
+</code></pre></div>
+<h3 id="modules-by-statistic">Modules by statistic<a class="headerlink" href="#modules-by-statistic" title="Permanent link">¶</a></h3>
+<p>Each statistic below creates a module named <code>&lt;prefix&gt;&lt;proxy&gt;_&lt;server&gt;_&lt;statistic&gt;</code>, subject to the row-type options and the allow and deny lists. The module description is the text in the table.</p>
+<h4 id="sessions-traffic-and-rates">Sessions, traffic and rates<a class="headerlink" href="#sessions-traffic-and-rates" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scur</code></td>
+<td>Current sessions</td>
+</tr>
+<tr>
+<td><code>smax</code></td>
+<td>Max sessions</td>
+</tr>
+<tr>
+<td><code>slim</code></td>
+<td>Configured session limit</td>
+</tr>
+<tr>
+<td><code>stot</code></td>
+<td>Cumulative sessions</td>
+</tr>
+<tr>
+<td><code>bin</code></td>
+<td>Bytes in</td>
+</tr>
+<tr>
+<td><code>bout</code></td>
+<td>Bytes out</td>
+</tr>
+<tr>
+<td><code>rate</code></td>
+<td>Sessions per second (last second)</td>
+</tr>
+<tr>
+<td><code>rate_lim</code></td>
+<td>Configured limit on new sessions/s</td>
+</tr>
+<tr>
+<td><code>rate_max</code></td>
+<td>Max sessions per second</td>
+</tr>
+<tr>
+<td><code>req_rate</code></td>
+<td>HTTP requests per second</td>
+</tr>
+<tr>
+<td><code>req_rate_max</code></td>
+<td>Max HTTP requests per second</td>
+</tr>
+<tr>
+<td><code>req_tot</code></td>
+<td>Total HTTP requests received</td>
+</tr>
+<tr>
+<td><code>conn_rate</code></td>
+<td>Connections over last elapsed second</td>
+</tr>
+<tr>
+<td><code>conn_rate_max</code></td>
+<td>Highest known conn_rate</td>
+</tr>
+<tr>
+<td><code>conn_tot</code></td>
+<td>Cumulative number of connections</td>
+</tr>
+<tr>
+<td><code>intercepted</code></td>
+<td>Cumulative intercepted requests</td>
+</tr>
+<tr>
+<td><code>lbtot</code></td>
+<td>Times server was selected</td>
+</tr>
+<tr>
+<td><code>lastsess</code></td>
+<td>Seconds since last session assigned</td>
+</tr>
+</tbody>
+</table>
+<h4 id="queue">Queue<a class="headerlink" href="#queue" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>qcur</code></td>
+<td>Current queued requests</td>
+</tr>
+<tr>
+<td><code>qmax</code></td>
+<td>Max queued requests</td>
+</tr>
+<tr>
+<td><code>qlimit</code></td>
+<td>Configured maxqueue for server</td>
+</tr>
+</tbody>
+</table>
+<h4 id="denied-requests-errors-and-aborts">Denied requests, errors and aborts<a class="headerlink" href="#denied-requests-errors-and-aborts" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dreq</code></td>
+<td>Requests denied (security)</td>
+</tr>
+<tr>
+<td><code>dresp</code></td>
+<td>Responses denied (security)</td>
+</tr>
+<tr>
+<td><code>dcon</code></td>
+<td>Requests denied by tcp-request connection rules</td>
+</tr>
+<tr>
+<td><code>dses</code></td>
+<td>Requests denied by tcp-request session rules</td>
+</tr>
+<tr>
+<td><code>ereq</code></td>
+<td>Request errors</td>
+</tr>
+<tr>
+<td><code>econ</code></td>
+<td>Connection errors to backend</td>
+</tr>
+<tr>
+<td><code>eresp</code></td>
+<td>Response errors</td>
+</tr>
+<tr>
+<td><code>wretr</code></td>
+<td>Connection retries</td>
+</tr>
+<tr>
+<td><code>wredis</code></td>
+<td>Redispatches to another server</td>
+</tr>
+<tr>
+<td><code>cli_abrt</code></td>
+<td>Data transfers aborted by client</td>
+</tr>
+<tr>
+<td><code>srv_abrt</code></td>
+<td>Data transfers aborted by server</td>
+</tr>
+</tbody>
+</table>
+<h4 id="servers-weight-and-health-checks">Servers, weight and health checks<a class="headerlink" href="#servers-weight-and-health-checks" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>weight</code></td>
+<td>Total weight / server weight</td>
+</tr>
+<tr>
+<td><code>act</code></td>
+<td>Active servers (backend) / server active</td>
+</tr>
+<tr>
+<td><code>bck</code></td>
+<td>Backup servers (backend) / server backup</td>
+</tr>
+<tr>
+<td><code>chkfail</code></td>
+<td>Failed health checks</td>
+</tr>
+<tr>
+<td><code>chkdown</code></td>
+<td>UP-&gt;DOWN transitions</td>
+</tr>
+<tr>
+<td><code>lastchg</code></td>
+<td>Seconds since last UP&lt;-&gt;DOWN transition</td>
+</tr>
+<tr>
+<td><code>downtime</code></td>
+<td>Total downtime (seconds)</td>
+</tr>
+<tr>
+<td><code>throttle</code></td>
+<td>Current throttle percentage</td>
+</tr>
+<tr>
+<td><code>tracked</code></td>
+<td>ID of proxy/server if tracking enabled</td>
+</tr>
+<tr>
+<td><code>check_code</code></td>
+<td>Layer 5-7 check code</td>
+</tr>
+<tr>
+<td><code>check_duration</code></td>
+<td>Time in ms of last health check</td>
+</tr>
+<tr>
+<td><code>check_rise</code></td>
+<td>Server's rise parameter used by checks</td>
+</tr>
+<tr>
+<td><code>check_fall</code></td>
+<td>Server's fall parameter used by checks</td>
+</tr>
+<tr>
+<td><code>check_health</code></td>
+<td>Server's health check value</td>
+</tr>
+<tr>
+<td><code>agent_code</code></td>
+<td>Numeric code reported by agent</td>
+</tr>
+<tr>
+<td><code>agent_duration</code></td>
+<td>Time in ms of last agent check</td>
+</tr>
+<tr>
+<td><code>agent_rise</code></td>
+<td>Agent's rise parameter</td>
+</tr>
+<tr>
+<td><code>agent_fall</code></td>
+<td>Agent's fall parameter</td>
+</tr>
+<tr>
+<td><code>agent_health</code></td>
+<td>Agent's health parameter</td>
+</tr>
+</tbody>
+</table>
+<h4 id="http-responses-and-timings">HTTP responses and timings<a class="headerlink" href="#http-responses-and-timings" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hrsp_1xx</code></td>
+<td>HTTP responses with 1xx code</td>
+</tr>
+<tr>
+<td><code>hrsp_2xx</code></td>
+<td>HTTP responses with 2xx code</td>
+</tr>
+<tr>
+<td><code>hrsp_3xx</code></td>
+<td>HTTP responses with 3xx code</td>
+</tr>
+<tr>
+<td><code>hrsp_4xx</code></td>
+<td>HTTP responses with 4xx code</td>
+</tr>
+<tr>
+<td><code>hrsp_5xx</code></td>
+<td>HTTP responses with 5xx code</td>
+</tr>
+<tr>
+<td><code>hrsp_other</code></td>
+<td>HTTP responses with other codes</td>
+</tr>
+<tr>
+<td><code>qtime</code></td>
+<td>Average queue time (ms) over last 1024 requests</td>
+</tr>
+<tr>
+<td><code>ctime</code></td>
+<td>Average connect time (ms) over last 1024 requests</td>
+</tr>
+<tr>
+<td><code>rtime</code></td>
+<td>Average response time (ms) over last 1024 requests</td>
+</tr>
+<tr>
+<td><code>ttime</code></td>
+<td>Average total session time (ms) over last 1024 requests</td>
+</tr>
+</tbody>
+</table>
+<h4 id="compression">Compression<a class="headerlink" href="#compression" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>comp_in</code></td>
+<td>HTTP response bytes fed to compressor</td>
+</tr>
+<tr>
+<td><code>comp_out</code></td>
+<td>HTTP response bytes emitted by compressor</td>
+</tr>
+<tr>
+<td><code>comp_byp</code></td>
+<td>Bytes that bypassed HTTP compressor</td>
+</tr>
+<tr>
+<td><code>comp_rsp</code></td>
+<td>HTTP responses that were compressed</td>
+</tr>
+</tbody>
+</table>
+<h4 id="identifiers">Identifiers<a class="headerlink" href="#identifiers" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pid</code></td>
+<td>Process ID</td>
+</tr>
+<tr>
+<td><code>iid</code></td>
+<td>Unique proxy ID</td>
+</tr>
+<tr>
+<td><code>sid</code></td>
+<td>Server ID (unique inside proxy)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-that-do-not-create-modules">Statistics that do not create modules<a class="headerlink" href="#statistics-that-do-not-create-modules" title="Permanent link">¶</a></h3>
+<p>The following columns of the HAProxy export never create a module: <code>pxname</code>, <code>svname</code> (they form the module name), <code>type</code> (it selects the row type), <code>status</code> (it has its own module, see <a href="#the-status-module">The status module</a>), <code>check_status</code>, <code>check_desc</code>, <code>agent_status</code>, <code>agent_desc</code>, <code>last_chk</code>, <code>last_agt</code>, <code>hanafail</code>, <code>addr</code>, <code>cookie</code>, <code>mode</code> and <code>algo</code>.</p>
+<h3 id="addon-identity">Addon identity<a class="headerlink" href="#addon-identity" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>HAProxy</td>
+</tr>
+<tr>
+<td>Identifier</td>
+<td><code>pandorafms.haproxy</code></td>
+</tr>
+<tr>
+<td>Version</td>
+<td><code>1.0</code></td>
+</tr>
+<tr>
+<td>Type and section</td>
+<td>Discovery, <code>app</code> (<strong>Management → Discovery → Application</strong>)</td>
+</tr>
+<tr>
+<td>Package</td>
+<td><code>pandorafms.haproxy.1.0.disco</code></td>
+</tr>
+<tr>
+<td>Marketplace entry</td>
+<td><a href="https://marketplace.pandorafms.com/entries/pandorafms.haproxy">pandorafms.haproxy</a>, updated 2026-06-04</td>
+</tr>
+<tr>
+<td>Availability</td>
+<td>The Marketplace entry states that the download is limited to licensed users</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

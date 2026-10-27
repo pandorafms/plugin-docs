@@ -1,0 +1,4975 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/es/discovery/sap-hana/">
+      
+      
+        <link rel="prev" href="../redis/">
+      
+      
+        <link rel="next" href="../sap-r3/">
+      
+      
+        
+          <link rel="alternate" href="../../../discovery/sap-hana/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>SAP HANA Discovery - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sap-hana-discovery" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../" title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SAP HANA Discovery
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../discovery/sap-hana/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bienvenida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../amazon-cloudwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon CloudWatch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../amazon-ec2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon EC2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../amazon-rds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../amazon-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon S3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de Azure backup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../db2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital-ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Ocean Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasticsearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../google-cloud-compute-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud Compute Engine Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../haproxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HAProxy Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hp-one-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HP One View Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hyper-v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JMX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de KVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../meraki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meraki Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Office 365 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../opensearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenSearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OVH Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de Proxmox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Discovery
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-monitoriza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué monitoriza
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerrequisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerrequisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crear-la-credencial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crear la credencial
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurar-la-tarea-de-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurar la tarea de Discovery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configurar la tarea de Discovery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formato-del-destino" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formato del destino
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asignar-nombres-de-agente-a-los-destinos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asignar nombres de agente a los destinos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificar-la-primera-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar la primera ejecución
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpretar-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpretar los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interpretar los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agentes-y-modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes y módulos generados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grupos-de-modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grupos de módulos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operar
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-personalizados-heredados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos personalizados heredados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitaciones
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de la tarea
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parámetros de la tarea">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sap-hana-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SAP HANA Base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sap-hana-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SAP HANA Detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agentes-y-modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes y módulos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agentes y módulos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#estadisticas-de-servicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estadísticas de servicio
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#propiedades-del-agente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Propiedades del agente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#salida-de-la-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Salida de la ejecución
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sap-r3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP R3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery de VMware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../xenserver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XenServer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/discord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Discord
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Google Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/slack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Slack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Microsoft Teams (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Telegram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/active-directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/apache-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Enterprise Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/azure-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Azure PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Pandora Azure SQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Pandora Azure Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/cisco-inventory-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco Inventory configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/citrix-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/citrix-netscaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Citrix NetScaler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/db2-remote/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Remote plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Dynamic SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/exchange/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exchange
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/glpi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GLPI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/google-drive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Google Drive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/ibm-z-series-mainframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBM Z Series Mainframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/influxdb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/inventory-for-mac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory plugin for MAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/inventory-ssh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory SSH plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/journalctl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Journalctl
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/kafka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Kafka
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/marklogic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MarkLogic monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/mongodb-remote-atlas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Pandora MongoDB remote / Atlas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/mssql-server-querier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MSSQL Server Querier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/net-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Net usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Office 365 Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Pandora Openshift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/oracle-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización Oracle VM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/pandora-ldap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora LDAP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/pandora-ux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora UX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/plugin-executor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Plugin Executor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/rabbitmq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/sap-hana-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin SAP HANA Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/spark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Spark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/sybase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin de monitorización de Sybase
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/tomcat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tomcat monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/zammad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zammad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/zendesk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zendesk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cómo documentar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#que-monitoriza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué monitoriza
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerrequisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerrequisitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalar-el-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalar el plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crear-la-credencial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crear la credencial
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurar-la-tarea-de-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurar la tarea de Discovery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configurar la tarea de Discovery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formato-del-destino" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formato del destino
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asignar-nombres-de-agente-a-los-destinos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asignar nombres de agente a los destinos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificar-la-primera-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificar la primera ejecución
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpretar-los-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpretar los resultados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interpretar los resultados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agentes-y-modulos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes y módulos generados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grupos-de-modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grupos de módulos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operar
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulos-personalizados-heredados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos personalizados heredados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitaciones
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solución de problemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parametros-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de la tarea
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parámetros de la tarea">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sap-hana-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SAP HANA Base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sap-hana-detailed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SAP HANA Detailed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agentes-y-modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agentes y módulos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agentes y módulos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#estadisticas-de-servicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estadísticas de servicio
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#propiedades-del-agente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Propiedades del agente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#salida-de-la-ejecucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Salida de la ejecución
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identidad-del-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidad del plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="sap-hana-discovery">SAP HANA Discovery<a class="headerlink" href="#sap-hana-discovery" title="Permanent link">¶</a></h1>
+<p><em>Última actualización del artículo: 2026-10-26.</em></p>
+<h2 id="que-monitoriza">Qué monitoriza<a class="headerlink" href="#que-monitoriza" title="Permanent link">¶</a></h2>
+<p>El plugin de Discovery de SAP HANA se conecta a una o varias bases de datos SAP HANA, ejecuta un conjunto de consultas SQL sobre las vistas del sistema y convierte los resultados en módulos de monitorización de Pandora FMS. De serie cubre disponibilidad, versión, memoria, conexiones, transacciones, estimación del tamaño de backups, E/S, CPU, licencia, fragmentación del row store, volúmenes y estadísticas por servicio. Cada grupo se activa o desactiva desde la tarea. Además puede añadir módulos propios basados en SQL.</p>
+<p>El plugin crea <strong>un agente por cada destino SAP HANA</strong>, con un módulo de disponibilidad y un módulo por cada métrica habilitada. Una misma tarea de Discovery puede listar varios destinos, de modo que una sola tarea cubre todo un conjunto de bases de datos.</p>
+<h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
+<h3 id="compatibilidad">Compatibilidad<a class="headerlink" href="#compatibilidad" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Ámbito</th>
+<th>Estado</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Versión <code>1.0</code> del add-on (<code>pandorafms.sap.hana</code>)</td>
+<td>Objetivo documentado</td>
+<td>Versión publicada en la entrada del Marketplace, actualizada por última vez el 2026-06-11. Consulte <a href="#identidad-del-plugin">Identidad del plugin</a></td>
+</tr>
+<tr>
+<td>Pandora FMS NG 784 y posteriores</td>
+<td><code>Soportado</code></td>
+<td>Declaración mostrada en el Marketplace para todas sus integraciones</td>
+</tr>
+<tr>
+<td>Puerto SQL de SAP HANA accesible desde el servidor Discovery</td>
+<td><code>Requerido</code></td>
+<td>El plugin abre una conexión a la base de datos por destino</td>
+</tr>
+<tr>
+<td>Usuario de base de datos con lectura de las vistas de monitorización <code>SYS</code></td>
+<td><code>Requerido</code></td>
+<td>Prerrequisito, no una declaración de compatibilidad. Consulte <a href="#prerrequisitos">Prerrequisitos</a></td>
+</tr>
+<tr>
+<td>Cualquier versión concreta de SAP HANA</td>
+<td><code>Sin validar</code></td>
+<td>No se ha registrado ninguna matriz de versiones o ediciones</td>
+</tr>
+</tbody>
+</table>
+<p>Según su entrada del Marketplace, la descarga del add-on está limitada a usuarios con licencia. Esta página no describe más condiciones de licencia.</p>
+<h3 id="prerrequisitos">Prerrequisitos<a class="headerlink" href="#prerrequisitos" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Acceso de red</strong> desde la máquina que ejecuta la tarea de Discovery hasta el puerto SQL de cada destino SAP HANA.</li>
+<li><strong>Un usuario y una contraseña de base de datos</strong> de SAP HANA. Las comprobaciones integradas del plugin solo ejecutan sentencias <code>SELECT</code>, sobre estas vistas del sistema: <code>SYS.M_DATABASE</code>, <code>SYS.M_HOST_RESOURCE_UTILIZATION</code>, <code>SYS.M_SERVICE_STATISTICS</code>, <code>SYS.M_CONNECTIONS</code>, <code>SYS.M_BLOCKED_TRANSACTIONS</code>, <code>SYS.M_TRANSACTIONS</code>, <code>SYS.M_VOLUMES</code>, <code>SYS.M_VOLUME_IO_TOTAL_STATISTICS</code>, <code>SYS.M_RS_MEMORY</code>, <code>SYS.M_CONVERTER_STATISTICS</code> y <code>SYS.M_LICENSE</code>. También lee las vistas de catálogo <code>SYS.OBJECTS</code>, <code>SYS.VIEWS</code>, <code>SYS.TABLES</code>, <code>SYS.VIEW_COLUMNS</code> y <code>SYS.TABLE_COLUMNS</code> para comprobar qué vistas y columnas existen, y consulta <code>DUMMY</code> para las comprobaciones de marca de tiempo y de conexión. El usuario debe poder leer las vistas de los grupos que habilite; no se documenta un conjunto de privilegios más reducido. Una vista que el usuario no puede leer genera un módulo con valor vacío en lugar de hacer fallar toda la tarea.</li>
+<li><strong>Una credencial de Pandora FMS de tipo Custom</strong> en el almacén de credenciales, con ese usuario y contraseña. Ambos son obligatorios.</li>
+<li><strong>Pandora FMS</strong>: un servidor Discovery que ejecute la tarea y la consola para definirla.</li>
+</ol>
+<p>El plugin se distribuye como un paquete autocontenido, por lo que no hay que instalar nada más en el servidor Discovery.</p>
+<h3 id="instalar-el-plugin">Instalar el plugin<a class="headerlink" href="#instalar-el-plugin" title="Permanent link">¶</a></h3>
+<p>Cargue el paquete <code>.disco</code> desde el Marketplace de Pandora FMS:</p>
+<p><a href="https://marketplace.pandorafms.com/entries/pandorafms.sap.hana">https://marketplace.pandorafms.com/entries/pandorafms.sap.hana</a></p>
+<p>Una vez cargado, la aplicación <strong>SAP HANA</strong> está disponible al crear tareas de Discovery.</p>
+<h3 id="crear-la-credencial">Crear la credencial<a class="headerlink" href="#crear-la-credencial" title="Permanent link">¶</a></h3>
+<ol>
+<li>En la consola de Pandora FMS, abra el almacén de credenciales y cree una credencial nueva de tipo <strong>Custom</strong>.</li>
+<li>Introduzca el <strong>usuario</strong> y la <strong>contraseña</strong> de SAP HANA.</li>
+<li>Asígnele un identificador que reconozca al elegirla en la tarea.</li>
+</ol>
+<!-- SCREENSHOT NEEDED: Formulario del almacén de credenciales para una credencial Custom con usuario y contraseña de ejemplo, sin secretos reales, que muestre cómo se crea la credencial de SAP HANA. -->
+
+<p>La credencial se guarda en la consola y la tarea la referencia, de modo que la contraseña no se escribe en los campos de la tarea.</p>
+<h2 id="configurar-la-tarea-de-discovery">Configurar la tarea de Discovery<a class="headerlink" href="#configurar-la-tarea-de-discovery" title="Permanent link">¶</a></h2>
+<p>Cree la tarea desde <strong>Management → Discovery → Application → SAP HANA</strong>. La consola presenta los campos en dos pasos, y todos los campos se documentan en <a href="#parametros-de-la-tarea">Parámetros de la tarea</a>.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/sap-hana/sap-hana-applications-menu.png" data-desc-position="bottom"><img alt="Página de aplicaciones de Discovery con la aplicación SAP HANA seleccionada" src="../../../assets/images/discovery/sap-hana/sap-hana-applications-menu.png"></a></p>
+<ol>
+<li>
+<p><strong>SAP HANA Base</strong> — los destinos y cómo autenticarse:</p>
+<ul>
+<li><strong>SAP HANA target strings</strong>: un destino por línea, o varios separados por comas, con el formato <code>HOST:PORT\DATABASE</code>. Las líneas que empiezan por <code>#</code> son comentarios. <strong>Cada destino válido genera un agente.</strong></li>
+<li><strong>HANA Credentials</strong>: la credencial Custom creada antes.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/sap-hana/sap-hana-base-step.png" data-desc-position="bottom"><img alt="Paso SAP HANA Base del asistente con el campo de destinos y el selector HANA Credentials" src="../../../assets/images/discovery/sap-hana/sap-hana-base-step.png"></a></p>
+</li>
+<li>
+<p><strong>SAP HANA Detailed</strong> — ajuste opcional del resultado:</p>
+<ul>
+<li><strong>Max threads</strong> y <strong>Target agent</strong>.</li>
+<li><strong>Regexp to filter modules</strong> con <strong>Allow regexp</strong>, y <strong>Regexp to discard modules</strong> con <strong>Deny regexp</strong>.</li>
+<li>Una casilla por cada grupo de métricas integrado. Los valores por defecto figuran en <a href="#parametros-de-la-tarea">Parámetros de la tarea</a>.</li>
+<li><strong>Execute custom queries</strong> y <strong>Custom queries</strong>.</li>
+<li><strong>Custom module prefix</strong>.</li>
+<li><strong>Custom modules (legacy)</strong>.</li>
+</ul>
+<!-- SCREENSHOT NEEDED: Paso SAP HANA Detailed del asistente con las casillas de los grupos de métricas, los filtros por expresión regular y el área de custom queries. -->
+</li>
+</ol>
+<p>El grupo de agentes y el intervalo de la tarea proceden del paso genérico de definición de la tarea y se aplican a los agentes y módulos que crea el plugin.</p>
+<h3 id="formato-del-destino">Formato del destino<a class="headerlink" href="#formato-del-destino" title="Permanent link">¶</a></h3>
+<p>Un destino se escribe como <code>HOST:PORT\DATABASE</code>, por ejemplo:</p>
+<div class="highlight"><pre><span></span><code>&lt;HANA_HOST_1&gt;:&lt;SQL_PORT&gt;\&lt;DATABASE_NAME&gt;
+&lt;HANA_HOST_2&gt;:&lt;SQL_PORT&gt;\&lt;DATABASE_NAME&gt;
+# &lt;HANA_HOST_3&gt;:&lt;SQL_PORT&gt;\&lt;DATABASE_NAME&gt;
+</code></pre></div>
+<ul>
+<li><code>HOST</code> puede ser un nombre o una dirección IP. Un nombre debe resolverse desde el servidor Discovery.</li>
+<li><code>PORT</code> es el puerto SQL numérico de la instancia o base de datos. Es obligatorio.</li>
+<li><code>DATABASE</code> se pasa a SAP HANA como el nombre de la base de datos a la que conectar.</li>
+<li>Antes del nombre de la base de datos también se acepta <code>:</code> en lugar de <code>\</code>.</li>
+</ul>
+<p>Una línea que no cumple este formato no se monitoriza y se cuenta en <strong>Targets down</strong>. Consulte <a href="#solucion-de-problemas">Solución de problemas</a>.</p>
+<h3 id="asignar-nombres-de-agente-a-los-destinos">Asignar nombres de agente a los destinos<a class="headerlink" href="#asignar-nombres-de-agente-a-los-destinos" title="Permanent link">¶</a></h3>
+<p>Por defecto cada agente se llama <code>HOST - DATABASE</code>. Para elegir los nombres, rellene <strong>Target agent</strong> con un nombre de agente por línea, <strong>en el mismo orden</strong> que los destinos. Las líneas vacías y las que empiezan por <code>#</code> se descartan de ambas listas, así que los nombres se asignan por posición entre los destinos válidos: una línea en blanco no deja a ese destino con su nombre por defecto, sino que desplaza todos los nombres siguientes un destino hacia atrás. El nombre se usa como nombre y como alias del agente.</p>
+<h2 id="verificar-la-primera-ejecucion">Verificar la primera ejecución<a class="headerlink" href="#verificar-la-primera-ejecucion" title="Permanent link">¶</a></h2>
+<p>Fuerce la tarea desde <strong>Management → Discovery → Task list</strong> y compruebe el resultado en este orden.</p>
+<ol>
+<li>
+<p><strong>El resumen de la tarea.</strong> La ejecución informa de:</p>
+<ul>
+<li><strong>Total agents</strong>: agentes generados por la tarea.</li>
+<li><strong>Targets up</strong>: destinos a los que el plugin se conectó.</li>
+<li><strong>Targets down</strong>: destinos que no se pudieron monitorizar.</li>
+</ul>
+<p>Espere un agente por cada destino válido y accesible. Cada destino fallido añade una línea a la información de ejecución con su host, puerto, base de datos y el motivo.</p>
+<!-- SCREENSHOT NEEDED: Resumen de ejecución de una tarea de Discovery de SAP HANA que muestre Total agents, Targets up y Targets down. -->
+</li>
+<li>
+<p><strong>Los agentes.</strong> Uno por destino, con la dirección fijada al host del destino y el sistema operativo fijado a <code>SAP HANA</code>.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/sap-hana/sap-hana-agent-list.png" data-desc-position="bottom"><img alt="Lista de agentes con un agente creado por la tarea de SAP HANA, llamado HOST - DATABASE" src="../../../assets/images/discovery/sap-hana/sap-hana-agent-list.png"></a></p>
+</li>
+<li>
+<p><strong>Los módulos de cada agente.</strong> Con las opciones por defecto, un destino accesible produce:</p>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Valor esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hana_availability</code></td>
+<td><code>1</code> — el plugin se conectó a la base de datos</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>Cadena con la versión de SAP HANA</td>
+</tr>
+<tr>
+<td><code>backups_estimated_size_bytes</code></td>
+<td>Tamaño estimado en bytes</td>
+</tr>
+<tr>
+<td><code>connections_total</code>, <code>connections_running</code>, <code>connections_idle</code></td>
+<td>Recuentos de conexiones</td>
+</tr>
+<tr>
+<td><code>memory_used_bytes</code>, <code>memory_allocation_limit_bytes</code></td>
+<td>Memoria en bytes</td>
+</tr>
+<tr>
+<td><code>blocked_transactions</code>, <code>open_transactions</code></td>
+<td>Recuentos de transacciones</td>
+</tr>
+</tbody>
+</table>
+<p>Los nombres de módulo llevan el <strong>Custom module prefix</strong> cuando se definió, y los filtros por expresión regular pueden eliminar cualquier módulo salvo <code>hana_availability</code>.</p>
+</li>
+</ol>
+<p>Si la tarea no informa de ningún agente, revise <strong>Targets down</strong> y la información de ejecución, y siga <a href="#solucion-de-problemas">Solución de problemas</a>.</p>
+<h2 id="interpretar-los-resultados">Interpretar los resultados<a class="headerlink" href="#interpretar-los-resultados" title="Permanent link">¶</a></h2>
+<h3 id="agentes-y-modulos-generados">Agentes y módulos generados<a class="headerlink" href="#agentes-y-modulos-generados" title="Permanent link">¶</a></h3>
+<p>El plugin crea <strong>un agente por cada destino</strong>. El nombre y el alias del agente son <code>HOST - DATABASE</code>, o el nombre indicado en <strong>Target agent</strong>. Dos destinos que resuelvan al mismo nombre reportan al mismo agente.</p>
+<p><code>hana_availability</code> es un módulo <code>generic_proc</code> con valor <code>1</code> siempre que el plugin se conectó al destino. Se crea siempre para un destino accesible y no le afectan las expresiones allow o deny. Un destino inaccesible no crea agente ni valor <code>0</code>: solo se informa en la información de ejecución y en <strong>Targets down</strong>.</p>
+<p>Cuando una consulta falla o la vista no existe en ese entorno SAP HANA, el módulo se crea igualmente con valor vacío. Por lo demás, los módulos de métricas son <code>generic_data</code> (números) o <code>generic_data_string</code> (texto).</p>
+<h3 id="grupos-de-modulos">Grupos de módulos<a class="headerlink" href="#grupos-de-modulos" title="Permanent link">¶</a></h3>
+<p>Los grupos siguientes se activan con las casillas de la tarea. Los módulos exactos de cada grupo figuran en <a href="#agentes-y-modulos">Agentes y módulos</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Grupo (casilla)</th>
+<th>Por defecto</th>
+<th>Qué aporta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enable Backups Size</td>
+<td>Activado</td>
+<td>Tamaño estimado de backups en bytes</td>
+</tr>
+<tr>
+<td>Enable Timestamp</td>
+<td>Desactivado</td>
+<td>Marca de tiempo UTC actual de la base de datos</td>
+</tr>
+<tr>
+<td>Enable Hana Version</td>
+<td>Activado</td>
+<td>Versión de SAP HANA</td>
+</tr>
+<tr>
+<td>Enable Data Disk Information</td>
+<td>Desactivado</td>
+<td>Número de volúmenes y de entradas de E/S de volumen</td>
+</tr>
+<tr>
+<td>Enable Hana Service Statistics</td>
+<td>Desactivado</td>
+<td>Estado, memoria, CPU, peticiones e hilos de cada servicio</td>
+</tr>
+<tr>
+<td>Enable Hana CPU Time</td>
+<td>Desactivado</td>
+<td>Tiempo de CPU agregado de los servicios</td>
+</tr>
+<tr>
+<td>Enable Hana RS Fragmentation</td>
+<td>Desactivado</td>
+<td>Porcentaje de fragmentación del row store</td>
+</tr>
+<tr>
+<td>Enable Hana License</td>
+<td>Desactivado</td>
+<td>Registros de licencia, fecha de expiración y uso</td>
+</tr>
+<tr>
+<td>Enable Hana IO Stats</td>
+<td>Desactivado</td>
+<td>Bytes leídos y escritos acumulados, y tiempo de E/S</td>
+</tr>
+<tr>
+<td>Enable Hana Get Stated Connections</td>
+<td>Activado</td>
+<td>Conexiones totales, en ejecución e inactivas</td>
+</tr>
+<tr>
+<td>Enable Hana Memory</td>
+<td>Activado</td>
+<td>Memoria usada y límite de asignación</td>
+</tr>
+<tr>
+<td>Enable Hana Transactions</td>
+<td>Activado</td>
+<td>Transacciones bloqueadas y abiertas</td>
+</tr>
+</tbody>
+</table>
+<h2 id="operar">Operar<a class="headerlink" href="#operar" title="Permanent link">¶</a></h2>
+<h3 id="custom-queries">Custom queries<a class="headerlink" href="#custom-queries" title="Permanent link">¶</a></h3>
+<p>Con <strong>Execute custom queries</strong> habilitado, puede definir módulos adicionales como consultas SQL en <strong>Custom queries</strong>. La tarea se entrega con una plantilla comentada del formato. Cada módulo es un bloque <code>check_begin</code> / <code>check_end</code>, con un par <code>clave valor</code> por línea:</p>
+<div class="highlight"><pre><span></span><code>check_begin
+name custom_running_connections
+description Connections in RUNNING state
+operation value
+target SELECT COUNT(*) FROM SYS.M_CONNECTIONS WHERE CONNECTION_STATUS = 'RUNNING'
+datatype generic_data
+unit conns
+check_end
+
+check_begin
+name custom_service_status
+description Status of every service
+operation full
+target SELECT HOST, SERVICE_NAME, ACTIVE_STATUS FROM SYS.M_SERVICE_STATISTICS
+datatype generic_data_string
+check_end
+</code></pre></div>
+<p>Estos ejemplos se comprobaron contra el analizador del plugin; no se ejecutaron contra un sistema SAP HANA real.</p>
+<p>Reglas:</p>
+<ul>
+<li><code>name</code>, <code>target</code> y <code>datatype</code> son obligatorios en cada bloque. Un bloque que no los tenga se ignora.</li>
+<li><code>target</code> debe ir en una sola línea. Se omiten las líneas en blanco y las que empiezan por <code>#</code>.</li>
+<li><code>operation value</code> (por defecto) toma la primera columna de la primera fila. Si la consulta no devuelve filas o devuelve un nulo, el valor es <code>0</code>. <code>operation full</code> devuelve todas las filas como texto, con las columnas unidas por <code>;</code> y las filas por saltos de línea: un <code>datatype</code> <code>generic_data</code> se convierte en <code>generic_data_string</code>.</li>
+<li><code>$__self_dbname</code> en la consulta se sustituye por el nombre de la base de datos del destino consultado.</li>
+<li>Por defecto un bloque se ejecuta en todos los destinos. Límitelo con <code>target_instances</code> (valores <code>HOST:PORT</code> separados por comas, escritos exactamente como en el destino), <code>target_databases</code> e <code>ignore_databases</code>. <code>target_scope</code> selecciona qué filtros se aplican: <code>instances</code> aplica solo el filtro de instancias, <code>databases</code> aplica solo los filtros de bases de datos y <code>all</code> (por defecto) aplica ambos.</li>
+<li>Una consulta fallida crea igualmente el módulo, con valor vacío.</li>
+<li>Los módulos personalizados están sujetos a <strong>Custom module prefix</strong> y a las expresiones allow y deny.</li>
+</ul>
+<p>La plantilla también lista las claves <code>min_warning</code>, <code>max_warning</code>, <code>min_critical</code>, <code>max_critical</code>, <code>inverse_warning</code>, <code>inverse_critical</code>, <code>str_warning</code>, <code>str_critical</code>, <code>interval</code> y <code>parent</code>. La versión actual las lee pero no las aplica a los módulos creados, así que configure después umbrales e intervalos en los módulos desde la consola.</p>
+<h3 id="modulos-personalizados-heredados">Módulos personalizados heredados<a class="headerlink" href="#modulos-personalizados-heredados" title="Permanent link">¶</a></h3>
+<p><strong>Custom modules (legacy)</strong> acepta un módulo por línea con el formato:</p>
+<div class="highlight"><pre><span></span><code>module_name:SQL_query:datatype:description
+</code></pre></div>
+<p><code>datatype</code> debe ser <code>generic_data</code>, <code>generic_data_string</code> o <code>generic_proc</code>; <code>description</code> es opcional. La consulta puede contener a su vez caracteres <code>:</code>. Estos módulos se crean aunque <strong>Execute custom queries</strong> esté desactivado. Use custom queries para las definiciones nuevas.</p>
+<h3 id="limitaciones">Limitaciones<a class="headerlink" href="#limitaciones" title="Permanent link">¶</a></h3>
+<ul>
+<li>La tarea acepta el valor de <code>Max threads</code>, pero en esta versión no cambia cómo se procesan los destinos: se consultan uno tras otro.</li>
+<li>La conexión usa el usuario y la contraseña de la credencial. El plugin no tiene ningún campo para seleccionar opciones de cifrado.</li>
+</ul>
+<h2 id="solucion-de-problemas">Solución de problemas<a class="headerlink" href="#solucion-de-problemas" title="Permanent link">¶</a></h2>
+<p>La tarea no tiene opción de depuración. Su canal de diagnóstico es el resumen y la información de ejecución de la tarea de Discovery.</p>
+<ul>
+<li><strong><code>Missing required parameters</code></strong> — la credencial no tiene usuario o contraseña, o la lista de destinos está vacía tras quitar los comentarios. El resumen indica cuál falta.</li>
+<li><strong><code>No agents generated</code></strong> — no se pudo monitorizar ningún destino. Lea las líneas <code>Target down</code> de la información de ejecución.</li>
+<li><strong><code>Target down HOST:PORT\DATABASE - Cannot resolve hostname</code></strong> — el servidor Discovery no resuelve el nombre. Use una dirección IP o corrija la resolución DNS.</li>
+<li><strong><code>Target down ... - SAP HANA connection failed: ...</code></strong> — la base de datos rechazó la conexión o las credenciales. Revise el puerto, el nombre de la base de datos, el usuario y la contraseña, y que el servidor Discovery alcance el puerto SQL.</li>
+<li><strong>Targets down es mayor que los fallos listados</strong> — una línea que no sigue <code>HOST:PORT\DATABASE</code> se cuenta como caída sin mensaje. Revise el formato de cada destino.</li>
+<li><strong>Existe un módulo con valor vacío</strong> — falló la consulta que lo alimenta o la vista no está disponible en ese entorno SAP HANA, por ejemplo porque el usuario no puede leerla. Ejecute el mismo <code>SELECT</code> con ese usuario para ver el error de la base de datos.</li>
+<li><strong>Faltan módulos esperados</strong> — una <strong>Allow regexp</strong> o una <strong>Deny regexp</strong> los eliminó. Las expresiones se buscan en cualquier parte del nombre del módulo (incluido el prefijo), y una expresión no válida se ignora sin avisar.</li>
+<li><strong>No aparecen métricas de otro grupo</strong> — solo los grupos con su casilla habilitada crean módulos. Consulte <a href="#grupos-de-modulos">Grupos de módulos</a>.</li>
+</ul>
+<h2 id="referencia">Referencia<a class="headerlink" href="#referencia" title="Permanent link">¶</a></h2>
+<h3 id="parametros-de-la-tarea">Parámetros de la tarea<a class="headerlink" href="#parametros-de-la-tarea" title="Permanent link">¶</a></h3>
+<h4 id="sap-hana-base">SAP HANA Base<a class="headerlink" href="#sap-hana-base" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Obligatorio</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SAP HANA target strings (<code>_dbstrings_</code>)</td>
+<td>Sí</td>
+<td>—</td>
+<td>Destinos como <code>HOST:PORT\DATABASE</code>, uno por línea o separados por comas. <code>#</code> inicia una línea de comentario.</td>
+</tr>
+<tr>
+<td>HANA Credentials (<code>_credentials_</code>)</td>
+<td>Sí</td>
+<td>—</td>
+<td>Credencial Custom con el usuario y la contraseña.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="sap-hana-detailed">SAP HANA Detailed<a class="headerlink" href="#sap-hana-detailed" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Obligatorio</th>
+<th>Por defecto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Max threads (<code>_threads_</code>)</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>La tarea lo acepta; sin efecto en el procesamiento en esta versión.</td>
+</tr>
+<tr>
+<td>Target agent (<code>_targetAgent_</code>)</td>
+<td>No</td>
+<td>vacío</td>
+<td>Un nombre de agente por destino, en el mismo orden. Vacío: <code>HOST - DATABASE</code>.</td>
+</tr>
+<tr>
+<td>Regexp to filter modules (<code>_regexpFilter_</code>)</td>
+<td>No</td>
+<td>Desactivado</td>
+<td>Muestra <strong>Allow regexp</strong>.</td>
+</tr>
+<tr>
+<td>Allow regexp (<code>_allowRegexp_</code>)</td>
+<td>No</td>
+<td>vacío</td>
+<td>Solo se crean los módulos cuyo nombre coincide.</td>
+</tr>
+<tr>
+<td>Regexp to discard modules (<code>_regexpDiscard_</code>)</td>
+<td>No</td>
+<td>Desactivado</td>
+<td>Muestra <strong>Deny regexp</strong>.</td>
+</tr>
+<tr>
+<td>Deny regexp (<code>_denyRegexp_</code>)</td>
+<td>No</td>
+<td>vacío</td>
+<td>No se crean los módulos cuyo nombre coincide.</td>
+</tr>
+<tr>
+<td>Enable Backups Size</td>
+<td>No</td>
+<td>Activado</td>
+<td>Consulte <a href="#agentes-y-modulos">Agentes y módulos</a>.</td>
+</tr>
+<tr>
+<td>Enable Timestamp</td>
+<td>No</td>
+<td>Desactivado</td>
+<td></td>
+</tr>
+<tr>
+<td>Enable Hana Version</td>
+<td>No</td>
+<td>Activado</td>
+<td></td>
+</tr>
+<tr>
+<td>Enable Data Disk Information</td>
+<td>No</td>
+<td>Desactivado</td>
+<td></td>
+</tr>
+<tr>
+<td>Enable Hana Service Statistics</td>
+<td>No</td>
+<td>Desactivado</td>
+<td></td>
+</tr>
+<tr>
+<td>Enable Hana CPU Time</td>
+<td>No</td>
+<td>Desactivado</td>
+<td></td>
+</tr>
+<tr>
+<td>Enable Hana RS Fragmentation</td>
+<td>No</td>
+<td>Desactivado</td>
+<td></td>
+</tr>
+<tr>
+<td>Enable Hana License</td>
+<td>No</td>
+<td>Desactivado</td>
+<td></td>
+</tr>
+<tr>
+<td>Enable Hana IO Stats</td>
+<td>No</td>
+<td>Desactivado</td>
+<td></td>
+</tr>
+<tr>
+<td>Enable Hana Get Stated Connections</td>
+<td>No</td>
+<td>Activado</td>
+<td></td>
+</tr>
+<tr>
+<td>Enable Hana Memory</td>
+<td>No</td>
+<td>Activado</td>
+<td></td>
+</tr>
+<tr>
+<td>Enable Hana Transactions</td>
+<td>No</td>
+<td>Activado</td>
+<td></td>
+</tr>
+<tr>
+<td>Execute custom queries (<code>_executeCustomQueries_</code>)</td>
+<td>No</td>
+<td>Activado</td>
+<td>Muestra <strong>Custom queries</strong>.</td>
+</tr>
+<tr>
+<td>Custom queries (<code>_customQueries_</code>)</td>
+<td>No</td>
+<td>Plantilla comentada</td>
+<td>Bloques <code>check_begin</code> / <code>check_end</code>. Consulte <a href="#custom-queries">Custom queries</a>.</td>
+</tr>
+<tr>
+<td>Custom module prefix (<code>_prefixModuleName_</code>)</td>
+<td>No</td>
+<td>vacío</td>
+<td>Texto antepuesto al nombre de cada módulo que crea la tarea.</td>
+</tr>
+<tr>
+<td>Custom modules (legacy)</td>
+<td>No</td>
+<td>vacío</td>
+<td>Líneas <code>module_name:SQL_query:datatype:description</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>El grupo de agentes y el intervalo de los módulos proceden de la definición genérica de la tarea.</p>
+<h3 id="agentes-y-modulos">Agentes y módulos<a class="headerlink" href="#agentes-y-modulos" title="Permanent link">¶</a></h3>
+<p>El prefijo se muestra como <code>&lt;prefix&gt;</code> y está vacío salvo que se defina <strong>Custom module prefix</strong>. Las unidades son las que informa el plugin.</p>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tipo</th>
+<th>Condición</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;prefix&gt;hana_availability</code></td>
+<td><code>generic_proc</code></td>
+<td>Siempre, para un destino accesible</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;backups_estimated_size_bytes</code></td>
+<td><code>generic_data</code> (bytes)</td>
+<td>Backups Size. Suma del tamaño de página asignado de las estadísticas del conversor; es una estimación de mejor esfuerzo y no el tamaño de los ficheros de backup</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;timestamp</code></td>
+<td><code>generic_data_string</code></td>
+<td>Timestamp. Marca de tiempo UTC actual de la base de datos</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;version</code></td>
+<td><code>generic_data_string</code></td>
+<td>Hana Version</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;volumes_count</code></td>
+<td><code>generic_data</code></td>
+<td>Data Disk Information. Número de volúmenes</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;volumes_io_entries</code></td>
+<td><code>generic_data</code></td>
+<td>Data Disk Information. Número de entradas de E/S de volumen</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;rowstore_fragmentation_pct</code></td>
+<td><code>generic_data</code> (%)</td>
+<td>RS Fragmentation. Tamaño libre sobre asignado del row store</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;io_total_read_bytes</code></td>
+<td><code>generic_data</code> (bytes)</td>
+<td>IO Stats. Lectura acumulada</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;io_total_write_bytes</code></td>
+<td><code>generic_data</code> (bytes)</td>
+<td>IO Stats. Escritura acumulada</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;io_total_time_ms</code></td>
+<td><code>generic_data</code> (ms)</td>
+<td>IO Stats. Tiempo total de E/S</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;memory_used_bytes</code></td>
+<td><code>generic_data</code> (bytes)</td>
+<td>Memory</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;memory_allocation_limit_bytes</code></td>
+<td><code>generic_data</code> (bytes)</td>
+<td>Memory</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;cpu_total_time_ms</code></td>
+<td><code>generic_data</code> (ms)</td>
+<td>CPU Time. Tiempo total de CPU agregado de los servicios</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;cpu_process_time_ms</code></td>
+<td><code>generic_data</code> (ms)</td>
+<td>CPU Time. Tiempo de CPU de proceso agregado de los servicios</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;license_count</code></td>
+<td><code>generic_data</code></td>
+<td>License, cuando existe la vista de licencia</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;license_expiration_date</code></td>
+<td><code>generic_data_string</code></td>
+<td>License, cuando existe la vista de licencia</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;license_usage_memory_gb</code></td>
+<td><code>generic_data</code> (GB)</td>
+<td>License, cuando existe la vista de licencia. Valor de mejor esfuerzo del uso de licencia</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;license_status</code></td>
+<td><code>generic_data_string</code></td>
+<td>License, solo cuando no existe la vista de licencia; valor vacío</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;connections_total</code></td>
+<td><code>generic_data</code> (conns)</td>
+<td>Get Stated Connections</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;connections_running</code></td>
+<td><code>generic_data</code> (conns)</td>
+<td>Get Stated Connections. Estado <code>RUNNING</code></td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;connections_idle</code></td>
+<td><code>generic_data</code> (conns)</td>
+<td>Get Stated Connections. Estado <code>IDLE</code></td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;blocked_transactions</code></td>
+<td><code>generic_data</code></td>
+<td>Transactions</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;blocked_transactions_distinct_users</code></td>
+<td><code>generic_data</code></td>
+<td>Transactions, solo cuando la vista de transacciones bloqueadas expone una columna de usuario</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;open_transactions</code></td>
+<td><code>generic_data</code></td>
+<td>Transactions, solo cuando existe la vista de transacciones</td>
+</tr>
+</tbody>
+</table>
+<h4 id="estadisticas-de-servicio">Estadísticas de servicio<a class="headerlink" href="#estadisticas-de-servicio" title="Permanent link">¶</a></h4>
+<p>Con <strong>Enable Hana Service Statistics</strong> se crea un conjunto de módulos por host y servicio, llamados <code>&lt;prefix&gt;&lt;host&gt;.&lt;service&gt;-&lt;COLUMN&gt;</code>. Solo se crean las columnas que existen en ese entorno SAP HANA.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ACTIVE_STATUS</code></td>
+<td><code>generic_proc</code></td>
+<td><code>1</code> para <code>YES</code>, <code>TRUE</code>, <code>1</code>, <code>ACTIVE</code> o <code>RUNNING</code>; en otro caso <code>0</code></td>
+</tr>
+<tr>
+<td><code>PROCESS_CPU_TIME</code>, <code>TOTAL_CPU_TIME</code></td>
+<td><code>generic_data</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>PROCESS_MEMORY</code>, <code>TOTAL_MEMORY</code>, <code>AVAILABLE_MEMORY</code></td>
+<td><code>generic_data</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACTIVE_REQUEST_COUNT</code>, <code>PENDING_REQUEST_COUNT</code></td>
+<td><code>generic_data</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACTIVE_THREAD_COUNT</code>, <code>THREAD_COUNT</code>, <code>OPEN_FILE_COUNT</code></td>
+<td><code>generic_data</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>REQUESTS_PER_SEC</code>, <code>RESPONSE_TIME</code></td>
+<td><code>generic_data</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>START_TIME</code>, <code>SYS_TIMESTAMP</code></td>
+<td><code>generic_data</code> (<code>_timeticks_</code>)</td>
+<td>Tiempo transcurrido desde esa marca de tiempo, en timeticks</td>
+</tr>
+</tbody>
+</table>
+<p>Si la vista de estadísticas de servicio no tiene las columnas de host o de nombre de servicio, se crea en su lugar un único módulo <code>service_statistics</code> vacío.</p>
+<h3 id="propiedades-del-agente">Propiedades del agente<a class="headerlink" href="#propiedades-del-agente" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Propiedad</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre y alias del agente</td>
+<td><code>HOST - DATABASE</code>, o el valor de <strong>Target agent</strong></td>
+</tr>
+<tr>
+<td>Dirección</td>
+<td>Host del destino</td>
+</tr>
+<tr>
+<td>Sistema operativo</td>
+<td><code>SAP HANA</code></td>
+</tr>
+<tr>
+<td>Grupo e intervalo</td>
+<td>De la tarea de Discovery</td>
+</tr>
+</tbody>
+</table>
+<h3 id="salida-de-la-ejecucion">Salida de la ejecución<a class="headerlink" href="#salida-de-la-ejecucion" title="Permanent link">¶</a></h3>
+<p>La ejecución informa de <code>Total agents</code>, <code>Targets up</code> y <code>Targets down</code>. La ejecución termina en estado de error cuando faltan parámetros obligatorios, cuando falla la lectura de la configuración o cuando no se generó ningún agente.</p>
+<h3 id="identidad-del-plugin">Identidad del plugin<a class="headerlink" href="#identidad-del-plugin" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre corto de la app</td>
+<td><code>pandorafms.sap.hana</code></td>
+</tr>
+<tr>
+<td>Versión del add-on</td>
+<td><code>1.0</code></td>
+</tr>
+<tr>
+<td>Paquete del Marketplace</td>
+<td><code>pandorafms.sap.hana.1.0.disco</code></td>
+</tr>
+<tr>
+<td>Tipo</td>
+<td>Aplicación de Discovery (<code>.disco</code>)</td>
+</tr>
+<tr>
+<td>Sección</td>
+<td>Discovery → Applications</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

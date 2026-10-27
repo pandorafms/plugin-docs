@@ -1,0 +1,5476 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/plugins/marklogic/">
+      
+      
+        <link rel="prev" href="../kvm/">
+      
+      
+        <link rel="next" href="../mongodb-remote-atlas/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../../es/plugins/marklogic/" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>MarkLogic monitoring plugin - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#marklogic-monitoring-plugin" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              MarkLogic monitoring plugin
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/plugins/marklogic/" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-cloudwatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon CloudWatch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-ec2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon EC2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-rds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/amazon-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon S3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/db2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/digital-ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Ocean Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elasticsearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/google-cloud-compute-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud Compute Engine Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/haproxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HAProxy Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hp-one-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HP One View Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/hyper-v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/iot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/jmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JMX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/meraki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meraki Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Office 365 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/opensearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenSearch Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/ovh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OVH Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proxmox Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/rabbitmq-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-hana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/sap-r3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP R3 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../discovery/xenserver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XenServer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/discord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discord integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Chat integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/slack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Slack integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft Teams integration (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegram integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../active-directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Enterprise Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure PostgreSQL monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Azure SQL plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Azure Storage monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cisco-inventory-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco Inventory configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citrix-netscaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citrix NetScaler monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../db2-remote/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DB2 Remote plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic SNMP plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exchange/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exchange
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glpi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GLPI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../google-drive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Drive monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ibm-z-series-mainframe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBM Z Series Mainframe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../influxdb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-for-mac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory plugin for MAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inventory-ssh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory SSH plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../journalctl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Journalctl plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kafka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kafka monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MarkLogic monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MarkLogic monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection-to-marklogic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection to MarkLogic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delivery-to-pandora-fms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delivery to Pandora FMS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-it-collects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it collects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-decoration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module decoration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-the-agent-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create the agent group
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-it-from-pandora-fms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it from Pandora FMS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate-and-troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate and troubleshoot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate and troubleshoot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scheduled-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduled execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugging-a-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugging a run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-limitations-of-this-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known limitations of this version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated agents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated modules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Generated modules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#host-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forest-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forest modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-server-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application server modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#global-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global module
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addon-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addon identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-remote-atlas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora MongoDB remote / Atlas plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-server-querier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MSSQL Server Querier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../net-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Net usage plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../office-365/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Office 365 Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Openshift monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle VM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ldap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora LDAP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandora-ux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora UX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugin-executor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Plugin Executor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitmq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sap-hana-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAP HANA Database plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Spark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sybase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sybase monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tomcat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tomcat monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zammad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zammad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zendesk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pandora Zendesk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to document
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection-to-marklogic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection to MarkLogic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delivery-to-pandora-fms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delivery to Pandora FMS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-it-collects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it collects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-decoration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module decoration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-the-agent-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create the agent group
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-it-from-pandora-fms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it from Pandora FMS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate-and-troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate and troubleshoot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate and troubleshoot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scheduled-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduled execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugging-a-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugging a run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-limitations-of-this-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known limitations of this version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated agents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated modules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Generated modules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#host-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forest-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forest modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-server-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application server modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#global-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global module
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addon-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addon identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="marklogic-monitoring-plugin">MarkLogic monitoring plugin<a class="headerlink" href="#marklogic-monitoring-plugin" title="Permanent link">¶</a></h1>
+<p><em>Article last updated: 2026-10-26.</em></p>
+<h2 id="what-it-does">What it does<a class="headerlink" href="#what-it-does" title="Permanent link">¶</a></h2>
+<p>The plugin monitors a MarkLogic installation from Pandora FMS. Each run reads the
+MarkLogic management REST API, takes the inventory of the installation — hosts,
+databases, forests and application servers — and builds one Pandora FMS agent per
+entity, holding the modules that describe its state, load and replication.</p>
+<p>Nothing is installed on the MarkLogic nodes: the plugin runs on one host, connects
+over HTTP or HTTPS and delivers the generated agents to Pandora FMS. Every
+execution reads the whole inventory again, so the plugin keeps no state between
+runs and the agents always reflect the installation at the moment of the run.</p>
+<p>Three groups of settings shape a run:</p>
+<ul>
+<li><strong>What it collects.</strong> Each entity type (hosts, databases, forests, application
+  servers) is enabled or disabled independently, individual entities can be
+  excluded by name, and each type produces either a summary set of modules or a
+  detailed set.</li>
+<li><strong>How it is identified.</strong> A common prefix names every generated agent, and the
+  agents land in a configured group with a configured interval.</li>
+<li><strong>Where it delivers.</strong> The generated agent documents travel with Tentacle or are
+  copied into a local Pandora FMS data folder.</li>
+</ul>
+<p>The entity agents are always delivered that way. The <code>as_agent_plugin</code> setting only
+selects what the plugin prints on standard output: enabled, it prints a
+<code>Plugin message</code> module for a Pandora FMS agent to collect; disabled, it prints the
+run result as a number for a server plugin module or a scheduled job.</p>
+<h2 id="prepare">Prepare<a class="headerlink" href="#prepare" title="Permanent link">¶</a></h2>
+<h3 id="compatibility">Compatibility<a class="headerlink" href="#compatibility" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>State</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MarkLogic management REST API reachable on the configured host and port</td>
+<td><code>Required</code></td>
+<td>Every collection reads <code>/manage/&lt;api-version&gt;/...</code> with <code>format=json</code> from that host and port</td>
+</tr>
+<tr>
+<td>An <code>ml_api_version</code> value the installation accepts: <code>V1</code>, <code>V2</code> or <code>LATEST</code></td>
+<td><code>Required</code></td>
+<td>The value is a path segment of every request; the shipped configuration file documents these three values</td>
+</tr>
+<tr>
+<td>A MarkLogic user allowed to read the management API</td>
+<td><code>Required</code></td>
+<td>The plugin authenticates with <code>ml_user</code>, <code>ml_pass</code> and <code>ml_realm</code></td>
+</tr>
+<tr>
+<td>A Perl runtime providing <code>LWP::UserAgent</code>, <code>JSON</code>, <code>IO::Socket::INET6</code> and <code>PerlIO::encoding</code></td>
+<td><code>Required</code></td>
+<td>The plugin does not start without them</td>
+</tr>
+<tr>
+<td>Network access from the plugin host to <code>ml_server:ml_port</code></td>
+<td><code>Required</code></td>
+<td>The plugin connects to the management API from that host</td>
+</tr>
+<tr>
+<td>Network access from the plugin host to each application server port, when port checks are enabled</td>
+<td><code>Required</code></td>
+<td>The port check opens a TCP connection for each application server</td>
+</tr>
+<tr>
+<td>Network access to the Pandora FMS Tentacle port, <code>41121</code> by default, when delivering with Tentacle</td>
+<td><code>Required</code></td>
+<td>Tentacle delivery is the default mode</td>
+</tr>
+<tr>
+<td>MarkLogic server version</td>
+<td><code>Not validated</code></td>
+<td>No MarkLogic version matrix has been recorded for this addon; the shipped file documents <code>LATEST</code> as the MarkLogic 8 API version</td>
+</tr>
+<tr>
+<td>Operating system of the host that runs the plugin</td>
+<td><code>Not validated</code></td>
+<td>No operating system has been recorded for this version</td>
+</tr>
+<tr>
+<td>Pandora FMS NG 784 and later</td>
+<td><code>Supported</code></td>
+<td>The Marketplace states that all its entries are compatible with Pandora FMS NG 784 and later versions; it is a catalogue-wide statement covering this addon, not a test record</td>
+</tr>
+</tbody>
+</table>
+<h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>A MarkLogic installation</strong> whose management API answers on the configured
+   host and port. The plugin and its shipped configuration file use <code>8002</code>.</li>
+<li><strong>A MarkLogic account</strong> that can read the management API at
+   <code>/manage/&lt;api-version&gt;/</code>.</li>
+<li><strong>A host to run the plugin</strong> with the Perl runtime and the modules listed in
+   <a href="#compatibility">Compatibility</a>.</li>
+<li><strong>A destination for the generated agents</strong>: the Pandora FMS Tentacle service,
+   or a local data folder that the Pandora FMS server reads.</li>
+<li><strong>Optionally</strong>, TCP reachability from the plugin host to each application
+   server port, only when the port check is enabled.</li>
+</ol>
+<h3 id="install-the-plugin">Install the plugin<a class="headerlink" href="#install-the-plugin" title="Permanent link">¶</a></h3>
+<p>Download the addon from the Pandora FMS Marketplace entry, which is limited to
+licensed users:</p>
+<p><a href="https://marketplace.pandorafms.com/entries/pandorafms.marklogic_monitoring">https://marketplace.pandorafms.com/entries/pandorafms.marklogic_monitoring</a></p>
+<p>Install it on the host that will run it, keeping the configuration file
+<code>pandora_ml.conf</code> next to it. The plugin takes that file as its only argument, so
+any location is valid as long as the execution uses the same path.</p>
+<h2 id="configure">Configure<a class="headerlink" href="#configure" title="Permanent link">¶</a></h2>
+<p>The plugin takes one argument, the path of its configuration file, and no
+command-line options:</p>
+<div class="highlight"><pre><span></span><code>perl<span class="w"> </span>/usr/share/pandora_server/util/pandora_marklogic.pl<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;
+</code></pre></div>
+<p>The file holds <code>key = value</code> lines, and the values in it override the built-in
+defaults. Two parsing rules apply:</p>
+<ul>
+<li>A line whose first character is <code>#</code> is a comment. A line that starts with spaces
+  is read as a key, so keep comments in the first column.</li>
+<li>Keys and values are trimmed, and the value keeps any <code>=</code> after the first one. A
+  repeated key keeps its last value; <code>global_alerts</code> is the exception, described in
+  <a href="#module-decoration">Module decoration</a>.</li>
+</ul>
+<p>The shipped <code>pandora_ml.conf</code> is a working base: it enables every entity type,
+selects summary detail for hosts, databases and forests and detailed information
+for application servers. Start from it rather than from an empty file. The
+<code>check_*</code> and <code>show_detailed_*</code> keys have no built-in value — a key missing from the
+file behaves as disabled, so an incomplete file collects nothing while still
+reporting a successful run.</p>
+<h3 id="connection-to-marklogic">Connection to MarkLogic<a class="headerlink" href="#connection-to-marklogic" title="Permanent link">¶</a></h3>
+<p>This block is mandatory; without it the plugin has no API to read.</p>
+<div class="highlight"><pre><span></span><code><span class="na">ml_server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;MARKLOGIC_HOST&gt;</span>
+<span class="na">ml_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8002</span>
+<span class="na">ml_user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;USERNAME&gt;</span>
+<span class="na">ml_pass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;PASSWORD&gt;</span>
+<span class="na">ml_realm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">public</span>
+<span class="na">use_ssl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<span class="na">ml_api_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">LATEST</span>
+</code></pre></div>
+<ul>
+<li><code>ml_server</code> and <code>ml_port</code> build every request URL. The plugin uses exactly the
+  port given: there is no fallback to the default port of the scheme.</li>
+<li><code>use_ssl</code> switches the scheme from <code>http</code> to <code>https</code>. Enable it when the
+  management API is served over TLS.</li>
+<li><code>ml_api_version</code> is inserted as a path segment, so <code>LATEST</code> reads
+  <code>/manage/LATEST/hosts</code>, and <code>V1</code> or <code>V2</code> read the corresponding API version.
+  <code>LATEST</code> is used when the key is absent.</li>
+<li><code>ml_realm</code> is the authentication realm sent with the credentials. If the server
+  challenges with a different realm, authentication fails.</li>
+</ul>
+<h3 id="delivery-to-pandora-fms">Delivery to Pandora FMS<a class="headerlink" href="#delivery-to-pandora-fms" title="Permanent link">¶</a></h3>
+<p>The generated agent documents leave the plugin in one of two ways. Tentacle is the
+default and requires the Tentacle address:</p>
+<div class="highlight"><pre><span></span><code><span class="na">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tentacle</span>
+<span class="na">tentacle_ip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;PANDORA_FMS_URL&gt;</span>
+<span class="na">tentacle_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">41121</span>
+<span class="na">tentacle_opts</span><span class="w"> </span><span class="o">=</span>
+<span class="na">tentacle_client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/bin/tentacle_client</span>
+</code></pre></div>
+<p>The local copy writes the documents into a folder that the Pandora FMS server
+reads, which is the usual choice when the plugin runs on the Pandora FMS server
+itself:</p>
+<div class="highlight"><pre><span></span><code><span class="na">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">local</span>
+<span class="na">local_folder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/var/spool/pandora/data_in</span>
+</code></pre></div>
+<ul>
+<li><code>mode</code> is Tentacle only when its value is exactly <code>tentacle</code>. Any other value,
+  including an empty one, copies the documents into <code>local_folder</code>.</li>
+<li><code>tentacle_ip</code> is required when delivering with Tentacle. <code>tentacle_client</code> must
+  name an executable: an empty value does not fall back to <code>tentacle_client</code> in the
+  <code>PATH</code>, and the delivery fails.</li>
+<li><code>tentacle_opts</code> passes extra options to the Tentacle client, separated by spaces.</li>
+<li><code>temp</code> is where each document is written before delivery, <code>/tmp</code> by default.</li>
+<li><strong><code>temp</code> and <code>local_folder</code> must both exist</strong>, even when the plugin delivers with
+  Tentacle and never copies anything. A missing directory stops the run before it
+  collects any data.</li>
+</ul>
+<h3 id="what-it-collects">What it collects<a class="headerlink" href="#what-it-collects" title="Permanent link">¶</a></h3>
+<p>Each entity type is collected only when its key is enabled. The shipped file
+enables all four and the port check:</p>
+<div class="highlight"><pre><span></span><code><span class="na">check_hosts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">check_databases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">check_forests</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">check_servers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">check_server_ports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+</code></pre></div>
+<p>Boolean keys are numeric: a value greater than <code>0</code> enables the feature; <code>0</code>, an
+empty value or a non-numeric value disables it.</p>
+<p>The port check monitors the port of each application server and is part of the
+server collection, so it is only generated while <code>check_servers</code> is enabled.</p>
+<p>To leave entities out, list their exact names, comma separated, in the exclusion
+key of their type. Names are matched as MarkLogic reports them:</p>
+<div class="highlight"><pre><span></span><code><span class="na">exlude_hosts</span><span class="w"> </span><span class="o">=</span>
+<span class="na">exlude_databases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Documents,Modules</span>
+<span class="na">exlude_forests</span><span class="w"> </span><span class="o">=</span>
+<span class="na">exlude_servers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Manage</span>
+</code></pre></div>
+<p>The keys are spelled <code>exlude_*</code>, without the <code>c</code>: the correctly spelled
+<code>exclude_*</code> is read as an unknown key and excludes nothing.</p>
+<p>The detail level adds modules to each entity type:</p>
+<div class="highlight"><pre><span></span><code><span class="na">show_detailed_hosts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<span class="na">show_detailed_databases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<span class="na">show_detailed_forests</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<span class="na">show_detailed_servers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+</code></pre></div>
+<p>A type at <code>0</code> produces the summary set described in
+<a href="#understand-the-results">Understand the results</a>; at <code>1</code> it produces every field
+the API reports for the entity.</p>
+<h3 id="agent-identity">Agent identity<a class="headerlink" href="#agent-identity" title="Permanent link">¶</a></h3>
+<p>Every generated agent uses the same header, name scheme, group and interval:</p>
+<div class="highlight"><pre><span></span><code><span class="na">agent_name_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ML_</span>
+<span class="na">agent_group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MarkLogic</span>
+<span class="na">agent_interval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">300</span>
+</code></pre></div>
+<p>The header is the only free part of the name; the rest is fixed by the entity type
+and the name MarkLogic reports, as described in
+<a href="#generated-agents">Generated agents</a>. Use a distinctive header, such as <code>ML_</code>, so
+the agents of several installations stay apart.</p>
+<p><code>show_server_type_in_agentname</code> (enabled in the shipped file) appends the
+application server type to those agent names:</p>
+<div class="highlight"><pre><span></span><code><span class="na">show_server_type_in_agentname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+</code></pre></div>
+<p>Turning it on or off renames every application server agent. The agents created
+under the previous name stop receiving data and new agents appear, so decide it
+before the first run.</p>
+<p><code>agent_group</code> is the group the agents are created in, by name, and <code>agent_interval</code>
+is their interval in seconds. Both apply to every generated agent.</p>
+<h3 id="module-decoration">Module decoration<a class="headerlink" href="#module-decoration" title="Permanent link">¶</a></h3>
+<p>These settings apply to the generated modules:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">#module_header = Custom_header_</span>
+<span class="c1">#warning_instructions = Some text to guide the team</span>
+<span class="c1">#critical_instructions = Some text to guide the team</span>
+<span class="c1">#global_alerts = critical condition</span>
+</code></pre></div>
+<ul>
+<li><code>module_header</code> prefixes every module name of every entity.</li>
+<li><code>warning_instructions</code>, <code>critical_instructions</code> and <code>unknown_instructions</code> add the
+  corresponding instruction text to every module.</li>
+<li><code>global_alerts</code> attaches an alert template to every module. Repeat the key once
+  per template; the value is the alert template name.</li>
+</ul>
+<h3 id="create-the-agent-group">Create the agent group<a class="headerlink" href="#create-the-agent-group" title="Permanent link">¶</a></h3>
+<p>The plugin can create the agent group through the Pandora FMS console API before
+delivering the agents:</p>
+<div class="highlight"><pre><span></span><code><span class="na">autocreate_group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<span class="na">api_url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">http://&lt;PANDORA_FMS_URL&gt;/pandora_console/include/api.php</span>
+<span class="na">api_user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;USERNAME&gt;</span>
+<span class="na">api_user_pass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;PASSWORD&gt;</span>
+<span class="na">api_pass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;PASSWORD&gt;</span>
+<span class="na">group_icon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Servers</span>
+</code></pre></div>
+<p><code>api_url</code>, <code>api_user</code>, <code>api_user_pass</code> and <code>api_pass</code> are used only for this
+creation; <code>group_icon</code> is the icon the new group receives. Set
+<code>autocreate_group = 1</code> only when the group does not exist yet:</p>
+<blockquote>
+<p>Do not enable group creation when the Pandora FMS installation is part of a
+metaconsole environment. Creating groups on a node with an active metaconsole can
+break the group synchronisation of the whole set of nodes.</p>
+</blockquote>
+<h3 id="run-it-from-pandora-fms">Run it from Pandora FMS<a class="headerlink" href="#run-it-from-pandora-fms" title="Permanent link">¶</a></h3>
+<p>The plugin is a command, so Pandora FMS runs it the same way a person does: with the
+path of the configuration file. Two integration paths are available, and they can
+coexist:</p>
+<ul>
+<li><strong>As a plugin module of an agent.</strong> The Pandora FMS agent runs the command every
+  interval and collects the <code>Plugin message</code> module the plugin prints. Enable
+  <code>as_agent_plugin = 1</code> in the file for this path.</li>
+<li><strong>As a server plugin module or a scheduled job.</strong> Keep
+  <code>as_agent_plugin = 0</code>: the plugin prints the result as a number and writes the
+  diagnostics to standard error, which is what a server plugin module records.
+  Scheduling it from the system <code>cron</code> is described in
+  <a href="#operate-and-troubleshoot">Operate and troubleshoot</a>.</li>
+</ul>
+<!-- SCREENSHOT NEEDED: Pandora FMS module definition screen for the plugin module or server plugin module that runs pandora_marklogic.pl, showing where the command and the configuration file path are entered. -->
+
+<p>The first path needs a Pandora FMS agent on the host that runs the plugin; the
+second does not and is the usual choice when the plugin already runs on the Pandora
+FMS server. Neither path installs anything on the MarkLogic nodes.</p>
+<h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">¶</a></h2>
+<p>Run the plugin with no argument to confirm that the runtime is complete. It prints
+its usage summary and stops:</p>
+<div class="highlight"><pre><span></span><code>perl<span class="w"> </span>/usr/share/pandora_server/util/pandora_marklogic.pl
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Pandora FMS Plugin for MarkLogic NoSQL Monitoring &lt;version&gt;
+
+At least one parameter is needed by this plugin:
+Usage: pandora_marklogic.pl pandora_ml.conf
+</code></pre></div>
+<p>Then run it with the configuration file:</p>
+<div class="highlight"><pre><span></span><code>perl<span class="w"> </span>/usr/share/pandora_server/util/pandora_marklogic.pl<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;
+</code></pre></div>
+<p>With <code>as_agent_plugin = 1</code> a successful run prints one <code>Plugin message</code> module on
+standard output:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;module&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span><span class="cp">&lt;![CDATA[Plugin message]]&gt;</span><span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>generic_proc<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;data&gt;</span><span class="cp">&lt;![CDATA[1]]&gt;</span><span class="nt">&lt;/data&gt;</span>
+<span class="w">    </span><span class="nt">&lt;description&gt;</span><span class="cp">&lt;![CDATA[Execution OK]]&gt;</span><span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+</code></pre></div>
+<p>With <code>as_agent_plugin = 0</code> it prints <code>1</code> on standard output and the same message on
+standard error:</p>
+<div class="highlight"><pre><span></span><code>Plugin execution Result:[Execution OK]
+</code></pre></div>
+<p>A run that cannot read everything prints <code>0</code> instead of <code>1</code> and lists the failed
+requests in the description of the <code>Plugin message</code> module, or after
+<code>Plugin execution Result:</code> on standard error. For example:</p>
+<div class="highlight"><pre><span></span><code>Plugin execution Result:[ No response from http://&lt;MARKLOGIC_HOST&gt;:8002/manage/LATEST/hosts?format=json
+  No response from http://&lt;MARKLOGIC_HOST&gt;:8002/manage/LATEST/databases?format=json
+ ]
+</code></pre></div>
+<p>Finally, confirm that the agents arrived. The plugin deletes each temporary document
+only when its delivery succeeds, so a document left in <code>temp</code> is a failed delivery.
+In Pandora FMS, the generated agents appear with the configured header, and each one
+carries the modules described in <a href="#understand-the-results">Understand the results</a>.</p>
+<!-- SCREENSHOT NEEDED: Pandora FMS agent list after a first run, filtered by the configured agent name header, showing the generated host, database, forest and application server agents. -->
+
+<p>A run that reports <code>Execution OK</code> does not prove that every entity was collected: an
+empty inventory produces no error. Compare the number of agents with the inventory
+of the installation.</p>
+<h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
+<p>The plugin creates one agent per entity, in four families, plus a status module when
+it runs as an agent plugin. The families are independent: a type that is disabled,
+excluded or unreadable simply produces no agent.</p>
+<ul>
+<li><strong>Hosts</strong> report whether the node is online, whether its status view includes a
+  critical issue, and its rate and load. These agents have no parent.</li>
+<li><strong>Databases</strong> report availability, capacity, replication lag and, in summary mode,
+  size and indexing or rebalancing state.</li>
+<li><strong>Forests</strong> report whether the forest is open and enabled, its load, and its
+  replication lag. Each forest agent is parented to the database that contains it,
+  when databases are collected.</li>
+<li><strong>Application servers</strong> report whether the service is open and enabled, its
+  detailed state, and whether its port accepts connections.</li>
+</ul>
+<p>State modules are <code>generic_proc</code> or <code>async_proc</code> modules: <code>1</code> is a normal state,
+<code>0</code> is a failure, and a value the plugin cannot map is reported as <code>3</code> with the
+original state in the module description. A database that reports no state at all
+gets <code>2</code>. Numeric modules carry the unit the API reports, so rates, loads and sizes
+keep their MarkLogic meaning. Summary mode keeps the modules that answer "is it
+healthy and how loaded is it"; detailed mode adds the fields of the entity and drops
+the summary-only modules, which is why it produces many more modules.</p>
+<p><code>Plugin message</code> summarises the run, not the installation: <code>1</code> means every request
+the plugin attempted returned data, <code>0</code> means at least one request failed or a
+delivery could not be completed.</p>
+<h2 id="operate-and-troubleshoot">Operate and troubleshoot<a class="headerlink" href="#operate-and-troubleshoot" title="Permanent link">¶</a></h2>
+<h3 id="scheduled-execution">Scheduled execution<a class="headerlink" href="#scheduled-execution" title="Permanent link">¶</a></h3>
+<p>The plugin has no internal scheduler, so an external one runs it. A system <code>cron</code>
+entry on the host, for example:</p>
+<div class="highlight"><pre><span></span><code>*/5 * * * * root perl /usr/share/pandora_server/util/pandora_marklogic.pl &lt;PATH_TO_CONFIG&gt;
+</code></pre></div>
+<p>Match the schedule to the agent interval you configured, so the agents receive data
+at the rate the console expects.</p>
+<h3 id="log">Log<a class="headerlink" href="#log" title="Permanent link">¶</a></h3>
+<p>The plugin writes a log file, <code>pandora_ml.log</code> in the working directory by default.
+Set <code>log</code> to an absolute path to place it elsewhere. Each run starts a new log, and a
+previous log larger than 3,200,000 bytes is renamed to <code>.old</code> before the new one
+starts. Every line carries a timestamp and the <code>execution_id</code> value, <code>MarkLogic</code>
+when the key is empty, which helps to tell concurrent executions apart.</p>
+<h3 id="timeout">Timeout<a class="headerlink" href="#timeout" title="Permanent link">¶</a></h3>
+<p><code>timeout</code> bounds the whole run, not one request: when it expires the plugin stops
+with <code>Exceeded execution time</code> on standard error and a non-zero exit status, before
+delivering anything. The value is in seconds. The shipped file sets <code>2</code>, which is
+short for an installation with many entities; raise it when runs are cut off. When
+the key is absent the plugin uses <code>60</code>.</p>
+<h3 id="debugging-a-run">Debugging a run<a class="headerlink" href="#debugging-a-run" title="Permanent link">¶</a></h3>
+<p><code>extra_log = 1</code> writes the raw JSON answer of each database and forest to the log, in
+addition to the normal messages, while that type is in summary mode. Use it to check
+what the API returns for an entity that produces unexpected modules, and disable it
+afterwards: the output is large.</p>
+<h3 id="known-limitations-of-this-version">Known limitations of this version<a class="headerlink" href="#known-limitations-of-this-version" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Application server agents are delivered only while forests are collected.</strong> With
+  <code>check_forests = 0</code> and <code>check_servers = 1</code> the servers are read but their agents
+  are never delivered.</li>
+<li><strong><code>module_interval</code>, <code>module_tags</code> and <code>module_group</code> have no effect.</strong> They are
+  accepted and ignored, so the generated modules carry no tags and no module group,
+  and the module interval is not set by the plugin.</li>
+<li><strong><code>status min-capacity</code> carries the unit string as its value.</strong> The module reports
+  the unit returned by the API instead of the numeric capacity, so its value is not a
+  measurement.</li>
+<li><strong>The exclusion keys are spelled <code>exlude_*</code>.</strong> The correctly spelled <code>exclude_*</code>
+  keys exclude nothing.</li>
+<li><strong>An empty <code>tentacle_client</code> does not fall back to the <code>PATH</code>.</strong></li>
+<li><strong>There is no cluster agent.</strong> The installation itself has no agent, and
+  application server agents have no parent; only forests are parented, to their
+  database.</li>
+<li><strong>Detailed mode names modules after the API field.</strong> When the same field name
+  appears in more than one section of an entity, the modules repeat the name, and
+  fields with an <code>enum</code> or <code>quantity</code> unit produce no module at all.</li>
+</ul>
+<h3 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong><code>Error: Cannot found temporal directory</code> followed by the usage text</strong> — the
+  configuration file could not be read, or <code>temp</code> does not exist. The plugin reports
+  the missing temporary directory because it falls back to its defaults when the file
+  cannot be opened, so check the path first, then the directory.</li>
+<li><strong><code>Error: Cannot found target directory ...</code></strong> — <code>local_folder</code> does not exist. The
+  directory is required even when the plugin delivers with Tentacle.</li>
+<li><strong><code>Plugin message</code> reports <code>0</code> with <code>No response from &lt;url&gt;</code></strong> — that management
+  API request failed. Check <code>ml_server</code>, <code>ml_port</code>, <code>use_ssl</code>, the credentials and
+  <code>ml_realm</code>. A wrong port or a disabled management API fails every request of the
+  run.</li>
+<li><strong>Only one entity type reports <code>No response</code></strong> — its endpoint is unavailable or
+  refused for that path, for example <code>/forests</code> behind a restricted account. The
+  other types still produce agents.</li>
+<li><strong><code>Plugin message</code> reports <code>0</code> with <code>Failed to retrieve the group id for &lt;server&gt;</code></strong>
+  — the group relation of an application server could not be read. Its modules are
+  still generated.</li>
+<li><strong><code>Plugin message</code> reports <code>0</code> with <code>There was a problem sending file using
+  tentacle</code></strong> — Tentacle delivery failed. Check <code>tentacle_ip</code>, <code>tentacle_port</code>,
+  <code>tentacle_client</code> and the network path to the Pandora FMS server. The document
+  stays in <code>temp</code>.</li>
+<li><strong><code>Plugin message</code> reports <code>0</code> with <code>There was a problem copying local file</code></strong> —
+  <code>local_folder</code> is not writable by the user that runs the plugin.</li>
+<li><strong><code>Exceeded execution time</code></strong> — the run exceeded <code>timeout</code>. Raise it, or reduce the
+  collected scope.</li>
+<li><strong>No modules on an entity that exists</strong> — its type is disabled, its name is in the
+  exclusion list, or the run finished before reaching it. Enable the type, check the
+  exclusion value and the log.</li>
+<li><strong>Fewer modules than expected on one entity</strong> — it is in summary mode. Enable the
+  corresponding <code>show_detailed_*</code> key.</li>
+<li><strong>The agents stopped receiving data after a naming change</strong> — the name of the agent
+  changed, so the old agent is orphaned. Check <code>agent_name_header</code> and
+  <code>show_server_type_in_agentname</code>, and remove the agents left behind.</li>
+</ul>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">¶</a></h2>
+<h3 id="configuration-file">Configuration file<a class="headerlink" href="#configuration-file" title="Permanent link">¶</a></h3>
+<p>The file is passed as the only argument and holds <code>key = value</code> lines. Values in the
+file override the built-in defaults shown below.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ml_server</code></td>
+<td>Yes</td>
+<td>Empty</td>
+<td>MarkLogic host that serves the management API</td>
+</tr>
+<tr>
+<td><code>ml_port</code></td>
+<td>No</td>
+<td><code>8002</code></td>
+<td>Port of the management API</td>
+</tr>
+<tr>
+<td><code>ml_user</code></td>
+<td>Yes</td>
+<td>Empty</td>
+<td>MarkLogic user allowed to read the management API</td>
+</tr>
+<tr>
+<td><code>ml_pass</code></td>
+<td>Yes</td>
+<td>Empty</td>
+<td>Password of <code>ml_user</code></td>
+</tr>
+<tr>
+<td><code>ml_realm</code></td>
+<td>No</td>
+<td><code>public</code></td>
+<td>Authentication realm sent with the credentials</td>
+</tr>
+<tr>
+<td><code>use_ssl</code></td>
+<td>No</td>
+<td>Not set (<code>0</code> in the shipped file, HTTP)</td>
+<td>A value greater than <code>0</code> queries <code>https://&lt;ml_server&gt;:&lt;ml_port&gt;</code>; any other value queries <code>http://</code></td>
+</tr>
+<tr>
+<td><code>ml_api_version</code></td>
+<td>No</td>
+<td><code>LATEST</code></td>
+<td>API version used as a path segment: <code>V1</code>, <code>V2</code> or <code>LATEST</code></td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>No</td>
+<td><code>60</code> (<code>2</code> in the shipped file)</td>
+<td>Seconds the whole run may take</td>
+</tr>
+<tr>
+<td><code>log</code></td>
+<td>No</td>
+<td><code>pandora_ml.log</code></td>
+<td>Log file path</td>
+</tr>
+<tr>
+<td><code>execution_id</code></td>
+<td>No</td>
+<td><code>MarkLogic</code></td>
+<td>Text added to every log line; empty uses <code>MarkLogic</code></td>
+</tr>
+<tr>
+<td><code>temp</code></td>
+<td>No</td>
+<td><code>/tmp</code></td>
+<td>Directory where each document is written before delivery; must exist</td>
+</tr>
+<tr>
+<td><code>mode</code></td>
+<td>No</td>
+<td><code>tentacle</code></td>
+<td><code>tentacle</code> delivers with the Tentacle client; any other value copies into <code>local_folder</code></td>
+</tr>
+<tr>
+<td><code>tentacle_ip</code></td>
+<td>Yes when <code>mode=tentacle</code></td>
+<td>Empty</td>
+<td>Tentacle server address</td>
+</tr>
+<tr>
+<td><code>tentacle_port</code></td>
+<td>No</td>
+<td><code>41121</code></td>
+<td>Tentacle server port</td>
+</tr>
+<tr>
+<td><code>tentacle_opts</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Extra options for the Tentacle client, separated by spaces</td>
+</tr>
+<tr>
+<td><code>tentacle_client</code></td>
+<td>No</td>
+<td><code>/usr/bin/tentacle_client</code></td>
+<td>Tentacle client executable; an empty value breaks the delivery</td>
+</tr>
+<tr>
+<td><code>local_folder</code></td>
+<td>No</td>
+<td><code>/var/spool/pandora/data_in</code></td>
+<td>Local destination for the documents; must exist even with Tentacle</td>
+</tr>
+<tr>
+<td><code>as_agent_plugin</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td><code>1</code> prints a <code>Plugin message</code> module on standard output; any other value prints the run result as a number</td>
+</tr>
+<tr>
+<td><code>agent_name_header</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Prefix of every generated agent name</td>
+</tr>
+<tr>
+<td><code>agent_group</code></td>
+<td>No</td>
+<td><code>MarkLogic</code></td>
+<td>Group of the generated agents, by name</td>
+</tr>
+<tr>
+<td><code>agent_interval</code></td>
+<td>No</td>
+<td><code>300</code></td>
+<td>Interval of the generated agents, in seconds</td>
+</tr>
+<tr>
+<td><code>show_server_type_in_agentname</code></td>
+<td>No</td>
+<td>Not set (disabled)</td>
+<td><code>1</code> appends the application server type to its agent name</td>
+</tr>
+<tr>
+<td><code>check_hosts</code></td>
+<td>No</td>
+<td>Not set (disabled)</td>
+<td><code>1</code> collects hosts; the shipped file sets <code>1</code></td>
+</tr>
+<tr>
+<td><code>check_databases</code></td>
+<td>No</td>
+<td>Not set (disabled)</td>
+<td><code>1</code> collects databases; the shipped file sets <code>1</code></td>
+</tr>
+<tr>
+<td><code>check_forests</code></td>
+<td>No</td>
+<td>Not set (disabled)</td>
+<td><code>1</code> collects forests and delivers the application server agents; the shipped file sets <code>1</code></td>
+</tr>
+<tr>
+<td><code>check_servers</code></td>
+<td>No</td>
+<td>Not set (disabled)</td>
+<td><code>1</code> collects application servers; the shipped file sets <code>1</code></td>
+</tr>
+<tr>
+<td><code>check_server_ports</code></td>
+<td>No</td>
+<td>Not set (disabled)</td>
+<td><code>1</code> adds the port check to each application server agent; the shipped file sets <code>1</code></td>
+</tr>
+<tr>
+<td><code>show_detailed_hosts</code></td>
+<td>No</td>
+<td>Not set (summary)</td>
+<td><code>1</code> generates every field of each host</td>
+</tr>
+<tr>
+<td><code>show_detailed_databases</code></td>
+<td>No</td>
+<td>Not set (summary)</td>
+<td><code>1</code> generates every field of each database</td>
+</tr>
+<tr>
+<td><code>show_detailed_forests</code></td>
+<td>No</td>
+<td>Not set (summary)</td>
+<td><code>1</code> generates every field of each forest</td>
+</tr>
+<tr>
+<td><code>show_detailed_servers</code></td>
+<td>No</td>
+<td>Not set (summary)</td>
+<td><code>1</code> generates every field of each application server; the shipped file sets <code>1</code></td>
+</tr>
+<tr>
+<td><code>exlude_hosts</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Host names to skip, comma separated</td>
+</tr>
+<tr>
+<td><code>exlude_databases</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Database names to skip, comma separated</td>
+</tr>
+<tr>
+<td><code>exlude_forests</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Forest names to skip, comma separated</td>
+</tr>
+<tr>
+<td><code>exlude_servers</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Application server names to skip, comma separated</td>
+</tr>
+<tr>
+<td><code>autocreate_group</code></td>
+<td>No</td>
+<td><code>0</code></td>
+<td><code>1</code> creates <code>agent_group</code> through the console API before delivering</td>
+</tr>
+<tr>
+<td><code>api_url</code></td>
+<td>Only for group creation</td>
+<td>Empty</td>
+<td>Console API URL, ending in <code>/include/api.php</code></td>
+</tr>
+<tr>
+<td><code>api_user</code></td>
+<td>Only for group creation</td>
+<td><code>admin</code></td>
+<td>Console user</td>
+</tr>
+<tr>
+<td><code>api_user_pass</code></td>
+<td>Only for group creation</td>
+<td><code>pandora</code></td>
+<td>Password of the console user</td>
+</tr>
+<tr>
+<td><code>api_pass</code></td>
+<td>Only for group creation</td>
+<td><code>1234</code></td>
+<td>API password</td>
+</tr>
+<tr>
+<td><code>group_icon</code></td>
+<td>No</td>
+<td>Not set (<code>Servers</code> in the shipped file)</td>
+<td>Icon of the created group</td>
+</tr>
+<tr>
+<td><code>module_header</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Prefix of every module name</td>
+</tr>
+<tr>
+<td><code>warning_instructions</code>, <code>critical_instructions</code>, <code>unknown_instructions</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Instruction text added to every module</td>
+</tr>
+<tr>
+<td><code>global_alerts</code></td>
+<td>No</td>
+<td>Empty</td>
+<td>Alert template attached to every module; repeat the key per template</td>
+</tr>
+<tr>
+<td><code>extra_log</code></td>
+<td>No</td>
+<td>Not set (disabled)</td>
+<td><code>1</code> writes the raw JSON of each database and forest to the log</td>
+</tr>
+<tr>
+<td><code>module_interval</code></td>
+<td>No</td>
+<td>—</td>
+<td>Accepted and ignored in this version</td>
+</tr>
+<tr>
+<td><code>module_tags</code></td>
+<td>No</td>
+<td>—</td>
+<td>Accepted and ignored in this version</td>
+</tr>
+<tr>
+<td><code>module_group</code></td>
+<td>No</td>
+<td>—</td>
+<td>Accepted and ignored in this version</td>
+</tr>
+</tbody>
+</table>
+<h3 id="command-line-execution">Command-line execution<a class="headerlink" href="#command-line-execution" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>perl<span class="w"> </span>pandora_marklogic.pl<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No argument</td>
+<td>Prints the usage summary and exits with status 1</td>
+</tr>
+<tr>
+<td>One argument that names a readable file</td>
+<td>Runs with that configuration</td>
+</tr>
+<tr>
+<td>One argument that names a file that cannot be opened</td>
+<td>Reports the missing temporary directory, prints the usage summary and exits with status 1, because the defaults replace the unreadable file</td>
+</tr>
+<tr>
+<td>More than one argument</td>
+<td>Only the first argument is read; the rest are ignored</td>
+</tr>
+<tr>
+<td><code>temp</code> or <code>local_folder</code> does not exist</td>
+<td>Reports the missing directory, prints the usage summary and exits with status 1</td>
+</tr>
+<tr>
+<td>The run completes</td>
+<td>Exits with status 0, whether or not a request failed; the result is in the output</td>
+</tr>
+<tr>
+<td><code>timeout</code> expires</td>
+<td>Stops with <code>Exceeded execution time</code> on standard error and a non-zero status</td>
+</tr>
+</tbody>
+</table>
+<h3 id="generated-agents">Generated agents<a class="headerlink" href="#generated-agents" title="Permanent link">¶</a></h3>
+<p><code>&lt;header&gt;</code> is the <code>agent_name_header</code> value and <code>&lt;name&gt;</code> is the entity name as
+MarkLogic reports it.</p>
+<table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Agent name</th>
+<th>Parent</th>
+<th>Modules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host</td>
+<td><code>&lt;header&gt;H_&lt;name&gt;</code></td>
+<td>None</td>
+<td><a href="#host-modules">Host modules</a></td>
+</tr>
+<tr>
+<td>Database</td>
+<td><code>&lt;header&gt;DB_&lt;name&gt;</code></td>
+<td>None</td>
+<td><a href="#database-modules">Database modules</a></td>
+</tr>
+<tr>
+<td>Forest</td>
+<td><code>&lt;header&gt;F_&lt;name&gt;</code></td>
+<td>The <code>&lt;header&gt;DB_&lt;database&gt;</code> agent of the database that contains it, when databases are collected</td>
+<td><a href="#forest-modules">Forest modules</a></td>
+</tr>
+<tr>
+<td>Application server</td>
+<td><code>&lt;header&gt;S_&lt;name&gt;</code>, or <code>&lt;header&gt;S_&lt;name&gt; [&lt;type&gt;]</code> with <code>show_server_type_in_agentname</code></td>
+<td>None</td>
+<td><a href="#application-server-modules">Application server modules</a></td>
+</tr>
+</tbody>
+</table>
+<p>Every agent is created with the operating system <code>MarkLogic</code>, no address, the
+configured group and interval, and a timestamp of the run. The installation itself
+has no agent.</p>
+<h3 id="generated-modules">Generated modules<a class="headerlink" href="#generated-modules" title="Permanent link">¶</a></h3>
+<p>Module names below are the names the plugin writes; <code>module_header</code> is prepended to
+each one. A field the API omits does not remove the module: it is written with an
+empty value. Only the <code>enum</code> and <code>quantity</code> fields of detailed mode produce no module
+at all.</p>
+<h4 id="host-modules">Host modules<a class="headerlink" href="#host-modules" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Type</th>
+<th>When</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error</code></td>
+<td><code>generic_proc</code></td>
+<td>Always</td>
+<td><code>1</code> when the status view reports no critical issue, <code>0</code> when it reports one; the description carries the reported message</td>
+</tr>
+<tr>
+<td><code>online</code></td>
+<td><code>generic_proc</code></td>
+<td>Always</td>
+<td><code>1</code> while the host is online</td>
+</tr>
+<tr>
+<td><code>total-rate</code></td>
+<td><code>generic_data</code></td>
+<td>Always</td>
+<td>Total rate with the unit the API reports</td>
+</tr>
+<tr>
+<td><code>total-load</code></td>
+<td><code>generic_data</code></td>
+<td>Always</td>
+<td>Total load with its unit</td>
+</tr>
+<tr>
+<td><code>deadlock-wait-load</code></td>
+<td><code>generic_data</code></td>
+<td>Summary mode</td>
+<td>Deadlock wait load with its unit</td>
+</tr>
+<tr>
+<td><code>journal-write-rate</code></td>
+<td><code>generic_data</code></td>
+<td>Summary mode</td>
+<td>Journal write rate with its unit; the description repeats the value</td>
+</tr>
+<tr>
+<td><code>secure</code></td>
+<td><code>generic_proc</code></td>
+<td>Detailed mode</td>
+<td><code>1</code> when the host reports a secure state</td>
+</tr>
+<tr>
+<td>One module per detail field</td>
+<td><code>generic_data</code>, <code>generic_data_string</code> or a <code>0</code>/<code>1</code> <code>generic_data</code></td>
+<td>Detailed mode</td>
+<td>The field name; boolean fields are described as <code>0 =&gt; false, 1 =&gt; true</code></td>
+</tr>
+</tbody>
+</table>
+<p>Detailed mode covers the <code>load-detail</code>, <code>rate-detail</code> and <code>status-detail</code> sections of
+the host status view.</p>
+<h4 id="database-modules">Database modules<a class="headerlink" href="#database-modules" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Type</th>
+<th>When</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><code>async_proc</code></td>
+<td>Always</td>
+<td><code>1</code> available, <code>0</code> unavailable, <code>2</code> when the API reports no state, <code>3</code> any other state; the description reads <code>State [&lt;value&gt;]</code></td>
+</tr>
+<tr>
+<td><code>status min-capacity</code></td>
+<td><code>generic_data</code></td>
+<td>When reported</td>
+<td>Default <code>max_warning</code> <code>30</code> and <code>max_critical</code> <code>10</code>; the value is the unit string, see <a href="#known-limitations-of-this-version">Known limitations</a></td>
+</tr>
+<tr>
+<td><code>foreign-forests-lag-exceeded</code></td>
+<td><code>generic_data</code></td>
+<td>When reported</td>
+<td>Default <code>min_warning</code> <code>15</code>, <code>max_warning</code> <code>20</code> and <code>min_critical</code> <code>21</code></td>
+</tr>
+<tr>
+<td><code>replication_pending-lag (&lt;n&gt;)</code></td>
+<td><code>generic_data</code></td>
+<td>Per foreign replica</td>
+<td>Pending lag; default <code>min_warning</code> <code>10</code> and <code>min_critical</code> <code>15</code></td>
+</tr>
+<tr>
+<td><code>replication journal-archive pending-lag (&lt;n&gt;)</code></td>
+<td><code>generic_data</code></td>
+<td>Per journal archive</td>
+<td>Pending lag; same defaults</td>
+</tr>
+<tr>
+<td><code>total-rate</code>, <code>total-load</code></td>
+<td><code>generic_data</code></td>
+<td>Summary mode</td>
+<td>Rate and load with their units</td>
+</tr>
+<tr>
+<td><code>forest-count</code></td>
+<td><code>generic_data</code></td>
+<td>Summary mode</td>
+<td>Number of forests of the database</td>
+</tr>
+<tr>
+<td><code>indexing-state</code>, <code>rebalancing-state</code>, <code>local-disk-failover</code></td>
+<td><code>generic_data</code></td>
+<td>Summary mode</td>
+<td><code>0</code>/<code>1</code> flags, described as <code>0 =&gt; false, 1 =&gt; true</code></td>
+</tr>
+<tr>
+<td><code>device-space</code>, <code>data-size</code></td>
+<td><code>generic_data</code></td>
+<td>Summary mode</td>
+<td>Space with the unit the API reports</td>
+</tr>
+<tr>
+<td>One module per detail field</td>
+<td><code>generic_data</code>, <code>generic_data_string</code> or a <code>0</code>/<code>1</code> <code>generic_data</code></td>
+<td>Detailed mode</td>
+<td>The field name, for every section of the database status view except <code>state</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>&lt;n&gt;</code> numbers the entries of the list from <code>0</code>.</p>
+<h4 id="forest-modules">Forest modules<a class="headerlink" href="#forest-modules" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Type</th>
+<th>When</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><code>generic_proc</code></td>
+<td>Always</td>
+<td><code>1</code> open, available or sync replicating; <code>0</code> closed or unavailable; <code>3</code> an unrecognised state, with the reported value in the description</td>
+</tr>
+<tr>
+<td><code>replication_pending-lag (&lt;n&gt;)</code></td>
+<td><code>generic_data</code></td>
+<td>Per foreign replica</td>
+<td>Pending lag; default <code>min_warning</code> <code>10</code> and <code>min_critical</code> <code>15</code></td>
+</tr>
+<tr>
+<td><code>replication journal-archive pending-lag (&lt;n&gt;)</code></td>
+<td><code>generic_data</code></td>
+<td>Per journal archive</td>
+<td>Pending lag; same defaults</td>
+</tr>
+<tr>
+<td><code>enabled</code></td>
+<td><code>generic_proc</code></td>
+<td>Summary mode</td>
+<td><code>1</code> when the forest is enabled</td>
+</tr>
+<tr>
+<td><code>rebalancing-state</code>, <code>local-disk-failover</code></td>
+<td><code>generic_data</code></td>
+<td>Summary mode</td>
+<td><code>0</code>/<code>1</code> flags</td>
+</tr>
+<tr>
+<td><code>total-rate</code>, <code>total-load</code>, <code>query-read-load</code>, <code>save-write-load</code></td>
+<td><code>generic_data</code></td>
+<td>Summary mode</td>
+<td>Value with its unit, <code>sec/sec</code> when the API omits it</td>
+</tr>
+<tr>
+<td>One module per detail field</td>
+<td><code>generic_data</code>, <code>generic_data_string</code> or a <code>0</code>/<code>1</code> <code>generic_data</code></td>
+<td>Detailed mode</td>
+<td>The field name, for every section of the forest status view except <code>state</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="application-server-modules">Application server modules<a class="headerlink" href="#application-server-modules" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Type</th>
+<th>When</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><code>generic_proc</code></td>
+<td>Always</td>
+<td><code>1</code> open, <code>0</code> closed, <code>3</code> an unrecognised state</td>
+</tr>
+<tr>
+<td><code>port status</code></td>
+<td><code>generic_proc</code></td>
+<td><code>check_server_ports</code> and <code>check_servers</code></td>
+<td><code>1</code> when a TCP connection to <code>ml_server</code> on the port of the application server succeeds; the description reads <code>Port &lt;port&gt;</code></td>
+</tr>
+<tr>
+<td><code>enabled</code></td>
+<td><code>generic_proc</code></td>
+<td>Summary mode</td>
+<td><code>1</code> when the server is enabled</td>
+</tr>
+<tr>
+<td>One module per detail field</td>
+<td><code>generic_data</code>, <code>generic_data_string</code> or a <code>0</code>/<code>1</code> <code>generic_data</code></td>
+<td>Detailed mode</td>
+<td>The field name, for every section of the server status view except <code>state</code></td>
+</tr>
+</tbody>
+</table>
+<p>The port check always connects to <code>ml_server</code>, not to the host that runs the
+application server.</p>
+<h4 id="global-module">Global module<a class="headerlink" href="#global-module" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Type</th>
+<th>When</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Plugin message</code></td>
+<td><code>generic_proc</code></td>
+<td><code>as_agent_plugin</code> enabled</td>
+<td><code>1</code> with the description <code>Execution OK</code>, or <code>0</code> with the collected diagnostics in the description</td>
+</tr>
+</tbody>
+</table>
+<h3 id="addon-identity">Addon identity<a class="headerlink" href="#addon-identity" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Marketplace identifier</td>
+<td><code>pandorafms.marklogic_monitoring</code></td>
+</tr>
+<tr>
+<td>Name</td>
+<td>Marklogic monitoring</td>
+</tr>
+<tr>
+<td>Version</td>
+<td><code>1.0</code></td>
+</tr>
+<tr>
+<td>Marketplace last update</td>
+<td>2025-07-07</td>
+</tr>
+<tr>
+<td>Author</td>
+<td>Pandora FMS</td>
+</tr>
+<tr>
+<td>Availability</td>
+<td>Download limited to licensed users</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
