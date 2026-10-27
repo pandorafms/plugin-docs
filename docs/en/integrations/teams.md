@@ -58,7 +58,7 @@ Next, define the eight necessary fields plus the last two parameters which are c
 
 ![image.png](../assets/images/integrations/teams/hQaimage.png)
 
-The `test-exec` file that accompanies the *Slack connector CLI* contains information that you can use to fill in these fields. Click the **Create** button to save the alert command.
+The `test-exec` file that accompanies the *Microsoft Teams connector CLI* contains information that you can use to fill in these fields. Click the **Create** button to save the alert command.
 
 ## Pandora FMS configuration: creating an alert action
 

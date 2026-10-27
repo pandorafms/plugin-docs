@@ -57,7 +57,7 @@ A continuación defina los ocho campos necesarios más los dos últimos parámet
 
 ![image.png](../assets/images/integrations/teams/hQaimage.png)
 
-El archivo `test-exec` que acompaña el *Slack connector CLI* contiene información que puede utilizar para rellenar estos campos. Haga clic en el botón **Create** para guardar el comando de alerta.
+El archivo `test-exec` que acompaña el *CLI del conector de Microsoft Teams* contiene información que puede utilizar para rellenar estos campos. Haga clic en el botón **Create** para guardar el comando de alerta.
 
 ## Configuración en Pandora FMS: creación de una acción de alerta
 
