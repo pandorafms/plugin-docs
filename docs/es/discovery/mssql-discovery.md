@@ -1,6 +1,6 @@
 # Microsoft SQL Server Discovery
 
-*Última actualización del artículo: 2026-09-21.*
+*Última actualización del artículo: 2026-10-27.*
 
 ## Qué monitoriza
 
@@ -14,7 +14,7 @@ Una tarea de Discovery crea un agente por instancia objetivo por defecto, y un a
 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
-| Versión del plugin `1.16` (`pandorafms.mssql`) | Objetivo documentado | La versión que describe esta página, identificada en la definición del paquete. Consulte [Identidad del plugin](#identidad-del-plugin). |
+| Versión del plugin `1.17` (`pandorafms.mssql`) | Objetivo documentado | La versión que describe esta página, identificada en la definición del paquete. Consulte [Identidad del plugin](#identidad-del-plugin). |
 | Una instancia de Microsoft SQL Server alcanzable | `Requerido` | El plugin establece conexiones remotas con cada instancia monitorizada. Prerrequisito, no una declaración de compatibilidad. |
 | Un login de SQL Server con **VIEW SERVER STATE** | `Requerido` | Necesario para leer las vistas del sistema y las peticiones en ejecución de la instancia. Prerrequisito, no una declaración de compatibilidad. Consulte [Preparar el acceso a SQL Server](#preparar-el-acceso-a-sql-server). |
 | Un login de SQL Server con **SELECT** | `Requerido` | Necesario para ejecutar las consultas personalizadas sobre tablas y vistas. Prerrequisito, no una declaración de compatibilidad. |
@@ -91,7 +91,7 @@ Fuerce la tarea desde **Management → Discovery → Task list** y compruebe el 
 
 4. **Los módulos de base de datos.** Cada base de datos monitorizada lleva sus métricas de estado, disponibilidad, transacciones, registro, copia de seguridad, grupos de archivos y espacio de tablas según los conmutadores habilitados, y los módulos de consultas personalizadas.
 
-Los objetivos a los que no se puede llegar se cuentan en **Targets down** y no generan agentes.
+Los objetivos a los que no se puede llegar se cuentan en **Targets down**, no producen módulos e informan de su error de conexión en el resumen de la tarea. Un objetivo que falla durante el preescaneo de bases de datos se marca como offline y no se vuelve a consultar.
 
 ![Resumen de ejecución de una tarea de Discovery de Microsoft SQL Server.](../assets/images/discovery/mssql-discovery/task-summary.png)
 
@@ -132,6 +132,12 @@ El archivo de configuración y las listas de objetivos contienen la contraseña 
 
 Todos los objetivos están sujetos a **Connection timeout** y **Query timeout**, `5` segundos por defecto. Cuando una consulta falla porque la sesión se ha caído o ha superado el tiempo de espera, el plugin cierra esa sesión, se reconecta y continúa con las comprobaciones restantes, de modo que una consulta lenta o interrumpida no detiene el resto de la tarea. Un tiempo de espera no positivo o no numérico vuelve a `5`.
 
+### Objetivos offline
+
+Cuando **Scan databases** está habilitado, el plugin se conecta a cada objetivo antes de recoger módulos. Si ese preescaneo no alcanza un objetivo, este se marca como offline: se omite la recogida de módulos, se cuenta en **Targets down** y el error de conexión se informa en la información de la tarea y en las trazas de depuración, por ejemplo `[ERROR] [<objetivo>] Target was marked offline during database scan`. La tarea termina igualmente y el resto de objetivos se procesa con normalidad.
+
+Una consulta que falla durante la recogida de módulos devuelve el valor de reserva del módulo, como `0` en una métrica numérica, en lugar de abortar el objetivo, de modo que una consulta no disponible no oculta el resto de resultados.
+
 ### Registros de depuración
 
 Con **Enable debug** habilitado, el plugin escribe trazas JSON en **Debug log directory** (por defecto `/tmp`), un archivo por agente y módulo. Cada registro lleva marca de tiempo y el ID de ejecución del plugin, y cubre el ciclo de vida del plugin, cada conexión y consulta (el texto de la consulta se trunca), el valor y la descripción devueltos por cada módulo generado, y el JSON final de Discovery. Los archivos de traza rotan al alcanzar 2 MB, conservando tres copias de seguridad. La depuración es una ayuda de diagnóstico; déjela desactivada en ejecuciones normales.
@@ -140,7 +146,7 @@ Con **Enable debug** habilitado, el plugin escribe trazas JSON en **Debug log di
 
 | Síntoma | Comprobación |
 | --- | --- |
-| No se crea ningún agente y el objetivo se informa como **Targets down** | Confirme que la instancia es alcanzable desde el servidor de Pandora FMS por su puerto (por defecto `1433`), que el servicio de SQL Server está en marcha y que **User** y **Password** son correctos. |
+| El objetivo se informa como **Targets down** con un error de conexión, como `Target was marked offline during database scan`, y no produce módulos | Confirme que la instancia es alcanzable desde el servidor de Pandora FMS por su puerto (por defecto `1433`), que el servicio de SQL Server está en marcha y que **User** y **Password** son correctos. Un objetivo inalcanzable se omite sin abortar la tarea. |
 | Faltan módulos de instancia y la información de ejecución registra avisos de recuperación | El login necesita **VIEW SERVER STATE** para las vistas del sistema y los contadores de rendimiento de la instancia. Conceda ese permiso. |
 | Faltan módulos de consultas personalizadas | La consulta debe estar entre `check_begin` y `check_end`, usar una sentencia `SELECT`, y el login necesita **SELECT** sobre las tablas o vistas referenciadas. Compruebe la expresión crontab si la consulta está programada. |
 | Una base de datos no se monitoriza | Lístela tras `|` en la cadena objetivo o habilite **Scan databases**. La lista de bases de datos descubiertas se guarda en caché y se refresca solo tras **Re-scan entities file interval**. |
@@ -444,6 +450,6 @@ Se crean cuando el conmutador correspondiente está habilitado:
 | Campo | Valor |
 | --- | --- |
 | App short name | `pandorafms.mssql` |
-| Versión del plugin | `1.16` |
+| Versión del plugin | `1.17` |
 | Tipo | Aplicación de Discovery (`.disco`) |
 | Sección | Discovery → Applications |

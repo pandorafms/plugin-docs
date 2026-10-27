@@ -1,6 +1,6 @@
 # Microsoft SQL Server Discovery
 
-*Article last updated: 2026-09-21.*
+*Article last updated: 2026-10-27.*
 
 ## What it monitors
 
@@ -14,7 +14,7 @@ A Discovery task creates one agent per target instance by default, and one agent
 
 | Scope | State | Evidence |
 | --- | --- | --- |
-| Plugin version `1.16` (`pandorafms.mssql`) | Documented target | The version this page describes, as identified by the package definition. See [Plugin identity](#plugin-identity). |
+| Plugin version `1.17` (`pandorafms.mssql`) | Documented target | The version this page describes, as identified by the package definition. See [Plugin identity](#plugin-identity). |
 | A reachable Microsoft SQL Server instance | `Required` | The plugin establishes remote connections to each monitored instance. Prerequisite, not a compatibility statement. |
 | A SQL Server login with **VIEW SERVER STATE** | `Required` | Needed to read the instance system views and execution requests. Prerequisite, not a compatibility statement. See [Prepare SQL Server access](#prepare-sql-server-access). |
 | A SQL Server login with **SELECT** | `Required` | Needed to run the custom queries against tables and views. Prerequisite, not a compatibility statement. |
@@ -91,7 +91,7 @@ Force the task from **Management → Discovery → Task list** and check the res
 
 4. **The database modules.** Each monitored database carries its state, availability, transaction, log, backup, filegroup and table-space metrics according to the enabled toggles, and the custom query modules.
 
-Targets that cannot be reached are counted in **Targets down** and do not produce agents.
+Targets that cannot be reached are counted in **Targets down**, produce no modules, and report their connection error in the task summary. A target that fails during the database pre-scan is marked offline and is not queried again.
 
 ![Microsoft SQL Server Discovery task execution summary.](../assets/images/discovery/mssql-discovery/task-summary.png)
 
@@ -132,6 +132,12 @@ The configuration file and the target lists hold the SQL Server password in plai
 
 Every target is subject to **Connection timeout** and **Query timeout**, both `5` seconds by default. When a query fails because the session was dropped or timed out, the plugin closes that session, reconnects and continues with the remaining checks, so one slow or interrupted query does not stop the rest of the task. A non-positive or non-numeric timeout falls back to `5`.
 
+### Offline targets
+
+When **Scan databases** is enabled, the plugin connects to each target before collecting modules. If that pre-scan cannot reach a target, the target is marked offline: module collection is skipped for it, it is counted in **Targets down**, and the connection error is reported in the task information and the debug traces, for example `[ERROR] [<target>] Target was marked offline during database scan`. The task still completes and the remaining targets are processed normally.
+
+A query that fails during module collection returns the module's fallback value, such as `0` for a numeric metric, instead of aborting the target, so one unavailable query does not hide the rest of the results.
+
 ### Debug logs
 
 With **Enable debug** on, the plugin writes JSON traces into **Debug log directory** (default `/tmp`), one file per agent and module. Each record is timestamped and carries the plugin execution ID, and covers the plugin lifecycle, every connection and query (the query text is truncated), the value and description returned by each generated module, and the final Discovery JSON. Trace files rotate once they reach 2 MB, keeping three backups. Debug logging is a diagnostic aid; leave it off for normal runs.
@@ -140,7 +146,7 @@ With **Enable debug** on, the plugin writes JSON traces into **Debug log directo
 
 | Symptom | Check |
 | --- | --- |
-| No agent is created and the target is reported **Targets down** | Confirm the instance is reachable from the Pandora FMS server on its port (default `1433`), that the SQL Server service is running, and that the **User** and **Password** are correct. |
+| The target is reported **Targets down** with a connection error, such as `Target was marked offline during database scan`, and produces no modules | Confirm the instance is reachable from the Pandora FMS server on its port (default `1433`), that the SQL Server service is running, and that the **User** and **Password** are correct. An unreachable target is skipped without aborting the task. |
 | Instance modules are missing and the execution information logs retrieval warnings | The login needs **VIEW SERVER STATE** for the instance system views and performance counters. Grant that permission. |
 | Custom query modules are missing | The query must be inside `check_begin`/`check_end`, use a `SELECT` statement, and the login needs **SELECT** on the referenced tables or views. Check the crontab expression if the query is scheduled. |
 | A database is not monitored | Either list it after `|` in the target string or enable **Scan databases**. The discovered database list is cached and refreshed only after **Re-scan entities file interval**. |
@@ -444,6 +450,6 @@ Created when the matching toggle is enabled:
 | Field | Value |
 | --- | --- |
 | App short name | `pandorafms.mssql` |
-| Plugin version | `1.16` |
+| Plugin version | `1.17` |
 | Type | Discovery application (`.disco`) |
 | Section | Discovery → Applications |
