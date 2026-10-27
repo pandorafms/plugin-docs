@@ -1,6 +1,6 @@
 # Proxmox Discovery
 
-*Article last updated: 2026-09-28.*
+*Article last updated: 2026-10-27.*
 
 ## What it monitors
 
@@ -84,7 +84,7 @@ Resource categories, the entities list and the re-scan behaviour:
 - **Enable entities list re-scan interval** rebuilds the resource sections of the entities list after the configured interval. See [Entities list file](#entities-list-file) for the consequences.
 - **Re-scan entities list interval** is how often the list is rebuilt. It is only shown when **Enable entities list re-scan interval** is on.
 
-The wizard does not expose the path of the entities list. The plugin keeps it in a file specific to the task under Pandora's temporary directory and reads it on every run. See [Entities list file](#entities-list-file).
+The wizard does not expose the path of the entities list. The plugin keeps it in a file specific to the task under Pandora's temporary directory and reads it on every run. Edit that file to choose which individual resources are monitored and to rename their agents. See [Entities list file](#entities-list-file).
 
 ![Proxmox detailed step](../assets/images/discovery/proxmox/proxmox-detailed.png)
 
@@ -145,7 +145,7 @@ Rename
 web-prod TO Production web
 ```
 
-Remove a resource line to exclude it from monitoring. Changes take effect on the next task execution. See [Entities list file](#entities-list-file) in the reference for the exact semantics and the re-scan behaviour.
+Remove a resource line to exclude it from monitoring. Changes take effect on the next task execution. The list is how this plugin selects individual resources and renames their agents; see [Entities list file](#entities-list-file) in the reference for the exact semantics, including what happens when a resource is deleted in Proxmox VE, and the re-scan behaviour.
 
 ### Modules by agent
 
@@ -206,6 +206,8 @@ All keys are documented in [Configuration file](#configuration-file). When no `t
 | Token authentication is not used | Fill both **Token Name** and **Token Password**. With only one of them set, the plugin falls back to the user and password. |
 | No agents are generated at all | Confirm the credentials, that the Proxmox cluster has the resources you expect, and that the relevant **Scan** options are enabled. |
 | Expected resources are missing | Review the entities list file: a removed line excludes the resource, and a disabled category is not written when the list is first built. |
+| An agent is reported as critical after a resource is deleted in Proxmox VE | The resource line is still in the entities list. Delete the line, or enable **Enable entities list re-scan interval** so the next rebuild drops resources that no longer exist. |
+| A manually excluded resource is monitored again after a re-scan | A rebuild restores lines for resources that still exist in Proxmox VE. To keep manual exclusions, leave the re-scan interval off or remove the line again after the rebuild. |
 | A renamed agent is not updated | Use the original alias, the resource name or the resource identifier in the rename rule, and confirm the rule is under the `Rename` section. |
 | Storage agents are missing for a node | The plugin skips a node whose node storage list does not match the cluster storage list. Confirm the node reports its storages correctly. |
 | New agents appeared after upgrading the plugin | This version changed the internal agent identity: earlier versions built it from the display name. The first run of this version creates new agents instead of updating the ones created by earlier versions. Review alerts and dashboards that refer to the old agents before removing them. |
@@ -295,6 +297,14 @@ The console API parameters are used to create the `proxmox_device` custom field 
 ### Entities list file
 
 The entities list is a plain text file that selects and renames resources. The plugin creates it on the first run and reads it on every run. In a Discovery task the path is fixed to a task-specific file under Pandora's temporary directory and is not configurable from the wizard; only a manual execution can set it with the `entities_list` key.
+
+In this plugin, the entities list is the mechanism that decides which discovered resources are monitored and how their agents are named. Use it to:
+
+- exclude an individual resource, such as one virtual machine, from monitoring without disabling its whole scan category;
+- keep a selection of monitored resources between task runs, because the file is read on every run;
+- rename the visible agent aliases with `Rename` rules.
+
+If a resource is removed from Proxmox VE but its line remains in the file, the plugin stops collecting it on the next run and its agent can be reported as critical. The line is removed only when the list is rebuilt after the re-scan interval, which must be enabled for this to happen; you can also delete the line manually. A rebuild also restores lines you removed for resources that still exist in Proxmox VE, so review the file after a re-scan.
 
 | Section | Entry format | Example |
 | --- | --- | --- |

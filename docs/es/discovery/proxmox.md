@@ -1,6 +1,6 @@
 # Discovery de Proxmox
 
-*Última actualización del artículo: 2026-09-28.*
+*Última actualización del artículo: 2026-10-27.*
 
 ## Qué monitoriza
 
@@ -84,7 +84,7 @@ Categorías de recursos, la lista de entidades y el comportamiento del reescaneo
 - **Enable entities list re-scan interval** reconstruye las secciones de recursos de la lista de entidades tras el intervalo configurado. Consulta [Archivo de lista de entidades](#archivo-de-lista-de-entidades) para conocer sus consecuencias.
 - **Re-scan entities list interval** es la frecuencia con la que se reconstruye la lista. Solo se muestra cuando **Enable entities list re-scan interval** está activado.
 
-El asistente no expone la ruta de la lista de entidades. El plugin la mantiene en un archivo específico de la tarea dentro del directorio temporal de Pandora y la lee en cada ejecución. Consulta [Archivo de lista de entidades](#archivo-de-lista-de-entidades).
+El asistente no expone la ruta de la lista de entidades. El plugin la mantiene en un archivo específico de la tarea dentro del directorio temporal de Pandora y la lee en cada ejecución. Edita ese archivo para elegir qué recursos concretos se monitorizan y para renombrar sus agentes. Consulta [Archivo de lista de entidades](#archivo-de-lista-de-entidades).
 
 ![Paso Proxmox detailed del asistente de Discovery](../assets/images/discovery/proxmox/proxmox-detailed.png)
 
@@ -145,7 +145,7 @@ Rename
 web-prod TO Production web
 ```
 
-Elimina una línea de recurso para excluirlo de la monitorización. Los cambios surten efecto en la siguiente ejecución de la tarea. Consulta [Archivo de lista de entidades](#archivo-de-lista-de-entidades) en la referencia para conocer la semántica exacta y el comportamiento del reescaneo.
+Elimina una línea de recurso para excluirlo de la monitorización. Los cambios surten efecto en la siguiente ejecución de la tarea. La lista es el mecanismo de este plugin para seleccionar recursos concretos y renombrar sus agentes; consulta [Archivo de lista de entidades](#archivo-de-lista-de-entidades) en la referencia para conocer la semántica exacta, incluido qué ocurre cuando se elimina un recurso en Proxmox VE, y el comportamiento del reescaneo.
 
 ### Módulos por agente
 
@@ -206,6 +206,8 @@ Todas las claves se documentan en [Archivo de configuración](#archivo-de-config
 | No se usa la autenticación por token | Rellena **Token Name** y **Token Password**. Con solo uno de ellos informado, el plugin recurre al usuario y la contraseña. |
 | No se genera ningún agente | Confirma las credenciales, que el clúster de Proxmox tiene los recursos que esperas y que las opciones **Scan** correspondientes están habilitadas. |
 | Faltan recursos esperados | Revisa el archivo de lista de entidades: una línea eliminada excluye el recurso, y una categoría deshabilitada no se escribe cuando la lista se crea por primera vez. |
+| Un agente aparece como crítico después de eliminar un recurso en Proxmox VE | La línea del recurso sigue en la lista de entidades. Elimina la línea o habilita **Enable entities list re-scan interval** para que la siguiente reconstrucción descarte los recursos que ya no existen. |
+| Un recurso excluido manualmente vuelve a monitorizarse tras un reescaneo | Una reconstrucción restaura las líneas de recursos que siguen existiendo en Proxmox VE. Para mantener las exclusiones manuales, deja el intervalo de reescaneo desactivado o vuelve a eliminar la línea después de la reconstrucción. |
 | Un agente renombrado no se actualiza | Usa en la regla de renombrado el alias original, el nombre del recurso o el identificador del recurso, y confirma que la regla está en la sección `Rename`. |
 | Faltan agentes de almacenamiento en un nodo | El plugin omite un nodo cuya lista de almacenamientos no coincide con la lista del clúster. Confirma que el nodo informa correctamente de sus almacenamientos. |
 | Aparecieron agentes nuevos tras actualizar el plugin | Esta versión cambió la identidad interna de los agentes: las versiones anteriores la construían a partir del nombre visible. La primera ejecución de esta versión crea agentes nuevos en lugar de actualizar los creados por versiones anteriores. Revisa las alertas y paneles que hagan referencia a los agentes antiguos antes de eliminarlos. |
@@ -295,6 +297,14 @@ Los parámetros de la API de la consola se usan para crear el campo personalizad
 ### Archivo de lista de entidades
 
 La lista de entidades es un archivo de texto plano que selecciona y renombra recursos. El plugin lo crea en la primera ejecución y lo lee en cada ejecución. En una tarea de Discovery la ruta es fija, un archivo específico de la tarea dentro del directorio temporal de Pandora, y no se configura desde el asistente; solo una ejecución manual puede fijarla con la clave `entities_list`.
+
+En este plugin, la lista de entidades es el mecanismo que decide qué recursos descubiertos se monitorizan y cómo se nombran sus agentes. Úsala para:
+
+- excluir un recurso concreto, por ejemplo una máquina virtual, de la monitorización sin deshabilitar toda su categoría de escaneo;
+- mantener una selección de recursos monitorizados entre ejecuciones de la tarea, porque el archivo se lee en cada ejecución;
+- renombrar los alias visibles de los agentes con reglas `Rename`.
+
+Si eliminas un recurso de Proxmox VE pero su línea permanece en el archivo, el plugin deja de recopilarlo en la siguiente ejecución y su agente puede aparecer como crítico. La línea solo se elimina cuando la lista se reconstruye tras el intervalo de reescaneo, que debe estar habilitado para que esto ocurra; también puedes borrar la línea manualmente. Una reconstrucción además restaura las líneas que hayas eliminado de recursos que siguen existiendo en Proxmox VE, así que revisa el archivo después de un reescaneo.
 
 | Sección | Formato de entrada | Ejemplo |
 | --- | --- | --- |
