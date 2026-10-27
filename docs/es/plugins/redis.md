@@ -1,6 +1,9 @@
 # Redis monitoring plugin
 
-*Última actualización del artículo: 2026-10-26.*
+*Última actualización del artículo: 2026-10-27.*
+
+!!! warning "Se recomienda la integración de Discovery"
+    Para instalaciones nuevas use [Redis Discovery](../discovery/redis.md), que es la integración recomendada para este servicio. Este plugin es la ruta heredada.
 
 ## Qué hace
 

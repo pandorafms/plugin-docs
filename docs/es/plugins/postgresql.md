@@ -1,6 +1,9 @@
 # Plugin de monitorización de PostgreSQL
 
-*Última actualización del artículo: 2026-10-26.*
+*Última actualización del artículo: 2026-10-27.*
+
+!!! warning "Se recomienda la integración de Discovery"
+    Para instalaciones nuevas use [PostgreSQL Discovery](../discovery/postgresql.md), que es la integración recomendada para este servicio. Este plugin es la ruta heredada. La entrada del Marketplace indica que este addon ya no recibe mantenimiento activo.
 
 <!-- DRAFT: Datos verificados contra la definición del paquete del addon y la superficie documentada del ejecutable distribuido. No se realizó ninguna ejecución real, conexión a base de datos ni captura de consola para esta página. -->
 

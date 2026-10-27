@@ -1,6 +1,9 @@
 # Pandora Openshift monitoring plugin
 
-*Article last updated: 2026-10-26.*
+*Article last updated: 2026-10-27.*
+
+!!! warning "Discovery integration recommended"
+    For new installations use [OpenShift Discovery](../discovery/openshift.md), which is the recommended integration for this service. This plugin is the legacy path. The Marketplace entry advises exploring alternative plugins in the library.
 
 ## What it does
 

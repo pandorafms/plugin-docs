@@ -1,9 +1,9 @@
 # Plugin de monitorización Pandora Azure Storage
 
-*Última actualización del artículo: 2026-10-26.*
+*Última actualización del artículo: 2026-10-27.*
 
 !!! warning "Se recomienda la integración de Discovery"
-    Para instalaciones nuevas utilice [Azure Storage Discovery](../discovery/azure-storage.md), que es la integración recomendada para este servicio. Este plugin es la vía heredada.
+    Para instalaciones nuevas use [Azure Storage Discovery](../discovery/azure-storage.md), que es la integración recomendada para este servicio. Este plugin es la ruta heredada.
 
 ## Qué hace
 

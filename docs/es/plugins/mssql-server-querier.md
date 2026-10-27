@@ -1,6 +1,9 @@
 # MSSQL Server Querier Tool
 
-*Última actualización del artículo: 2026-10-26.*
+*Última actualización del artículo: 2026-10-27.*
+
+!!! warning "Se recomienda la integración de Discovery"
+    Esta página documenta una herramienta de consulta. Para monitorizar SQL Server use [Microsoft SQL Server Discovery](../discovery/mssql-discovery.md), que es la integración recomendada para este servicio.
 
 ## Qué hace
 

@@ -1,6 +1,9 @@
 # Plugin SAP HANA Database
 
-*Última actualización del artículo: 2026-10-26.*
+*Última actualización del artículo: 2026-10-27.*
+
+!!! warning "Se recomienda la integración de Discovery"
+    Para instalaciones nuevas use [SAP HANA Discovery](../discovery/sap-hana.md), que es la integración recomendada para este servicio. Este plugin es la ruta heredada.
 
 ## Qué hace
 

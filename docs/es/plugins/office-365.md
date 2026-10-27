@@ -1,6 +1,9 @@
 # Pandora Office 365 Monitoring
 
-*Última actualización del artículo: 2026-10-26.*
+*Última actualización del artículo: 2026-10-27.*
+
+!!! warning "Se recomienda la integración de Discovery"
+    Para instalaciones nuevas use [Office 365 Discovery](../discovery/office-365.md), que es la integración recomendada para este servicio. Este plugin es la ruta heredada. La entrada del Marketplace indica que este addon ya no recibe mantenimiento activo.
 
 ## Qué hace
 
