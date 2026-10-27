@@ -458,7 +458,7 @@ el mismo perfil está asignado a un usuario en varios grupos, cada asignación t
 ### Políticas, colecciones y servicios
 
 `policy`, `collection` y `service` agrupan parte de sus comandos en **grupos hijos**, y también lo
-hacen `agent`, `module`, `log`, `pandora-ai-audit` y `rmm`. La sintaxis es
+hacen `agent`, `module`, `log`, `pandora-ai-audit`, `rmm` y `notification`. La sintaxis es
 `<entidad> <grupo> <verbo> <ids...>`, y `pandora-cli <entidad> --help` enumera los grupos de una
 entidad:
 
@@ -688,6 +688,40 @@ Los campos que contienen arrays, como `inputs` o `idAgentsRmm`, necesitan `--fro
 y las programaciones de una rutina no tienen `delete`: modifíquelos con `update` y
 `--set pendingDelete=true` para marcarlos para su eliminación.
 
+### Notificaciones, correo, eventos SIEM y tareas de Pandora AI
+
+Estas entidades cubren el sistema de notificaciones de la consola, el transporte de correo, los
+eventos SIEM y las tareas programadas de Pandora AI. Siguen la forma habitual de los comandos; no se
+han verificado contra una consola en esta versión.
+
+- **`notification`** gestiona las notificaciones de la consola (`message`), las fuentes de
+  notificación (`source`, solo lectura) y las preferencias de notificación de cada usuario
+  (`source-user`).
+- **`email send`** envía un correo mediante el transporte de correo de la consola, y `email config`
+  muestra la configuración del transporte sin credenciales. `user notify` envía un correo a un
+  usuario.
+- **`siem-event`** es de solo lectura. Busca los eventos SIEM que el usuario puede ver y necesita un
+  backend SIEM configurado en la consola. Sin `startDate` y `endDate` abarca las últimas 24 horas.
+- **`ai-task`** gestiona las tareas programadas de Pandora AI. `periodicity` es `hourly`, `daily`,
+  `weekly`, `monthly` o `yearly`, y `notifySuccess` y `notifyError` son `never`, `on_request` o
+  `always`. `ai-notify send` notifica al propietario de una tarea.
+
+```bash
+pandora-cli notification message list --set idUser=admin --size 20
+pandora-cli notification message create --set idUser=admin --set subject='Copia terminada' --set message='La copia nocturna ha terminado'
+pandora-cli notification source-user update 3 admin --set email=false
+
+pandora-cli email send --set idUser=admin --set subject='Informe' --set body='El informe está listo'
+pandora-cli user notify admin --set subject='Informe' --set body='El informe está listo'
+
+pandora-cli siem-event list --set severity=high --set startDate=2026-10-01T00:00:00Z
+pandora-cli siem-event aggregate --set groupBy=severity --set size=10
+
+pandora-cli ai-task list
+pandora-cli ai-task enable 4 --set enabled=false
+pandora-cli ai-task run 4
+```
+
 ### Inspeccionar la API de la consola
 
 `spec` lee la descripción de la API que la propia consola publica sobre sí misma, de modo que puede
@@ -854,6 +888,8 @@ instalada.
 | `agent` | Agentes de monitorización | `list`, `get`, `create`, `update`, `delete` + 6 más (`status` y los grupos `collection`, `public-ip` y `policy`) |
 | `agent-extended-data` | Datos extendidos asociados a agentes | `list`, `get`, `create`, `update`, `delete` |
 | `agent-secondary-group` | Grupos secundarios de un agente | `list`, `create`, `delete` |
+| `ai-notify` | Notificar al propietario de una tarea programada de Pandora AI | `send` |
+| `ai-task` | Tareas programadas de Pandora AI | `list`, `get`, `create`, `update`, `delete` + 2 más (`enable` y `run`) |
 | `alert-action` | Acciones de alerta | `list`, `get`, `create`, `update`, `delete` + 1 más |
 | `alert-calendar` | Calendarios de alerta | `list`, `get`, `create`, `update`, `delete` |
 | `alert-command` | Comandos de alerta | `list`, `get`, `create`, `update`, `delete` + 1 más |
@@ -865,6 +901,7 @@ instalada.
 | `dashboard` | Dashboards | `list`, `get`, `create`, `update`, `delete` |
 | `dashboard-widget` | Widgets colocados en un dashboard | `list`, `get`, `create`, `update`, `delete` |
 | `data-translation` | Definiciones de traducción de datos | `list`, `get`, `create`, `update`, `delete` |
+| `email` | Envío de correo mediante el transporte de correo de la consola | `send`, `config` |
 | `event` | Eventos de monitorización | `list`, `get`, `create`, `update`, `delete` + 12 más |
 | `event-alert` | Alertas de evento | `list`, `get`, `create`, `update`, `delete` |
 | `event-alert-action` | Acciones de una alerta de evento | `list`, `get`, `create`, `update`, `delete` |
@@ -882,6 +919,7 @@ instalada.
 | `module-tag` | Etiquetas asociadas a un módulo de agente | `list`, `get`, `create`, `delete` |
 | `module-type` | Tipos de módulo | `list`, `get` |
 | `monitoring` | Envío de datos de monitorización | `create` |
+| `notification` | Notificaciones de la consola, fuentes de notificación y preferencias por usuario | 12 comandos en los grupos `message`, `source` y `source-user` |
 | `pandora-ai-audit` | Auditoría de las conversaciones de Pandora AI (solo lectura) | `message list`, `session list`, `session get`, `user list` |
 | `pandora-itsm-inventory` | Inventario de Pandora ITSM | `list`, `get` |
 | `policy` | Políticas aplicadas a agentes | `list`, `get`, `create`, `update`, `delete` + 75 más (`copy`, `purge` y los grupos `agent`, `alert`, `alert-action`, `collection`, `group`, `log-module`, `module`, `plugin`, `queue`, `external-alert`, `external-alert-action`, `fim` y `linking`) |
@@ -896,11 +934,12 @@ instalada.
 | `report-design-template` | Plantillas de un diseño de informe | `list`, `get`, `create`, `update`, `delete` |
 | `rmm` | Agentes, trabajos por lotes y colas de monitorización y gestión remotas (RMM) | 74 comandos en los grupos `agent`, `batch`, `pending-software`, `queue`, `resource`, `routine`, `rule`, `schedule`, `script` y `settings` |
 | `service` | Servicios | `list`, `get`, `create`, `update`, `delete` + 5 más (el grupo `element`) |
+| `siem-event` | Eventos SIEM que el usuario puede ver (solo lectura) | `list`, `get`, `aggregate` |
 | `siem-group` | Grupos SIEM | `list`, `get`, `create`, `update`, `delete` |
 | `siem-rule` | Reglas SIEM | `list`, `get`, `create`, `update`, `delete` + 4 más |
 | `tag` | Etiquetas de módulos | `list`, `get`, `create`, `update`, `delete` |
 | `token` | Tokens de la API | `list`, `get`, `create`, `update`, `delete` |
-| `user` | Usuarios de la consola y sus perfiles asignados | `list`, `get`, `create`, `update`, `delete` + 5 más |
+| `user` | Usuarios de la consola y sus perfiles asignados | `list`, `get`, `create`, `update`, `delete` + 6 más |
 | `widget` | Widgets de dashboard | `list`, `get` |
 
 Las entidades que conoce un ejecutable son las de la versión de la API con la que se construyó. Una
