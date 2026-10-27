@@ -1,0 +1,3137 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pandorafms.com/docs/integrations/latest/discovery/rabbitmq-discovery/">
+      
+      
+        <link rel="prev" href="../postgresql/">
+      
+      
+        <link rel="next" href="../selenium-4/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../../es/discovery/rabbitmq-discovery/" hreflang="es">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>RabbitMQ Discovery - Pandora FMS Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rabbitmq-discovery" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pandora FMS Guides" class="md-header__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pandora FMS Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RabbitMQ Discovery
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/discovery/rabbitmq-discovery/" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pandora FMS Guides" class="md-nav__button md-logo" aria-label="Pandora FMS Guides" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Pandora FMS Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pandorafms/plugin-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apache-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-application-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Application Gateway Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Load Balancer Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-microsoft-compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Microsoft Compute Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure SQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Storage Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mssql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SQL Server Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mysql-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NGINX Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenShift Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oracle Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playwright/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playwright
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-monitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it monitors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prepare-rabbitmq-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare RabbitMQ access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-the-discovery-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure the Discovery task
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-the-first-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify the first run
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understand the results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agents-and-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents and identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modules-by-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modules by agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbitmq-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RabbitMQ Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshoot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agents-and-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents and filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metrics-and-module-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics and module filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#targets-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Targets file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-filter-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module filter files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-modules-and-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated modules and agents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plugin identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../selenium-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selenium 4 Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../veeam-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam Backup Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/google-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Chat integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/teams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft Teams integration (Workflows)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegram integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/advanced-log-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Log Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/autodiscover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autodiscover
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/dynamic-snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic SNMP plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/kvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/oculix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oculix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/rabbitmq-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RabbitMQ Local monitoring plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/snmp-bandwidth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network bandwidth SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extras/how-to-document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to document
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#what-it-monitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it monitors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prepare">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prepare-rabbitmq-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare RabbitMQ access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the plugin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-the-discovery-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure the Discovery task
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-the-first-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify the first run
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understand the results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agents-and-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents and identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modules-by-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modules by agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbitmq-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RabbitMQ Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshoot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agents-and-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents and filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metrics-and-module-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics and module filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#targets-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Targets file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-filter-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module filter files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-line execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generated-modules-and-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated modules and agents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plugin identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="rabbitmq-discovery">RabbitMQ Discovery<a class="headerlink" href="#rabbitmq-discovery" title="Permanent link">¶</a></h1>
+<p><em>Article last updated: 2026-10-26.</em></p>
+<h2 id="what-it-monitors">What it monitors<a class="headerlink" href="#what-it-monitors" title="Permanent link">¶</a></h2>
+<p>The RabbitMQ Discovery plugin connects to one or more RabbitMQ brokers through their Management API and turns the state and performance of the cluster into Pandora FMS agents and modules. It reads a list of targets given as Management API URLs, authenticates with HTTP Basic credentials, and collects cluster, node, exchange, connection, queue, channel and virtual host data through the read endpoints of the API.</p>
+<p>A Discovery task creates one agent per target. Every metric group is optional and controlled from the task, so the same plugin can collect only the cluster overview or the full inventory of queues, channels and virtual hosts.</p>
+<p>A companion console extension, <strong>RabbitMQ Dashboard</strong>, presents the generated agents and modules in a single monitoring view.</p>
+<h2 id="prepare">Prepare<a class="headerlink" href="#prepare" title="Permanent link">¶</a></h2>
+<h3 id="compatibility">Compatibility<a class="headerlink" href="#compatibility" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>State</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plugin version <code>1.0</code> (<code>pandorafms.rabbitmq.discovery</code>)</td>
+<td>Documented target</td>
+<td>The version this page describes, as identified by the package definition. See <a href="#plugin-identity">Plugin identity</a>.</td>
+</tr>
+<tr>
+<td>A reachable RabbitMQ Management API endpoint</td>
+<td><code>Required</code></td>
+<td>The plugin establishes remote connections to each target and queries its <code>/api</code> endpoints. Prerequisite, not a compatibility statement.</td>
+</tr>
+<tr>
+<td>The RabbitMQ management plugin enabled on each broker</td>
+<td><code>Required</code></td>
+<td>The collected data is served by the Management API. Without it the endpoints are not available. Prerequisite, not a compatibility statement.</td>
+</tr>
+<tr>
+<td>A RabbitMQ user able to read the Management API</td>
+<td><code>Required</code></td>
+<td>The plugin authenticates with HTTP Basic credentials on every request. Prerequisite, not a compatibility statement. See <a href="#prepare-rabbitmq-access">Prepare RabbitMQ access</a>.</td>
+</tr>
+<tr>
+<td>A specific RabbitMQ version</td>
+<td><code>Not validated</code></td>
+<td>No published test record establishes compatibility with a concrete RabbitMQ release.</td>
+</tr>
+<tr>
+<td>A specific Pandora FMS version</td>
+<td><code>Not validated</code></td>
+<td>No published test record establishes console or server version compatibility.</td>
+</tr>
+<tr>
+<td>A specific host operating system</td>
+<td><code>Not validated</code></td>
+<td>No published test record establishes operating-system compatibility for the machine that runs the plugin.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>A Pandora FMS server with Discovery enabled</strong> to run the task, and a console to define it.</li>
+<li><strong>The RabbitMQ management plugin enabled</strong> on every broker to monitor, so the Management API is served.</li>
+<li><strong>Connectivity</strong> between the Pandora FMS server and each broker's Management API (default port <code>15672</code> for HTTP, <code>443</code> for HTTPS).</li>
+<li><strong>A RabbitMQ user with read access to the Management API.</strong> See <a href="#prepare-rabbitmq-access">Prepare RabbitMQ access</a>.</li>
+<li><strong>A target agent group and a monitoring interval</strong> for the generated agents, taken from the Discovery task.</li>
+</ol>
+<p>The plugin is distributed as a Pandora FMS Discovery application (<code>.disco</code> package) with its Python dependencies bundled, so no extra Python libraries have to be installed on the Discovery server.</p>
+<h3 id="prepare-rabbitmq-access">Prepare RabbitMQ access<a class="headerlink" href="#prepare-rabbitmq-access" title="Permanent link">¶</a></h3>
+<p>The plugin authenticates against the Management API with HTTP Basic and only issues read (<code>GET</code>) requests, so the account only needs access to the endpoints the task queries.</p>
+<ul>
+<li><strong>Enable the management plugin</strong> on each broker and confirm the Management API responds, for example <code>https://&lt;TARGET_HOST&gt;:15672/api/overview</code>.</li>
+<li><strong>Create a dedicated user</strong> and grant it the least privileges that allow reading the Management API of the virtual hosts being monitored. No management write access is required.</li>
+<li><strong>Prefer HTTPS.</strong> Over plain HTTP the Basic credentials travel unencrypted. To use HTTPS with a private certificate authority, set <strong>CA file</strong> to the PEM bundle on the Pandora server.</li>
+</ul>
+<p>The plugin never publishes, consumes or changes RabbitMQ resources; it only reads the API.</p>
+<h3 id="install-the-plugin">Install the plugin<a class="headerlink" href="#install-the-plugin" title="Permanent link">¶</a></h3>
+<p>Load the <code>.disco</code> package from <strong>Management → Discovery → Extension manager</strong> (the <em>Manage disco packages</em> view). Once loaded, <strong>RabbitMQ</strong> appears under the <strong>Applications</strong> category of the Discovery wizard.</p>
+<p>The companion <strong>RabbitMQ Dashboard</strong> is a console extension. Install it as a console extension package; once installed it adds the <strong>RabbitMQ Dashboard</strong> entry to the <strong>Monitoring</strong> menu. It requires the agents generated by this plugin to exist.</p>
+<h2 id="configure-the-discovery-task">Configure the Discovery task<a class="headerlink" href="#configure-the-discovery-task" title="Permanent link">¶</a></h2>
+<p>Create the task from <strong>Management → Discovery → Applications → RabbitMQ</strong>. The generic first step defines the task; the package adds <strong>Connection</strong>, <strong>Agents and filters</strong> and <strong>Metrics and module filters</strong>. Every field is documented in <a href="#task-parameters">Task parameters</a>.</p>
+<p><strong>Step 1 — Task definition.</strong> Name, agent group, server and interval. The group ID and the interval are passed to the plugin and applied to every generated agent.</p>
+<p><strong>Step 2 — Connection.</strong> The targets to connect to and how the API is reached:</p>
+<ul>
+<li><strong>Targets</strong> is the list of Management API URLs, one per line or comma-separated. Each entry is a plain URL, for example <code>http://172.17.0.2:15672</code>, or a JSON object with <code>url</code>, <code>user</code>, <code>password</code> and <code>alias</code>. Lines starting with <code>#</code> are comments. See <a href="#targets-file">Targets file</a>.</li>
+<li><strong>Default user</strong> and <strong>Default password</strong> apply to targets that do not carry their own credentials inline, and to plain URL targets.</li>
+<li><strong>Request timeout seconds</strong> and <strong>HTTP retries</strong> tune how the API is called.</li>
+<li><strong>Verify TLS certificates</strong> validates HTTPS certificates and hostnames, and <strong>CA file</strong> points to an optional PEM bundle on the Pandora server.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/rabbitmq-discovery/connection-step.png" data-desc-position="bottom"><img alt="RabbitMQ Discovery task Connection step: targets, credentials and TLS options." src="../../assets/images/discovery/rabbitmq-discovery/connection-step.png"></a></p>
+<p><strong>Step 3 — Agents and filters.</strong> Agent naming and the resource filters:</p>
+<ul>
+<li><strong>Agent alias prefix</strong> is prepended to the agent display alias. The agent identity is not affected.</li>
+<li><strong>Module prefix</strong> is prepended to every generated module name.</li>
+<li><strong>Agent autodisable mode</strong> creates the generated agents in Pandora FMS mode <code>2</code>, which disables an agent when all its modules become unknown.</li>
+<li><strong>Queue name regexp</strong> and <strong>Vhost name regexp</strong> restrict which queues, exchanges and virtual hosts are collected. Empty matches all.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/rabbitmq-discovery/agents-filters-step.png" data-desc-position="bottom"><img alt="RabbitMQ Discovery task Agents and filters step." src="../../assets/images/discovery/rabbitmq-discovery/agents-filters-step.png"></a></p>
+<p><strong>Step 4 — Metrics and module filters.</strong> Which metric groups are collected and which modules are kept:</p>
+<ul>
+<li>The twelve toggles enable the cluster overview, the global message rates, the node metrics and resources, the node IO counters, the queue metrics and rates, the exchanges, the connection summary and per-connection detail, the channels and the virtual hosts.</li>
+<li><strong>Modules allow regexp</strong> and <strong>Modules deny regexp</strong> filter the final module names. The deny list takes priority over the allow list.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/rabbitmq-discovery/metrics-step.png" data-desc-position="bottom"><img alt="RabbitMQ Discovery task Metrics and module filters step." src="../../assets/images/discovery/rabbitmq-discovery/metrics-step.png"></a></p>
+<h2 id="verify-the-first-run">Verify the first run<a class="headerlink" href="#verify-the-first-run" title="Permanent link">¶</a></h2>
+<p>Force the task from <strong>Management → Discovery → Task list</strong> and check the result in this order.</p>
+<ol>
+<li>
+<p><strong>The task summary</strong> reports <code>resources_discovered</code>, <code>resources_vanished</code>, <code>modules</code> and <code>errors</code>. <code>resources_discovered</code> is the number of targets in the task, whether they are reachable or not; <code>errors</code> counts the API endpoints that failed during the run. The example below shows a single target discovered with <code>141</code> modules and no errors.</p>
+</li>
+<li>
+<p><strong>The agent.</strong> One agent appears per target, named <code>rabbitmq-&lt;identifier&gt;</code> with the alias taken from the target URL or its <code>alias</code>. An unreachable target still produces an agent whose <code>Availability</code> module reports <code>0</code>, and the connection or timeout error is reported in the execution information.</p>
+</li>
+<li>
+<p><strong>The modules.</strong> The agent carries the <code>Availability</code> module plus the metric groups enabled in step 4, according to what the broker reports.</p>
+</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/rabbitmq-discovery/task-summary.png" data-desc-position="bottom"><img alt="RabbitMQ Discovery task execution summary." src="../../assets/images/discovery/rabbitmq-discovery/task-summary.png"></a></p>
+<p>The agent detail lists the generated modules with their current value, state and description.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/rabbitmq-discovery/agent-modules.png" data-desc-position="bottom"><img alt="RabbitMQ discovery agent with its generated modules." src="../../assets/images/discovery/rabbitmq-discovery/agent-modules.png"></a></p>
+<h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
+<h3 id="agents-and-identity">Agents and identity<a class="headerlink" href="#agents-and-identity" title="Permanent link">¶</a></h3>
+<p>The plugin creates one agent per target. The agent name is <code>rabbitmq-</code> followed by a 32-character identifier derived from the task and the normalized target URL, so the name is stable across runs for the same task and target. The alias is the target alias when provided, or the target URL, with the <strong>Agent alias prefix</strong> prepended.</p>
+<p>Each generated agent reports <code>Other</code> as its operating system, belongs to the task's group (by ID) with the task interval, and carries the base address of the target. It is marked with the agent-level <code>extra_data</code> value <code>rabbitmq:agent:&lt;identifier&gt;</code>, which lets the console and the companion dashboard identify it as a RabbitMQ discovery agent. With <strong>Agent autodisable mode</strong> enabled the agents are created in Pandora FMS mode <code>2</code>.</p>
+<p>Targets are grouped by their normalized URL; duplicate normalized URLs are rejected. Targets that do not carry inline credentials use the task's <strong>Default user</strong> and <strong>Default password</strong>.</p>
+<h3 id="modules-by-agent">Modules by agent<a class="headerlink" href="#modules-by-agent" title="Permanent link">¶</a></h3>
+<p>Every module is created on the target agent; the resource name is appended to the module name so a single agent can hold every node, queue, channel or virtual host. Resource suffixes are <code>&lt;label&gt; - &lt;node&gt;</code> for nodes, <code>&lt;label&gt; - channel &lt;name&gt;</code> for channels, <code>&lt;label&gt; - vhost &lt;name&gt;</code> for virtual hosts, <code>&lt;label&gt; - connection &lt;name&gt;</code> for connections, and <code>&lt;label&gt; - ["&lt;vhost&gt;","&lt;name&gt;"]</code> for queues and exchanges.</p>
+<table>
+<thead>
+<tr>
+<th>Toggle</th>
+<th>Modules it adds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Overview modules</strong></td>
+<td>Cluster name, RabbitMQ version, message totals and object totals</td>
+</tr>
+<tr>
+<td><strong>Global message rates</strong></td>
+<td>Global publish, deliver, get, ack, confirm and related rates</td>
+</tr>
+<tr>
+<td><strong>Node modules</strong></td>
+<td>Node status, memory and Erlang process metrics per node</td>
+</tr>
+<tr>
+<td><strong>Node resource modules</strong></td>
+<td>Limits, alarms, descriptors, sockets, uptime and run queue per node</td>
+</tr>
+<tr>
+<td><strong>Node IO counters</strong></td>
+<td>Read/write operation, byte and garbage-collection counters per node</td>
+</tr>
+<tr>
+<td><strong>Queue modules</strong></td>
+<td>Per-queue messages, consumers, memory, state and type</td>
+</tr>
+<tr>
+<td><strong>Queue message rates</strong></td>
+<td>Per-queue publish, deliver, ack and redeliver rates</td>
+</tr>
+<tr>
+<td><strong>Exchange modules</strong></td>
+<td>Aggregate exchange rates and per-exchange publish in/out rates</td>
+</tr>
+<tr>
+<td><strong>Connection summary</strong></td>
+<td>Connection totals and aggregate network rates</td>
+</tr>
+<tr>
+<td><strong>Per connection modules</strong></td>
+<td>Per-connection channels, network rates and state</td>
+</tr>
+<tr>
+<td><strong>Channel modules</strong></td>
+<td>Per-channel consumers, counters and rates</td>
+</tr>
+<tr>
+<td><strong>Vhost modules</strong></td>
+<td>Per-virtual-host message totals and rates</td>
+</tr>
+</tbody>
+</table>
+<p>Module names are <code>&lt;Module prefix&gt;</code> plus the module name. The exhaustive inventory and the exact API field behind each module are in <a href="#generated-modules-and-agents">Generated modules and agents</a>.</p>
+<h3 id="rabbitmq-dashboard">RabbitMQ Dashboard<a class="headerlink" href="#rabbitmq-dashboard" title="Permanent link">¶</a></h3>
+<p><strong>RabbitMQ Dashboard</strong> is a companion console extension that reads the agents marked with <code>rabbitmq:agent:</code> (and, as a fallback, agents named <code>rabbitmq-</code>) and their enabled modules, and presents them in one view. It appears in the <strong>Monitoring</strong> menu and requires the standard agent read permission.</p>
+<p>The dashboard has three filters: <strong>Target</strong> (one agent or all), <strong>Section</strong> (one section or all) and <strong>Chart period</strong> for the history graph. The available sections are <strong>Overview</strong>, <strong>Message rates</strong>, <strong>Nodes</strong>, <strong>Exchanges</strong>, <strong>Connections</strong>, <strong>Queues</strong>, <strong>Channels</strong>, <strong>Vhosts</strong> and <strong>History</strong>.</p>
+<ul>
+<li><strong>Overview</strong> shows the cluster KPIs, the message backlog (ready versus unacknowledged) and the object totals. <strong>Message rates</strong> charts the global rates reported by the overview endpoint.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/rabbitmq-discovery/dashboard-overview.png" data-desc-position="bottom"><img alt="RabbitMQ Dashboard overview and global message rates." src="../../assets/images/discovery/rabbitmq-discovery/dashboard-overview.png"></a></p>
+<ul>
+<li><strong>Nodes</strong> lists every node with its status, memory, process, disk, descriptor, socket, uptime, run queue and alarms. <strong>Exchanges</strong> lists the publish in/out rates and the busiest exchanges.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/rabbitmq-discovery/dashboard-nodes-exchanges.png" data-desc-position="bottom"><img alt="RabbitMQ Dashboard nodes and exchanges." src="../../assets/images/discovery/rabbitmq-discovery/dashboard-nodes-exchanges.png"></a></p>
+<ul>
+<li><strong>Connections</strong> shows the connection summary, the state breakdown and the per-connection detail. <strong>Queues</strong> lists every queue with its state, backlog, consumers, memory and type.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/rabbitmq-discovery/dashboard-connections-queues.png" data-desc-position="bottom"><img alt="RabbitMQ Dashboard connections and queues." src="../../assets/images/discovery/rabbitmq-discovery/dashboard-connections-queues.png"></a></p>
+<ul>
+<li><strong>Channels</strong> and <strong>Vhosts</strong> list the per-resource consumers and message rates. <strong>History</strong> plots the key counters over the selected period.</li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/rabbitmq-discovery/dashboard-queues-channels.png" data-desc-position="bottom"><img alt="RabbitMQ Dashboard queues, channels, vhosts and history." src="../../assets/images/discovery/rabbitmq-discovery/dashboard-queues-channels.png"></a></p>
+<p>When no RabbitMQ agent is found, the dashboard shows the message <em>No RabbitMQ data found</em> with the instruction to run the discovery task and verify that the agents and modules were created.</p>
+<h2 id="operate">Operate<a class="headerlink" href="#operate" title="Permanent link">¶</a></h2>
+<h3 id="manual-execution">Manual execution<a class="headerlink" href="#manual-execution" title="Permanent link">¶</a></h3>
+<p>The plugin can run outside Discovery, from a Pandora FMS agent or directly from the command line, with a configuration file, a targets file and the optional module filter files:</p>
+<div class="highlight"><pre><span></span><code>./pandora_rabbitmq<span class="w"> </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span>--targets-file<span class="w"> </span>&lt;PATH_TO_TARGETS&gt;<span class="w"> </span>--module-allow-list-file<span class="w"> </span>&lt;PATH_TO_ALLOW&gt;<span class="w"> </span>--module-deny-list-file<span class="w"> </span>&lt;PATH_TO_DENY&gt;
+</code></pre></div>
+<p>Only <code>--conf</code> and <code>--targets-file</code> are required. The plugin reads each target, collects the enabled metric groups and prints the Discovery JSON output with the agents and modules on standard output. See <a href="#configuration-file">Configuration file</a> and <a href="#command-line-execution">Command-line execution</a>.</p>
+<p>The targets file may embed a username and a password. Restrict it to the account that runs the plugin and keep it out of shared directories, logs and version control. When the credentials travel in command arguments, shell history and the process list may expose them; prefer the configuration file.</p>
+<h2 id="troubleshoot">Troubleshoot<a class="headerlink" href="#troubleshoot" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The agent is created but its <code>Availability</code> module reports <code>0</code> and the execution information logs a connection or timeout error</td>
+<td>Confirm the broker is reachable from the Pandora FMS server on its Management API port (default <code>15672</code> for HTTP), that the management plugin is enabled and that the target URL is correct.</td>
+</tr>
+<tr>
+<td>The execution information logs <code>HTTP 401</code></td>
+<td>The user or password is wrong, or the user cannot read the Management API. Review <strong>Default user</strong> and <strong>Default password</strong>, and the inline credentials of the target.</td>
+</tr>
+<tr>
+<td>The execution information logs <code>HTTP 404</code></td>
+<td>The URL does not point to the Management API of the broker. Check the host and port, and remove any <code>/api</code> suffix, which the plugin strips automatically.</td>
+</tr>
+<tr>
+<td>TLS certificate errors</td>
+<td>Set <strong>CA file</strong> to the PEM bundle that signs the broker certificate, or disable <strong>Verify TLS certificates</strong> only for trusted test environments.</td>
+</tr>
+<tr>
+<td>The queue or virtual host inventory is empty while the cluster overview works</td>
+<td>Enable <strong>Queue modules</strong>, <strong>Queue message rates</strong>, <strong>Channel modules</strong> or <strong>Vhost modules</strong>, and review <strong>Queue name regexp</strong> and <strong>Vhost name regexp</strong>: an empty value matches everything, a non-matching expression keeps nothing.</td>
+</tr>
+<tr>
+<td>Expected modules are missing</td>
+<td>Review the <strong>Metrics and module filters</strong> toggles and the <strong>Modules allow regexp</strong> / <strong>Modules deny regexp</strong> filters. The deny list is applied after the allow list.</td>
+</tr>
+<tr>
+<td>The dashboard shows <em>No RabbitMQ data found</em></td>
+<td>Run the discovery task and confirm the plugin created agents marked <code>rabbitmq:agent:</code> (or named <code>rabbitmq-</code>), and that the console account can read them.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">¶</a></h2>
+<h3 id="task-parameters">Task parameters<a class="headerlink" href="#task-parameters" title="Permanent link">¶</a></h3>
+<p>The console presents the task fields in three steps after the generic task definition. The macro column is the identifier used in the generated task configuration.</p>
+<h4 id="connection">Connection<a class="headerlink" href="#connection" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Macro</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Targets</td>
+<td><code>_targets_</code></td>
+<td>textarea</td>
+<td>—</td>
+<td>Management API URLs, one per line or comma-separated, or JSON target objects. Required</td>
+</tr>
+<tr>
+<td>Default user</td>
+<td><code>_user_</code></td>
+<td>string</td>
+<td>—</td>
+<td>User for targets without their own credentials. Every target needs a user</td>
+</tr>
+<tr>
+<td>Default password</td>
+<td><code>_password_</code></td>
+<td>password</td>
+<td>—</td>
+<td>Password for targets without their own credentials</td>
+</tr>
+<tr>
+<td>Request timeout seconds</td>
+<td><code>_timeout_</code></td>
+<td>string</td>
+<td><code>10</code></td>
+<td>Timeout of every HTTP request. Must be positive</td>
+</tr>
+<tr>
+<td>HTTP retries</td>
+<td><code>_retries_</code></td>
+<td>string</td>
+<td><code>2</code></td>
+<td>Retries for transient HTTP errors, between <code>0</code> and <code>5</code></td>
+</tr>
+<tr>
+<td>Verify TLS certificates</td>
+<td><code>_verifytls_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Validates HTTPS certificates and hostnames</td>
+</tr>
+<tr>
+<td>CA file</td>
+<td><code>_cafile_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Optional PEM CA bundle on the Pandora server, used for HTTPS targets</td>
+</tr>
+</tbody>
+</table>
+<h4 id="agents-and-filters">Agents and filters<a class="headerlink" href="#agents-and-filters" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Macro</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agent alias prefix</td>
+<td><code>_agentprefix_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Prefix for the display alias; the agent identity is unchanged</td>
+</tr>
+<tr>
+<td>Module prefix</td>
+<td><code>_moduleprefix_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Prefix for all generated module names</td>
+</tr>
+<tr>
+<td>Agent autodisable mode</td>
+<td><code>_agentautodisable_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Creates the agents in Pandora FMS mode <code>2</code></td>
+</tr>
+<tr>
+<td>Queue name regexp</td>
+<td><code>_queuefilter_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Queue name filter. Empty matches all</td>
+</tr>
+<tr>
+<td>Vhost name regexp</td>
+<td><code>_vhostfilter_</code></td>
+<td>string</td>
+<td>—</td>
+<td>Vhost filter for queues, exchanges and vhosts. Empty matches all</td>
+</tr>
+</tbody>
+</table>
+<h4 id="metrics-and-module-filters">Metrics and module filters<a class="headerlink" href="#metrics-and-module-filters" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Macro</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Overview modules</td>
+<td><code>_overviewenabled_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Cluster name, version, message totals and object totals</td>
+</tr>
+<tr>
+<td>Global message rates</td>
+<td><code>_messageratesenabled_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Global publish, deliver, get, ack, confirm and related rates</td>
+</tr>
+<tr>
+<td>Node modules</td>
+<td><code>_nodesenabled_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Node status, memory and Erlang process metrics</td>
+</tr>
+<tr>
+<td>Node resource modules</td>
+<td><code>_noderesourcesenabled_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Limits, alarms, descriptors, sockets, uptime and run queue</td>
+</tr>
+<tr>
+<td>Node IO counters</td>
+<td><code>_nodeioenabled_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Read/write operation, byte and garbage-collection counters</td>
+</tr>
+<tr>
+<td>Queue modules</td>
+<td><code>_queuesenabled_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Per-queue messages, consumers, memory, state and type</td>
+</tr>
+<tr>
+<td>Queue message rates</td>
+<td><code>_queueratesenabled_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Per-queue publish, deliver, ack and redeliver rates</td>
+</tr>
+<tr>
+<td>Exchange modules</td>
+<td><code>_exchangesenabled_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Aggregate and per-exchange publish rates</td>
+</tr>
+<tr>
+<td>Connection summary</td>
+<td><code>_connectionsenabled_</code></td>
+<td>checkbox</td>
+<td>on</td>
+<td>Connection totals and aggregate network rates</td>
+</tr>
+<tr>
+<td>Per connection modules</td>
+<td><code>_connectiondetailsenabled_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Per-connection channels, network rates and state</td>
+</tr>
+<tr>
+<td>Channel modules</td>
+<td><code>_channelsenabled_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Per-channel consumers, counters and rates</td>
+</tr>
+<tr>
+<td>Vhost modules</td>
+<td><code>_vhostsenabled_</code></td>
+<td>checkbox</td>
+<td>off</td>
+<td>Per-virtual-host message totals and rates</td>
+</tr>
+<tr>
+<td>Modules allow regexp</td>
+<td><code>_moduleallowlist_</code></td>
+<td>textarea</td>
+<td>—</td>
+<td>One regular expression per line. Matches final module names</td>
+</tr>
+<tr>
+<td>Modules deny regexp</td>
+<td><code>_moduledenylist_</code></td>
+<td>textarea</td>
+<td>—</td>
+<td>One regular expression per line. Deny takes priority over allow</td>
+</tr>
+</tbody>
+</table>
+<h3 id="configuration-file">Configuration file<a class="headerlink" href="#configuration-file" title="Permanent link">¶</a></h3>
+<p>The Discovery task builds a temporary <code>--conf</code> file from its own fields. A manual run supplies it directly. The file has a <code>[CONF]</code> section; a file without a section header is read as if it had one.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user</code></td>
+<td>Empty</td>
+<td>Default user for targets without their own credentials</td>
+</tr>
+<tr>
+<td><code>pass</code></td>
+<td>Empty</td>
+<td>Default password for targets without their own credentials</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td><code>10</code></td>
+<td>Timeout of every HTTP request, in seconds</td>
+</tr>
+<tr>
+<td><code>retries</code></td>
+<td><code>2</code></td>
+<td>Retries for transient HTTP errors, between <code>0</code> and <code>5</code></td>
+</tr>
+<tr>
+<td><code>verify_tls</code></td>
+<td><code>1</code></td>
+<td>Validates HTTPS certificates and hostnames</td>
+</tr>
+<tr>
+<td><code>ca_file</code></td>
+<td>Empty</td>
+<td>PEM CA bundle used for HTTPS targets</td>
+</tr>
+<tr>
+<td><code>task_id</code></td>
+<td>—</td>
+<td>Task identifier; used to derive the stable agent name. Required</td>
+</tr>
+<tr>
+<td><code>group_id</code></td>
+<td><code>0</code></td>
+<td>ID of the group where the agents are created. Must be positive</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td><code>300</code></td>
+<td>Monitoring interval in seconds, inherited by the agents</td>
+</tr>
+<tr>
+<td><code>agent_prefix</code></td>
+<td>Empty</td>
+<td>Prefix for the agent display alias</td>
+</tr>
+<tr>
+<td><code>module_prefix</code></td>
+<td>Empty</td>
+<td>Prefix for all module names</td>
+</tr>
+<tr>
+<td><code>agent_autodisable</code></td>
+<td><code>0</code></td>
+<td>Creates the agents in Pandora FMS mode <code>2</code> when enabled</td>
+</tr>
+<tr>
+<td><code>queue_filter</code></td>
+<td>Empty</td>
+<td>Queue name regular expression</td>
+</tr>
+<tr>
+<td><code>vhost_filter</code></td>
+<td>Empty</td>
+<td>Vhost regular expression for queues, exchanges and vhosts</td>
+</tr>
+<tr>
+<td><code>overview_enabled</code></td>
+<td><code>1</code></td>
+<td>Enables the overview modules</td>
+</tr>
+<tr>
+<td><code>message_rates_enabled</code></td>
+<td><code>1</code></td>
+<td>Enables the global message rates</td>
+</tr>
+<tr>
+<td><code>nodes_enabled</code></td>
+<td><code>1</code></td>
+<td>Enables the node modules</td>
+</tr>
+<tr>
+<td><code>node_resources_enabled</code></td>
+<td><code>1</code></td>
+<td>Enables the node resource modules</td>
+</tr>
+<tr>
+<td><code>node_io_enabled</code></td>
+<td><code>0</code></td>
+<td>Enables the node IO counters</td>
+</tr>
+<tr>
+<td><code>queues_enabled</code></td>
+<td><code>0</code></td>
+<td>Enables the queue modules</td>
+</tr>
+<tr>
+<td><code>queue_rates_enabled</code></td>
+<td><code>0</code></td>
+<td>Enables the queue message rates</td>
+</tr>
+<tr>
+<td><code>exchanges_enabled</code></td>
+<td><code>1</code></td>
+<td>Enables the exchange modules</td>
+</tr>
+<tr>
+<td><code>connections_enabled</code></td>
+<td><code>1</code></td>
+<td>Enables the connection summary</td>
+</tr>
+<tr>
+<td><code>connection_details_enabled</code></td>
+<td><code>0</code></td>
+<td>Enables the per-connection modules</td>
+</tr>
+<tr>
+<td><code>channels_enabled</code></td>
+<td><code>0</code></td>
+<td>Enables the channel modules</td>
+</tr>
+<tr>
+<td><code>vhosts_enabled</code></td>
+<td><code>0</code></td>
+<td>Enables the vhost modules</td>
+</tr>
+<tr>
+<td><code>module_allow_list</code></td>
+<td>Empty</td>
+<td>Inline allow regular expressions, one per line</td>
+</tr>
+<tr>
+<td><code>module_deny_list</code></td>
+<td>Empty</td>
+<td>Inline deny regular expressions, one per line</td>
+</tr>
+</tbody>
+</table>
+<h3 id="targets-file">Targets file<a class="headerlink" href="#targets-file" title="Permanent link">¶</a></h3>
+<p>The <code>--targets-file</code> file holds the targets. It accepts a JSON array of target objects:</p>
+<div class="highlight"><pre><span></span><code><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://172.17.0.2:15672"</span><span class="p">,</span><span class="w"> </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"monitor"</span><span class="p">,</span><span class="w"> </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;PASSWORD&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"alias"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RabbitMQ lab"</span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://rabbitmq-prod.internal.company.com"</span><span class="p">,</span><span class="w"> </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"monitor"</span><span class="p">,</span><span class="w"> </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;PASSWORD&gt;"</span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+<p>or a plain list separated by commas or newlines, with lines starting by <code>#</code> ignored:</p>
+<div class="highlight"><pre><span></span><code># Production cluster
+http://172.17.0.2:15672
+https://rabbitmq-prod.internal.company.com
+</code></pre></div>
+<p>Each URL is normalized before use: <code>http://</code> is assumed when the scheme is missing, the port defaults to <code>443</code> for HTTPS and <code>15672</code> for HTTP, a trailing <code>/api</code> is removed, and embedded credentials, query strings and fragments are rejected. Duplicate normalized URLs are rejected, and every target requires a user, either inline or from the default.</p>
+<h3 id="module-filter-files">Module filter files<a class="headerlink" href="#module-filter-files" title="Permanent link">¶</a></h3>
+<p><code>--module-allow-list-file</code> and <code>--module-deny-list-file</code> hold one regular expression per line, matched against the final module names (after the module prefix). A module is kept when it matches the allow list (or the allow list is empty) and does not match the deny list. The same expressions can be supplied inline through the <code>module_allow_list</code> and <code>module_deny_list</code> configuration keys instead.</p>
+<h3 id="command-line-execution">Command-line execution<a class="headerlink" href="#command-line-execution" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>./pandora_rabbitmq<span class="w"> </span>--conf<span class="w"> </span>&lt;PATH_TO_CONFIG&gt;<span class="w"> </span>--targets-file<span class="w"> </span>&lt;PATH_TO_TARGETS&gt;<span class="w"> </span>--module-allow-list-file<span class="w"> </span>&lt;PATH_TO_ALLOW&gt;<span class="w"> </span>--module-deny-list-file<span class="w"> </span>&lt;PATH_TO_DENY&gt;
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--conf</code></td>
+<td>Path to the configuration file. Required in Discovery</td>
+</tr>
+<tr>
+<td><code>--targets-file</code></td>
+<td>Path to the file with the targets</td>
+</tr>
+<tr>
+<td><code>--module-allow-list-file</code></td>
+<td>Path to the file with the allow regular expressions</td>
+</tr>
+<tr>
+<td><code>--module-deny-list-file</code></td>
+<td>Path to the file with the deny regular expressions</td>
+</tr>
+<tr>
+<td><code>--host</code></td>
+<td>Single target URL, used when no targets file is given</td>
+</tr>
+<tr>
+<td><code>--user</code>, <code>--pass</code></td>
+<td>Default credentials</td>
+</tr>
+<tr>
+<td><code>--group-id</code>, <code>--interval</code></td>
+<td>Group ID and interval for the generated agents</td>
+</tr>
+<tr>
+<td><code>--task-id</code></td>
+<td>Task identifier used to derive the agent name</td>
+</tr>
+<tr>
+<td><code>--timeout</code>, <code>--retries</code>, <code>--ca-file</code></td>
+<td>HTTP and TLS options</td>
+</tr>
+<tr>
+<td><code>--agent-prefix</code>, <code>--module-prefix</code></td>
+<td>Alias and module prefixes</td>
+</tr>
+<tr>
+<td><code>--version</code></td>
+<td>Prints the plugin version</td>
+</tr>
+</tbody>
+</table>
+<p>Example configuration file:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[CONF]</span>
+<span class="na">user</span><span class="o">=</span><span class="s">monitor</span>
+<span class="na">pass</span><span class="o">=</span><span class="s">&lt;PASSWORD&gt;</span>
+<span class="na">timeout</span><span class="o">=</span><span class="s">10</span>
+<span class="na">retries</span><span class="o">=</span><span class="s">2</span>
+<span class="na">verify_tls</span><span class="o">=</span><span class="s">1</span>
+<span class="na">task_id</span><span class="o">=</span><span class="s">manual</span>
+<span class="na">group_id</span><span class="o">=</span><span class="s">10</span>
+<span class="na">interval</span><span class="o">=</span><span class="s">300</span>
+<span class="na">overview_enabled</span><span class="o">=</span><span class="s">1</span>
+<span class="na">message_rates_enabled</span><span class="o">=</span><span class="s">1</span>
+<span class="na">nodes_enabled</span><span class="o">=</span><span class="s">1</span>
+<span class="na">node_resources_enabled</span><span class="o">=</span><span class="s">1</span>
+<span class="na">exchanges_enabled</span><span class="o">=</span><span class="s">1</span>
+<span class="na">connections_enabled</span><span class="o">=</span><span class="s">1</span>
+</code></pre></div>
+<h3 id="generated-modules-and-agents">Generated modules and agents<a class="headerlink" href="#generated-modules-and-agents" title="Permanent link">¶</a></h3>
+<p>Module names are <code>&lt;Module prefix&gt;&lt;module name&gt;</code>. Resource modules append <code>- &lt;resource&gt;</code> as described in <a href="#modules-by-agent">Modules by agent</a>.</p>
+<p><strong>Target agent</strong> (one per target)</p>
+<p>Always created:</p>
+<ul>
+<li><code>Availability</code>: <code>generic_proc</code>, <code>1</code> when the cluster overview was read, <code>0</code> otherwise.</li>
+</ul>
+<p>Created when the matching toggle is enabled:</p>
+<ul>
+<li><strong>Overview modules</strong>: <code>Cluster name</code> and <code>RabbitMQ version</code> (<code>generic_data_string</code>), <code>Total queue messages</code>, <code>Messages ready</code>, <code>Messages unacknowledged</code>, <code>Overview connections</code>, <code>Total queues</code>, <code>Total exchanges</code>, <code>Total channels</code> and <code>Total consumers</code> (<code>generic_data</code>).</li>
+<li><strong>Global message rates</strong> (per rate): <code>Queue publish rate</code>, <code>Queue deliver get rate</code>, <code>Queue get rate</code>, <code>Queue deliver rate</code>, <code>Queue deliver no ack rate</code>, <code>Queue ack rate</code>, <code>Queue redeliver rate</code>, <code>Queue confirm rate</code>, <code>Queue return unroutable rate</code> and <code>Queue drop unroutable rate</code> (<code>generic_data</code>).</li>
+<li><strong>Node modules</strong> (per node): <code>Node status</code> (<code>generic_proc</code>), <code>Memory used</code>, <code>Memory rate</code>, <code>Proc used</code> and <code>Proc details</code> (<code>generic_data</code>).</li>
+<li><strong>Node resource modules</strong> (per node): <code>Memory limit</code>, <code>Disk free</code>, <code>Disk free limit</code>, <code>File descriptors used</code>, <code>File descriptors total</code>, <code>Sockets used</code>, <code>Sockets total</code>, <code>Proc total</code>, <code>Uptime ms</code> and <code>Run queue</code> (<code>generic_data</code>), and <code>Memory alarm</code> and <code>Disk alarm</code> (<code>generic_proc</code>).</li>
+<li><strong>Node IO counters</strong> (per node): <code>Io read count</code>, <code>Io write count</code>, <code>Io read bytes</code>, <code>Io write bytes</code>, <code>Gc num</code> and <code>Gc bytes reclaimed</code> (<code>generic_data_inc</code>).</li>
+<li><strong>Queue modules</strong> (per queue): <code>Messages</code>, <code>Messages ready</code>, <code>Messages unacknowledged</code>, <code>Consumers</code>, <code>Consumer capacity</code>, <code>Memory</code>, <code>Message bytes</code> and <code>Messages ram</code> (<code>generic_data</code>), and <code>State</code> and <code>Type</code> (<code>generic_data_string</code>).</li>
+<li><strong>Queue message rates</strong> (per queue): <code>Queue publish rate</code>, <code>Queue deliver get rate</code>, <code>Queue ack rate</code> and <code>Queue redeliver rate</code> (<code>generic_data</code>).</li>
+<li><strong>Exchange modules</strong>: <code>Exchanges in rate</code> and <code>Exchanges out rate</code> (<code>generic_data</code>), plus <code>Exchange publish in rate</code> and <code>Exchange publish out rate</code> (<code>generic_data</code>) per exchange. The aggregate rates are created only when every exchange reports the underlying rate.</li>
+<li><strong>Connection summary</strong>: <code>Total connections</code>, <code>Connections running</code>, <code>Connections blocked</code>, <code>Connections other</code>, <code>Total received octets rate</code> and <code>Total sent octets rate</code> (<code>generic_data</code>).</li>
+<li><strong>Per connection modules</strong> (per connection): <code>Channels</code>, <code>Received octets rate</code> and <code>Sent octets rate</code> (<code>generic_data</code>), and <code>State</code> (<code>generic_data_string</code>).</li>
+<li><strong>Channel modules</strong> (per channel): <code>Consumers</code>, <code>Messages unacknowledged</code>, <code>Messages unconfirmed</code> and <code>Prefetch count</code> (<code>generic_data</code>), plus <code>Channel publish rate</code>, <code>Channel deliver get rate</code>, <code>Channel ack rate</code> and <code>Channel redeliver rate</code> (<code>generic_data</code>).</li>
+<li><strong>Vhost modules</strong> (per vhost): <code>Messages</code>, <code>Messages ready</code> and <code>Messages unacknowledged</code> (<code>generic_data</code>), plus <code>Vhost publish rate</code>, <code>Vhost deliver get rate</code>, <code>Vhost ack rate</code> and <code>Vhost redeliver rate</code> (<code>generic_data</code>).</li>
+</ul>
+<h3 id="agent-fields">Agent fields<a class="headerlink" href="#agent-fields" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agent name</td>
+<td><code>rabbitmq-&lt;identifier&gt;</code>, where <code>&lt;identifier&gt;</code> is derived from the task and the normalized target URL</td>
+</tr>
+<tr>
+<td>Agent alias</td>
+<td><code>&lt;Agent alias prefix&gt;</code> plus the target <code>alias</code>, or the target URL</td>
+</tr>
+<tr>
+<td>Operating system</td>
+<td><code>Other</code></td>
+</tr>
+<tr>
+<td>Address</td>
+<td>Host name of the target URL</td>
+</tr>
+<tr>
+<td>Group</td>
+<td>The Discovery task group, by ID</td>
+</tr>
+<tr>
+<td>Interval</td>
+<td>The Discovery task interval</td>
+</tr>
+<tr>
+<td>Agent mode</td>
+<td><code>1</code>, or <code>2</code> when <strong>Agent autodisable mode</strong> is enabled</td>
+</tr>
+<tr>
+<td><code>extra_data</code></td>
+<td><code>rabbitmq:agent:&lt;identifier&gt;</code></td>
+</tr>
+<tr>
+<td>Description</td>
+<td><code>RabbitMQ Management API &lt;target URL&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="plugin-identity">Plugin identity<a class="headerlink" href="#plugin-identity" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>App short name</td>
+<td><code>pandorafms.rabbitmq.discovery</code></td>
+</tr>
+<tr>
+<td>Plugin version</td>
+<td><code>1.0</code></td>
+</tr>
+<tr>
+<td>Type</td>
+<td>Discovery application (<code>.disco</code>)</td>
+</tr>
+<tr>
+<td>Section</td>
+<td>Discovery → Applications</td>
+</tr>
+<tr>
+<td>Companion extension</td>
+<td>RabbitMQ Dashboard</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
