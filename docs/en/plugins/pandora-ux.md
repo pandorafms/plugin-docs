@@ -1,6 +1,9 @@
 # Pandora UX
 
-*Article last updated: 2026-10-26.*
+*Article last updated: 2026-10-27.*
+
+!!! warning "Deprecated"
+    Pandora UX is deprecated. Web transaction monitoring is now covered by WUX, and Windows transaction monitoring by [Oculix](oculix.md).
 
 ## What it does
 

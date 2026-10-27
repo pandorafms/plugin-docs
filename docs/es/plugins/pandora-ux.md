@@ -1,6 +1,9 @@
 # Pandora UX
 
-*Última actualización del artículo: 2026-10-26.*
+*Última actualización del artículo: 2026-10-27.*
+
+!!! warning "Obsoleto"
+    Pandora UX está obsoleto. La monitorización de transacciones web se cubre ahora con WUX, y la de transacciones en Windows con [Oculix](oculix.md).
 
 ## Qué hace
 
