@@ -12,6 +12,8 @@ de conexiones y una comprobación de disponibilidad.
 
 El plugin admite dos modelos de ejecución:
 
+> Esta página documenta el plugin incluido con el agente de Pandora FMS. El addon del Marketplace `pandorafms.rabbitmq` es otro distinto: consulte [Plugin de monitorización de RabbitMQ](rabbitmq.md).
+
 - **Modo plugin de servidor** (por defecto; se selecciona cuando
   `as_agent_plugin` está ausente, es `0` o está vacío): cada ejecución
   construye un documento `agent_data` y lo entrega a Pandora FMS mediante
