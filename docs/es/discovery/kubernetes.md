@@ -1,8 +1,8 @@
 # Kubernetes Discovery
 
-*Última actualización del artículo: 2026-10-23.*
+*Última actualización del artículo: 2026-10-26.*
 
-<!-- DRAFT: Verificado contra las fuentes del paquete 1.2; faltan validar la instalación del paquete distribuido y la recopilación en un entorno real. -->
+<!-- DRAFT: Verificado contra las fuentes del paquete 1.3; faltan validar la instalación del paquete distribuido y la recopilación en un entorno real. -->
 
 ## Qué monitoriza
 
@@ -12,8 +12,8 @@ El plugin genera agentes para:
 
 - el propio clúster, mediante un agente global **Kubernetes**;
 - cada nodo, cuando **Scan Nodes** está habilitado;
-- cada deployment, cuando **Scan Deployments** está habilitado;
-- los pods con métricas y datos completos de nodo e IP, cuando **Scan Pods** está habilitado.
+- cada deployment con datos de condiciones, cuando **Scan Deployments** está habilitado;
+- cada pod ya planificado en un nodo, cuando **Scan Pods** está habilitado.
 
 El agente global también incluye el estado de la API, los endpoints de salud, el número de servicios, el número de namespaces y los estados de componentes del clúster.
 
@@ -25,10 +25,10 @@ El plugin se ejecuta como tarea de Discovery: la consola define la tarea, el ser
 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
-| Versión del plugin `1.2` (`pandorafms.kubernetes`) | Objetivo documentado | Identidad del paquete; consulte [Identidad del plugin](#identidad-del-plugin) |
+| Versión del plugin `1.3` (`pandorafms.kubernetes`) | Objetivo documentado | La versión que describe esta página, identificada por la definición del paquete. Consulte [Identidad del plugin](#identidad-del-plugin) |
 | Clúster de Kubernetes con API accesible por HTTPS | `Requerido` | El plugin consulta `https://<host>:<port>`. Es un requisito, no una declaración de compatibilidad |
-| Token Bearer con acceso de lectura a los recursos consultados | `Requerido` | Autenticación con `Authorization: Bearer <token>` para nodos, pods, deployments, servicios, namespaces y estados de componentes |
-| API de métricas de Kubernetes (`metrics.k8s.io`) | `Requerido` para descubrir nodos y pods | Los datos parten de `/apis/metrics.k8s.io/v1beta1`; su ausencia puede impedir generar agentes, no solo omitir CPU y memoria |
+| Token Bearer con acceso de lectura a los recursos consultados | `Requerido` | Autenticación con `Authorization: Bearer <token>` para nodos, pods, deployments, servicios, namespaces y estados de componentes. Los endpoints de salud y de componentes pueden necesitar permisos elevados. Es un requisito, no una declaración de compatibilidad |
+| API de métricas de Kubernetes (`metrics.k8s.io`) para el uso de CPU y memoria | `Requerido` para los módulos de CPU y memoria | Los módulos de CPU y memoria de nodos y contenedores se leen de `/apis/metrics.k8s.io/v1beta1`. Sin ella, los agentes de nodo y pod se siguen generando, pero esos módulos se omiten |
 | Versión concreta de Kubernetes | `Sin validar` | No hay un registro de pruebas publicado que establezca compatibilidad con una versión concreta |
 | Sistema operativo del host del plugin | `Sin validar` | No hay un registro de pruebas publicado que establezca compatibilidad con sistemas operativos |
 
@@ -36,12 +36,12 @@ El plugin se ejecuta como tarea de Discovery: la consola define la tarea, el ser
 
 1. **Un servidor de Pandora FMS con Discovery habilitado** para ejecutar la tarea y una consola para definirla.
 2. **Acceso al servidor de API desde el servidor de Discovery**, por host y puerto. La conexión directa usa HTTPS; introduzca el host sin esquema.
-3. **Un token Bearer** con acceso de lectura a nodos, pods, deployments, namespaces, servicios, estados de componentes, métricas de nodos y pods y los endpoints de salud de [Peticiones a la API](#peticiones-a-la-api). La tarea no define un rol concreto. Las peticiones de salud y componentes siempre se intentan; esta versión no tiene interruptores para ellas.
+3. **Un token Bearer** para el servidor de API. Es necesario para leer los endpoints protegidos; concédale acceso de lectura solo a los recursos que consulta la tarea. Las opciones **Scan API health checks** y **Scan component statuses** pueden necesitar permisos de API elevados, como indican las ayudas de la tarea.
 4. **Un grupo de agentes y un intervalo de monitorización**. Todos los agentes generados heredan ambos valores de la tarea.
 5. **Conectividad al destino de Tentacle** para enviar los datos generados.
 6. El plugin se distribuye como aplicación de Discovery de Pandora FMS (paquete `.disco`), ejecutada por el servidor de Discovery.
 
-Las conexiones directas usan HTTPS sin verificar el certificado: la identidad del servidor no queda autenticada. Restrinja el acceso de red. En modo proxy se utiliza la URL indicada sin añadir la cabecera Bearer. El token se introduce en la tarea y se escribe en su configuración; restrinja el acceso a ambos. En ejecuciones manuales, guarde el token en un archivo protegido, no en comandos del shell.
+Las conexiones directas usan HTTPS sin verificar el certificado: la identidad del servidor no queda autenticada, por lo que funcionan los certificados autofirmados. Restrinja el acceso de red. En modo proxy se utiliza la URL indicada sin añadir la cabecera Bearer. El token se introduce en la tarea y se escribe en su configuración; restrinja el acceso a ambos. En ejecuciones manuales, guarde el token en un archivo protegido, no en comandos del shell.
 
 ### Comprobar el acceso al destino
 
@@ -53,11 +53,11 @@ kubectl top node
 kubectl top pod --all-namespaces
 ```
 
-Si el clúster no expone la API de métricas, su administrador debe configurarla antes de verificar el descubrimiento de nodos y pods. Estos comandos de diagnóstico no conceden permisos al token del plugin.
+Si el clúster no expone la API de métricas, los agentes de nodo y pod se siguen generando, pero se omiten sus módulos de CPU y memoria. Estos comandos de diagnóstico no conceden permisos al token del plugin.
 
 ### Instalar el plugin
 
-Obtenga el paquete `.disco` en la [entrada de Kubernetes del Marketplace](https://marketplace.pandorafms.com/entries/pandorafms.kubernetes) y cárguelo en Discovery. Seleccione **Kubernetes** al crear una tarea de aplicación. Esta página corresponde al paquete `1.2`, no a una interfaz `1.3`.
+Obtenga el paquete `.disco` en la [entrada de Kubernetes del Marketplace](https://marketplace.pandorafms.com/entries/pandorafms.kubernetes) y cárguelo en Discovery desde **Management → Discovery → Extension manager**. Una vez cargado, **Kubernetes** aparece en la categoría **Applications** del asistente de Discovery. Esta página corresponde al paquete `1.3`.
 
 ## Configurar la tarea de Discovery
 
@@ -85,21 +85,24 @@ Conexión y destino de Tentacle:
 
 Selección de recursos:
 
-- **Scan Deployments**, **Scan Nodes** y **Scan Pods** activan o desactivan la generación de agentes por categoría. Las peticiones de recopilación se ejecutan aunque estas opciones estén desactivadas.
-- El paquete `1.2` no tiene interruptores para los endpoints de salud ni los estados de componentes.
+- **Scan Deployments**, **Scan Nodes** y **Scan Pods** activan o desactivan cada categoría de recurso.
+- **Scan API health checks** genera los módulos de los endpoints de salud de la API. Los endpoints de salud pueden necesitar permisos de API elevados.
+- **Scan component statuses** genera el recuento de componentes y los módulos de condiciones de componente. Los estados de componentes pueden necesitar permisos de API elevados.
 
-<!-- SCREENSHOT NEEDED: Paso Kubernetes detailed de la versión 1.2 con solo los tres interruptores de recursos; la imagen heredada de 1.3 no corresponde. -->
+![Paso Kubernetes detailed](../assets/images/discovery/kubernetes/kubernetes-detailed.png)
 
 ## Verificar la primera ejecución
 
 Ejecute la tarea desde **Management → Discovery → Task list** y compruebe:
 
 1. **El resumen de la tarea**: progreso, agentes de nodo, pod y deployment generados y total de agentes.
-2. **Los agentes**: el global **Kubernetes** y las categorías habilitadas. Los nodos y pods dependen de las métricas; los deployments requieren datos de condiciones.
-3. **Los módulos**: contraste valores representativos de CPU y memoria y condiciones de pods con el clúster. Los contadores del resumen no demuestran que los datos se hayan recibido correctamente.
+2. **Los agentes**: el global **Kubernetes** y una instancia por cada nodo, deployment y pod planificado descubiertos. Los agentes de nodo y pod se generan aunque la API de métricas no esté disponible; los deployments requieren datos de condiciones.
+3. **Los módulos**: cada agente generado lleva los módulos de su recurso; un clúster accesible con la API de métricas disponible rellena los valores de CPU y memoria. Los contadores del resumen no demuestran que los datos se hayan recibido correctamente.
 4. **La información de ejecución**: una ejecución correcta no informa de errores; los fallos de peticiones se registran ahí.
 
-Si no se genera nada, revise primero host, puerto, conectividad y token.
+![Resumen de ejecución de la tarea](../assets/images/discovery/kubernetes/task-summary.png)
+
+Si la tarea falla antes de generar nada, revise primero host, puerto, conectividad y token.
 
 ## Interpretar los resultados
 
@@ -112,11 +115,11 @@ El plugin crea un agente por recurso descubierto. Los nombres se forman con el n
 | Global | `[Prefix]Kubernetes` | — |
 | Nodo | `[Prefix]<node>` | El agente global |
 | Deployment | `[Prefix]<deployment>` | `Kubernetes` (sin prefijo) |
-| Pod | `[Prefix]<pod>` | El agente del nodo que lo ejecuta |
+| Pod | `[Prefix]<namespace>/<pod>` | El agente del nodo que lo ejecuta |
 
 Los nodos apuntan al global con prefijo; los deployments apuntan al padre `Kubernetes` sin prefijo aunque haya uno configurado. Los pods apuntan al nodo con prefijo y usan la IP del pod como dirección. Las descripciones son `Kubernetes global agent`, `Kubernetes node`, `Kubernetes deployment` y `Kubernetes pod`.
 
-El descubrimiento de nodos y pods parte de la API de métricas. Las métricas incompletas, la ausencia de nodo asignado o de IP del pod pueden interrumpir el procesamiento y dejar resultados parciales. Las identidades de pods y deployments no incluyen el namespace: nombres iguales en namespaces distintos pueden colisionar. Use prefijos distintos para clústeres diferentes; filtrar namespaces no añade el namespace a la identidad.
+Los agentes de nodo y pod no dependen de la API de métricas: si no está disponible, se siguen generando sin los módulos de CPU y memoria. Solo se descubren los pods ya planificados en un nodo: un pod sin nodo asignado se omite, igual que los recursos que la API devuelve sin nombre. Las identidades de los pods incluyen el namespace, por lo que nombres iguales en namespaces distintos no colisionan; las de los deployments no incluyen el namespace, por lo que nombres iguales de deployment en namespaces distintos pueden colisionar. Use prefijos distintos para clústeres diferentes; filtrar namespaces no añade el namespace a la identidad del deployment.
 
 Cambiar **Prefix** cambia la identidad de todos los agentes generados. **Filter namespace** solo afecta a deployments y pods; los nodos tienen ámbito de clúster. La comparación es exacta y distingue mayúsculas. La lista es un array JSON, por ejemplo `["default","kube-system"]`. Con el filtro activado, incluya al menos un namespace: una lista vacía no genera agentes de deployment ni de pod.
 
@@ -127,9 +130,9 @@ Los valores se leen en cada ejecución. Los nombres, tipos y unidades están en 
 | Agente | Módulos |
 | --- | --- |
 | Global | Estado de la API, endpoints de salud, número de servicios, namespaces, estados de componentes y deployments |
-| Nodo | Pods frente a capacidad asignable, condiciones, CPU y memoria; depende de la API de métricas |
+| Nodo | Pods frente a capacidad asignable, condiciones y, cuando la API de métricas está disponible, uso de CPU y memoria |
 | Deployment | Recuentos de réplicas, preparación y disponibilidad |
-| Pod | Fase, condiciones, número de contenedores y CPU/memoria por contenedor; depende de la API de métricas |
+| Pod | Fase, condiciones, número de contenedores y, cuando la API de métricas está disponible, CPU y memoria por contenedor |
 
 ![Módulos de un agente de pod generado](../assets/images/discovery/kubernetes/pod-modules.png)
 
@@ -143,7 +146,7 @@ Para probar la conectividad o realizar una ejecución puntual fuera del asistent
 pandora_kubernetes --conf <PATH_TO_CONFIG>
 ```
 
-Este ejemplo de configuración directa habilita las tres categorías de recursos. Sustituya todos los marcadores antes de usarlo; el ejemplo no se ha ejecutado:
+Este ejemplo de configuración directa habilita todas las categorías de recursos y opciones de escaneo. Sustituya todos los marcadores antes de usarlo; el ejemplo no se ha ejecutado:
 
 ```ini
 ip=<TARGET_HOST>
@@ -162,6 +165,8 @@ use_proxy=0
 deployments=1
 nodes=1
 pods=1
+health_checks=1
+component_checks=1
 ```
 
 La ejecución devuelve un resumen JSON de Discovery y genera XML por agente. Un resumen ilustrativo es `{"summary":{"Total agents":4,"Nodes agents":1,"Pods agents":1,"Deployments agents":1}}`; los contadores describen la generación, no la entrega confirmada.
@@ -173,16 +178,16 @@ La entrada operativa de la CLI es `--conf` (`-h`/`--help` muestra ayuda). En una
 | Síntoma | Comprobación |
 | --- | --- |
 | Error de petición | Confirme **Kubernetes host**, **Kubernetes port** y conectividad desde Discovery. El host no debe incluir esquema. |
-| Respuestas `401` o `403` | El token falta, no es válido o no permite leer el recurso. Compruebe el acceso a las rutas exactas de la referencia de API; esta página no proporciona un rol validado. |
-| Se generan nodos, pero no deployments ni pods | Revise **Filter namespace**: coincidencia exacta con las mismas mayúsculas; una lista vacía no coincide con nada. |
-| Faltan pods esperados | Compruebe métricas, nodo asignado e IP. Los datos incompletos pueden interrumpir la generación; no presuponga que todos los pods pendientes se omiten sin errores. |
-| Faltan agentes o módulos de nodo/pod | Revise la API de métricas, los recursos asignables y los datos de nodo/IP del pod. Consulte `Can't get metrics`, `Error: Nodes` y `Error: Pods`: los datos incompletos pueden detener el procesamiento. |
-| Faltan módulos globales, de salud o componentes | Revise errores de peticiones, incluidos `401`, `403` y `404`. Los fallos de endpoints de salud omiten sus módulos; los fallos al consultar servicios, namespaces o componentes pueden impedir enviar el global. No hay interruptor para omitir estas peticiones. |
-| `Could not connect to the API` o **API status** a `0` | `/healthz` no devuelve exactamente `ok`. Revise acceso y salud de la API; también es la comprobación inicial de conexión. |
-| Falta un agente de deployment | Revise **Scan Deployments**, filtro de namespaces y condiciones devueltas. |
+| Respuestas `401` o `403` | El token falta, no es válido o no permite leer el recurso. Los endpoints de salud y de componentes pueden necesitar permisos elevados. Compruebe el acceso a las rutas exactas de la referencia de API; esta página no proporciona un rol validado. |
+| Se generan nodos, pero no deployments ni pods | Revise **Scan Deployments** y **Scan Pods**, y **Filter namespace**: con el filtro activado, los nombres deben coincidir de forma exacta y con las mismas mayúsculas; una lista vacía no coincide con nada. |
+| Faltan pods esperados | Solo se descubren los pods ya planificados en un nodo. Un pod en `Pending` sin nodo asignado no se genera. |
+| Faltan los módulos de CPU y memoria de los nodos | La API de métricas de Kubernetes no está disponible en el clúster. El agente de nodo se sigue generando. |
+| Faltan algunos módulos globales, de salud o de componentes | Esos endpoints devolvieron `401`, `403` o `404`, o la opción de escaneo correspondiente está deshabilitada. El plugin omite un endpoint opcional no accesible en lugar de hacer fallar toda la ejecución. |
+| **API status** es `0` | El endpoint `/healthz` no devolvió `ok`. Compruebe la salud del propio servidor de API. Si `/healthz` no es accesible, el módulo se omite. |
+| Falta un agente de deployment | Revise **Scan Deployments**, el filtro de namespaces y las condiciones devueltas. |
 | **Available** parece correcto con una condición fallida | Refleja el tipo de la primera condición, no su estado booleano. Contraste réplicas y condiciones con el clúster. |
 | Las peticiones agotan el tiempo | El tiempo de espera es fijo de 5 segundos, no configurable. Revise la latencia. |
-| Falla Tentacle | Compruebe acceso desde Discovery a **Tentacle IP** y **Tentacle port**. |
+| Falla Tentacle | Compruebe el acceso desde Discovery a **Tentacle IP** y **Tentacle port**. |
 | El modo proxy no se autentica | **Use proxy** envía las peticiones a **Proxy url** sin añadir el token Bearer. |
 
 ## Referencia
@@ -193,27 +198,29 @@ Estos campos siguen a la definición genérica. La macro identifica el valor en 
 
 #### Kubernetes base
 
-| Campo | Macro | Requerido | Por defecto | Descripción |
-| --- | --- | --- | --- | --- |
-| Kubernetes host | `_ip_` | Modo directo | Vacío | Dirección o nombre del servidor de API, sin esquema |
-| Kubernetes port | `_port_` | Modo directo | Vacío | Puerto numérico del servidor de API |
-| Kubernetes token | `_token_` | Endpoints directos protegidos | Vacío | Token Bearer; el asistente permite dejarlo vacío |
-| Use prefix | `_usePrefix_` | No | off | Muestra el campo de prefijo |
-| Prefix | `_prefix_` | No | Vacío | Visible con **Use prefix**; vacíelo para dejar de aplicar prefijo |
-| Filter namespace | `_filterNamespace_` | No | off | Limita agentes de deployment y pod a la lista indicada |
-| Namespace | `_namespace_` | Al filtrar | `[]` | Array JSON, por ejemplo `["default","kube-system"]`; comparación exacta con distinción de mayúsculas |
-| Use proxy | `_useProxy_` | No | off | Usa **Proxy url** en lugar de la dirección directa; omite autenticación Bearer |
-| Proxy url | `_proxyUrl_` | Modo proxy | Vacío | URL base con esquema; visible con **Use proxy** |
-| Tentacle IP | `_tentacleIP_` | Sí | `127.0.0.1` | Destino de transferencia |
-| Tentacle port | `_tentaclePort_` | Sí | `41121` | Puerto numérico de transferencia |
+| Campo | Macro | Tipo | Requerido | Por defecto | Notas |
+| --- | --- | --- | --- | --- | --- |
+| Kubernetes host | `_ip_` | string | Modo directo | Vacío | Dirección o nombre del servidor de API, sin esquema |
+| Kubernetes port | `_port_` | number | Modo directo | Vacío | Puerto numérico del servidor de API |
+| Kubernetes token | `_token_` | textarea | Endpoints directos protegidos | Vacío | Token Bearer; el asistente permite dejarlo vacío |
+| Use prefix | `_usePrefix_` | checkbox | No | off | Muestra el campo de prefijo; no anula un prefijo con contenido |
+| Prefix | `_prefix_` | string | No | Vacío | Visible con **Use prefix**; vacíelo para dejar de aplicar prefijo |
+| Filter namespace | `_filterNamespace_` | checkbox | No | off | Limita los agentes de deployment y de pod a la lista indicada |
+| Namespace | `_namespace_` | textarea | Al filtrar | `[]` | Array JSON, por ejemplo `["default","kube-system"]`; comparación exacta con distinción de mayúsculas |
+| Use proxy | `_useProxy_` | checkbox | No | off | Usa **Proxy url** en lugar de la dirección directa; omite autenticación Bearer |
+| Proxy url | `_proxyUrl_` | string | Modo proxy | Vacío | URL base con esquema; visible con **Use proxy** |
+| Tentacle IP | `_tentacleIP_` | string | Sí | `127.0.0.1` | Destino de transferencia |
+| Tentacle port | `_tentaclePort_` | number | Sí | `41121` | Puerto numérico de transferencia |
 
 #### Kubernetes detailed
 
-| Campo | Macro | Requerido | Por defecto | Descripción |
-| --- | --- | --- | --- | --- |
-| Scan Deployments | `_scanDeployments_` | No | on | Genera agentes de deployment cuando hay condiciones |
-| Scan Nodes | `_scanNodes_` | No | on | Genera agentes de nodo a partir de métricas disponibles |
-| Scan Pods | `_scanPods_` | No | on | Genera agentes de pod con datos completos de métricas, nodo e IP |
+| Campo | Macro | Tipo | Requerido | Por defecto | Notas |
+| --- | --- | --- | --- | --- | --- |
+| Scan Deployments | `_scanDeployments_` | checkbox | No | on | Genera agentes de deployment cuando hay datos de condiciones |
+| Scan Nodes | `_scanNodes_` | checkbox | No | on | Genera agentes de nodo; los módulos de CPU y memoria requieren la API de métricas |
+| Scan Pods | `_scanPods_` | checkbox | No | on | Genera agentes de pod planificados; los módulos de CPU y memoria por contenedor requieren la API de métricas |
+| Scan API health checks | `_healthChecks_` | checkbox | No | on | Genera los módulos de los endpoints de salud de la API. Puede necesitar permisos de API elevados |
+| Scan component statuses | `_componentChecks_` | checkbox | No | on | Genera el recuento de componentes y los módulos de condiciones de componente. Puede necesitar permisos de API elevados |
 
 ### Claves del archivo de configuración
 
@@ -237,9 +244,11 @@ En modo directo se requieren `ip`, `port` y, para endpoints protegidos, `token`;
 | `filter_namespace` | Al filtrar | `[]` | Array JSON; coincidencia exacta de namespaces |
 | `use_proxy` | No | `0` | `1` usa `proxy_url` sin cabecera Bearer |
 | `proxy_url` | Modo proxy | Vacío | URL base con esquema |
-| `deployments` | No | `1` | `1` genera agentes de deployment |
-| `nodes` | No | `1` | `1` genera agentes de nodo |
-| `pods` | No | `1` | `1` genera agentes de pod |
+| `deployments` | No | `1` | `1` recopila deployments y genera agentes de deployment |
+| `nodes` | No | `1` | `1` recopila nodos y genera agentes de nodo |
+| `pods` | No | `1` | `1` recopila pods y genera agentes de pod |
+| `health_checks` | No | `1` | `1` genera los módulos de los endpoints de salud de la API |
+| `component_checks` | No | `1` | `1` genera los módulos de estado de componentes |
 | `data_dir` | No | Vacío | Aceptada, pero no selecciona el directorio de salida |
 
 ### Línea de comandos
@@ -254,22 +263,22 @@ En modo directo se requieren `ip`, `port` y, para endpoints protegidos, `token`;
 
 | Nombre | Tipo | Valor |
 | --- | --- | --- |
-| `API status` | generic_proc | `1` si `/healthz` devuelve `ok`; `0` en caso contrario |
-| Un módulo por endpoint de salud | generic_proc | `1` si devuelve `ok`; `0` en caso contrario; se omite si falla la petición |
-| `Services` | generic_data | Número de servicios |
-| `Namespaces` | generic_data | Número de namespaces |
-| `Components` | generic_data | Número de estados de componentes |
+| `API status` | generic_proc | `1` si `/healthz` devuelve `ok`; `0` en caso contrario. Solo se crea cuando `/healthz` responde |
+| Un módulo por endpoint de salud | generic_proc | `1` si devuelve `ok`; `0` en caso contrario. Solo cuando **Scan API health checks** está habilitado y el endpoint responde |
+| `Services` | generic_data | Número de servicios; se omite si la petición no es accesible |
+| `Namespaces` | generic_data | Número de namespaces; se omite si la petición no es accesible |
+| `Components` | generic_data | Número de estados de componentes. Solo cuando **Scan component statuses** está habilitado y la petición es accesible |
 | `<component>.<condition>` | generic_data | `1` si el estado es `TRUE`; `0` en caso contrario |
-| `Deployments` | generic_data | Número de deployments |
+| `Deployments` | generic_data | Número de deployments; `0` cuando **Scan Deployments** está deshabilitado |
 
-Los nombres y rutas de salud están en [Peticiones a la API](#peticiones-a-la-api). El global se transfiere solo si termina su fase de recopilación.
+Los nombres y rutas de salud están en [Peticiones a la API](#peticiones-a-la-api). Solo se crea un módulo para un endpoint que responde. Los fallos de endpoints opcionales no impiden la transferencia del agente global.
 
 #### Agentes de nodo
 
 | Nombre | Tipo | Unidad | Valor |
 | --- | --- | --- | --- |
 | `Pods` | generic_data | — | Pods contados durante la recopilación en el nodo |
-| `Pods (%)` | generic_data | % | Pods recopilados frente a capacidad asignable del nodo; su ausencia puede detener la generación de nodos |
+| `Pods (%)` | generic_data | % | Pods recopilados frente a capacidad asignable del nodo; se omite si falta esa capacidad |
 | `CPU (cores)` | generic_data | cores | CPU utilizada; requiere API de métricas |
 | `CPU (%)` | generic_data | % | CPU utilizada frente a asignable; requiere API de métricas |
 | `Memory (bytes)` | generic_data | bytes | Memoria utilizada; requiere API de métricas |
@@ -277,7 +286,7 @@ Los nombres y rutas de salud están en [Peticiones a la API](#peticiones-a-la-ap
 | `NetworkUnavailable`, `MemoryPressure`, `DiskPressure`, `PIDPressure` | generic_proc | — | `1` si la condición es `False`; `0` en caso contrario |
 | `Ready` | generic_proc | — | `1` si la condición es `True`; `0` en caso contrario |
 
-La generación de nodos requiere métricas y datos asignables completos, incluida la capacidad de pods. La ausencia de campos puede detener la fase de nodos en lugar de generar agentes con menos módulos. `Pods` cuenta los pods procesados de los datos recibidos, no un recuento independiente validado de todos los pods del nodo.
+Los agentes de nodo se generan aunque la API de métricas no esté disponible; en ese caso se omiten los módulos de CPU y memoria. `Pods` cuenta los pods procesados de los datos recibidos, no un recuento independiente validado de todos los pods del nodo.
 
 #### Agentes de deployment
 
@@ -292,6 +301,8 @@ La generación de nodos requiere métricas y datos asignables completos, incluid
 | `Unavailable replicas` | generic_data | — | Réplicas restantes para alcanzar disponibilidad completa |
 | `Available` | generic_data | — | `1` si el tipo de la primera condición es `Available` o `Progressing`; `0` en otro caso. Ignora el estado de la condición. Umbral de aviso `2` y crítico `0` |
 
+Los agentes de deployment solo se generan cuando el deployment devuelve al menos una condición.
+
 #### Agentes de pod
 
 | Nombre | Tipo | Unidad | Valor |
@@ -305,11 +316,11 @@ La generación de nodos requiere métricas y datos asignables completos, incluid
 | `Container <name> memory (bytes)` | generic_data | bytes | Memoria del contenedor; requiere API de métricas |
 | `Container <name> memory (%)` | generic_data | % | Memoria frente a la asignable del nodo; requiere API de métricas |
 
-Las métricas incompletas de contenedores pueden interrumpir la generación del agente. Los porcentajes usan los recursos asignables del nodo, no los requests ni límites del contenedor.
+Solo se crea un módulo de CPU o memoria por contenedor cuando el contenedor expone esa métrica; el agente de pod se genera aunque falte una métrica. Los porcentajes usan los recursos asignables del nodo, no los requests ni límites del contenedor.
 
 ### Peticiones a la API
 
-El token necesita acceso a las siguientes peticiones. Los interruptores controlan la generación de agentes, no la recopilación. Esta lista describe las consultas, no un rol de mínimo privilegio validado.
+El token necesita acceso a las siguientes peticiones. Los interruptores de recursos controlan la recopilación y la generación de agentes; los de salud y componentes controlan sus propias peticiones. Esta lista describe las consultas, no un rol de mínimo privilegio validado.
 
 | Recurso | Ruta GET |
 | --- | --- |
@@ -337,6 +348,6 @@ El token necesita acceso a las siguientes peticiones. Los interruptores controla
 | Campo | Valor |
 | --- | --- |
 | App short name | `pandorafms.kubernetes` |
-| Versión del plugin | `1.2` |
+| Versión del plugin | `1.3` |
 | Tipo | Aplicación de Discovery (`.disco`) |
 | Sección | Discovery → Applications |
