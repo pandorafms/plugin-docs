@@ -422,6 +422,33 @@ puede incluir `events`, `inventory_data`, `log_data`, `trap_data`, `discovery_da
 Reenviar el mismo agente, módulo y marca de tiempo actualiza el valor existente en lugar de
 duplicarlo.
 
+**Los datos de un agente que ya existe se descartan en silencio** salvo que la carga lo nombre como lo
+guarda la consola: `agent_name` debe ser el `name` del agente, no su alias, y el agente necesita un
+`serverName` que coincida con el del nodo. `pandora-cli agent get <id> -o json` muestra ambos. Un
+agente creado por el API tiene el `name` hasheado, un alias para mostrar y ningún `serverName`, así
+que una carga que use el alias —o que llegue antes de
+`pandora-cli agent update <id> --set serverName=<nodo>`— responde 200, borra su fila de cola y no
+crea nada, sin ningún error en el log de la consola. Los módulos escritos así necesitan además un
+tipo async (`async_data`, `async_proc`, `async_string`) para tener estado y disparar alertas.
+
+### Probar el historial de alertas
+
+`fired-alert` es de solo lectura: sus filas las genera la consola. Para crear una, use un módulo
+async, la plantilla crítica que ya viene instalada y un valor inyectado:
+
+```bash
+pandora-cli module create --set idAgent=1 --set name=probe --set idModule=1 --set idModuleType=21 --set moduleInterval=300
+pandora-cli module-alert create <idAgentModule> --set idAlertTemplate=1
+# probe.json contiene una carga cuyo module_data es
+#   {"name": "probe", "type": "async_proc", "data": 0}
+pandora-cli monitoring create --from-file probe.json
+pandora-cli fired-alert list
+```
+
+En un módulo proc `0` es crítico y `1` normal, así que inyectar `data: 1` recupera la alerta
+(`recovered: true`). Un módulo `generic_*` guarda el valor inyectado pero nunca calcula estado, así
+que no dispara ninguna alerta.
+
 ### Entidades anidadas
 
 Algunas entidades dependen de una entidad superior. Sus comandos reciben primero el identificador de
@@ -566,7 +593,9 @@ tiene configuración remota. La asignación solo se registra en la configuració
 `collection apply` tras cambiar los ficheros de una colección para que los agentes recojan el
 paquete nuevo.
 
-**`isPandoraAi` en `token`** solo puede establecerse al crear el token.
+**`isPandoraAi` en `token`** lo gestiona la consola: crear un token con `isPandoraAi=true` responde
+`400 Pandora AI tokens can only be created by the console`, y el campo se rechaza al actualizar.
+Omítalo o envíe `false`.
 
 ### Transferir ficheros
 
@@ -688,23 +717,33 @@ Los campos que contienen arrays, como `inputs` o `idAgentsRmm`, necesitan `--fro
 y las programaciones de una rutina no tienen `delete`: modifíquelos con `update` y
 `--set pendingDelete=true` para marcarlos para su eliminación.
 
-### Notificaciones, correo, eventos SIEM y tareas de Pandora AI
+### Notificaciones, correo, SIEM, alertas disparadas y tareas de Pandora AI
 
 Estas entidades cubren el sistema de notificaciones de la consola, el transporte de correo, los
-eventos SIEM y las tareas programadas de Pandora AI. Siguen la forma habitual de los comandos; no se
-han verificado contra una consola en esta versión.
+eventos y los logs decodificados de SIEM, el historial de alertas disparadas y las tareas
+programadas de Pandora AI. Siguen la forma habitual de los comandos; no se han verificado contra una
+consola en esta versión.
 
 - **`notification`** gestiona las notificaciones de la consola (`message`), las fuentes de
   notificación (`source`, solo lectura) y las preferencias de notificación de cada usuario
-  (`source-user`).
+  (`source-user`). `message create` exige `idUser`, `subject` y `message`, y `message update`
+  ignora `read` en silencio: es de solo lectura.
 - **`email send`** envía un correo mediante el transporte de correo de la consola, y `email config`
   muestra la configuración del transporte sin credenciales. `user notify` envía un correo a un
   usuario.
 - **`siem-event`** es de solo lectura. Busca los eventos SIEM que el usuario puede ver y necesita un
   backend SIEM configurado en la consola. Sin `startDate` y `endDate` abarca las últimas 24 horas.
-- **`ai-task`** gestiona las tareas programadas de Pandora AI. `periodicity` es `hourly`, `daily`,
-  `weekly`, `monthly` o `yearly`, y `notifySuccess` y `notifyError` son `never`, `on_request` o
-  `always`. `ai-notify send` notifica al propietario de una tarea.
+- **`siem-log`** es de solo lectura. Busca los logs decodificados de SIEM, que no son logs en bruto
+  ni eventos SIEM, y necesita el mismo backend. `siem-log get <idLog>` devuelve un documento y
+  `siem-log aggregate --set groupBy=decoder` los cuenta por una dimensión.
+- **`fired-alert`** es de solo lectura. Lista el historial de alertas, una fila por disparo, y
+  admite toda la superficie de filtrado y paginación. No guarda definiciones de alerta: para eso
+  están `alert-action`, `alert-template` y `module-alert`. En una metaconsola `--serverId` es
+  obligatorio.
+- **`ai-task`** gestiona las tareas programadas de Pandora AI. `create` exige `firstRun`, una marca
+  de tiempo Unix. `periodicity` es `hourly`, `daily`, `weekly`, `monthly` o `yearly`, y
+  `notifySuccess` y `notifyError` son `never`, `on_request` o `always`. `ai-notify send` notifica
+  al propietario de una tarea y exige `idScheduledTask`, `event`, `subject` y `message`.
 
 ```bash
 pandora-cli notification message list --set idUser=admin --size 20
@@ -716,6 +755,13 @@ pandora-cli user notify admin --set subject='Informe' --set body='El informe est
 
 pandora-cli siem-event list --set severity=high --set startDate=2026-10-01T00:00:00Z
 pandora-cli siem-event aggregate --set groupBy=severity --set size=10
+
+pandora-cli siem-log list --set programName=sshd --size 20
+pandora-cli siem-log get 3f9a1c
+pandora-cli siem-log aggregate --set groupBy=decoder --set size=10
+
+pandora-cli fired-alert list --size 20
+pandora-cli fired-alert list --filter idAgentModuleAlert=12 --page 2
 
 pandora-cli ai-task list
 pandora-cli ai-task enable 4 --set enabled=false
@@ -908,6 +954,7 @@ instalada.
 | `event-alert-rule` | Reglas que disparan una alerta de evento | `list`, `get`, `create`, `update`, `delete` |
 | `event-filter` | Filtros de eventos guardados | `list`, `get`, `create`, `update`, `delete` |
 | `event-tag` | Etiquetas de eventos | `list`, `get`, `create`, `update`, `delete` |
+| `fired-alert` | Historial de alertas disparadas (solo lectura) | `list`, `get` |
 | `group` | Grupos de agentes | `list`, `get`, `create`, `update`, `delete` |
 | `log` | Entradas de log retenidas para los agentes | `agent list`, `agent entry list`, `agent source list` |
 | `module` (alias `agent-module`) | Módulos de agente | `list`, `get`, `create`, `update`, `delete` + 4 más (`force-check`, `graph` y el grupo `policy`) |
@@ -936,6 +983,7 @@ instalada.
 | `service` | Servicios | `list`, `get`, `create`, `update`, `delete` + 5 más (el grupo `element`) |
 | `siem-event` | Eventos SIEM que el usuario puede ver (solo lectura) | `list`, `get`, `aggregate` |
 | `siem-group` | Grupos SIEM | `list`, `get`, `create`, `update`, `delete` |
+| `siem-log` | Logs decodificados de SIEM que el usuario puede ver (solo lectura) | `list`, `get`, `aggregate` |
 | `siem-rule` | Reglas SIEM | `list`, `get`, `create`, `update`, `delete` + 4 más |
 | `tag` | Etiquetas de módulos | `list`, `get`, `create`, `update`, `delete` |
 | `token` | Tokens de la API | `list`, `get`, `create`, `update`, `delete` |

@@ -408,6 +408,33 @@ the console rejects the request without any of them. Other `agent_data` keys are
 `events`, `inventory_data`, `log_data`, `trap_data`, `discovery_data` and `cmd_data`. Re-sending the
 same agent, module and timestamp updates the existing value instead of duplicating it.
 
+**Data for an agent that already exists is dropped silently** unless the payload names it the way the
+console stores it: `agent_name` must be the agent's `name`, not its alias, and the agent needs a
+`serverName` matching the node. `pandora-cli agent get <id> -o json` prints both. An agent created
+through the API has a hashed `name`, an alias for display and no `serverName`, so a push that uses the
+alias — or that runs before
+`pandora-cli agent update <id> --set serverName=<node>` — answers 200, deletes its queue row and
+creates nothing, with no error in the console log. Modules written this way also need an async type
+(`async_data`, `async_proc`, `async_string`) to get a status and drive alerts.
+
+### Testing the alert history
+
+`fired-alert` is read-only: its rows are produced by the console. To create one, use an async module,
+the shipped critical template and a pushed value:
+
+```bash
+pandora-cli module create --set idAgent=1 --set name=probe --set idModule=1 --set idModuleType=21 --set moduleInterval=300
+pandora-cli module-alert create <idAgentModule> --set idAlertTemplate=1
+# probe.json holds one payload whose module_data entry is
+#   {"name": "probe", "type": "async_proc", "data": 0}
+pandora-cli monitoring create --from-file probe.json
+pandora-cli fired-alert list
+```
+
+In a proc module `0` is critical and `1` normal, so pushing `data: 1` recovers the alert
+(`recovered: true`). A `generic_*` module stores the pushed value but never computes a status, so no
+alert fires from it.
+
 ### Nested entities
 
 Some entities live under a parent. Their commands take the parent identifier first:
@@ -546,7 +573,9 @@ that is available on the console. Otherwise the console answers
 remote configuration yet. The assignment is only recorded in the agent's remote configuration; run `collection apply` after changing the files of a collection so that agents pick
 up the new package.
 
-**`isPandoraAi` on `token`** can only be set when the token is created.
+**`isPandoraAi` on `token`** is managed by the console: creating a token with `isPandoraAi=true`
+answers `400 Pandora AI tokens can only be created by the console`, and the field is rejected on
+update. Omit it or send `false`.
 
 ### Transferring files
 
@@ -667,22 +696,31 @@ Fields that hold arrays, such as `inputs` or `idAgentsRmm`, need `--from-file`. 
 routine schedules have no `delete`: `update` them with `--set pendingDelete=true` to flag them for
 removal.
 
-### Notifications, e-mail, SIEM events and Pandora AI tasks
+### Notifications, e-mail, SIEM, fired alerts and Pandora AI tasks
 
-These entities cover the console notification system, the mail transport, the SIEM events and the
-Pandora AI scheduled tasks. They follow the usual command shape; they have not been verified
-against a console in this release.
+These entities cover the console notification system, the mail transport, the SIEM events and
+decoded logs, the alert firing history and the Pandora AI scheduled tasks. They follow the usual
+command shape; they have not been verified against a console in this release.
 
 - **`notification`** manages the console notifications (`message`), the notification sources
   (`source`, read only) and the notification preferences of each user (`source-user`).
+  `message create` requires `idUser`, `subject` and `message`, and `message update` silently
+  ignores `read`, which is read-only.
 - **`email send`** sends an e-mail through the console mail transport, and `email config` shows
   the transport configuration without credentials. `user notify` sends an e-mail to one user.
 - **`siem-event`** is read only. It searches the SIEM events the user is authorized to see, and
   needs a SIEM backend configured in the console. Without `startDate` and `endDate` it covers
   the last 24 hours.
-- **`ai-task`** manages the Pandora AI scheduled tasks. `periodicity` is `hourly`, `daily`,
-  `weekly`, `monthly` or `yearly`, and `notifySuccess` and `notifyError` are `never`,
-  `on_request` or `always`. `ai-notify send` notifies the owner of a task.
+- **`siem-log`** is read only. It searches the decoded SIEM logs, which are not raw logs and not
+  SIEM events, and needs the same backend. `siem-log get <idLog>` returns one document and
+  `siem-log aggregate --set groupBy=decoder` counts them by one dimension.
+- **`fired-alert`** is read only. It lists the alert history, one row per firing, and takes the
+  whole filter and paging surface. It holds no alert definitions: `alert-action`,
+  `alert-template` and `module-alert` do. On a metaconsole `--serverId` is required.
+- **`ai-task`** manages the Pandora AI scheduled tasks. `create` requires `firstRun`, a Unix
+  timestamp. `periodicity` is `hourly`, `daily`, `weekly`, `monthly` or `yearly`, and
+  `notifySuccess` and `notifyError` are `never`, `on_request` or `always`. `ai-notify send`
+  notifies the owner of a task and requires `idScheduledTask`, `event`, `subject` and `message`.
 
 ```bash
 pandora-cli notification message list --set idUser=admin --size 20
@@ -694,6 +732,13 @@ pandora-cli user notify admin --set subject='Report' --set body='The report is r
 
 pandora-cli siem-event list --set severity=high --set startDate=2026-10-01T00:00:00Z
 pandora-cli siem-event aggregate --set groupBy=severity --set size=10
+
+pandora-cli siem-log list --set programName=sshd --size 20
+pandora-cli siem-log get 3f9a1c
+pandora-cli siem-log aggregate --set groupBy=decoder --set size=10
+
+pandora-cli fired-alert list --size 20
+pandora-cli fired-alert list --filter idAgentModuleAlert=12 --page 2
 
 pandora-cli ai-task list
 pandora-cli ai-task enable 4 --set enabled=false
@@ -880,6 +925,7 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `event-alert-rule` | Rules that trigger an event alert | `list`, `get`, `create`, `update`, `delete` |
 | `event-filter` | Saved event filters | `list`, `get`, `create`, `update`, `delete` |
 | `event-tag` | Event tags | `list`, `get`, `create`, `update`, `delete` |
+| `fired-alert` | Alert fired history (read only) | `list`, `get` |
 | `group` | Agent groups | `list`, `get`, `create`, `update`, `delete` |
 | `log` | Log entries retained for the agents | `agent list`, `agent entry list`, `agent source list` |
 | `module` (alias `agent-module`) | Agent modules | `list`, `get`, `create`, `update`, `delete` + 4 more (`force-check`, `graph` and the `policy` group) |
@@ -908,6 +954,7 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `service` | Services | `list`, `get`, `create`, `update`, `delete` + 5 more (the `element` group) |
 | `siem-event` | SIEM events the user is authorized to see (read only) | `list`, `get`, `aggregate` |
 | `siem-group` | SIEM groups | `list`, `get`, `create`, `update`, `delete` |
+| `siem-log` | Decoded SIEM logs the user is authorized to see (read only) | `list`, `get`, `aggregate` |
 | `siem-rule` | SIEM rules | `list`, `get`, `create`, `update`, `delete` + 4 more |
 | `tag` | Module tags | `list`, `get`, `create`, `update`, `delete` |
 | `token` | API tokens | `list`, `get`, `create`, `update`, `delete` |
