@@ -1,12 +1,12 @@
 # Selenium 4 Discovery
 
-*Última actualización del artículo: 2026-09-08.*
+*Última actualización del artículo: 2026-10-28.*
 
 ## Qué monitoriza
 
 El plugin de Discovery de Selenium 4 (WUX, monitorización de experiencia de usuario web) ejecuta transacciones web grabadas con la extensión de navegador Selenium IDE contra un navegador real de Google Chrome o Mozilla Firefox y convierte cada prueba grabada en un agente de Pandora FMS con los resultados de la transacción. Lee la transacción de un archivo `.side` de Selenium IDE (formato Selenium JSON) y maneja el navegador mediante la API WebDriver de Selenium 4.
 
-Una tarea de Discovery puede ejecutar las pruebas grabadas en cuatro modos: un driver de Selenium local en el servidor de Pandora FMS, un servidor remoto de Selenium 4, un contenedor de Docker en el servidor de Discovery, o un contenedor de Docker en un worker remoto alcanzado por SSH. Se crea un agente por cada prueba del proyecto, más un agente por proyecto con estadísticas de conexión cuando **Monitor time statistics** está habilitado.
+Una tarea de Discovery puede ejecutar las pruebas grabadas en cuatro modos: un driver de Selenium local en el servidor de Pandora FMS, un servidor remoto de Selenium 4, un contenedor de Docker en el servidor de Discovery, o un contenedor de Docker en un worker remoto alcanzado por SSH. Se crea un agente por cada prueba del proyecto, más un agente por proyecto con estadísticas de conexión cuando **Monitor time statistics** está habilitado. El agente de estadísticas cubre la URL principal de la transacción y cualquier URL absoluta adicional configurada en la tarea.
 
 ## Preparación
 
@@ -14,7 +14,7 @@ Una tarea de Discovery puede ejecutar las pruebas grabadas en cuatro modos: un d
 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
-| Versión del plugin `1.8` (`pandorafms.selenium.4`) | Objetivo documentado | La versión que describe esta página, identificada en la definición del paquete. Consulte [Identidad del plugin](#identidad-del-plugin). |
+| Versión del plugin `1.9` (`pandorafms.selenium.4`) | Objetivo documentado | La versión que describe esta página, identificada en la definición del paquete. Consulte [Identidad del plugin](#identidad-del-plugin). |
 | Discovery de Pandora FMS, versión `780` o posterior | `Compatible conocido` | El manual oficial de WUX indica que el WUX centralizado en Discovery se basa en Selenium 4, está disponible desde Pandora FMS 780 y es el método recomendado desde la versión 782. |
 | Google Chrome y Mozilla Firefox | `Soportado` | El manual oficial de WUX describe el plugin ejecutando transacciones con estos navegadores y recomienda usar el mismo navegador donde se grabó la transacción. |
 | Un sistema operativo concreto del host del worker | `Sin validar` | Ningún registro de pruebas publicado demuestra compatibilidad con sistemas operativos para la máquina que ejecuta las pruebas. |
@@ -81,7 +81,8 @@ Cree la tarea desde **Management → Discovery → Applications → Selenium 4**
 **Paso 4 — Test setup.** Comportamiento de la transacción:
 
 - **Accept insecure certs** acepta certificados TLS autofirmados o no válidos durante la transacción.
-- **Monitor time statistics** crea el agente de estadísticas del proyecto con las temporizaciones de conexión a la URL principal de la transacción.
+- **Monitor time statistics** crea el agente de estadísticas del proyecto con las temporizaciones de conexión a la URL principal de la transacción y a las URLs indicadas en **Additional URL statistics**.
+- **Additional URL statistics** enumera URLs HTTP(S) absolutas que se monitorizan además de la URL principal de la transacción, una por línea. Cada URL añade sus propios módulos **URL status** y **URL stat** al agente de estadísticas del proyecto. Se ignoran las líneas vacías, las que empiezan por `#`, los duplicados y las entradas que no son URLs HTTP(S) absolutas. Este campo requiere **Monitor time statistics**.
 - **Browser width** y **Browser height** fijan el tamaño de la ventana del navegador (por defecto `1920`×`1080`).
 - **Global timeout** es el tiempo de espera por defecto, en segundos, para los comandos de Selenium y para operaciones como la apertura de la sesión (por defecto `10`).
 - **Wait between commands** añade una pausa, en segundos, entre los comandos de la transacción (por defecto `0.15`).
@@ -102,7 +103,11 @@ Fuerce la tarea desde **Management → Discovery → Task list** y compruebe el 
 
 3. **Los módulos de transacción.** Todo agente de prueba lleva **Global status** (`1` en éxito), **Global time** (segundos) y **Last error screenshot** (una captura cuando la prueba falla, `None` cuando tiene éxito).
 
-4. **Los módulos de estadísticas.** Cuando **Monitor time statistics** está habilitado, el agente del proyecto lleva **URL status** y los módulos de temporización **URL stat**.
+![Módulos del agente de prueba de Selenium 4: Global status, Global time y Last error screenshot.](../assets/images/discovery/selenium-4/test-agent-modules.png)
+
+4. **Los módulos de estadísticas.** Cuando **Monitor time statistics** está habilitado, el agente del proyecto lleva **URL status** y los módulos de temporización **URL stat** de la URL principal y de cada URL adicional. Los módulos de la URL principal conservan sus nombres simples; cada conjunto adicional añade la URL entre paréntesis, por ejemplo `URL stat TT (https://example.com/pricing)`.
+
+![Agente de estadísticas del proyecto de Selenium 4 con módulos para la URL principal y dos URLs adicionales.](../assets/images/discovery/selenium-4/project-agent-stats.png)
 
 Si no aparece ningún agente, lo primero que hay que revisar son los requisitos del modo de ejecución: drivers, Docker, acceso SSH o la URL del servidor de Selenium.
 
@@ -121,7 +126,7 @@ El nombre interno de Pandora FMS de cada agente es `a` + el hash MD5 del nombre 
 | Agente | Se crea cuando | Módulos que lleva |
 | --- | --- | --- |
 | `WUX Discovery - <nombre de la prueba>` | El proyecto contiene una prueba | `Global status`, `Global time`, `Last error screenshot`; `Phase <nombre> status`, `Phase <nombre> time` y, con **Monitor errors**, `Phase <nombre> error` por cada fase; módulos personalizados |
-| `WUX Discovery - <nombre del proyecto>` | **Monitor time statistics** habilitado | `URL status`, `URL stat TT`, `URL stat DNS`, `URL stat TTCP`, `URL stat TST`, `URL stat TTC` y, para URLs HTTPS, `URL stat TSSL` |
+| `WUX Discovery - <nombre del proyecto>` | **Monitor time statistics** habilitado | `URL status` y `URL stat TT`, `URL stat DNS`, `URL stat TTCP`, `URL stat TST`, `URL stat TTC` y, para URLs HTTPS, `URL stat TSSL` de la URL principal; el mismo conjunto, con el sufijo ` (<URL>)`, por cada URL adicional |
 
 **Global time** mide la ejecución completa de la prueba, incluido el tiempo que el navegador tarda en abrirse y cerrarse, por lo que no es necesariamente la suma de los tiempos de las fases. **Last error screenshot** se declara crítico cuando contiene una captura, es decir, cuando la prueba falló. El texto del error se conserva en la descripción de **Global status** y, con **Monitor errors**, en los módulos **Global error** y de error de fase.
 
@@ -156,6 +161,7 @@ Ejecute el plugin con `-v` (o `--verbose`) para imprimir el progreso de la ejecu
 | Una tarea Docker informa de una imagen ausente o de errores de Docker | Descargue la **Docker image** configurada en la máquina que ejecuta Docker y verifique el motor y los permisos del usuario. |
 | Una tarea de Remote Docker falla al autenticarse | Confirme **SSH address**, **SSH port**, **SSH user** y **SSH password**, y que la contraseña cifrada se generó para este plugin. El usuario de SSH debe poder iniciar contenedores y escribir en el **Temporal folder**. |
 | Faltan módulos de estadísticas o están a `0` | **Monitor time statistics** requiere `curl` en la máquina que ejecuta el plugin (incluido en la imagen Docker por defecto). En el modo Remote Driver las estadísticas se miden desde el servidor de Discovery, no desde el servidor de Selenium. |
+| No aparecen las estadísticas de las URLs adicionales | Compruebe que **Monitor time statistics** está habilitado y que **Additional URL statistics** contiene URLs absolutas `http://` o `https://`, una por línea. Las URLs relativas, los duplicados y las entradas no válidas se omiten; las no válidas se notifican por la salida de error. Cada URL aceptada añade su propio conjunto de módulos con el sufijo ` (<URL>)` |
 | La tarea informa de un error de parseo de SIDE | El campo **Selenium IDE JSON** debe contener el contenido JSON del archivo `.side` exportado. |
 | Una prueba falla con `Global status` a `0` | Abra el módulo **Last error screenshot** y la descripción de **Global status** para ver el texto del fallo. Las fases y los módulos de error apuntan al comando que falló. |
 | Un comando de Selenium IDE parece ignorarse | Los comandos que no están en la [lista de soportados](#comandos-para-archivos-side) se omiten silenciosamente. Los comandos que generan módulos deben empezar por `//`. |
@@ -204,6 +210,7 @@ Los campos que se muestran dependen de **Worker mode**, **Run mode** y **Browser
 | --- | --- | --- | --- | --- |
 | Accept insecure certs | `_acceptInsecureCerts_` | checkbox | off | Acepta certificados TLS no válidos durante la transacción |
 | Monitor time statistics | `_monitorStats_` | checkbox | on | Crea el agente de estadísticas del proyecto con las temporizaciones de conexión |
+| Additional URL statistics | `_extraStatsURLs_` | textarea | — | URLs HTTP(S) absolutas que se monitorizan además de la URL principal, una por línea. Requiere **Monitor time statistics** |
 | Browser width | `_browserWidth_` | number | `1920` | Anchura de la ventana del navegador en píxeles |
 | Browser height | `_browserHeight_` | number | `1080` | Altura de la ventana del navegador en píxeles |
 | Global timeout | `_globalTimeout_` | number | `10` | Tiempo de espera por defecto en segundos para los comandos de Selenium y la apertura de la sesión. El plugin usa `5` cuando la clave no está presente |
@@ -237,6 +244,7 @@ La tarea de Discovery construye un archivo JSON temporal a partir de sus propios
 | `firefox_profile` | Vacío | Carpeta del perfil de Firefox; se monta en el contenedor en los modos Docker |
 | `accept_insecure_certs` | `0` | `1` acepta certificados TLS no válidos |
 | `monitor_stats` | `0` | `1` crea el agente de estadísticas del proyecto |
+| `extra_stats_urls` | Vacío | Lista de URLs HTTP(S) absolutas cuyas estadísticas se añaden al agente del proyecto. El asistente de Discovery la suministra mediante la opción `-u`; un archivo de configuración manual puede incluir la lista directamente |
 | `browser_width` | `1920` | Anchura del navegador en píxeles |
 | `browser_height` | `1080` | Altura del navegador en píxeles |
 | `global_timeout` | `5` | Tiempo de espera en segundos para comandos y operaciones de sesión |
@@ -245,7 +253,7 @@ La tarea de Discovery construye un archivo JSON temporal a partir de sus propios
 | `headless` | `1` | `1` ejecuta el navegador en modo headless. Modo local driver |
 | `virtual_display` | `1` | `1` ejecuta el navegador en un display virtual. Modo local driver |
 | `phase_summarize` | `0` | Solo tarea — `1` hace que `Global time` sea la suma de los tiempos de fase |
-| `legacy_data_structure` | `0` | Solo tarea — `1` usa el nombrado de módulos compatible con Selenium 3 y envía un único agente heredado |
+| `legacy_data_structure` | `0` | Solo tarea — `1` usa el nombrado de módulos compatible con Selenium 3 y envía un único agente heredado. Los módulos de URLs adicionales se nombran `_Global_Status_extra_<N>` y `_UX_Stats_<KEY>_extra_<N>` |
 | `legacy_data_agent_name` | `a` + MD5 del nombre del archivo SIDE | Solo tarea — nombre del agente heredado |
 | `legacy_data_agent_group` | Vacío | Solo tarea — grupo del agente heredado |
 
@@ -263,6 +271,7 @@ El plugin principal lee un archivo de configuración JSON y un archivo SIDE:
 | --- | --- |
 | `-c`, `--conf` | Ruta obligatoria al archivo de configuración de la tarea |
 | `-s`, `--side` | Ruta obligatoria al archivo SIDE |
+| `-u`, `--extra_stats_urls` | Ruta a un archivo con URLs HTTP(S) absolutas adicionales que medir, una por línea. Se ignoran las líneas vacías y las que empiezan por `#`, y se omiten las URLs no válidas o duplicadas |
 | `-t`, `--task` | Nombre obligatorio de la tarea, usado para derivar los nombres de los agentes y los elementos temporales |
 | `-i`, `--interval` | Intervalo del agente en segundos. Por defecto `300` |
 | `-g`, `--group` | ID del grupo de los agentes generados. Por defecto `0` |
@@ -295,6 +304,7 @@ Ejemplo de archivo de configuración:
     "firefox_profile": "",
     "accept_insecure_certs": "0",
     "monitor_stats": "1",
+    "extra_stats_urls": [],
     "browser_width": "1920",
     "browser_height": "1080",
     "global_timeout": "10",
@@ -352,6 +362,8 @@ Todos los módulos siguientes se crean en el agente de su transacción. Los pref
 
 **Agente de estadísticas** (`WUX Discovery - <nombre del proyecto>`, creado cuando **Monitor time statistics** está habilitado)
 
+El agente lleva un conjunto de módulos para la URL principal de la transacción y un conjunto por cada URL de **Additional URL statistics**. El conjunto de la URL principal usa los nombres siguientes; cada conjunto adicional añade ` (<URL>)` a todos los nombres, por ejemplo `URL stat TT (https://example.com/pricing)`.
+
 - `URL status`: `generic_proc`, `1` cuando la URL principal del proyecto responde, `0` en caso contrario.
 - `URL stat TT`: `generic_data`, tiempo total de acceso a la URL.
 - `URL stat DNS`: `generic_data`, tiempo de resolución DNS.
@@ -360,13 +372,13 @@ Todos los módulos siguientes se crean en el agente de su transacción. Los pref
 - `URL stat TTC`: `generic_data`, tiempo desde el primer byte hasta el final de la transferencia.
 - `URL stat TSSL`: `generic_data`, tiempo para establecer la conexión TLS; solo se crea cuando la URL es HTTPS.
 
-Los módulos de estadísticas se miden con `curl` en la máquina que ejecuta el plugin e informan de la unidad `miliseconds` tal y como la define el plugin; los valores están en milisegundos. En el modo Remote Driver la medición la hace el servidor de Discovery, no el servidor de Selenium.
+Los módulos de estadísticas se miden con `curl` en la máquina que ejecuta el plugin e informan de la unidad `miliseconds` tal y como la define el plugin; los valores están en milisegundos. Cada URL, principal o adicional, se mide por separado. En el modo Remote Driver la medición la hace el servidor de Discovery, no el servidor de Selenium.
 
 ### Identidad del plugin
 
 | Campo | Valor |
 | --- | --- |
 | App short name | `pandorafms.selenium.4` |
-| Versión del plugin | `1.8` |
+| Versión del plugin | `1.9` |
 | Tipo | Aplicación de Discovery (`.disco`) |
 | Sección | Discovery → Applications |
