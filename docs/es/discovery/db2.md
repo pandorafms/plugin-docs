@@ -1,6 +1,6 @@
 # DB2 Discovery
 
-*Última actualización del artículo: 2026-10-26.*
+*Última actualización del artículo: 2026-10-28.*
 
 ## Qué monitoriza
 
@@ -14,7 +14,7 @@ Una tarea de Discovery genera **un agente por cada base de datos objetivo**. No 
 
 | Alcance | Estado | Evidencia |
 |---------|--------|-----------|
-| Addon `pandorafms.db2`, versión `1.2` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
+| Addon `pandorafms.db2`, versión `1.3` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
 | Acceso de red desde el servidor de Discovery a cada listener de Db2 (TCP, puerto por defecto `50000`) | `Requerido` | El addon se conecta con el protocolo TCP/IP |
 | Un usuario de Db2 con los permisos de [Usuario de base de datos](#usuario-de-base-de-datos) | `Requerido` | Prerrequisito, no una declaración de compatibilidad |
 | Versiones y plataformas del servidor Db2 | `Sin validar` | No se ha registrado una matriz de versiones de Db2 para este addon |
@@ -61,12 +61,13 @@ Cárguelo en Pandora FMS. Una vez cargado, **DB2** está disponible al crear tar
 
 Cree la tarea y elija **DB2**. La consola presenta los campos en dos pasos; todos los campos se documentan en [Parámetros de la tarea](#parametros-de-la-tarea).
 
-1. **DB2 Base** — objetivos y credenciales:
+1. **DB2 Base** — objetivos, credenciales y límites de tiempo:
 
     - **DB2 target strings**: las bases de datos a monitorizar, una `SERVER:PORT/DATABASE` por entrada, separadas por comas o una por línea. Las líneas que empiezan por `#` son comentarios. Consulte [Formato de los objetivos](#formato-de-los-objetivos).
     - **User** y **Password**: las credenciales de Db2. Ambas son obligatorias.
+    - **Connection timeout**, **Query timeout** y **Max execution time**: cuánto puede tardar el addon en conectar, en ejecutar cada consulta y en completar toda la ejecución. Consulte [Tiempos de espera](#tiempos-de-espera).
 
-    <!-- SCREENSHOT NEEDED: Paso DB2 Base del asistente con un objetivo de laboratorio, un usuario y una contraseña enmascarada, sin nombres de host ni credenciales reales. -->
+    ![Paso DB2 Base del asistente con las cadenas de objetivo, el usuario, la contraseña y los selectores de timeout de conexión, de consulta y de ejecución máxima.](../assets/images/discovery/db2/base-step.png)
 
 2. **DB2 Detailed** — ejecución y qué recopilar:
 
@@ -79,6 +80,26 @@ Cree la tarea y elija **DB2**. La consola presenta los campos en dos pasos; todo
     <!-- SCREENSHOT NEEDED: Paso DB2 Detailed del asistente con Max threads, Target agent, Custom module prefix y las casillas de recopilación. -->
 
 El grupo y el intervalo de la tarea proceden del paso genérico de definición de la tarea y se aplican a los agentes que crea.
+
+### Tiempos de espera
+
+Los tres campos de timeout son selectores de tiempo: elija un periodo predefinido o, como administrador, use el control de edición (lápiz) para introducir una cantidad y una unidad personalizadas. El addon lee el valor en segundos.
+
+| Campo | Por defecto | Limita |
+|-------|-------------|--------|
+| **Connection timeout** | `20` segundos | Establecer la conexión y ejecutar la consulta de prueba inicial de cada objetivo |
+| **Query timeout** | `120` segundos | Cada consulta individual |
+| **Max execution time** | `240` segundos | Toda la ejecución, contando todos los objetivos |
+
+- **Connection timeout.** Un objetivo que no conecta y responde a la consulta de prueba en ese tiempo se informa en **Targets down** con `Connection timed out after <N> seconds`, y su agente se crea igualmente con `DB2 connection` a `0`.
+- **Query timeout.** Una consulta que no termina a tiempo falla con `Query timed out after <N> seconds` en la información de la tarea. El addon descarta esa sesión y abre una conexión nueva para la siguiente consulta, de modo que una consulta lenta no detiene el resto de comprobaciones. El timeout se recorta al tiempo que queda antes de **Max execution time**.
+- **Max execution time.** Es el presupuesto de toda la ejecución. Cuando quedan menos de cinco segundos, el addon deja de lanzar las consultas personalizadas pendientes, no envía consultas nuevas, informa de cuántas consultas personalizadas se han omitido y termina con los datos recopilados hasta ese momento. Use `0` para desactivarlo.
+
+Mantenga **Max execution time** por debajo del timeout de la tarea de Discovery. Si antes se alcanza el timeout de la tarea, Pandora FMS detiene el addon con `SIGTERM`; el addon devuelve entonces el resultado parcial recopilado hasta ese momento y registra `Execution interrupted by SIGTERM (task timeout?). Partial data returned.` en la información de la tarea.
+
+Un timeout de conexión o de consulta no positivo o no numérico usa su valor por defecto.
+
+![Paso DB2 Base del asistente con un valor y una unidad personalizados introducidos en un selector de timeout en lugar de un periodo predefinido.](../assets/images/discovery/db2/base-step-custom.png)
 
 ### Formato de los objetivos
 
@@ -221,7 +242,7 @@ El fichero de configuración contiene la contraseña: protéjalo con permisos re
 ### Notas de ejecución
 
 - El addon elimina el contenido de su directorio de diagnóstico del cliente Db2 al comienzo de cada ejecución.
-- Cada objetivo usa una conexión que se cierra cuando el objetivo ha sido procesado. El número de conexiones en paralelo nunca supera el número de objetivos.
+- Cada objetivo usa una conexión que se cierra cuando el objetivo ha sido procesado. Cuando una consulta agota su timeout, esa conexión se descarta y se abre una nueva para la siguiente consulta. El número de conexiones en paralelo nunca supera el número de objetivos.
 
 ## Solución de problemas
 
@@ -230,6 +251,10 @@ El addon no tiene indicador de modo detallado ni de depuración. Su canal de dia
 - **`Parameter [user] not defined`, `Parameter [password] not defined` o `Database targets not defined`**: falta un campo obligatorio. La tarea termina con código de salida `1` y no genera nada.
 - **Un error de conexión y `Targets down` mayor que cero**: no se pudo alcanzar la base de datos. Compruebe el host, el puerto y el nombre de base de datos del objetivo, las credenciales y la ruta de red. El agente se genera igualmente con `DB2 connection` a `0`.
 - **Un objetivo sin nombre de base de datos**: no puede conectar; use la forma `<HOST>:<PORT>/<DATABASE>`.
+- **`Connection timed out after <N> seconds`**: el objetivo no respondió dentro de **Connection timeout**. Auméntelo o revise la ruta de red y el listener de Db2.
+- **`Query timed out after <N> seconds`**: una consulta superó **Query timeout**. Auméntelo si se espera que la consulta sea lenta; el addon descarta esa sesión y vuelve a conectar para las comprobaciones restantes.
+- **`Execution deadline reached` y un mensaje que informa de consultas personalizadas omitidas**: la ejecución agotó su **Max execution time**. Auméntelo, manteniéndolo por debajo del timeout de la tarea, o acorte o reprograme las consultas personalizadas lentas.
+- **`Execution interrupted by SIGTERM (task timeout?). Partial data returned.`**: se alcanzó el timeout de la tarea de Discovery antes de que el addon terminara. Ajuste **Max execution time** por debajo del timeout de la tarea para que pueda terminar de forma limpia.
 - **`DB2 error, please verify you have grants to ...`**: el usuario no puede leer la vista que usa esa opción (resumen, utilización del log, tamaño, número de conexiones o ratio de aciertos). Conceda `SELECT` sobre ella o desactive la opción.
 - **`Removed [<query>] from custom queries, only select queries are allowed.`**: el `target` de una consulta personalizada no empieza por `SELECT`.
 - **`Invalid custom query crontab expression`**: el `crontab` de una consulta no tiene cinco campos o no es válido; la consulta se omite.
@@ -249,6 +274,9 @@ El addon no tiene indicador de modo detallado ni de depuración. Su canal de dia
 | DB2 target strings | `_dbstrings_` | área de texto | vacío | Obligatorio. `SERVER:PORT/DATABASE`, separados por comas o uno por línea; `#` inicia una línea de comentario |
 | User | `_dbuser_` | cadena | vacío | Obligatorio |
 | Password | `_dbpass_` | contraseña | vacío | Obligatorio |
+| Connection timeout | `_connectionTimeout_` | selección (tiempo) | `20` | Opcional. Tiempo máximo para establecer la conexión y ejecutar la consulta de prueba de un objetivo. Se guarda en segundos |
+| Query timeout | `_queryTimeout_` | selección (tiempo) | `120` | Opcional. Tiempo máximo de cada consulta. Se guarda en segundos |
+| Max execution time | `_maxExecutionTime_` | selección (tiempo) | `240` | Opcional. Presupuesto total de la ejecución; las consultas pendientes se omiten al alcanzarlo. `0` lo desactiva. Debe ser menor que el timeout de la tarea |
 
 #### DB2 Detailed
 
@@ -276,6 +304,9 @@ Se usa en la ejecución manual. Un `clave = valor` por línea. Las opciones num�
 | `user` | vacío | Usuario de Db2. Obligatorio |
 | `password` | vacío | Contraseña de Db2. Obligatoria |
 | `threads` | `1` | Número de hilos en paralelo |
+| `connection_timeout` | `20` | Segundos máximos para establecer la conexión y ejecutar la consulta de prueba de un objetivo. Un valor no positivo usa `20` |
+| `query_timeout` | `120` | Segundos máximos de cada consulta. Un valor no positivo usa `120` |
+| `max_execution_time` | `240` | Presupuesto total de la ejecución en segundos. `0` lo desactiva. Debe ser menor que el timeout de la tarea |
 | `modules_prefix` | vacío | Prefijo de todos los nombres de módulo |
 | `execute_custom_queries` | `1` | Ejecutar consultas personalizadas |
 | `analyze_connections` | `1` | Módulo `Active connections` |
@@ -293,6 +324,9 @@ interval               = 300
 user                   = <DB2_USER>
 password               = <DB2_PASSWORD>
 threads                = 2
+connection_timeout     = 20
+query_timeout          = 120
+max_execution_time     = 240
 modules_prefix         = db2_
 execute_custom_queries = 1
 analyze_connections    = 1
@@ -308,6 +342,6 @@ db_size                = 1
 |-----------|-------|
 | Identificador del Marketplace | `pandorafms.db2` |
 | Nombre | DB2 |
-| Versión | `1.2` |
+| Versión | `1.3` |
 | Última actualización en el Marketplace | 2026-08-28 |
 | Disponibilidad | Descarga limitada a usuarios con licencia |

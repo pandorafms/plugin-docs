@@ -1,6 +1,6 @@
 # DB2 Discovery
 
-*Article last updated: 2026-10-26.*
+*Article last updated: 2026-10-28.*
 
 ## What it monitors
 
@@ -14,7 +14,7 @@ A Discovery task generates **one agent per target database**. Nothing is install
 
 | Scope | State | Evidence |
 |-------|-------|----------|
-| Addon `pandorafms.db2`, version `1.2` | Documented target | The version this page describes. See [Addon identity](#addon-identity) |
+| Addon `pandorafms.db2`, version `1.3` | Documented target | The version this page describes. See [Addon identity](#addon-identity) |
 | Network access from the Discovery server to each Db2 listener (TCP, default port `50000`) | `Required` | The addon connects with the TCP/IP protocol |
 | A Db2 user with the grants listed in [Database user](#database-user) | `Required` | Prerequisite, not a compatibility statement |
 | Db2 server versions and platforms | `Not validated` | No Db2 version matrix has been recorded for this addon |
@@ -61,12 +61,13 @@ Load it into Pandora FMS. Once loaded, **DB2** is available when creating Discov
 
 Create the task and choose **DB2**. The console presents the fields in two steps; every field is documented in [Task parameters](#task-parameters).
 
-1. **DB2 Base** — targets and credentials:
+1. **DB2 Base** — targets, credentials and time limits:
 
     - **DB2 target strings**: the databases to monitor, one `SERVER:PORT/DATABASE` per entry, separated by commas or one per line. Lines starting with `#` are comments. See [Target format](#target-format).
     - **User** and **Password**: the Db2 credentials. Both are required.
+    - **Connection timeout**, **Query timeout** and **Max execution time**: how long the addon may spend connecting, running each query and completing the whole execution. See [Timeouts](#timeouts).
 
-    <!-- SCREENSHOT NEEDED: DB2 Base wizard step with a lab target string, user and a masked password, with no real hostnames or credentials. -->
+    ![DB2 Base wizard step with the target strings, user, password and the connection, query and maximum execution time selectors.](../assets/images/discovery/db2/base-step.png)
 
 2. **DB2 Detailed** — execution and what to collect:
 
@@ -79,6 +80,26 @@ Create the task and choose **DB2**. The console presents the fields in two steps
     <!-- SCREENSHOT NEEDED: DB2 Detailed wizard step showing Max threads, Target agent, Custom module prefix and the collection checkboxes. -->
 
 The task's group and interval come from the generic task-definition step and are applied to the agents the task creates.
+
+### Timeouts
+
+The three timeout fields are time selectors: choose a predefined period, or — as an administrator — use the edit (pencil) control to enter a custom amount and unit. The addon reads the value in seconds.
+
+| Field | Default | Limits |
+|-------|---------|--------|
+| **Connection timeout** | `20` seconds | Establishing the connection and running the initial test query of each target |
+| **Query timeout** | `120` seconds | Each individual query |
+| **Max execution time** | `240` seconds | The whole execution, counting every target |
+
+- **Connection timeout.** A target that does not connect and answer the test query within this time is reported under **Targets down** with `Connection timed out after <N> seconds`, and its agent is still created with `DB2 connection` at `0`.
+- **Query timeout.** A query that does not finish in time fails with `Query timed out after <N> seconds` in the task information. The addon discards that session and opens a new connection for the next query, so one slow query does not stop the remaining checks. The timeout is capped to the time left before **Max execution time**.
+- **Max execution time.** This is the budget of the whole run. When less than five seconds remain, the addon stops launching pending custom queries, does not send new queries, reports how many custom queries were skipped and finishes with the data collected so far. Set `0` to disable it.
+
+Keep **Max execution time** lower than the timeout of the Discovery task. If the task timeout is reached first, Pandora FMS stops the addon with `SIGTERM`; the addon then returns the partial result collected until that moment and records `Execution interrupted by SIGTERM (task timeout?). Partial data returned.` in the task information.
+
+A non-positive or non-numeric connection or query timeout falls back to its default.
+
+![DB2 Base wizard step with a custom value and unit entered in a timeout selector instead of a predefined period.](../assets/images/discovery/db2/base-step-custom.png)
 
 ### Target format
 
@@ -221,7 +242,7 @@ The configuration file contains the password: protect it with restrictive permis
 ### Run time notes
 
 - The addon removes the contents of its Db2 client diagnostic directory at the start of every execution.
-- Each target uses one connection that is closed when the target has been processed. The number of parallel connections never exceeds the number of targets.
+- Each target uses one connection that is closed when the target has been processed. When a query times out, that connection is discarded and a new one is opened for the next query. The number of parallel connections never exceeds the number of targets.
 
 ## Troubleshoot
 
@@ -230,6 +251,10 @@ The addon has no verbose or debug flag. Its diagnostic channel is the `info` fie
 - **`Parameter [user] not defined`, `Parameter [password] not defined` or `Database targets not defined`**: a required field is empty. The task ends with exit code `1` and generates nothing.
 - **A connection error and `Targets down` greater than zero**: the database could not be reached. Check the host, port and database name of the target, the credentials and the network path. The agent is still generated with `DB2 connection` set to `0`.
 - **A target without a database name**: it cannot connect; use the `<HOST>:<PORT>/<DATABASE>` form.
+- **`Connection timed out after <N> seconds`**: the target did not answer within **Connection timeout**. Raise it or check the network path and the Db2 listener.
+- **`Query timed out after <N> seconds`**: a query exceeded **Query timeout**. Raise it if the query is expected to be slow; the addon discards that session and reconnects for the remaining checks.
+- **`Execution deadline reached` and a message reporting skipped custom queries**: the run used its whole **Max execution time**. Raise it, keeping it below the task timeout, or shorten or reschedule the slow custom queries.
+- **`Execution interrupted by SIGTERM (task timeout?). Partial data returned.`**: the Discovery task timeout was reached before the addon finished. Set **Max execution time** below the task timeout so it can finish cleanly.
 - **`DB2 error, please verify you have grants to ...`**: the user cannot read the view used by that option (summary, log utilization, database size, number of connections or hit ratio). Grant `SELECT` on it or disable the option.
 - **`Removed [<query>] from custom queries, only select queries are allowed.`**: the `target` of a custom query does not start with `SELECT`.
 - **`Invalid custom query crontab expression`**: the `crontab` of a query does not have five fields or is invalid; the query is skipped.
@@ -249,6 +274,9 @@ The addon has no verbose or debug flag. Its diagnostic channel is the `info` fie
 | DB2 target strings | `_dbstrings_` | text area | empty | Mandatory. `SERVER:PORT/DATABASE`, comma separated or one per line; `#` starts a comment line |
 | User | `_dbuser_` | string | empty | Mandatory |
 | Password | `_dbpass_` | password | empty | Mandatory |
+| Connection timeout | `_connectionTimeout_` | select (time) | `20` | Optional. Maximum time to establish the connection and run the test query of a target. Stored in seconds |
+| Query timeout | `_queryTimeout_` | select (time) | `120` | Optional. Maximum time for each query. Stored in seconds |
+| Max execution time | `_maxExecutionTime_` | select (time) | `240` | Optional. Total budget of the run; pending queries are skipped when it is reached. `0` disables it. Must be below the task timeout |
 
 #### DB2 Detailed
 
@@ -276,6 +304,9 @@ Used by manual execution. One `key = value` per line. Numeric options accept `1`
 | `user` | empty | Db2 user. Required |
 | `password` | empty | Db2 password. Required |
 | `threads` | `1` | Number of parallel threads |
+| `connection_timeout` | `20` | Maximum seconds to establish the connection and run the test query of a target. A non-positive value uses `20` |
+| `query_timeout` | `120` | Maximum seconds for each query. A non-positive value uses `120` |
+| `max_execution_time` | `240` | Total budget of the run in seconds. `0` disables it. Must be below the task timeout |
 | `modules_prefix` | empty | Prefix for every module name |
 | `execute_custom_queries` | `1` | Run custom queries |
 | `analyze_connections` | `1` | `Active connections` module |
@@ -293,6 +324,9 @@ interval               = 300
 user                   = <DB2_USER>
 password               = <DB2_PASSWORD>
 threads                = 2
+connection_timeout     = 20
+query_timeout          = 120
+max_execution_time     = 240
 modules_prefix         = db2_
 execute_custom_queries = 1
 analyze_connections    = 1
@@ -308,6 +342,6 @@ db_size                = 1
 |----------|-------|
 | Marketplace identifier | `pandorafms.db2` |
 | Name | DB2 |
-| Version | `1.2` |
+| Version | `1.3` |
 | Marketplace last update | 2026-08-28 |
 | Availability | Download limited to licensed users |
