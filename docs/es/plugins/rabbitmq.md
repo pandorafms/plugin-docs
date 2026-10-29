@@ -1,6 +1,9 @@
 # RabbitMQ monitoring plugin
 
-*Última actualización del artículo: 2026-10-26.*
+*Última actualización del artículo: 2026-10-29.*
+
+!!! warning "Se recomienda la integración de Discovery"
+    Para instalaciones nuevas use [RabbitMQ Discovery](../discovery/rabbitmq-discovery.md), que es la integración recomendada para este servicio. Este plugin es la ruta heredada.
 
 ## Qué hace
 
