@@ -24,12 +24,14 @@ the domain root:
   every Spanish alternate. We repair that join in the generated sitemap.
 """
 
+import json
 import os
 import shutil
 from pathlib import Path
 from urllib.parse import urlsplit
 
 from mkdocs.plugins import event_priority
+from mkdocs.utils import log
 
 # Section titles that must always render last, in this exact order.
 PINNED_LAST = ["Extras"]
@@ -79,6 +81,89 @@ def _fix_sitemap_alternates(site_dir, prefix):
         sitemap.write_text(text.replace(broken, fixed), encoding="utf-8")
 
 
+def _scoped_search_tag(page) -> str:
+    """<script> tag for the scoped-search hook, relative to the page depth."""
+    depth = page.url.count("/")
+    return f'<script src="{"../" * depth}javascripts/scoped-search.js"></script>'
+
+
+def on_post_page(output, page, config):
+    """Load the scoped-search hook before Material's bundle.
+
+    The bundle requests the search index as soon as it runs, so a script loaded
+    through `extra_javascript` (end of body) arrives too late and the shared
+    index is already in memory. Injecting the tag as the first child of <head>
+    puts it ahead of the bundle without forking the theme.
+    """
+    tag = _scoped_search_tag(page)
+    head = output.find("<head")
+    if head == -1:
+        return output
+    end = output.find(">", head)
+    return output[: end + 1] + tag + output[end + 1 :]
+
+
+def _split_search_index(site_dir, config):
+    """Write one search index per language at the site root.
+
+    mkdocs-static-i18n builds a separate index for each locale (the default one
+    lands at the site root, the others under `<locale>/search/`), but Material
+    always fetches `search/search_index.json` from the site root, so a search in
+    one language competes with the pages of the others. Each build slices its
+    own index by the first segment of every `location` and writes the slice at
+    the site root, where `docs/javascripts/scoped-search.js` sends each locale.
+
+    The shared index is left untouched on purpose: it is the fallback when a
+    slice is missing, and rewriting it would make this hook destructive when it
+    runs once per locale build.
+    """
+    index = site_dir / "search" / "search_index.json"
+    if not index.is_file():
+        return
+    plugin = config["plugins"].get("i18n")
+    if plugin is None:
+        return
+    locales = [lang.locale for lang in plugin.config.languages if lang.build]
+    default = next(
+        (lang.locale for lang in plugin.config.languages if lang.default), locales[0]
+    )
+    # The default locale builds into the site root; the rest build into
+    # `<root>/<locale>/`, so the slices always go to the parent in that case.
+    root = site_dir.parent if site_dir.name in locales else site_dir
+    (root / "search").mkdir(parents=True, exist_ok=True)
+
+    data = json.loads(index.read_text(encoding="utf-8"))
+    docs = data.get("docs", [])
+    slices = {locale: [] for locale in locales}
+    for doc in docs:
+        location = doc.get("location") or ""
+        owner = next(
+            (
+                locale
+                for locale in locales
+                if locale != default and location.startswith(locale + "/")
+            ),
+            default,
+        )
+        slices[owner].append(doc)
+
+    written = []
+    for locale, entries in slices.items():
+        if not entries:
+            # Each locale build only sees its own pages, so the slices of the
+            # other locales are written by their own build into this same
+            # directory. Nothing to do here, and never overwrite a good slice.
+            continue
+        target = root / "search" / f"search_index.{locale}.json"
+        target.write_text(
+            json.dumps({**data, "docs": entries}, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        written.append(f"{locale}={len(entries)}")
+    if written:
+        log.info("scoped search index: %s", ", ".join(written))
+
+
 def on_post_build(config):
     """
     Patch versioned-build quirks in the generated site. Only rewrites the
@@ -86,6 +171,8 @@ def on_post_build(config):
     builds are left untouched.
     """
     site_dir = Path(config.site_dir)
+
+    _split_search_index(site_dir, config)
 
     prefix = _version_prefix(config)
     if prefix is not None:
