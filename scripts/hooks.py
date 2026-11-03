@@ -26,6 +26,7 @@ the domain root:
 
 import json
 import os
+import re
 import shutil
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -164,6 +165,7 @@ def _split_search_index(site_dir, config):
         log.info("scoped search index: %s", ", ".join(written))
 
 
+@event_priority(-100)
 def on_post_build(config):
     """
     Patch versioned-build quirks in the generated site. Only rewrites the
@@ -173,6 +175,19 @@ def on_post_build(config):
     site_dir = Path(config.site_dir)
 
     _split_search_index(site_dir, config)
+
+    # The redirects plugin sees source paths before i18n removes the default
+    # English prefix. Correct its generated English aliases after it runs.
+    redirects = config.plugins.get("redirects")
+    if redirects:
+        for source, target in redirects.config["redirect_maps"].items():
+            if not (source.startswith("en/disco/") and target.startswith("en/discovery/")):
+                continue
+            page = site_dir / source.removesuffix(".md") / "index.html"
+            if page.exists():
+                text = page.read_text(encoding="utf-8")
+                text = re.sub(r"(?<!\.\./)\.\./\.\./discovery/", "../../../discovery/", text)
+                page.write_text(text, encoding="utf-8")
 
     prefix = _version_prefix(config)
     if prefix is not None:
