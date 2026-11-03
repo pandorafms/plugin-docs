@@ -798,6 +798,8 @@ been verified.
 | `graph` | Combined graphs | `graph-source <idGraph>` manages the modules plotted in a graph. |
 | `scheduled-downtime` | Scheduled downtimes | `dateFrom` and `dateTo` are Unix timestamps. `scheduled-downtime-agent <idDowntime>` and `scheduled-downtime-module <idDowntime>` manage what the downtime covers. |
 | `local-component` | Local components (module definitions for software agents) | `idOs` and `idNetworkComponentGroup` are required on `create`. |
+| `network-component` | Network components (remote module templates) | `idModule` is required on `create`, and `idModuleType` must belong to that module family (for example `idModule=2` with `idModuleType=6`). |
+| `network-component-group` | Groups that organise network components | `idParentNetworkComponentGroup` nests a group inside another. |
 | `server` | Pandora FMS servers and their status | Read only. |
 | `alert-execution-queue` | Alert executions waiting in the queue | Read only. |
 | `security-vulnerability`, `windows-patch` | Vulnerabilities and Windows patches reported by agents | Read only. `list` filters as usual; `get` takes the composite key shown in the list. |
@@ -819,7 +821,8 @@ console answers `404`. `scheduled-downtime-module` has no `update`: remove the m
 again.
 
 Verified against a console in this release: the full create, read, update and delete cycle of
-`graph`, `graph-source`, `scheduled-downtime` and its agents and modules, and `local-component`, and
+`graph`, `graph-source`, `scheduled-downtime` and its agents and modules, `local-component`,
+`network-component` and `network-component-group`, and
 the lists of `server`, `alert-execution-queue`, `security-vulnerability` and `windows-patch`. The
 `get` of `security-vulnerability` and `windows-patch` has not been verified, because the test
 console held no agent-reported data.
@@ -864,8 +867,8 @@ pandora-cli --token <access_token> token session logout
   `401 Invalid credentials`, the same message as for a wrong password.
 - Pass the returned access token with `--token` on a call to use it. `logout` revokes the session of
   the token used for that call, and later calls with it answer `401`.
-- `refresh` needs the HttpOnly cookie that the console sets at login. `pandora-cli` does not keep
-  cookies, so `token session refresh` answers `401 Session expired`; log in again instead.
+- Sessions cannot be renewed from `pandora-cli`: renewing needs the HttpOnly cookie that the console
+  sets at login and the tool keeps no cookies. When a session expires, log in again.
 
 Treat the access token as a password: do not leave it in shell history or in logs.
 
@@ -1055,6 +1058,8 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `graph-source` | Sources (modules) of a combined graph | `list`, `get`, `create`, `update`, `delete` |
 | `group` | Agent groups | `list`, `get`, `create`, `update`, `delete` |
 | `local-component` | Local components (module definitions for software agents) | `list`, `get`, `create`, `update`, `delete` |
+| `network-component` | Network components (remote module templates) | `list`, `get`, `create`, `update`, `delete` |
+| `network-component-group` | Groups that organise network components | `list`, `get`, `create`, `update`, `delete` |
 | `log` | Log entries retained for the agents | `agent list`, `agent entry list`, `agent source list` |
 | `module` (alias `agent-module`) | Agent modules | `list`, `get`, `create`, `update`, `delete` + 4 more (`force-check`, `graph` and the `policy` group) |
 | `module-alert` | Alerts assigned to an agent module | `list`, `get`, `create`, `update`, `delete` |
@@ -1091,7 +1096,7 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `siem-log` | Decoded SIEM logs the user is authorized to see (read only) | `list`, `get`, `aggregate` |
 | `siem-rule` | SIEM rules | `list`, `get`, `create`, `update`, `delete` + 4 more |
 | `tag` | Module tags | `list`, `get`, `create`, `update`, `delete` |
-| `token` | API tokens and console sessions | `list`, `get`, `create`, `update`, `delete` + 4 more (the `session` group) |
+| `token` | API tokens and console sessions | `list`, `get`, `create`, `update`, `delete` + 3 more (the `session` group) |
 | `user` | Console users and their profile assignments | `list`, `get`, `create`, `update`, `delete` + 11 more (`login-info`, `notify` and the `profile` and `2fa` groups) |
 | `widget` | Dashboard widgets | `list`, `get` |
 | `windows-patch` | Windows patches reported by agents (read only) | `list` + 1 more (`get`) |
