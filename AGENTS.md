@@ -49,3 +49,4 @@ step was not run.
 
 - Preserve published slugs by default. Do not rename an existing page without explicit authorization and an approved redirect mechanism.
 - Maintain English/Spanish parity and image fallback behavior as documented in the contributor guide.
+- For every new plugin documentation entry, add and verify a redirect for each supported language from `/<language>/disco/<exact-plugin-directory-name>/` to the corresponding plugin page, using the plugin's directory name in its repository. For example, `/es/disco/pandorafms.vmware/` redirects to `/es/discovery/vmware/`. Preserve existing page URLs; ensure the redirects also work under versioned deployments.
