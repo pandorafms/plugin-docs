@@ -798,6 +798,8 @@ been verified.
 | `graph` | Combined graphs | `graph-source <idGraph>` manages the modules plotted in a graph. |
 | `scheduled-downtime` | Scheduled downtimes | `dateFrom` and `dateTo` are Unix timestamps. `scheduled-downtime-agent <idDowntime>` and `scheduled-downtime-module <idDowntime>` manage what the downtime covers. |
 | `local-component` | Local components (module definitions for software agents) | `idOs` and `idNetworkComponentGroup` are required on `create`. |
+| `network-component` | Network components (remote module templates) | `idModule` is required on `create`, and `idModuleType` must belong to that module family (for example `idModule=2` with `idModuleType=6`). |
+| `network-component-group` | Groups that organise network components | `idParentNetworkComponentGroup` nests a group inside another. |
 | `server` | Pandora FMS servers and their status | Read only. |
 | `alert-execution-queue` | Alert executions waiting in the queue | Read only. |
 | `security-vulnerability`, `windows-patch` | Vulnerabilities and Windows patches reported by agents | Read only. `list` filters as usual; `get` takes the composite key shown in the list. |
@@ -819,7 +821,8 @@ console answers `404`. `scheduled-downtime-module` has no `update`: remove the m
 again.
 
 Verified against a console in this release: the full create, read, update and delete cycle of
-`graph`, `graph-source`, `scheduled-downtime` and its agents and modules, and `local-component`, and
+`graph`, `graph-source`, `scheduled-downtime` and its agents and modules, `local-component`,
+`network-component` and `network-component-group`, and
 the lists of `server`, `alert-execution-queue`, `security-vulnerability` and `windows-patch`. The
 `get` of `security-vulnerability` and `windows-patch` has not been verified, because the test
 console held no agent-reported data.
@@ -1055,6 +1058,8 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `graph-source` | Sources (modules) of a combined graph | `list`, `get`, `create`, `update`, `delete` |
 | `group` | Agent groups | `list`, `get`, `create`, `update`, `delete` |
 | `local-component` | Local components (module definitions for software agents) | `list`, `get`, `create`, `update`, `delete` |
+| `network-component` | Network components (remote module templates) | `list`, `get`, `create`, `update`, `delete` |
+| `network-component-group` | Groups that organise network components | `list`, `get`, `create`, `update`, `delete` |
 | `log` | Log entries retained for the agents | `agent list`, `agent entry list`, `agent source list` |
 | `module` (alias `agent-module`) | Agent modules | `list`, `get`, `create`, `update`, `delete` + 4 more (`force-check`, `graph` and the `policy` group) |
 | `module-alert` | Alerts assigned to an agent module | `list`, `get`, `create`, `update`, `delete` |

@@ -821,6 +821,8 @@ actúan sobre un dispositivo gestionado (`ncm agent enable`, `bulk`, `update` y 
 | `graph` | Gráficas combinadas | `graph-source <idGraph>` gestiona los módulos representados en una gráfica. |
 | `scheduled-downtime` | Paradas programadas | `dateFrom` y `dateTo` son marcas de tiempo Unix. `scheduled-downtime-agent <idParada>` y `scheduled-downtime-module <idParada>` gestionan lo que cubre la parada. |
 | `local-component` | Componentes locales (definiciones de módulos para agentes software) | `idOs` e `idNetworkComponentGroup` son obligatorios en `create`. |
+| `network-component` | Componentes de red (plantillas de módulos remotos) | `idModule` es obligatorio en `create`, y `idModuleType` debe pertenecer a esa familia de módulo (por ejemplo `idModule=2` con `idModuleType=6`). |
+| `network-component-group` | Grupos que organizan los componentes de red | `idParentNetworkComponentGroup` anida un grupo dentro de otro. |
 | `server` | Servidores de Pandora FMS y su estado | Solo lectura. |
 | `alert-execution-queue` | Ejecuciones de alertas en espera en la cola | Solo lectura. |
 | `security-vulnerability`, `windows-patch` | Vulnerabilidades y parches de Windows reportados por los agentes | Solo lectura. `list` filtra como de costumbre; `get` recibe la clave compuesta que muestra el listado. |
@@ -842,7 +844,8 @@ contrario la consola responde `404`. `scheduled-downtime-module` no tiene `updat
 módulo y vuelve a añadirlo.
 
 Verificado contra una consola en esta versión: el ciclo completo de crear, leer, actualizar y borrar
-de `graph`, `graph-source`, `scheduled-downtime` con sus agentes y módulos, y `local-component`, y los
+de `graph`, `graph-source`, `scheduled-downtime` con sus agentes y módulos, `local-component`,
+`network-component` y `network-component-group`, y los
 listados de `server`, `alert-execution-queue`, `security-vulnerability` y `windows-patch`. El `get`
 de `security-vulnerability` y `windows-patch` no se ha verificado, porque la consola de pruebas no
 tenía datos reportados por agentes.
@@ -1085,6 +1088,8 @@ instalada.
 | `graph-source` | Fuentes (módulos) de una gráfica combinada | `list`, `get`, `create`, `update`, `delete` |
 | `group` | Grupos de agentes | `list`, `get`, `create`, `update`, `delete` |
 | `local-component` | Componentes locales (definiciones de módulos para agentes software) | `list`, `get`, `create`, `update`, `delete` |
+| `network-component` | Componentes de red (plantillas de módulos remotos) | `list`, `get`, `create`, `update`, `delete` |
+| `network-component-group` | Grupos que organizan los componentes de red | `list`, `get`, `create`, `update`, `delete` |
 | `log` | Entradas de log retenidas para los agentes | `agent list`, `agent entry list`, `agent source list` |
 | `module` (alias `agent-module`) | Módulos de agente | `list`, `get`, `create`, `update`, `delete` + 4 más (`force-check`, `graph` y el grupo `policy`) |
 | `module-alert` | Alertas asignadas a un módulo de agente | `list`, `get`, `create`, `update`, `delete` |
