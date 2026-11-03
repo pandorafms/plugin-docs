@@ -864,8 +864,8 @@ pandora-cli --token <access_token> token session logout
   `401 Invalid credentials`, the same message as for a wrong password.
 - Pass the returned access token with `--token` on a call to use it. `logout` revokes the session of
   the token used for that call, and later calls with it answer `401`.
-- `refresh` needs the HttpOnly cookie that the console sets at login. `pandora-cli` does not keep
-  cookies, so `token session refresh` answers `401 Session expired`; log in again instead.
+- Sessions cannot be renewed from `pandora-cli`: renewing needs the HttpOnly cookie that the console
+  sets at login and the tool keeps no cookies. When a session expires, log in again.
 
 Treat the access token as a password: do not leave it in shell history or in logs.
 
@@ -1091,7 +1091,7 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `siem-log` | Decoded SIEM logs the user is authorized to see (read only) | `list`, `get`, `aggregate` |
 | `siem-rule` | SIEM rules | `list`, `get`, `create`, `update`, `delete` + 4 more |
 | `tag` | Module tags | `list`, `get`, `create`, `update`, `delete` |
-| `token` | API tokens and console sessions | `list`, `get`, `create`, `update`, `delete` + 4 more (the `session` group) |
+| `token` | API tokens and console sessions | `list`, `get`, `create`, `update`, `delete` + 3 more (the `session` group) |
 | `user` | Console users and their profile assignments | `list`, `get`, `create`, `update`, `delete` + 11 more (`login-info`, `notify` and the `profile` and `2fa` groups) |
 | `widget` | Dashboard widgets | `list`, `get` |
 | `windows-patch` | Windows patches reported by agents (read only) | `list` + 1 more (`get`) |

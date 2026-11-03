@@ -887,9 +887,9 @@ pandora-cli --token <access_token> token session logout
   `401 Invalid credentials`, el mismo mensaje que para una contraseña incorrecta.
 - Pasa el token de acceso devuelto con `--token` en una llamada para usarlo. `logout` revoca la
   sesión del token usado en esa llamada, y las llamadas posteriores con él responden `401`.
-- `refresh` necesita la cookie HttpOnly que la consola establece al iniciar sesión. `pandora-cli` no
-  conserva cookies, así que `token session refresh` responde `401 Session expired`; inicia sesión de
-  nuevo.
+- Las sesiones no se pueden renovar desde `pandora-cli`: la renovación necesita la cookie HttpOnly
+  que la consola establece al iniciar sesión y la herramienta no conserva cookies. Cuando una sesión
+  caduque, inicia sesión de nuevo.
 
 Trata el token de acceso como una contraseña: no lo dejes en el historial del shell ni en logs.
 
@@ -1121,7 +1121,7 @@ instalada.
 | `siem-log` | Logs decodificados de SIEM que el usuario puede ver (solo lectura) | `list`, `get`, `aggregate` |
 | `siem-rule` | Reglas SIEM | `list`, `get`, `create`, `update`, `delete` + 4 más |
 | `tag` | Etiquetas de módulos | `list`, `get`, `create`, `update`, `delete` |
-| `token` | Tokens de la API y sesiones de la consola | `list`, `get`, `create`, `update`, `delete` + 4 más (el grupo `session`) |
+| `token` | Tokens de la API y sesiones de la consola | `list`, `get`, `create`, `update`, `delete` + 3 más (el grupo `session`) |
 | `user` | Usuarios de la consola y sus perfiles asignados | `list`, `get`, `create`, `update`, `delete` + 11 más (`login-info`, `notify` y los grupos `profile` y `2fa`) |
 | `widget` | Widgets de dashboard | `list`, `get` |
 | `windows-patch` | Parches de Windows reportados por los agentes (solo lectura) | `list` + 1 más (`get`) |
