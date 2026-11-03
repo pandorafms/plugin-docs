@@ -1,6 +1,6 @@
 # Pandora CLI
 
-*Última actualización del artículo: 2026-10-23.*
+*Última actualización del artículo: 2026-11-03.*
 
 ## Introducción
 
@@ -768,6 +768,131 @@ pandora-cli ai-task enable 4 --set enabled=false
 pandora-cli ai-task run 4
 ```
 
+### Gestión de configuración de red (NCM)
+
+`ncm` gestiona la configuración de red: los agentes bajo gestión de red, su firmware, scripts,
+plantillas y fabricantes. Como `rmm`, es una única entidad: todos los comandos pertenecen a un
+grupo y la entidad no tiene un id propio. Los 51 comandos se listan con `pandora-cli ncm --help`.
+
+| Grupo | Comandos |
+| --- | --- |
+| `ncm agent` | `list`, `get`, `enable`, `bulk`, `update`, `delete`; subgrupos `backup` (`list`, `get`, `delete`, `download`, `mark`, `restore`), `queue` (`list`, `add`, `delete`, `clear`) y `script` (`list`, `get`, `create`, `update`, `delete`) |
+| `ncm firmware` | `list`, `get`, `create`, `update`, `delete` |
+| `ncm script` | `list`, `get`, `create`, `update`, `delete` |
+| `ncm template` | `list`, `get`, `create`, `update`, `delete`; subgrupo `script` (`list`, `get`, `create`, `update`, `delete`) |
+| `ncm vendor` | `list`, `get`, `create`, `update`, `delete`; subgrupo `model` (`list`, `get`, `create`, `update`, `delete`) |
+
+```bash
+pandora-cli ncm vendor list
+pandora-cli ncm vendor create --set name=Acme --set description='Switches Acme'
+pandora-cli ncm vendor model create 21 --set name=AS-100
+pandora-cli ncm template create --set name=Acme-switch --set idGroup=0
+pandora-cli ncm template script create 22 --set idScript=175 --set eventOnChange=false
+pandora-cli ncm vendor model delete 21 12 --yes
+```
+
+Detalles que impone la consola:
+
+- Un script tiene un `type`, uno de `TEST`, `GET_CONFIGURATION`, `SET_CONFIGURATION`,
+  `GET_FIRMWARE`, `SET_FIRMWARE`, `CUSTOM_TASK`, `SNIPPET` o `GET_OS_VERSION`.
+- El campo `regexp` de un script es una lista de pares `[expresión regular, booleano]`, así que
+  necesita `--from-file`:
+
+  ```bash
+  echo '{"name":"Show version","idGroup":0,"type":"SNIPPET","content":"show version","regexp":[["^.*$",true]]}' \
+    | pandora-cli ncm script create --from-file -
+  ```
+
+- Un script de plantilla recibe en `idScript` el id de un script existente; su `type` procede de ese
+  script y no se puede indicar.
+- Todos los `delete`, `ncm agent backup restore` y `ncm agent queue clear` piden confirmación; usa
+  `--yes` en scripts.
+
+Verificado contra una consola en esta versión: crear, leer, actualizar y borrar fabricantes,
+modelos, firmware, scripts, plantillas y scripts de plantilla, y `ncm agent list`. Los comandos que
+actúan sobre un dispositivo gestionado (`ncm agent enable`, `bulk`, `update` y los grupos `backup`,
+`queue` y `script`) necesitan un dispositivo de red con credenciales; se documentan a partir de su
+`--help` y no se han verificado.
+
+### Gráficas, paradas programadas, componentes locales y estado de los servidores
+
+| Entidad | Finalidad | Notas |
+| --- | --- | --- |
+| `graph` | Gráficas combinadas | `graph-source <idGraph>` gestiona los módulos representados en una gráfica. |
+| `scheduled-downtime` | Paradas programadas | `dateFrom` y `dateTo` son marcas de tiempo Unix. `scheduled-downtime-agent <idParada>` y `scheduled-downtime-module <idParada>` gestionan lo que cubre la parada. |
+| `local-component` | Componentes locales (definiciones de módulos para agentes software) | `idOs` e `idNetworkComponentGroup` son obligatorios en `create`. |
+| `server` | Servidores de Pandora FMS y su estado | Solo lectura. |
+| `alert-execution-queue` | Ejecuciones de alertas en espera en la cola | Solo lectura. |
+| `security-vulnerability`, `windows-patch` | Vulnerabilidades y parches de Windows reportados por los agentes | Solo lectura. `list` filtra como de costumbre; `get` recibe la clave compuesta que muestra el listado. |
+
+```bash
+pandora-cli graph create --set name='Resumen de CPU' --set idGroup=0 --set period=3600
+pandora-cli graph-source create 1 --set idAgentModule=153 --set weight=1 --set label=cpu
+pandora-cli scheduled-downtime create --set name='Mantenimiento' --set idGroup=0 \
+  --set dateFrom=1893456000 --set dateTo=1893542400
+pandora-cli scheduled-downtime-agent create 3 --set idAgent=4 --set allModules=false
+pandora-cli scheduled-downtime-module create 3 --set idAgent=4 --set idAgentModule=138
+pandora-cli server list
+pandora-cli security-vulnerability get 7 5d41402abc4b2a76b9719d911017c592 1700000000
+pandora-cli windows-patch get 7 KB5034441 1700000000
+```
+
+El módulo indicado en `idAgentModule` debe pertenecer al agente indicado en `idAgent`; en caso
+contrario la consola responde `404`. `scheduled-downtime-module` no tiene `update`: elimina el
+módulo y vuelve a añadirlo.
+
+Verificado contra una consola en esta versión: el ciclo completo de crear, leer, actualizar y borrar
+de `graph`, `graph-source`, `scheduled-downtime` con sus agentes y módulos, y `local-component`, y los
+listados de `server`, `alert-execution-queue`, `security-vulnerability` y `windows-patch`. El `get`
+de `security-vulnerability` y `windows-patch` no se ha verificado, porque la consola de pruebas no
+tenía datos reportados por agentes.
+
+### Autenticación en dos factores y sesiones web
+
+`user 2fa` gestiona el segundo factor de los usuarios de la consola:
+
+| Comando | Efecto |
+| --- | --- |
+| `user 2fa status <usuario>` | Muestra si el usuario tiene segundo factor (`twoFactorEnabled`) y si la consola lo tiene activado (`consoleTwoFactorEnabled`). |
+| `user 2fa reset <usuario>` | Crea o rota el secreto del usuario. El secreto y su URI de aprovisionamiento aparecen solo en esta respuesta. |
+| `user 2fa disable <usuario>` | Elimina el secreto del usuario. |
+| `user 2fa bulk-disable` | Elimina el secreto de varios usuarios. El cuerpo es un array JSON de ids de usuario, así que necesita `--from-file`. |
+| `user 2fa disable-all` | Elimina el secreto de todos los usuarios de la consola. |
+
+```bash
+pandora-cli user 2fa status jdoe
+pandora-cli user 2fa reset jdoe --set reason='Dispositivo sustituido'
+pandora-cli user 2fa disable jdoe --set reason='Dispositivo perdido'
+echo '["jdoe","asmith"]' | pandora-cli user 2fa bulk-disable --from-file - --yes
+pandora-cli user 2fa disable-all --yes
+```
+
+`reason` es opcional y se guarda en el registro de auditoría de la consola. `bulk-disable` y
+`disable-all` piden confirmación; `disable-all` afecta a todos los usuarios, así que revisa antes la
+consola de destino. Verificado contra una consola en esta versión: `status`, `reset`, `disable` y
+`bulk-disable`; de `disable-all`, solo su petición de confirmación.
+
+`token session` gestiona **sesiones de la consola** como las que abren la interfaz web y las
+aplicaciones móviles. Son distintas de los tokens de la API que emite `token create`:
+
+```bash
+pandora-cli token session login --set id_user=jdoe --set password='...'
+pandora-cli --token <access_token> token session logout
+```
+
+- `login` no necesita token. Devuelve `access_token`, `access_expires_in` y `session_expires_at`.
+  Si la cuenta tiene segundo factor, devuelve `status: mfa_required` y un `mfa_token`; complétalo
+  con `token session login-mfa --set mfa_token=<token> --set code=<código>`.
+- El usuario necesita al menos un perfil para iniciar sesión; si no, la consola responde
+  `401 Invalid credentials`, el mismo mensaje que para una contraseña incorrecta.
+- Pasa el token de acceso devuelto con `--token` en una llamada para usarlo. `logout` revoca la
+  sesión del token usado en esa llamada, y las llamadas posteriores con él responden `401`.
+- `refresh` necesita la cookie HttpOnly que la consola establece al iniciar sesión. `pandora-cli` no
+  conserva cookies, así que `token session refresh` responde `401 Session expired`; inicia sesión de
+  nuevo.
+
+Trata el token de acceso como una contraseña: no lo dejes en el historial del shell ni en logs.
+
 ### Inspeccionar la API de la consola
 
 `spec` lee la descripción de la API que la propia consola publica sobre sí misma, de modo que puede
@@ -939,6 +1064,7 @@ instalada.
 | `alert-action` | Acciones de alerta | `list`, `get`, `create`, `update`, `delete` + 1 más |
 | `alert-calendar` | Calendarios de alerta | `list`, `get`, `create`, `update`, `delete` |
 | `alert-command` | Comandos de alerta | `list`, `get`, `create`, `update`, `delete` + 1 más |
+| `alert-execution-queue` | Ejecuciones de alertas en espera en la cola (solo lectura) | `list`, `get` |
 | `alert-special-day` | Días especiales de un calendario de alerta | `list`, `get`, `create`, `update`, `delete` |
 | `alert-template` | Plantillas de alerta | `list`, `get`, `create`, `update`, `delete` + 1 más |
 | `bulk-draft` | Borradores de operaciones masivas | `list`, `get`, `delete` + 1 más |
@@ -955,7 +1081,10 @@ instalada.
 | `event-filter` | Filtros de eventos guardados | `list`, `get`, `create`, `update`, `delete` |
 | `event-tag` | Etiquetas de eventos | `list`, `get`, `create`, `update`, `delete` |
 | `fired-alert` | Historial de alertas disparadas (solo lectura) | `list`, `get` |
+| `graph` | Gráficas combinadas | `list`, `get`, `create`, `update`, `delete` |
+| `graph-source` | Fuentes (módulos) de una gráfica combinada | `list`, `get`, `create`, `update`, `delete` |
 | `group` | Grupos de agentes | `list`, `get`, `create`, `update`, `delete` |
+| `local-component` | Componentes locales (definiciones de módulos para agentes software) | `list`, `get`, `create`, `update`, `delete` |
 | `log` | Entradas de log retenidas para los agentes | `agent list`, `agent entry list`, `agent source list` |
 | `module` (alias `agent-module`) | Módulos de agente | `list`, `get`, `create`, `update`, `delete` + 4 más (`force-check`, `graph` y el grupo `policy`) |
 | `module-alert` | Alertas asignadas a un módulo de agente | `list`, `get`, `create`, `update`, `delete` |
@@ -966,6 +1095,7 @@ instalada.
 | `module-tag` | Etiquetas asociadas a un módulo de agente | `list`, `get`, `create`, `delete` |
 | `module-type` | Tipos de módulo | `list`, `get` |
 | `monitoring` | Envío de datos de monitorización | `create` |
+| `ncm` | Agentes, firmware, scripts, plantillas y fabricantes de la gestión de configuración de red (NCM) | 51 comandos en los grupos `agent`, `firmware`, `script`, `template` y `vendor` |
 | `notification` | Notificaciones de la consola, fuentes de notificación y preferencias por usuario | 12 comandos en los grupos `message`, `source` y `source-user` |
 | `pandora-ai-audit` | Auditoría de las conversaciones de Pandora AI (solo lectura) | `message list`, `session list`, `session get`, `user list` |
 | `pandora-itsm-inventory` | Inventario de Pandora ITSM | `list`, `get` |
@@ -980,15 +1110,21 @@ instalada.
 | `report-design-report` | Informes de un diseño de informe | `list`, `get`, `create`, `update`, `delete` |
 | `report-design-template` | Plantillas de un diseño de informe | `list`, `get`, `create`, `update`, `delete` |
 | `rmm` | Agentes, trabajos por lotes y colas de monitorización y gestión remotas (RMM) | 74 comandos en los grupos `agent`, `batch`, `pending-software`, `queue`, `resource`, `routine`, `rule`, `schedule`, `script` y `settings` |
+| `scheduled-downtime` | Paradas programadas | `list`, `get`, `create`, `update`, `delete` |
+| `scheduled-downtime-agent` | Agentes cubiertos por una parada programada | `list`, `get`, `create`, `update`, `delete` |
+| `scheduled-downtime-module` | Módulos cubiertos por una parada programada | `list`, `get`, `create`, `delete` |
+| `security-vulnerability` | Vulnerabilidades de seguridad reportadas por los agentes (solo lectura) | `list` + 1 más (`get`) |
+| `server` | Servidores de Pandora FMS y su estado (solo lectura) | `list`, `get` |
 | `service` | Servicios | `list`, `get`, `create`, `update`, `delete` + 5 más (el grupo `element`) |
 | `siem-event` | Eventos SIEM que el usuario puede ver (solo lectura) | `list`, `get`, `aggregate` |
 | `siem-group` | Grupos SIEM | `list`, `get`, `create`, `update`, `delete` |
 | `siem-log` | Logs decodificados de SIEM que el usuario puede ver (solo lectura) | `list`, `get`, `aggregate` |
 | `siem-rule` | Reglas SIEM | `list`, `get`, `create`, `update`, `delete` + 4 más |
 | `tag` | Etiquetas de módulos | `list`, `get`, `create`, `update`, `delete` |
-| `token` | Tokens de la API | `list`, `get`, `create`, `update`, `delete` |
-| `user` | Usuarios de la consola y sus perfiles asignados | `list`, `get`, `create`, `update`, `delete` + 6 más |
+| `token` | Tokens de la API y sesiones de la consola | `list`, `get`, `create`, `update`, `delete` + 4 más (el grupo `session`) |
+| `user` | Usuarios de la consola y sus perfiles asignados | `list`, `get`, `create`, `update`, `delete` + 11 más (`login-info`, `notify` y los grupos `profile` y `2fa`) |
 | `widget` | Widgets de dashboard | `list`, `get` |
+| `windows-patch` | Parches de Windows reportados por los agentes (solo lectura) | `list` + 1 más (`get`) |
 
 Las entidades que conoce un ejecutable son las de la versión de la API con la que se construyó. Una
 consola más reciente que el ejecutable puede publicar más; `pandora-cli auth status` informa de lo
