@@ -21,7 +21,7 @@ La tarea crea **un agente por cada valor distinto de `filter_topic`** definido e
 
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
-| Addon `pandorafms.iot`, versión `1.1` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
+| Addon `pandorafms.iot`, versión `1.2` | Objetivo documentado | La versión que describe esta página. Consulte [Identidad del addon](#identidad-del-addon) |
 | Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que todas sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores |
 | Un broker MQTT accesible desde el equipo del servidor IoT | `Requerido` | Requisito previo, no una declaración de compatibilidad |
 | Acceso de red desde el servidor de Discovery a la base de datos del servidor IoT | `Requerido` | La tarea lee la ruta del fichero de base de datos que configure |
@@ -88,7 +88,7 @@ Cree la tarea desde **Management → Discovery → Application → IOT**. La con
 1. **Iot base**:
 
     - **DB path**: ruta del fichero de base de datos del servidor IoT.
-    - **Time window**: consulte [Parámetros de la tarea](#parametros-de-la-tarea). Actualmente no restringe los mensajes que se leen.
+    - **Time window**: número de segundos antes de la ejecución de la tarea desde los que se procesan mensajes. Déjelo vacío o `0` para procesar todos los mensajes pendientes. Consulte [Parámetros de la tarea](#parametros-de-la-tarea).
     - **Tentacle IP**, **Tentacle port** y **Tentacle extra options**: dónde y cómo se envían los datos de los agentes generados. Rara vez es necesario cambiarlos.
 
     ![Paso del asistente IOT con DB path, Time window y los campos de Tentacle](../assets/images/discovery/iot/wizard-iot-base.png)
@@ -191,7 +191,7 @@ Cada ejecución lee de la base de datos todos los mensajes que aún no se han pr
 - **Todo mensaje leído se marca como procesado, incluso cuando no coincide con ningún filtro.** Cambiar un filtro no hace que la tarea reprocese mensajes anteriores.
 - **Agentes**: se crea un agente por cada valor distinto de `filter_topic`, y su nombre es ese valor tal como está escrito en el filtro, no el tópico MQTT del mensaje. Los filtros con el mismo texto de `filter_topic` comparten agente. Defina `filter_topic` en todos los filtros y prefiera texto plano o un patrón legible, porque una expresión regular se convierte en el nombre del agente.
 - **Módulos**: dentro de una ejecución y de un agente, se conserva el primer módulo generado con un nombre dado y se descartan los mensajes posteriores que resuelven al mismo nombre. Use `__topic__` o valores capturados en `filter_module_name` cuando varios tópicos o mensajes deban producir módulos distintos.
-- **Marcas de tiempo**: la tarea lee los mensajes almacenados después del instante dado por la ventana de tiempo efectiva; consulte la nota en [Parámetros de la tarea](#parametros-de-la-tarea).
+- **Marcas de tiempo**: cuando Time window es mayor que `0`, la tarea lee los mensajes almacenados después de `ahora - Time window`. Los mensajes más antiguos que esa ventana permanecen sin procesar. Consulte [Parámetros de la tarea](#parametros-de-la-tarea).
 - **Retención**: con independencia del procesamiento, el servidor IoT elimina los mensajes almacenados más antiguos que el periodo de retención (por defecto 86400 segundos), comprobándolo con el intervalo de limpieza configurado.
 
 ### Agentes y módulos generados
@@ -295,10 +295,10 @@ log_location = /var/log/pandora/
 | Campo | Obligatorio | Por defecto | Descripción |
 |-------|-------------|-------------|-------------|
 | DB path | Sí | `/opt/pandora/pandora_iot_server/db/pandora_iot.db` | Ruta completa del fichero de base de datos del servidor IoT. |
-| Time window | No | Vacío | Pensado para limitar los mensajes por antigüedad. En la versión `1.1` el valor no se transmite al procesador, por lo que no tiene efecto: se leen todos los mensajes sin procesar. Déjelo vacío. |
+| Time window | No | Vacío | Número de segundos antes de la ejecución de la tarea desde los que se procesan mensajes. El procesador lee los mensajes almacenados después de `ahora - Time window`. Déjelo vacío o `0` para procesar todos los mensajes pendientes. |
 | Tentacle IP | Sí | `127.0.0.1` | Servidor Tentacle que recibe los datos de los agentes. |
 | Tentacle port | Sí | `41121` | Puerto de Tentacle. |
-| Tentacle extra options | No | Vacío | Opciones adicionales de Tentacle. Esta versión escribe el valor en la configuración pero no lo lee, por lo que no tiene efecto. |
+| Tentacle extra options | No | Vacío | Opciones adicionales que se pasan al cliente de Tentacle, por ejemplo `-z` para comprimir los datos. |
 
 #### Iot detailed
 
@@ -333,7 +333,7 @@ La aplicación de Discovery ejecuta su procesador con la configuración de la ta
 |----------|-------|
 | Nombre | IOT |
 | Identificador | `pandorafms.iot` |
-| Versión | `1.1` |
+| Versión | `1.2` |
 | Tipo y sección | Discovery, `app` |
-| Entrada del Marketplace | [pandorafms.iot](https://marketplace.pandorafms.com/entries/pandorafms.iot), actualizada el 2025-11-14 |
+| Entrada del Marketplace | [pandorafms.iot](https://marketplace.pandorafms.com/entries/pandorafms.iot), actualizada el 2026-11-04 |
 | Disponibilidad | La entrada del Marketplace indica que la descarga está limitada a usuarios con licencia |

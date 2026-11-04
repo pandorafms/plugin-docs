@@ -21,7 +21,7 @@ The task creates **one agent per distinct `filter_topic` value** defined in your
 
 | Scope | State | Evidence |
 |-------|-------|----------|
-| Addon `pandorafms.iot`, version `1.1` | Documented target | The version this page describes. See [Addon identity](#addon-identity) |
+| Addon `pandorafms.iot`, version `1.2` | Documented target | The version this page describes. See [Addon identity](#addon-identity) |
 | Pandora FMS NG 784 and later | `Supported` | The Marketplace states that all its integrations are compatible with Pandora FMS NG 784 and later versions |
 | An MQTT broker reachable from the IoT server host | `Required` | Prerequisite, not a compatibility statement |
 | Network access from the Discovery server to the IoT server database | `Required` | The task reads the database file path you configure |
@@ -88,7 +88,7 @@ Create the task from **Management → Discovery → Application → IOT**. The c
 1. **Iot base**:
 
     - **DB path**: path of the IoT server database file.
-    - **Time window**: see [Task parameters](#task-parameters). It does not currently restrict the messages that are read.
+    - **Time window**: number of seconds before the task run from which messages are processed. Leave it empty or `0` to process every pending message. See [Task parameters](#task-parameters).
     - **Tentacle IP**, **Tentacle port** and **Tentacle extra options**: where and how the generated agent data is sent. They rarely need changing.
 
     ![IOT wizard step with DB path, Time window and the Tentacle fields](../assets/images/discovery/iot/wizard-iot-base.png)
@@ -98,7 +98,7 @@ Create the task from **Management → Discovery → Application → IOT**. The c
     - **Max threads**: number of processes used to evaluate the messages.
     - **Filter messages modules**: the filter definitions that decide which messages become modules. See [Define the message filters](#define-the-message-filters).
 
-    <!-- SCREENSHOT NEEDED: IOT Iot detailed wizard step showing Max threads and the Filter messages modules text area with one filter defined. -->
+    ![IOT detailed step with Max threads and the filter definitions](../assets/images/discovery/iot/wizard-iot-detailed.png)
 
 The task interval and group are the ones you set on the task; the generated agents use them.
 
@@ -176,7 +176,7 @@ creates a module named `testtopic/rgb/test/action/ get right` with the value `te
     - **Total agents**: number of agents generated.
     - **Total messages**: number of modules generated from messages that passed a filter.
 
-    <!-- SCREENSHOT NEEDED: Discovery task execution summary for an IOT task showing Total agents and Total messages. -->
+    ![IOT task execution summary with Total agents and Total messages](../assets/images/discovery/iot/task-summary.png)
 
 5. Open the generated agent and confirm it has the module and value your filter produces.
 
@@ -191,7 +191,7 @@ Each run reads from the database every message that has not been processed yet a
 - **Every message read is marked as processed, even when it matches no filter.** Changing a filter does not make the task reprocess earlier messages.
 - **Agents**: one agent is created per distinct `filter_topic` value, and its name is that value exactly as written in the filter, not the MQTT topic of the message. Filters that share the same `filter_topic` text share an agent. Set `filter_topic` in every filter, and prefer plain text or a readable pattern, because a regular expression becomes the agent name.
 - **Modules**: within one run and one agent, the first module generated with a given name is kept and later messages that resolve to the same name are discarded. Use `__topic__` or captured values in `filter_module_name` when several topics or messages should produce separate modules.
-- **Timestamps**: the task reads messages stored after the time given by the effective time window; see the note in [Task parameters](#task-parameters).
+- **Timestamps**: when Time window is greater than `0`, the task reads messages stored after `now - Time window`. Messages older than that window stay unprocessed. See [Task parameters](#task-parameters).
 - **Retention**: independently of processing, the IoT server deletes stored messages older than the retention period (default 86400 seconds), checking at the configured cleaning interval.
 
 ### Generated agents and modules
@@ -295,10 +295,10 @@ log_location = /var/log/pandora/
 | Field | Required | Default | Description |
 |-------|----------|---------|-------------|
 | DB path | Yes | `/opt/pandora/pandora_iot_server/db/pandora_iot.db` | Full path of the IoT server database file. |
-| Time window | No | Empty | Intended to limit the messages by age. In version `1.1` the value is not passed to the processor, so it has no effect: every unprocessed message is read. Leave it empty. |
+| Time window | No | Empty | Number of seconds before the task run from which messages are processed. The processor reads messages stored after `now - Time window`. Leave it empty or `0` to process every pending message. |
 | Tentacle IP | Yes | `127.0.0.1` | Tentacle server that receives the agent data. |
 | Tentacle port | Yes | `41121` | Tentacle port. |
-| Tentacle extra options | No | Empty | Extra options for Tentacle. This version writes the value to the configuration but does not read it, so it has no effect. |
+| Tentacle extra options | No | Empty | Extra options passed to the Tentacle client, for example `-z` to compress the data. |
 
 #### Iot detailed
 
@@ -333,7 +333,7 @@ The Discovery application runs its processor with the task configuration (`--con
 |------|-------|
 | Name | IOT |
 | Identifier | `pandorafms.iot` |
-| Version | `1.1` |
+| Version | `1.2` |
 | Type and section | Discovery, `app` |
-| Marketplace entry | [pandorafms.iot](https://marketplace.pandorafms.com/entries/pandorafms.iot), updated 2025-11-14 |
+| Marketplace entry | [pandorafms.iot](https://marketplace.pandorafms.com/entries/pandorafms.iot), updated 2026-11-04 |
 | Availability | The Marketplace entry states that the download is limited to licensed users |
