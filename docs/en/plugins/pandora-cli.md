@@ -651,14 +651,17 @@ pandora-cli module graph 12 --set period=3600 -o json | jq -r .graph | base64 -d
 
 ### Logs, Pandora AI audit and RMM
 
-Three entities depend on something the console must provide. Their commands follow the usual shape,
-and the list flags described above apply wherever a command declares them.
+Four entities are read only or depend on something the console must provide. Their commands follow
+the usual shape, and the list flags described above apply wherever a command declares them.
 
 - **`log`** reads the log entries retained for the agents. It needs a log backend configured in the
   console; without it the console answers `503 Invalid or missing log backend configuration`. Its
   lists take `--size` but not `--page`.
 - **`pandora-ai-audit`** is read only and audits the Pandora AI conversations. It needs a Pandora AI
   server configured in the console.
+- **`audit-log`** (alias `audit`) is read only and reads the console audit trail: `list` filters by
+  `idUser`, `sourceIp`, `action`, `description`, `timestamp`, `aiSession`, `freeSearch`, `startDate`
+  and `endDate`, and `get <idSession>` returns one entry with its extended data.
 - **`rmm`** manages remote monitoring and management: agents, scripts, resources, routines,
   schedules, batch jobs and their queues. Its commands are documented from their `--help`; they have
   not been verified against a console in this release.
@@ -672,6 +675,9 @@ pandora-cli pandora-ai-audit user list
 pandora-cli pandora-ai-audit session list --set userId=admin
 pandora-cli pandora-ai-audit session get admin 5f2c1e
 pandora-cli pandora-ai-audit message list --set userId=admin --set role=assistant
+
+pandora-cli audit-log list --filter idUser=admin --size 20
+pandora-cli audit-log get 1042
 
 pandora-cli rmm queue list --size 20
 echo '{"idScriptRmm":2,"name":"Install updates","idAgentsRmm":[5,6]}' | pandora-cli rmm rule execute --from-file -
@@ -826,6 +832,41 @@ Verified against a console in this release: the full create, read, update and de
 the lists of `server`, `alert-execution-queue`, `security-vulnerability` and `windows-patch`. The
 `get` of `security-vulnerability` and `windows-patch` has not been verified, because the test
 console held no agent-reported data.
+
+### Counters, custom fields and system values
+
+| Command | Returns |
+| --- | --- |
+| `agent summary` | Agents by status: `total`, `normal`, `warning`, `critical`, `unknown` and `notInit`. |
+| `module summary` | Modules by status, plus the configured (`alerts`) and fired (`alertsFired`) alerts. |
+| `alert summary` | Alerts `configured` and `fired`. |
+| `server summary` | Servers `total` and their `status`: `running`, `stopped`, `crashed` and `standby`. |
+| `event summary` | Events `total`, `bySeverity` and `byStatus`. |
+| `system timezone` | The console system timezone. |
+| `system self-monitoring-agent-name` | The name of the console self-monitoring agent. |
+
+The agent, module and alert counters cover the groups the user can read and come from the statistics
+the server precomputes, so they are not real time. `server summary` covers the groups the user can
+manage; a user with none gets a total of `0`.
+
+`event summary` takes the event filter fields (`severity`, `idGroup`, `status`...). The filter is optional: without
+any filter, or without a date range, it covers the last 8 hours.
+
+`agent-custom-field` manages the definitions of the custom fields, and the `custom-field` group of
+`agent` manages the value an agent holds for each one. The value travels in the `description` field.
+Clearing a value does not remove the definition.
+
+```bash
+pandora-cli agent summary
+pandora-cli event summary --set severity=4
+pandora-cli system timezone
+pandora-cli agent-custom-field create --set name='Rack'
+pandora-cli agent custom-field update 7 3 --set description='rack 12'
+pandora-cli agent custom-field list 7
+pandora-cli agent custom-field delete 7 3 --yes
+```
+
+Verified against a console in this release: the seven counter and system commands, and the full create, read, update and delete cycle of `agent-custom-field` and of the value an agent holds for it.
 
 ### Two-factor authentication and web sessions
 
@@ -1029,11 +1070,13 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 
 | Entity | Covers | Verbs |
 | --- | --- | --- |
-| `agent` | Monitoring agents | `list`, `get`, `create`, `update`, `delete` + 6 more (`status` and the `collection`, `public-ip` and `policy` groups) |
+| `agent` | Monitoring agents | `list`, `get`, `create`, `update`, `delete` + 11 more (`status`, `summary` and the `collection`, `public-ip`, `policy` and `custom-field` groups) |
+| `agent-custom-field` | Custom field definitions for agents | `list`, `get`, `create`, `update`, `delete` |
 | `agent-extended-data` | Extended data attached to agents | `list`, `get`, `create`, `update`, `delete` |
 | `agent-secondary-group` | Secondary groups of an agent | `list`, `create`, `delete` |
 | `ai-notify` | Notify the owner of a Pandora AI scheduled task | `send` |
 | `ai-task` | Pandora AI scheduled tasks | `list`, `get`, `create`, `update`, `delete` + 2 more (`enable` and `run`) |
+| `alert` | Alert counters | `summary` |
 | `alert-action` | Alert actions | `list`, `get`, `create`, `update`, `delete` + 1 more |
 | `alert-calendar` | Alert calendars | `list`, `get`, `create`, `update`, `delete` |
 | `alert-command` | Alert commands | `list`, `get`, `create`, `update`, `delete` + 1 more |
@@ -1047,7 +1090,7 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `dashboard-widget` | Widgets placed on a dashboard | `list`, `get`, `create`, `update`, `delete` |
 | `data-translation` | Data translation definitions | `list`, `get`, `create`, `update`, `delete` |
 | `email` | Send e-mail through the console mail transport | `send`, `config` |
-| `event` | Monitoring events | `list`, `get`, `create`, `update`, `delete` + 12 more |
+| `event` | Monitoring events | `list`, `get`, `create`, `update`, `delete` + 13 more (including `summary`) |
 | `event-alert` | Event alerts | `list`, `get`, `create`, `update`, `delete` |
 | `event-alert-action` | Actions of an event alert | `list`, `get`, `create`, `update`, `delete` |
 | `event-alert-rule` | Rules that trigger an event alert | `list`, `get`, `create`, `update`, `delete` |
@@ -1061,7 +1104,7 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `network-component` | Network components (remote module templates) | `list`, `get`, `create`, `update`, `delete` |
 | `network-component-group` | Groups that organise network components | `list`, `get`, `create`, `update`, `delete` |
 | `log` | Log entries retained for the agents | `agent list`, `agent entry list`, `agent source list` |
-| `module` (alias `agent-module`) | Agent modules | `list`, `get`, `create`, `update`, `delete` + 4 more (`force-check`, `graph` and the `policy` group) |
+| `module` (alias `agent-module`) | Agent modules | `list`, `get`, `create`, `update`, `delete` + 5 more (`force-check`, `graph`, `summary` and the `policy` group) |
 | `module-alert` | Alerts assigned to an agent module | `list`, `get`, `create`, `update`, `delete` |
 | `module-alert-action` | Actions fired by an agent module alert | `list`, `get`, `create`, `update`, `delete` |
 | `module-data` | Historical data of an agent module | `list`, `get` + 1 more |
@@ -1089,12 +1132,13 @@ arguments, and `pandora-cli docs` for the full reference of the installed build.
 | `scheduled-downtime-agent` | Agents covered by a scheduled downtime | `list`, `get`, `create`, `update`, `delete` |
 | `scheduled-downtime-module` | Modules covered by a scheduled downtime | `list`, `get`, `create`, `delete` |
 | `security-vulnerability` | Security vulnerabilities reported by agents (read only) | `list` + 1 more (`get`) |
-| `server` | Pandora FMS servers and their status (read only) | `list`, `get` |
+| `server` | Pandora FMS servers and their status (read only) | `list`, `get`, `summary` |
 | `service` | Services | `list`, `get`, `create`, `update`, `delete` + 5 more (the `element` group) |
 | `siem-event` | SIEM events the user is authorized to see (read only) | `list`, `get`, `aggregate` |
 | `siem-group` | SIEM groups | `list`, `get`, `create`, `update`, `delete` |
 | `siem-log` | Decoded SIEM logs the user is authorized to see (read only) | `list`, `get`, `aggregate` |
 | `siem-rule` | SIEM rules | `list`, `get`, `create`, `update`, `delete` + 4 more |
+| `system` | Console system information | `timezone`, `self-monitoring-agent-name` |
 | `tag` | Module tags | `list`, `get`, `create`, `update`, `delete` |
 | `token` | API tokens and console sessions | `list`, `get`, `create`, `update`, `delete` + 3 more (the `session` group) |
 | `user` | Console users and their profile assignments | `list`, `get`, `create`, `update`, `delete` + 11 more (`login-info`, `notify` and the `profile` and `2fa` groups) |
