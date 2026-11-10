@@ -951,6 +951,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#tiempos-de-espera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tiempos de espera
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#formato-de-los-objetivos" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3975,6 +3986,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#tiempos-de-espera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tiempos de espera
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#formato-de-los-objetivos" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4211,7 +4233,7 @@
 
 
 <h1 id="db2-discovery">DB2 Discovery<a class="headerlink" href="#db2-discovery" title="Permanent link">¶</a></h1>
-<p><em>Última actualización del artículo: 2026-10-26.</em></p>
+<p><em>Última actualización del artículo: 2026-10-28.</em></p>
 <h2 id="que-monitoriza">Qué monitoriza<a class="headerlink" href="#que-monitoriza" title="Permanent link">¶</a></h2>
 <p>El addon de Discovery de DB2 monitoriza bases de datos IBM Db2 de forma remota. Una tarea de Discovery se conecta a cada base de datos que indique y convierte el resultado en agentes y módulos de Pandora FMS: disponibilidad de la conexión, resumen de rendimiento de la base de datos, utilización del log de transacciones, tamaño de la base de datos, conexiones activas y estadísticas de caché de los buffer pools. También puede ejecutar sus propias consultas <code>SELECT</code> de solo lectura y publicar su resultado como módulos.</p>
 <p>Una tarea de Discovery genera <strong>un agente por cada base de datos objetivo</strong>. No se instala nada en el servidor de base de datos: el addon se conecta por TCP/IP desde el servidor de Discovery con un usuario y una contraseña de base de datos.</p>
@@ -4227,7 +4249,7 @@
 </thead>
 <tbody>
 <tr>
-<td>Addon <code>pandorafms.db2</code>, versión <code>1.2</code></td>
+<td>Addon <code>pandorafms.db2</code>, versión <code>1.3</code></td>
 <td>Objetivo documentado</td>
 <td>La versión que describe esta página. Consulte <a href="#identidad-del-addon">Identidad del addon</a></td>
 </tr>
@@ -4317,12 +4339,13 @@
 <p>Cree la tarea y elija <strong>DB2</strong>. La consola presenta los campos en dos pasos; todos los campos se documentan en <a href="#parametros-de-la-tarea">Parámetros de la tarea</a>.</p>
 <ol>
 <li>
-<p><strong>DB2 Base</strong> — objetivos y credenciales:</p>
+<p><strong>DB2 Base</strong> — objetivos, credenciales y límites de tiempo:</p>
 <ul>
 <li><strong>DB2 target strings</strong>: las bases de datos a monitorizar, una <code>SERVER:PORT/DATABASE</code> por entrada, separadas por comas o una por línea. Las líneas que empiezan por <code>#</code> son comentarios. Consulte <a href="#formato-de-los-objetivos">Formato de los objetivos</a>.</li>
 <li><strong>User</strong> y <strong>Password</strong>: las credenciales de Db2. Ambas son obligatorias.</li>
+<li><strong>Connection timeout</strong>, <strong>Query timeout</strong> y <strong>Max execution time</strong>: cuánto puede tardar el addon en conectar, en ejecutar cada consulta y en completar toda la ejecución. Consulte <a href="#tiempos-de-espera">Tiempos de espera</a>.</li>
 </ul>
-<!-- SCREENSHOT NEEDED: Paso DB2 Base del asistente con un objetivo de laboratorio, un usuario y una contraseña enmascarada, sin nombres de host ni credenciales reales. -->
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/db2/base-step.png" data-desc-position="bottom"><img alt="Paso DB2 Base del asistente con las cadenas de objetivo, el usuario, la contraseña y los selectores de timeout de conexión, de consulta y de ejecución máxima." src="../../../assets/images/discovery/db2/base-step.png"></a></p>
 </li>
 <li>
 <p><strong>DB2 Detailed</strong> — ejecución y qué recopilar:</p>
@@ -4337,6 +4360,42 @@
 </li>
 </ol>
 <p>El grupo y el intervalo de la tarea proceden del paso genérico de definición de la tarea y se aplican a los agentes que crea.</p>
+<h3 id="tiempos-de-espera">Tiempos de espera<a class="headerlink" href="#tiempos-de-espera" title="Permanent link">¶</a></h3>
+<p>Los tres campos de timeout son selectores de tiempo: elija un periodo predefinido o, como administrador, use el control de edición (lápiz) para introducir una cantidad y una unidad personalizadas. El addon lee el valor en segundos.</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Por defecto</th>
+<th>Limita</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Connection timeout</strong></td>
+<td><code>20</code> segundos</td>
+<td>Establecer la conexión y ejecutar la consulta de prueba inicial de cada objetivo</td>
+</tr>
+<tr>
+<td><strong>Query timeout</strong></td>
+<td><code>120</code> segundos</td>
+<td>Cada consulta individual</td>
+</tr>
+<tr>
+<td><strong>Max execution time</strong></td>
+<td><code>240</code> segundos</td>
+<td>Toda la ejecución, contando todos los objetivos</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Connection timeout.</strong> Un objetivo que no conecta y responde a la consulta de prueba en ese tiempo se informa en <strong>Targets down</strong> con <code>Connection timed out after &lt;N&gt; seconds</code>, y su agente se crea igualmente con <code>DB2 connection</code> a <code>0</code>.</li>
+<li><strong>Query timeout.</strong> Una consulta que no termina a tiempo falla con <code>Query timed out after &lt;N&gt; seconds</code> en la información de la tarea. El addon descarta esa sesión y abre una conexión nueva para la siguiente consulta, de modo que una consulta lenta no detiene el resto de comprobaciones. El timeout se recorta al tiempo que queda antes de <strong>Max execution time</strong>.</li>
+<li><strong>Max execution time.</strong> Es el presupuesto de toda la ejecución. Cuando quedan menos de cinco segundos, el addon deja de lanzar las consultas personalizadas pendientes, no envía consultas nuevas, informa de cuántas consultas personalizadas se han omitido y termina con los datos recopilados hasta ese momento. Use <code>0</code> para desactivarlo.</li>
+</ul>
+<p>Mantenga <strong>Max execution time</strong> por debajo del timeout de la tarea de Discovery. Si antes se alcanza el timeout de la tarea, Pandora FMS detiene el addon con <code>SIGTERM</code>; el addon devuelve entonces el resultado parcial recopilado hasta ese momento y registra <code>Execution interrupted by SIGTERM (task timeout?). Partial data returned.</code> en la información de la tarea.</p>
+<p>Un timeout de conexión o de consulta no positivo o no numérico usa su valor por defecto.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/db2/base-step-custom.png" data-desc-position="bottom"><img alt="Paso DB2 Base del asistente con un valor y una unidad personalizados introducidos en un selector de timeout en lugar de un periodo predefinido." src="../../../assets/images/discovery/db2/base-step-custom.png"></a></p>
 <h3 id="formato-de-los-objetivos">Formato de los objetivos<a class="headerlink" href="#formato-de-los-objetivos" title="Permanent link">¶</a></h3>
 <p>Cada objetivo identifica un host, opcionalmente un puerto, y una base de datos:</p>
 <table>
@@ -4606,7 +4665,7 @@ check_end
 <h3 id="notas-de-ejecucion">Notas de ejecución<a class="headerlink" href="#notas-de-ejecucion" title="Permanent link">¶</a></h3>
 <ul>
 <li>El addon elimina el contenido de su directorio de diagnóstico del cliente Db2 al comienzo de cada ejecución.</li>
-<li>Cada objetivo usa una conexión que se cierra cuando el objetivo ha sido procesado. El número de conexiones en paralelo nunca supera el número de objetivos.</li>
+<li>Cada objetivo usa una conexión que se cierra cuando el objetivo ha sido procesado. Cuando una consulta agota su timeout, esa conexión se descarta y se abre una nueva para la siguiente consulta. El número de conexiones en paralelo nunca supera el número de objetivos.</li>
 </ul>
 <h2 id="solucion-de-problemas">Solución de problemas<a class="headerlink" href="#solucion-de-problemas" title="Permanent link">¶</a></h2>
 <p>El addon no tiene indicador de modo detallado ni de depuración. Su canal de diagnóstico es el campo <code>info</code> del resultado JSON de ejecución, que se muestra en la información de ejecución de la tarea.</p>
@@ -4614,6 +4673,10 @@ check_end
 <li><strong><code>Parameter [user] not defined</code>, <code>Parameter [password] not defined</code> o <code>Database targets not defined</code></strong>: falta un campo obligatorio. La tarea termina con código de salida <code>1</code> y no genera nada.</li>
 <li><strong>Un error de conexión y <code>Targets down</code> mayor que cero</strong>: no se pudo alcanzar la base de datos. Compruebe el host, el puerto y el nombre de base de datos del objetivo, las credenciales y la ruta de red. El agente se genera igualmente con <code>DB2 connection</code> a <code>0</code>.</li>
 <li><strong>Un objetivo sin nombre de base de datos</strong>: no puede conectar; use la forma <code>&lt;HOST&gt;:&lt;PORT&gt;/&lt;DATABASE&gt;</code>.</li>
+<li><strong><code>Connection timed out after &lt;N&gt; seconds</code></strong>: el objetivo no respondió dentro de <strong>Connection timeout</strong>. Auméntelo o revise la ruta de red y el listener de Db2.</li>
+<li><strong><code>Query timed out after &lt;N&gt; seconds</code></strong>: una consulta superó <strong>Query timeout</strong>. Auméntelo si se espera que la consulta sea lenta; el addon descarta esa sesión y vuelve a conectar para las comprobaciones restantes.</li>
+<li><strong><code>Execution deadline reached</code> y un mensaje que informa de consultas personalizadas omitidas</strong>: la ejecución agotó su <strong>Max execution time</strong>. Auméntelo, manteniéndolo por debajo del timeout de la tarea, o acorte o reprograme las consultas personalizadas lentas.</li>
+<li><strong><code>Execution interrupted by SIGTERM (task timeout?). Partial data returned.</code></strong>: se alcanzó el timeout de la tarea de Discovery antes de que el addon terminara. Ajuste <strong>Max execution time</strong> por debajo del timeout de la tarea para que pueda terminar de forma limpia.</li>
 <li><strong><code>DB2 error, please verify you have grants to ...</code></strong>: el usuario no puede leer la vista que usa esa opción (resumen, utilización del log, tamaño, número de conexiones o ratio de aciertos). Conceda <code>SELECT</code> sobre ella o desactive la opción.</li>
 <li><strong><code>Removed [&lt;query&gt;] from custom queries, only select queries are allowed.</code></strong>: el <code>target</code> de una consulta personalizada no empieza por <code>SELECT</code>.</li>
 <li><strong><code>Invalid custom query crontab expression</code></strong>: el <code>crontab</code> de una consulta no tiene cinco campos o no es válido; la consulta se omite.</li>
@@ -4656,6 +4719,27 @@ check_end
 <td>contraseña</td>
 <td>vacío</td>
 <td>Obligatorio</td>
+</tr>
+<tr>
+<td>Connection timeout</td>
+<td><code>_connectionTimeout_</code></td>
+<td>selección (tiempo)</td>
+<td><code>20</code></td>
+<td>Opcional. Tiempo máximo para establecer la conexión y ejecutar la consulta de prueba de un objetivo. Se guarda en segundos</td>
+</tr>
+<tr>
+<td>Query timeout</td>
+<td><code>_queryTimeout_</code></td>
+<td>selección (tiempo)</td>
+<td><code>120</code></td>
+<td>Opcional. Tiempo máximo de cada consulta. Se guarda en segundos</td>
+</tr>
+<tr>
+<td>Max execution time</td>
+<td><code>_maxExecutionTime_</code></td>
+<td>selección (tiempo)</td>
+<td><code>240</code></td>
+<td>Opcional. Presupuesto total de la ejecución; las consultas pendientes se omiten al alcanzarlo. <code>0</code> lo desactiva. Debe ser menor que el timeout de la tarea</td>
 </tr>
 </tbody>
 </table>
@@ -4780,6 +4864,21 @@ check_end
 <td>Número de hilos en paralelo</td>
 </tr>
 <tr>
+<td><code>connection_timeout</code></td>
+<td><code>20</code></td>
+<td>Segundos máximos para establecer la conexión y ejecutar la consulta de prueba de un objetivo. Un valor no positivo usa <code>20</code></td>
+</tr>
+<tr>
+<td><code>query_timeout</code></td>
+<td><code>120</code></td>
+<td>Segundos máximos de cada consulta. Un valor no positivo usa <code>120</code></td>
+</tr>
+<tr>
+<td><code>max_execution_time</code></td>
+<td><code>240</code></td>
+<td>Presupuesto total de la ejecución en segundos. <code>0</code> lo desactiva. Debe ser menor que el timeout de la tarea</td>
+</tr>
+<tr>
 <td><code>modules_prefix</code></td>
 <td>vacío</td>
 <td>Prefijo de todos los nombres de módulo</td>
@@ -4827,6 +4926,9 @@ check_end
 <span class="na">user</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;DB2_USER&gt;</span>
 <span class="na">password</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;DB2_PASSWORD&gt;</span>
 <span class="na">threads</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
+<span class="na">connection_timeout</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">20</span>
+<span class="na">query_timeout</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s">120</span>
+<span class="na">max_execution_time</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">240</span>
 <span class="na">modules_prefix</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s">db2_</span>
 <span class="na">execute_custom_queries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
 <span class="na">analyze_connections</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
@@ -4854,7 +4956,7 @@ check_end
 </tr>
 <tr>
 <td>Versión</td>
-<td><code>1.2</code></td>
+<td><code>1.3</code></td>
 </tr>
 <tr>
 <td>Última actualización en el Marketplace</td>
