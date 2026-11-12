@@ -4221,10 +4221,10 @@
 
 
 <h1 id="selenium-4-discovery">Selenium 4 Discovery<a class="headerlink" href="#selenium-4-discovery" title="Permanent link">¶</a></h1>
-<p><em>Última actualización del artículo: 2026-09-08.</em></p>
+<p><em>Última actualización del artículo: 2026-10-28.</em></p>
 <h2 id="que-monitoriza">Qué monitoriza<a class="headerlink" href="#que-monitoriza" title="Permanent link">¶</a></h2>
 <p>El plugin de Discovery de Selenium 4 (WUX, monitorización de experiencia de usuario web) ejecuta transacciones web grabadas con la extensión de navegador Selenium IDE contra un navegador real de Google Chrome o Mozilla Firefox y convierte cada prueba grabada en un agente de Pandora FMS con los resultados de la transacción. Lee la transacción de un archivo <code>.side</code> de Selenium IDE (formato Selenium JSON) y maneja el navegador mediante la API WebDriver de Selenium 4.</p>
-<p>Una tarea de Discovery puede ejecutar las pruebas grabadas en cuatro modos: un driver de Selenium local en el servidor de Pandora FMS, un servidor remoto de Selenium 4, un contenedor de Docker en el servidor de Discovery, o un contenedor de Docker en un worker remoto alcanzado por SSH. Se crea un agente por cada prueba del proyecto, más un agente por proyecto con estadísticas de conexión cuando <strong>Monitor time statistics</strong> está habilitado.</p>
+<p>Una tarea de Discovery puede ejecutar las pruebas grabadas en cuatro modos: un driver de Selenium local en el servidor de Pandora FMS, un servidor remoto de Selenium 4, un contenedor de Docker en el servidor de Discovery, o un contenedor de Docker en un worker remoto alcanzado por SSH. Se crea un agente por cada prueba del proyecto, más un agente por proyecto con estadísticas de conexión cuando <strong>Monitor time statistics</strong> está habilitado. El agente de estadísticas cubre la URL principal de la transacción y cualquier URL absoluta adicional configurada en la tarea.</p>
 <h2 id="preparacion">Preparación<a class="headerlink" href="#preparacion" title="Permanent link">¶</a></h2>
 <h3 id="compatibilidad">Compatibilidad<a class="headerlink" href="#compatibilidad" title="Permanent link">¶</a></h3>
 <table>
@@ -4237,7 +4237,7 @@
 </thead>
 <tbody>
 <tr>
-<td>Versión del plugin <code>1.8</code> (<code>pandorafms.selenium.4</code>)</td>
+<td>Versión del plugin <code>1.9</code> (<code>pandorafms.selenium.4</code>)</td>
 <td>Objetivo documentado</td>
 <td>La versión que describe esta página, identificada en la definición del paquete. Consulte <a href="#identidad-del-plugin">Identidad del plugin</a>.</td>
 </tr>
@@ -4320,7 +4320,8 @@
 <p><strong>Paso 4 — Test setup.</strong> Comportamiento de la transacción:</p>
 <ul>
 <li><strong>Accept insecure certs</strong> acepta certificados TLS autofirmados o no válidos durante la transacción.</li>
-<li><strong>Monitor time statistics</strong> crea el agente de estadísticas del proyecto con las temporizaciones de conexión a la URL principal de la transacción.</li>
+<li><strong>Monitor time statistics</strong> crea el agente de estadísticas del proyecto con las temporizaciones de conexión a la URL principal de la transacción y a las URLs indicadas en <strong>Additional URL statistics</strong>.</li>
+<li><strong>Additional URL statistics</strong> enumera URLs HTTP(S) absolutas que se monitorizan además de la URL principal de la transacción, una por línea. Cada URL añade sus propios módulos <strong>URL status</strong> y <strong>URL stat</strong> al agente de estadísticas del proyecto. Se ignoran las líneas vacías, las que empiezan por <code>#</code>, los duplicados y las entradas que no son URLs HTTP(S) absolutas. Este campo requiere <strong>Monitor time statistics</strong>.</li>
 <li><strong>Browser width</strong> y <strong>Browser height</strong> fijan el tamaño de la ventana del navegador (por defecto <code>1920</code>×<code>1080</code>).</li>
 <li><strong>Global timeout</strong> es el tiempo de espera por defecto, en segundos, para los comandos de Selenium y para operaciones como la apertura de la sesión (por defecto <code>10</code>).</li>
 <li><strong>Wait between commands</strong> añade una pausa, en segundos, entre los comandos de la transacción (por defecto <code>0.15</code>).</li>
@@ -4341,10 +4342,12 @@
 <li>
 <p><strong>Los módulos de transacción.</strong> Todo agente de prueba lleva <strong>Global status</strong> (<code>1</code> en éxito), <strong>Global time</strong> (segundos) y <strong>Last error screenshot</strong> (una captura cuando la prueba falla, <code>None</code> cuando tiene éxito).</p>
 </li>
-<li>
-<p><strong>Los módulos de estadísticas.</strong> Cuando <strong>Monitor time statistics</strong> está habilitado, el agente del proyecto lleva <strong>URL status</strong> y los módulos de temporización <strong>URL stat</strong>.</p>
-</li>
 </ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/selenium-4/test-agent-modules.png" data-desc-position="bottom"><img alt="Módulos del agente de prueba de Selenium 4: Global status, Global time y Last error screenshot." src="../../../assets/images/discovery/selenium-4/test-agent-modules.png"></a></p>
+<ol>
+<li><strong>Los módulos de estadísticas.</strong> Cuando <strong>Monitor time statistics</strong> está habilitado, el agente del proyecto lleva <strong>URL status</strong> y los módulos de temporización <strong>URL stat</strong> de la URL principal y de cada URL adicional. Los módulos de la URL principal conservan sus nombres simples; cada conjunto adicional añade la URL entre paréntesis, por ejemplo <code>URL stat TT (https://example.com/pricing)</code>.</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/selenium-4/project-agent-stats.png" data-desc-position="bottom"><img alt="Agente de estadísticas del proyecto de Selenium 4 con módulos para la URL principal y dos URLs adicionales." src="../../../assets/images/discovery/selenium-4/project-agent-stats.png"></a></p>
 <p>Si no aparece ningún agente, lo primero que hay que revisar son los requisitos del modo de ejecución: drivers, Docker, acceso SSH o la URL del servidor de Selenium.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/selenium-4/task-summary.png" data-desc-position="bottom"><img alt="Resumen de ejecución de una tarea de Discovery de Selenium 4." src="../../../assets/images/discovery/selenium-4/task-summary.png"></a></p>
 <h2 id="interpretar-los-resultados">Interpretar los resultados<a class="headerlink" href="#interpretar-los-resultados" title="Permanent link">¶</a></h2>
@@ -4369,7 +4372,7 @@
 <tr>
 <td><code>WUX Discovery - &lt;nombre del proyecto&gt;</code></td>
 <td><strong>Monitor time statistics</strong> habilitado</td>
-<td><code>URL status</code>, <code>URL stat TT</code>, <code>URL stat DNS</code>, <code>URL stat TTCP</code>, <code>URL stat TST</code>, <code>URL stat TTC</code> y, para URLs HTTPS, <code>URL stat TSSL</code></td>
+<td><code>URL status</code> y <code>URL stat TT</code>, <code>URL stat DNS</code>, <code>URL stat TTCP</code>, <code>URL stat TST</code>, <code>URL stat TTC</code> y, para URLs HTTPS, <code>URL stat TSSL</code> de la URL principal; el mismo conjunto, con el sufijo <code>(&lt;URL&gt;)</code>, por cada URL adicional</td>
 </tr>
 </tbody>
 </table>
@@ -4420,6 +4423,10 @@
 <tr>
 <td>Faltan módulos de estadísticas o están a <code>0</code></td>
 <td><strong>Monitor time statistics</strong> requiere <code>curl</code> en la máquina que ejecuta el plugin (incluido en la imagen Docker por defecto). En el modo Remote Driver las estadísticas se miden desde el servidor de Discovery, no desde el servidor de Selenium.</td>
+</tr>
+<tr>
+<td>No aparecen las estadísticas de las URLs adicionales</td>
+<td>Compruebe que <strong>Monitor time statistics</strong> está habilitado y que <strong>Additional URL statistics</strong> contiene URLs absolutas <code>http://</code> o <code>https://</code>, una por línea. Las URLs relativas, los duplicados y las entradas no válidas se omiten; las no válidas se notifican por la salida de error. Cada URL aceptada añade su propio conjunto de módulos con el sufijo <code>(&lt;URL&gt;)</code></td>
 </tr>
 <tr>
 <td>La tarea informa de un error de parseo de SIDE</td>
@@ -4634,6 +4641,13 @@
 <td>Crea el agente de estadísticas del proyecto con las temporizaciones de conexión</td>
 </tr>
 <tr>
+<td>Additional URL statistics</td>
+<td><code>_extraStatsURLs_</code></td>
+<td>textarea</td>
+<td>—</td>
+<td>URLs HTTP(S) absolutas que se monitorizan además de la URL principal, una por línea. Requiere <strong>Monitor time statistics</strong></td>
+</tr>
+<tr>
 <td>Browser width</td>
 <td><code>_browserWidth_</code></td>
 <td>number</td>
@@ -4789,6 +4803,11 @@
 <td><code>1</code> crea el agente de estadísticas del proyecto</td>
 </tr>
 <tr>
+<td><code>extra_stats_urls</code></td>
+<td>Vacío</td>
+<td>Lista de URLs HTTP(S) absolutas cuyas estadísticas se añaden al agente del proyecto. El asistente de Discovery la suministra mediante la opción <code>-u</code>; un archivo de configuración manual puede incluir la lista directamente</td>
+</tr>
+<tr>
 <td><code>browser_width</code></td>
 <td><code>1920</code></td>
 <td>Anchura del navegador en píxeles</td>
@@ -4831,7 +4850,7 @@
 <tr>
 <td><code>legacy_data_structure</code></td>
 <td><code>0</code></td>
-<td>Solo tarea — <code>1</code> usa el nombrado de módulos compatible con Selenium 3 y envía un único agente heredado</td>
+<td>Solo tarea — <code>1</code> usa el nombrado de módulos compatible con Selenium 3 y envía un único agente heredado. Los módulos de URLs adicionales se nombran <code>_Global_Status_extra_&lt;N&gt;</code> y <code>_UX_Stats_&lt;KEY&gt;_extra_&lt;N&gt;</code></td>
 </tr>
 <tr>
 <td><code>legacy_data_agent_name</code></td>
@@ -4865,6 +4884,10 @@
 <tr>
 <td><code>-s</code>, <code>--side</code></td>
 <td>Ruta obligatoria al archivo SIDE</td>
+</tr>
+<tr>
+<td><code>-u</code>, <code>--extra_stats_urls</code></td>
+<td>Ruta a un archivo con URLs HTTP(S) absolutas adicionales que medir, una por línea. Se ignoran las líneas vacías y las que empiezan por <code>#</code>, y se omiten las URLs no válidas o duplicadas</td>
 </tr>
 <tr>
 <td><code>-t</code>, <code>--task</code></td>
@@ -4918,6 +4941,7 @@
 <span class="w">    </span><span class="nt">"firefox_profile"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"accept_insecure_certs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"monitor_stats"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"extra_stats_urls"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
 <span class="w">    </span><span class="nt">"browser_width"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1920"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"browser_height"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1080"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"global_timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10"</span><span class="p">,</span>
@@ -4985,6 +5009,7 @@
 <li>Módulos personalizados creados por los comandos <code>//getValue</code>, <code>//getVariable</code> y <code>//getScreenshot</code>, con el tipo solicitado en el comando.</li>
 </ul>
 <p><strong>Agente de estadísticas</strong> (<code>WUX Discovery - &lt;nombre del proyecto&gt;</code>, creado cuando <strong>Monitor time statistics</strong> está habilitado)</p>
+<p>El agente lleva un conjunto de módulos para la URL principal de la transacción y un conjunto por cada URL de <strong>Additional URL statistics</strong>. El conjunto de la URL principal usa los nombres siguientes; cada conjunto adicional añade <code>(&lt;URL&gt;)</code> a todos los nombres, por ejemplo <code>URL stat TT (https://example.com/pricing)</code>.</p>
 <ul>
 <li><code>URL status</code>: <code>generic_proc</code>, <code>1</code> cuando la URL principal del proyecto responde, <code>0</code> en caso contrario.</li>
 <li><code>URL stat TT</code>: <code>generic_data</code>, tiempo total de acceso a la URL.</li>
@@ -4994,7 +5019,7 @@
 <li><code>URL stat TTC</code>: <code>generic_data</code>, tiempo desde el primer byte hasta el final de la transferencia.</li>
 <li><code>URL stat TSSL</code>: <code>generic_data</code>, tiempo para establecer la conexión TLS; solo se crea cuando la URL es HTTPS.</li>
 </ul>
-<p>Los módulos de estadísticas se miden con <code>curl</code> en la máquina que ejecuta el plugin e informan de la unidad <code>miliseconds</code> tal y como la define el plugin; los valores están en milisegundos. En el modo Remote Driver la medición la hace el servidor de Discovery, no el servidor de Selenium.</p>
+<p>Los módulos de estadísticas se miden con <code>curl</code> en la máquina que ejecuta el plugin e informan de la unidad <code>miliseconds</code> tal y como la define el plugin; los valores están en milisegundos. Cada URL, principal o adicional, se mide por separado. En el modo Remote Driver la medición la hace el servidor de Discovery, no el servidor de Selenium.</p>
 <h3 id="identidad-del-plugin">Identidad del plugin<a class="headerlink" href="#identidad-del-plugin" title="Permanent link">¶</a></h3>
 <table>
 <thead>
@@ -5010,7 +5035,7 @@
 </tr>
 <tr>
 <td>Versión del plugin</td>
-<td><code>1.8</code></td>
+<td><code>1.9</code></td>
 </tr>
 <tr>
 <td>Tipo</td>
