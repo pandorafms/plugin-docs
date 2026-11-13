@@ -1,36 +1,42 @@
 # Exchange
 
-*Última actualización del artículo: 2026-10-26.*
+*Última actualización del artículo: 2026-11-12.*
 
 ## Qué hace
 
 El addon Exchange monitoriza el estado de un servidor Microsoft Exchange Server
 desde Pandora FMS. Se ejecuta en el propio servidor Exchange, bajo el agente de
-Pandora FMS, como plugin de agente: cada ejecución lanza las comprobaciones de
-estado de Exchange y escribe un bloque XML `<module>` por resultado, y el agente
+Pandora FMS, como plugin de agente: una ejecución lanza las comprobaciones de
+estado de Exchange seleccionadas y escribe un bloque XML `<module>` por resultado, y el agente
 convierte esos bloques en módulos de su propio agente.
 
-Las comprobaciones se agrupan en dos roles y un extra opcional:
+Las comprobaciones se agrupan en bloques independientes, cada uno habilitado por
+su propio conmutador:
 
-- **Buzón** — estado de la replicación de bases de datos, conectividad MAPI y
-  estado de las copias locales de base de datos del DAG.
-- **Acceso de cliente** — OWA, ActiveSync, servicios web (EWS), PowerShell
-  remoto, POP, IMAP, ECP, Autodiscover, conectividad de cliente de Outlook y
-  conectividad SMTP.
-- **Carga y almacenamiento del servidor**, que informa cada ejecución: la cola
-  de envío, la carga de procesador, el uso de memoria y un triplete de módulos
-  por volumen.
+- **Buzón** (`-mailbox`) — estado de la replicación de bases de datos,
+  conectividad MAPI y estado de las copias locales de base de datos del DAG.
+- **Acceso de cliente** (`-cas`) — OWA, ActiveSync, servicios web (EWS),
+  PowerShell remoto, POP, IMAP, ECP, Autodiscover, conectividad de cliente de
+  Outlook y conectividad SMTP.
+- **Carga** — la cola de envío (`-queue`), la carga de procesador (`-cpu`) y el
+  uso de memoria (`-memory`).
+- **Almacenamiento** (`-storage`) — un triplete de módulos por volumen.
 - **Servicios de Exchange** (`-services`) — un módulo por cada servicio de
   Exchange instalado.
+
+Una ejecución sin ningún conmutador habilita todos los bloques excepto el de
+servicios. `-all` habilita el mismo conjunto; el bloque de servicios siempre se
+activa explícitamente con `-services`. Los conmutadores se combinan, así que una
+ejecución puede recoger solo los bloques que se seleccionen.
 
 Cada ejecución cubre un servidor. El addon no tiene ningún parámetro que nombre
 un servidor Exchange remoto: inspecciona el servidor donde el agente lo ejecuta,
 así que hay que instalarlo en el agente de cada servidor Exchange que se quiera
 monitorizar.
 
-El paquete contiene un único punto de entrada. Los roles se seleccionan con
+El paquete contiene un único punto de entrada. Los bloques se seleccionan con
 conmutadores de línea de comandos (véase
-[Elegir qué comprobar](#elegir-que-comprobar)), no con un script por rol.
+[Elegir qué comprobar](#elegir-que-comprobar)), no con un script por bloque.
 
 ## Preparación
 
@@ -59,9 +65,10 @@ sobre la versión de Windows que la aloja.
    de Exchange** que usan las comprobaciones: `Test-ReplicationHealth`,
    `Test-MAPIConnectivity`, `Get-MailboxDatabaseCopyStatus`, `Get-HealthReport` y
    `Test-SmtpConnectivity` para las comprobaciones de estado, más `Get-Queue` y
-   `Get-Service` para los módulos de carga y de servicios. Ninguna fuente oficial
-   indica un grupo de roles más restringido para este addon; conceda solo los
-   permisos que esos cmdlets necesiten.
+   `Get-Service` para los módulos de carga y de servicios. Los bloques de
+   procesador, memoria y volúmenes también leen datos WMI locales. Ninguna fuente
+   oficial indica un grupo de roles más restringido para este addon; conceda solo
+   los permisos que necesiten esos cmdlets y esas consultas WMI.
 4. **Esos cmdlets cargados en la sesión de PowerShell** que ejecuta el plugin.
    Véase
    [Cargar los cmdlets de administración de Exchange](#cargar-los-cmdlets-de-administracion-de-exchange).
@@ -92,8 +99,8 @@ esa carpeta como `<PATH_TO_PLUGIN>` y el fichero del script como
 ### Añadir el plugin al agente
 
 El plugin se configura en el fichero de configuración del agente
-(`pandora_agent.conf`) como una línea `module_plugin`. Esta línea ejecuta todas
-las comprobaciones del addon en el servidor que aloja el agente:
+(`pandora_agent.conf`) como una línea `module_plugin`. Esta línea ejecuta todos
+los bloques excepto los módulos de servicios en el servidor que aloja el agente:
 
 ```apache
 module_plugin powershell.exe -PSConsoleFile "<PATH_TO_EXCHANGE_SHELL>\<EXCHANGE_CONSOLE_FILE>" -command "& '<PATH_TO_PLUGIN>\<PLUGIN_SCRIPT>' -all 3> $NULL"
@@ -129,40 +136,36 @@ Una ejecución cortada por el timeout produce menos módulos que una completa.
 
 ### Elegir qué comprobar
 
-Los conmutadores son indicadores independientes, y una ejecución sin ningún
-conmutador se comporta como `-all`:
+Los conmutadores son indicadores independientes y se pueden combinar. Una
+ejecución sin ningún conmutador se comporta como `-all`:
 
 | Línea de comandos | Qué cubre la ejecución |
 |-------------------|------------------------|
-| Sin conmutador | Comprobaciones de buzón y de acceso de cliente |
-| `-all` | Comprobaciones de buzón y de acceso de cliente |
+| Sin conmutador | Todos los bloques excepto servicios |
+| `-all` | Todos los bloques excepto servicios |
 | `-mailbox` | Comprobaciones de buzón |
-| `-cas` | Comprobaciones de acceso de cliente — lea la advertencia siguiente antes de usarlo solo |
-| `-services` | Módulos de servicios de Exchange, añadidos a las comprobaciones que seleccionen los demás conmutadores |
-| `-mailbox -services` | Comprobaciones de buzón y módulos de servicios |
-| `-cas -services` | Comprobaciones de acceso de cliente y módulos de servicios |
+| `-cas` | Comprobaciones de acceso de cliente |
+| `-queue` | Módulo de cola de mensajes |
+| `-cpu` | Módulo de procesador |
+| `-memory` | Módulo de memoria |
+| `-storage` | Módulos de volúmenes |
+| `-services` | Módulos de servicios de Exchange |
+| `-all -services` | Todos los bloques, servicios incluidos |
+| `-queue -storage` | Módulos de cola de mensajes y de volúmenes |
 
-Los módulos de carga y almacenamiento —cola de envío, procesador, memoria y
-volúmenes— los escribe toda ejecución, sean cuales sean los conmutadores.
+Los bloques añaden sus módulos a la ejecución: un conmutador nunca elimina un
+bloque seleccionado por otro. El bloque de servicios no forma parte de `-all` ni
+de la ejecución por defecto; se activa explícitamente con `-services`.
 
-**Ejecute las comprobaciones de acceso de cliente junto con las de buzón.** Las
-comprobaciones de acceso de cliente piden el informe de estado de una identidad
-de servidor que obtienen las comprobaciones de buzón, y una ejecución con `-cas`
-solo no tiene esa identidad: las peticiones de informe de estado no producen
-resultado y los módulos de OWA, ActiveSync, servicios web, PowerShell remoto,
-POP, IMAP, ECP, Autodiscover y Outlook no se escriben. Solo aparecen
-`SMTP Connectivity`, que no depende de esa identidad, y los módulos de carga y
-almacenamiento. Use `-all`, o `-mailbox -cas`, para obtener el conjunto completo.
-Lo mismo ocurre con `-all` cuando `Test-ReplicationHealth` no devuelve ninguna
-fila, porque las comprobaciones de acceso de cliente reutilizan la identidad de
-ese resultado.
+Las comprobaciones de acceso de cliente usan el nombre del servidor local cuando
+la ejecución no incluye las comprobaciones de buzón, así que `-cas` por sí solo
+produce el conjunto completo de acceso de cliente. Cuando se ejecutan las
+comprobaciones de buzón, las peticiones de informe de estado reutilizan la
+identidad de servidor que informa `Test-ReplicationHealth`.
 
-**`-services` no restringe la ejecución.** El addon trata una ejecución sin los
-conmutadores `-all`, `-mailbox` y `-cas` como `-all`, y en esa decisión no mira
-`-services`, así que `-services` solo ejecuta todas las comprobaciones más los
-módulos de servicios. No hay forma de obtener únicamente los módulos de
-servicios: use `-services` junto con los conmutadores de rol que necesite,
-asumiendo que los módulos de carga y almacenamiento los escribe toda ejecución.
+Los bloques de carga y almacenamiento son opcionales como cualquier otro: `-all`
+y la ejecución por defecto los incluyen, y `-queue`, `-cpu`, `-memory` y
+`-storage` los seleccionan uno a uno.
 
 ### Cargar los cmdlets de administración de Exchange
 
@@ -223,12 +226,14 @@ servidor:
 </module>
 ```
 
-<!-- SCREENSHOT NEEDED: ventana de PowerShell con una ejecución manual del plugin de Exchange mostrando varios bloques de módulo, en un servidor de laboratorio sin nombres de host ni credenciales reales. -->
+Cuando la línea `module_plugin` está puesta y el agente la ha ejecutado, el
+agente aparece en la consola en Recursos > Gestionar agentes:
 
-Cuando la línea `module_plugin` está puesta y el agente la ha ejecutado, los
-módulos aparecen en la consola bajo el agente del servidor Exchange:
+![Agente Exchange en la lista de agentes](../assets/images/plugins/exchange/agents.png)
 
-<!-- SCREENSHOT NEEDED: lista de módulos del agente del servidor Exchange en Pandora FMS, mostrando los módulos de carga, buzón y acceso de cliente. -->
+Los módulos aparecen bajo el agente del servidor Exchange:
+
+![Módulos de Exchange en la vista principal del agente](../assets/images/plugins/exchange/modules.png)
 
 Compruebe en este orden:
 
@@ -248,16 +253,20 @@ Compruebe en este orden:
 Qué comprobaciones realiza una ejecución depende de los conmutadores, y qué
 módulos aparecen depende además de si cada comprobación produjo un resultado:
 
-| Grupo de módulos | `-all` | `-mailbox` | `-cas` | `-services` |
-|------------------|--------|------------|--------|-------------|
-| Carga y almacenamiento (cola, procesador, memoria, volúmenes) | Sí | Sí | Sí | Sí |
-| Buzón (replicación, MAPI, DAG) | Sí | Sí | No | No |
-| Acceso de cliente, comprobaciones de informe de estado | Sí | No | Solo con identidad de servidor | No |
-| `SMTP Connectivity` | Sí | No | Sí | No |
-| Servicios de Exchange | No | No | No | Sí |
+| Grupo de módulos | Conmutador |
+|------------------|------------|
+| Buzón (replicación, MAPI, DAG) | `-mailbox` |
+| Acceso de cliente, comprobaciones de informe de estado | `-cas` |
+| `SMTP Connectivity` | `-cas` |
+| Cola de mensajes | `-queue` |
+| Procesador | `-cpu` |
+| Memoria | `-memory` |
+| Volúmenes | `-storage` |
+| Servicios de Exchange | `-services` |
 
-`-services` solo añade los módulos de servicios a las comprobaciones
-seleccionadas: no quita ninguno ni cambia ningún otro valor.
+La ejecución por defecto y `-all` habilitan todos los grupos de la tabla excepto
+los servicios de Exchange. Un conmutador añade solo su grupo y no cambia ningún
+otro valor; combine los conmutadores que necesite.
 
 ### Cómo informa cada comprobación
 
@@ -299,12 +308,12 @@ final: un volumen `C:\` produce `Capacity(GB) - EXCHANGE01-C:`. Se escribe un
 triplete por cada volumen que informa el servidor, incluidos los volúmenes sin
 capacidad, como una unidad óptica.
 
-Los módulos de cola, procesador y volúmenes se escriben solo cuando la consulta
-correspondiente devuelve datos; el módulo de memoria se escribe siempre. Las
-consultas de procesador y de memoria no tienen respaldo ante errores, así que un
-fallo en cualquiera de ellas detiene la ejecución: los módulos que vienen después
-—el triplete de volúmenes y los módulos de servicios— no se escriben en esa
-ejecución.
+Cuando su bloque está seleccionado, cada uno de estos módulos se escribe solo si
+la consulta correspondiente devuelve datos; el módulo de memoria se escribe
+siempre que su bloque esté seleccionado. Las consultas de procesador y de
+memoria no tienen respaldo ante errores, así que un fallo en cualquiera de ellas
+detiene la ejecución: los bloques que vienen después, como el triplete de
+volúmenes y los módulos de servicios, no se escriben en esa ejecución.
 
 ### Comprobaciones de buzón
 
@@ -365,11 +374,12 @@ deteniéndose— informa `0`.
 
 - El addon no guarda estado. Cada ejecución vuelve a lanzar las comprobaciones,
   así que una ejecución manual reproduce exactamente lo que hace el agente.
-- Una ejecución hace que el servidor Exchange realice pruebas en vivo: una prueba
-  de estado de replicación, una prueba de inicio de sesión MAPI, una consulta del
-  estado de las copias de base de datos de buzón y diez peticiones de informe de
-  estado. Dé al módulo un intervalo acorde con ese coste y evite ejecutarlo cada
-  minuto en un servidor con carga.
+- Una ejecución que incluye los bloques de buzón y de acceso de cliente hace que
+  el servidor Exchange realice pruebas en vivo: una prueba de estado de
+  replicación, una prueba de inicio de sesión MAPI, una consulta del estado de las
+  copias de base de datos de buzón y diez peticiones de informe de estado. Dé al
+  módulo un intervalo acorde con ese coste, evite ejecutarlo cada minuto en un
+  servidor con carga y deje fuera los bloques que no necesite.
 - Los módulos los crea el agente a partir de la salida del script, así que una
   comprobación que empieza a informar un módulo nuevo no requiere cambios en la
   consola.
@@ -381,11 +391,6 @@ deteniéndose— informa `0`.
 
 Estos son comportamientos de esta versión, no errores de configuración:
 
-- **`-cas` solo no produce ningún módulo de estado de acceso de cliente.** La
-  identidad que necesita el informe de estado procede de las comprobaciones de
-  buzón. Use `-all`.
-- **`-services` también activa `-all`.** No hay forma de obtener únicamente los
-  módulos de servicios.
 - **`Outlook - <host>` y `Outlook client connectivity - <host>` son la misma
   prueba dos veces.** Ambos leen el conjunto de estado `Outlook`; el segundo
   módulo no lleva descripción.
@@ -404,12 +409,10 @@ Estos son comportamientos de esta versión, no errores de configuración:
   fichero de consola es incorrecta, o la cuenta no puede usarlos; o los cmdlets
   se ejecutan y no devuelven nada porque la cuenta se autentica contra otra
   organización o porque el servidor no tiene ningún rol que responda a esa
-  comprobación. Los módulos de carga y almacenamiento aparecen igualmente, porque
-  no dependen de cmdlets de Exchange. Ejecute el script a mano en una Exchange
-  Management Shell para ver el error que produjo la sesión y revise después la
-  cuenta.
-- **`-cas` produce `SMTP Connectivity` y nada más.** Es lo esperado: véase
-  [Limitaciones conocidas](#limitaciones-conocidas).
+  comprobación. Si la ejecución incluye los bloques de carga o de
+  almacenamiento, esos módulos aparecen igualmente, porque no dependen de
+  cmdlets de Exchange. Ejecute el script a mano en una Exchange Management Shell
+  para ver el error que produjo la sesión y revise después la cuenta.
 - **Un módulo informa `0` en todas las comprobaciones.** Confirme el idioma del
   servidor antes de buscar un fallo real: los valores de aprobado se reconocen
   solo en inglés y en español.
@@ -421,10 +424,9 @@ Estos son comportamientos de esta versión, no errores de configuración:
   la ejecución en ese punto. El error va al flujo de errores de la sesión, así que
   ejecute el script a mano para leerlo.
 - **El log del agente muestra un timeout.** Una ejecución completa con `-all`
-  realiza una docena de pruebas en vivo. Suba el timeout del módulo. No separe
-  las comprobaciones de estado en una línea `-cas`: una línea por sí sola no tiene
-  identidad de servidor y no escribe ningún módulo de estado de acceso de
-  cliente.
+  realiza una docena de pruebas en vivo. Suba el timeout del módulo, o separe los
+  bloques que necesite en líneas `module_plugin` distintas, cada una con su
+  propio timeout y su propio conmutador.
 
 ## Referencia
 
@@ -432,12 +434,16 @@ Estos son comportamientos de esta versión, no errores de configuración:
 
 | Conmutador | Tipo | Valor por defecto | Efecto |
 |------------|------|-------------------|--------|
-| `-all` | indicador | Activo cuando no se da ningún conmutador de rol | Comprobaciones de buzón y de acceso de cliente |
+| `-all` | indicador | Activo cuando no se da ningún conmutador | Bloques de buzón, acceso de cliente, cola, procesador, memoria y volúmenes |
 | `-mailbox` | indicador | Desactivado | Comprobaciones de buzón |
 | `-cas` | indicador | Desactivado | Comprobaciones de acceso de cliente |
-| `-services` | indicador | Desactivado | Un módulo por cada servicio de Exchange instalado, añadido a las comprobaciones seleccionadas |
+| `-queue` | indicador | Desactivado | Módulo de cola de mensajes |
+| `-cpu` | indicador | Desactivado | Módulo de procesador |
+| `-memory` | indicador | Desactivado | Módulo de memoria |
+| `-storage` | indicador | Desactivado | Módulos de volúmenes |
+| `-services` | indicador | Desactivado | Un módulo por cada servicio de Exchange instalado |
 
-El addon declara estos cuatro conmutadores y ningún otro parámetro. No tiene
+El addon declara estos ocho conmutadores y ningún otro parámetro. No tiene
 parámetros de verbosidad, timeout, destino ni credenciales, y escribe únicamente
 en la salida estándar.
 
@@ -486,11 +492,11 @@ escribe con la `s` minúscula y `MAPI Connectivity` no lleva sufijo de servidor.
 |-----------|-------|
 | Identificador del Marketplace | `pandorafms.exchange` |
 | Nombre | Exchange |
-| Versión | `1.0` — la versión del paquete `pandorafms.exchange.1.0.zip` del Marketplace |
+| Versión | `1.1` — la versión del paquete `pandorafms.exchange.1.1.zip` del Marketplace |
 | Categoría | Miscelaneus |
 | Etiquetas | applications |
 | Licencia | Free |
-| Última actualización en el Marketplace | 2026-02-05 |
+| Última actualización en el Marketplace | 2026-11-12 |
 | Disponibilidad | Descarga gratuita |
 | Entrada del Marketplace | [pandorafms.exchange](https://marketplace.pandorafms.com/entries/pandorafms.exchange) |
 | Modelo de ejecución | Plugin de agente de Pandora FMS (`module_plugin`) en el servidor Exchange |
