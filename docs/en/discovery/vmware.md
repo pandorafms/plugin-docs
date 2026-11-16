@@ -1,6 +1,6 @@
 # VMware Discovery
 
-*Article last updated: 2026-09-15.*
+*Article last updated: 2026-11-16.*
 
 ## What it monitors
 
@@ -169,6 +169,7 @@ The password supplied in the task is encrypted with a symmetric algorithm before
 | The task reports that the datacenter was not found | The message lists the available datacenters. Correct **Datacenter name** so it matches the vCenter name exactly. |
 | No agents are generated at all | Confirm the credentials, that the target datacenter has the entities you expect, and that the relevant **Scan** options are enabled. |
 | Expected entities are missing | Review **Monitor exclusive agents** and its tree: when it is enabled, the scanning options are ignored and only the selected entities are monitored. Also confirm the re-scan interval has elapsed. |
+| Module settings in **Extra settings** are not applied | Confirm the block heading is one of `Datacenter`/`DC`, `Datastore`/`DS`, `ESX`/`ESXi`, `VM`/`VMs` or `RP` (headings are case-insensitive) and that the module identifier exists in [Generated modules](#generated-modules). |
 | Event mode reports that the datacenter agent does not exist | Enable **Scan datacenters** so the datacenter agent is generated, and confirm the console API is reachable with valid credentials. |
 | Event mode reports that event correlation is only available in vCenter | Events cannot be read from a connection that does not expose the vCenter event manager. |
 | Tentacle transfer fails | Confirm the Discovery server can reach **Tentacle IP** on **Tentacle port**, and enable **Retry send**. |
@@ -275,7 +276,7 @@ These parameters apply to the whole execution and are read from the `Configurati
 
 #### Entity module blocks
 
-Module generation is configured per entity type inside the `Datacenter`, `Datastore`, `ESX` and `VM` blocks. Each line inside one of these blocks starts with a module identifier followed by one of:
+Module generation is configured per entity type inside the `Datacenter` (`DC`), `Datastore` (`DS`), `ESX` (`ESXi`), `VM` (`VMs`) and `RP` blocks. Block headings are case-insensitive, and the short or alternate forms `DC`, `DS`, `ESXi` and `VMs` are accepted. Each line inside one of these blocks starts with a module identifier followed by one of:
 
 - `enabled` or `disabled` to turn a module on or off.
 - One or more `option=value` pairs separated by `;`, which set module options and enable the module.
