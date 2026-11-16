@@ -1,6 +1,6 @@
 # Discovery de VMware
 
-*Última actualización del artículo: 2026-09-15.*
+*Última actualización del artículo: 2026-11-16.*
 
 ## Qué monitoriza
 
@@ -169,6 +169,7 @@ La contraseña indicada en la tarea se cifra con un algoritmo simétrico antes d
 | La tarea informa de que no se encontró el datacenter | El mensaje enumera los datacenters disponibles. Corrige **Datacenter name** para que coincida exactamente con el nombre de vCenter. |
 | No se genera ningún agente | Confirma las credenciales, que el datacenter objetivo tenga las entidades esperadas y que las opciones **Scan** correspondientes estén habilitadas. |
 | Faltan entidades esperadas | Revisa **Monitor exclusive agents** y su árbol: cuando está activado, las opciones de escaneo se ignoran y solo se monitorizan las entidades seleccionadas. Comprueba también que haya transcurrido el intervalo de re-escaneo. |
+| La configuración de módulos en **Extra settings** no se aplica | Comprueba que el encabezado del bloque sea uno de `Datacenter`/`DC`, `Datastore`/`DS`, `ESX`/`ESXi`, `VM`/`VMs` o `RP` (no distingue mayúsculas de minúsculas) y que el identificador del módulo exista en [Módulos generados](#modulos-generados). |
 | Event mode informa de que el agente del datacenter no existe | Habilita **Scan datacenters** para que se genere el agente del datacenter y confirma que la API de consola sea accesible con credenciales válidas. |
 | Event mode informa de que la correlación de eventos solo está disponible en vCenter | No se pueden leer eventos desde una conexión que no exponga el gestor de eventos de vCenter. |
 | Falla el envío por Tentacle | Confirma que el servidor de Discovery puede alcanzar **Tentacle IP** en **Tentacle port** y habilita **Retry send**. |
@@ -275,7 +276,7 @@ Estos parámetros se aplican a toda la ejecución y se leen del bloque `Configur
 
 #### Bloques de módulos por entidad
 
-La generación de módulos se configura por tipo de entidad dentro de los bloques `Datacenter`, `Datastore`, `ESX` y `VM`. Cada línea dentro de uno de estos bloques empieza por un identificador de módulo seguido de una de estas opciones:
+La generación de módulos se configura por tipo de entidad dentro de los bloques `Datacenter` (`DC`), `Datastore` (`DS`), `ESX` (`ESXi`), `VM` (`VMs`) y `RP`. Los encabezados de bloque no distinguen mayúsculas de minúsculas y se aceptan las formas cortas o alternativas `DC`, `DS`, `ESXi` y `VMs`. Cada línea dentro de uno de estos bloques empieza por un identificador de módulo seguido de una de estas opciones:
 
 - `enabled` o `disabled` para activar o desactivar un módulo.
 - Uno o varios pares `opcion=valor` separados por `;`, que establecen opciones del módulo y lo habilitan.
