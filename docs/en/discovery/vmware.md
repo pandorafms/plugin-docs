@@ -1,6 +1,6 @@
 # VMware Discovery
 
-*Article last updated: 2026-11-16.*
+*Article last updated: 2026-11-17.*
 
 ## What it monitors
 
@@ -150,6 +150,12 @@ The plugin can also be run outside the Discovery wizard with a configuration fil
 
 The manual run prints a single module, `VMware Plugin <datacenter>`, of type `async_proc`: its value is `1` when the execution finished with no error and `0` otherwise, and its description contains the execution summary and any errors. When the plugin runs as a Discovery task, the same information becomes the task execution information.
 
+### vCenter sessions
+
+Each run authenticates against vCenter and reuses a single session for all its monitoring workers when the server supports it. If the session cannot be reused, each worker opens its own session. The plugin closes every session it opens when the run finishes, including runs that end with an error, and it does not reuse sessions between runs.
+
+While a task is running, vCenter can show the plugin session. After the run finishes, `sessionManager.sessionList` should not list sessions for the plugin user. A session that survives a finished run usually comes from an interrupted execution, for example a killed Discovery server, and vCenter closes it when the session idle timeout expires.
+
 ### Events monitoring
 
 With **Event mode** enabled, the plugin reads the vCenter events that occurred since the previous run and creates them in the Pandora FMS event console. The time window starts at the timestamp stored by the previous run and ends at the current time, so the first run reads only events newer than the configured interval.
@@ -173,6 +179,7 @@ The password supplied in the task is encrypted with a symmetric algorithm before
 | Event mode reports that the datacenter agent does not exist | Enable **Scan datacenters** so the datacenter agent is generated, and confirm the console API is reachable with valid credentials. |
 | Event mode reports that event correlation is only available in vCenter | Events cannot be read from a connection that does not expose the vCenter event manager. |
 | Tentacle transfer fails | Confirm the Discovery server can reach **Tentacle IP** on **Tentacle port**, and enable **Retry send**. |
+| Sessions from the plugin user remain in vCenter | The plugin closes its sessions when the run finishes. Check that the run was not interrupted, such as a stopped or killed Discovery server, and review the Discovery server log. vCenter removes abandoned sessions when the session idle timeout expires. |
 | The execution takes too long | Raise **Max threads** to monitor more entities concurrently, keeping in mind the extra CPU usage. |
 
 ## Reference
