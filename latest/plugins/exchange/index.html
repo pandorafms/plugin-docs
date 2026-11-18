@@ -4243,31 +4243,35 @@
 
 
 <h1 id="exchange">Exchange<a class="headerlink" href="#exchange" title="Permanent link">¶</a></h1>
-<p><em>Article last updated: 2026-10-26.</em></p>
+<p><em>Article last updated: 2026-11-12.</em></p>
 <h2 id="what-it-does">What it does<a class="headerlink" href="#what-it-does" title="Permanent link">¶</a></h2>
 <p>The Exchange addon monitors the health of a Microsoft Exchange Server from
 Pandora FMS. It runs on the Exchange server itself, under the Pandora FMS
-agent, as an agent plugin: every run executes Exchange management health checks
+agent, as an agent plugin: a run executes the selected Exchange health checks
 and prints one XML <code>&lt;module&gt;</code> block per result, and the agent turns those blocks
 into modules of its own agent.</p>
-<p>The checks are grouped in two roles and one optional extra:</p>
+<p>The checks are grouped in independent blocks, each enabled by its own switch:</p>
 <ul>
-<li><strong>Mailbox</strong> — database replication health, MAPI connectivity and the state of
-  the local database copies of the DAG.</li>
-<li><strong>Client access</strong> — OWA, ActiveSync, web services (EWS), remote PowerShell,
-  POP, IMAP, ECP, Autodiscover, Outlook client connectivity and SMTP
-  connectivity.</li>
-<li><strong>Server load and storage</strong>, reported by every run: the submission queue,
-  processor load, memory usage and one module triple per volume.</li>
+<li><strong>Mailbox</strong> (<code>-mailbox</code>) — database replication health, MAPI connectivity and
+  the state of the local database copies of the DAG.</li>
+<li><strong>Client access</strong> (<code>-cas</code>) — OWA, ActiveSync, web services (EWS), remote
+  PowerShell, POP, IMAP, ECP, Autodiscover, Outlook client connectivity and
+  SMTP connectivity.</li>
+<li><strong>Load</strong> — the submission queue (<code>-queue</code>), processor load (<code>-cpu</code>) and
+  memory usage (<code>-memory</code>).</li>
+<li><strong>Storage</strong> (<code>-storage</code>) — one module triple per volume.</li>
 <li><strong>Exchange services</strong> (<code>-services</code>) — one module per installed Exchange
   service.</li>
 </ul>
+<p>A run with no switch enables every block except the services block. <code>-all</code>
+enables the same set; the services block is always opt-in with <code>-services</code>. The
+switches combine, so a run can collect only the blocks you select.</p>
 <p>One run covers one server. The addon takes no parameter that names a remote
 Exchange server: it inspects the server where the agent runs it, so install it
 in the agent of every Exchange server you want to monitor.</p>
-<p>The package contains a single entry point. The roles are selected with
+<p>The package contains a single entry point. The blocks are selected with
 command-line switches (see <a href="#choose-what-to-check">Choose what to check</a>), not
-with one script per role.</p>
+with one script per block.</p>
 <h2 id="prepare">Prepare<a class="headerlink" href="#prepare" title="Permanent link">¶</a></h2>
 <h3 id="compatibility">Compatibility<a class="headerlink" href="#compatibility" title="Permanent link">¶</a></h3>
 <table>
@@ -4332,9 +4336,10 @@ about the Windows release that hosts it.</p>
    used by the checks: <code>Test-ReplicationHealth</code>, <code>Test-MAPIConnectivity</code>,
    <code>Get-MailboxDatabaseCopyStatus</code>, <code>Get-HealthReport</code> and
    <code>Test-SmtpConnectivity</code> for the health checks, plus <code>Get-Queue</code> and
-   <code>Get-Service</code> for the load and service modules. No official source names a
-   narrower role group for this addon; grant only the permissions those cmdlets
-   require.</li>
+   <code>Get-Service</code> for the load and service modules. The processor, memory and
+   volume blocks also read local WMI data. No official source names a narrower
+   role group for this addon; grant only the permissions those cmdlets and WMI
+   queries require.</li>
 <li><strong>Those cmdlets loaded in the PowerShell session</strong> that runs the plugin. See
    <a href="#load-the-exchange-management-cmdlets">Load the Exchange management cmdlets</a>.</li>
 <li><strong><code>powershell.exe</code> in the search path</strong> of the account that runs the agent.</li>
@@ -4355,8 +4360,8 @@ name the file has inside the downloaded package.</p>
 <h2 id="configure">Configure<a class="headerlink" href="#configure" title="Permanent link">¶</a></h2>
 <h3 id="add-the-plugin-to-the-agent">Add the plugin to the agent<a class="headerlink" href="#add-the-plugin-to-the-agent" title="Permanent link">¶</a></h3>
 <p>The plugin is configured in the agent configuration file (<code>pandora_agent.conf</code>)
-as one <code>module_plugin</code> line. This line runs every check of the addon on the
-server that hosts the agent:</p>
+as one <code>module_plugin</code> line. This line runs every block except the service
+modules on the server that hosts the agent:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">module_plugin</span><span class="w"> </span>powershell.exe<span class="w"> </span>-PSConsoleFile<span class="w"> </span><span class="s2">"&lt;PATH_TO_EXCHANGE_SHELL&gt;\&lt;EXCHANGE_CONSOLE_FILE&gt;"</span><span class="w"> </span>-command<span class="w"> </span><span class="s2">"&amp; '&lt;PATH_TO_PLUGIN&gt;\&lt;PLUGIN_SCRIPT&gt;' -all 3&gt; $NULL"</span>
 </code></pre></div>
 <ul>
@@ -4383,8 +4388,8 @@ module timeout, in seconds:</p>
 </code></pre></div>
 <p>A run cut short by the timeout produces fewer modules than a complete one.</p>
 <h3 id="choose-what-to-check">Choose what to check<a class="headerlink" href="#choose-what-to-check" title="Permanent link">¶</a></h3>
-<p>The switches are independent flags, and a run without any switch behaves like
-<code>-all</code>:</p>
+<p>The switches are independent flags and can be combined. A run with no switch
+behaves like <code>-all</code>:</p>
 <table>
 <thead>
 <tr>
@@ -4395,11 +4400,11 @@ module timeout, in seconds:</p>
 <tbody>
 <tr>
 <td>No switch</td>
-<td>Mailbox and client access checks</td>
+<td>Every block except services</td>
 </tr>
 <tr>
 <td><code>-all</code></td>
-<td>Mailbox and client access checks</td>
+<td>Every block except services</td>
 </tr>
 <tr>
 <td><code>-mailbox</code></td>
@@ -4407,40 +4412,48 @@ module timeout, in seconds:</p>
 </tr>
 <tr>
 <td><code>-cas</code></td>
-<td>Client access checks — read the warning below before using it alone</td>
+<td>Client access checks</td>
+</tr>
+<tr>
+<td><code>-queue</code></td>
+<td>Message queue module</td>
+</tr>
+<tr>
+<td><code>-cpu</code></td>
+<td>Processor module</td>
+</tr>
+<tr>
+<td><code>-memory</code></td>
+<td>Memory module</td>
+</tr>
+<tr>
+<td><code>-storage</code></td>
+<td>Volume modules</td>
 </tr>
 <tr>
 <td><code>-services</code></td>
-<td>Exchange service modules, added to the checks selected by the other switches</td>
+<td>Exchange service modules</td>
 </tr>
 <tr>
-<td><code>-mailbox -services</code></td>
-<td>Mailbox checks and service modules</td>
+<td><code>-all -services</code></td>
+<td>Every block, services included</td>
 </tr>
 <tr>
-<td><code>-cas -services</code></td>
-<td>Client access checks and service modules</td>
+<td><code>-queue -storage</code></td>
+<td>Message queue and volume modules</td>
 </tr>
 </tbody>
 </table>
-<p>The load and storage modules — submission queue, processor, memory and volumes
-— are printed by every run, whatever the switches are.</p>
-<p><strong>Run the client access checks together with the mailbox checks.</strong> The client
-access checks ask for the health report of a server identity that the mailbox
-checks obtain, and a run with <code>-cas</code> alone has no such identity: the health
-report requests do not produce a result and the OWA, ActiveSync, web services,
-remote PowerShell, POP, IMAP, ECP, Autodiscover and Outlook modules are not
-printed. Only <code>SMTP Connectivity</code>, which does not depend on that identity, and
-the load and storage modules appear. Use <code>-all</code>, or <code>-mailbox -cas</code>, to obtain
-the complete set. The same thing happens with <code>-all</code> when
-<code>Test-ReplicationHealth</code> returns no row, because the client access checks reuse
-the identity of that result.</p>
-<p><strong><code>-services</code> does not narrow the run.</strong> The addon treats a run with no
-<code>-all</code>, <code>-mailbox</code> and <code>-cas</code> switch as <code>-all</code>, and it does not look at
-<code>-services</code> in that decision, so <code>-services</code> on its own runs every check plus
-the service modules. There is no way to obtain the service modules alone: use
-<code>-services</code> together with the role switches you need, accepting that the load
-and storage modules are printed by every run.</p>
+<p>Blocks add their modules to the run: a switch never removes a block selected by
+another one. The services block is not part of <code>-all</code> or of the default run;
+enable it explicitly with <code>-services</code>.</p>
+<p>The client access checks use the local server name when the run does not include
+the mailbox checks, so <code>-cas</code> on its own produces the full client access set.
+When the mailbox checks run, the health report requests reuse the server
+identity reported by <code>Test-ReplicationHealth</code>.</p>
+<p>The load and storage blocks are optional like any other block: <code>-all</code> and the
+default run include them, and <code>-queue</code>, <code>-cpu</code>, <code>-memory</code> and <code>-storage</code> select
+them one by one.</p>
 <h3 id="load-the-exchange-management-cmdlets">Load the Exchange management cmdlets<a class="headerlink" href="#load-the-exchange-management-cmdlets" title="Permanent link">¶</a></h3>
 <p>The checks call Exchange management cmdlets and the addon imports nothing
 itself. The invocation therefore has to load them in the same PowerShell
@@ -4487,12 +4500,11 @@ are illustrative and <code>EXCHANGE01</code> stands for the name of the server:<
 <span class="nt">&lt;description&gt;</span><span class="cp">&lt;![CDATA[OWA HealthSet .Monitors the overall health of the Outlook Web App service.]]&gt;</span><span class="nt">&lt;/description&gt;</span>
 <span class="nt">&lt;/module&gt;</span>
 </code></pre></div>
-<!-- SCREENSHOT NEEDED: PowerShell window with a manual run of the Exchange plugin showing several module blocks, on a lab server with no real hostnames or credentials. -->
-
-<p>Once the <code>module_plugin</code> line is in place and the agent has run it, the modules
-appear in the console under the agent of the Exchange server:</p>
-<!-- SCREENSHOT NEEDED: Pandora FMS agent module list for the Exchange server agent, showing the Exchange load, mailbox and client access modules. -->
-
+<p>Once the <code>module_plugin</code> line is in place and the agent has run it, the agent
+appears in the console in Resources &gt; Manage agents:</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/exchange/agents.png" data-desc-position="bottom"><img alt="Exchange agent in the list of agents" src="../../assets/images/plugins/exchange/agents.png"></a></p>
+<p>The modules appear under the agent of the Exchange server:</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/plugins/exchange/modules.png" data-desc-position="bottom"><img alt="Exchange modules in the agent main view" src="../../assets/images/plugins/exchange/modules.png"></a></p>
 <p>Check in this order:</p>
 <ol>
 <li><strong>The agent modules.</strong> The agent that runs the plugin holds a module for
@@ -4511,52 +4523,47 @@ depends also on whether each check produced a result:</p>
 <thead>
 <tr>
 <th>Module group</th>
-<th><code>-all</code></th>
-<th><code>-mailbox</code></th>
-<th><code>-cas</code></th>
-<th><code>-services</code></th>
+<th>Switch</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Load and storage (queue, processor, memory, volumes)</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes</td>
-</tr>
-<tr>
 <td>Mailbox (replication, MAPI, DAG)</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>No</td>
-<td>No</td>
+<td><code>-mailbox</code></td>
 </tr>
 <tr>
 <td>Client access, health report checks</td>
-<td>Yes</td>
-<td>No</td>
-<td>Only with a server identity</td>
-<td>No</td>
+<td><code>-cas</code></td>
 </tr>
 <tr>
 <td><code>SMTP Connectivity</code></td>
-<td>Yes</td>
-<td>No</td>
-<td>Yes</td>
-<td>No</td>
+<td><code>-cas</code></td>
+</tr>
+<tr>
+<td>Message queue</td>
+<td><code>-queue</code></td>
+</tr>
+<tr>
+<td>Processor</td>
+<td><code>-cpu</code></td>
+</tr>
+<tr>
+<td>Memory</td>
+<td><code>-memory</code></td>
+</tr>
+<tr>
+<td>Volumes</td>
+<td><code>-storage</code></td>
 </tr>
 <tr>
 <td>Exchange services</td>
-<td>No</td>
-<td>No</td>
-<td>No</td>
-<td>Yes</td>
+<td><code>-services</code></td>
 </tr>
 </tbody>
 </table>
-<p><code>-services</code> only adds the service modules to the selected checks: it removes
-none and changes no other value.</p>
+<p>The default run and <code>-all</code> enable every group in the table except Exchange
+services. A switch adds only its group and changes no other value; combine the
+switches you need.</p>
 <h3 id="how-a-check-reports-its-result">How a check reports its result<a class="headerlink" href="#how-a-check-reports-its-result" title="Permanent link">¶</a></h3>
 <p>Every health check follows the same pattern, which is what makes a missing
 module meaningful:</p>
@@ -4622,11 +4629,11 @@ of the volume as the operating system reports it, without its trailing
 backslash: a volume <code>C:\</code> produces <code>Capacity(GB) - EXCHANGE01-C:</code>. One triple is
 printed for every volume the server reports, including volumes that have no
 capacity, such as an optical drive.</p>
-<p>The queue, processor and volume modules are printed only when the corresponding
-query returns data; the memory module is always printed. The processor and the
-memory queries have no error fallback, so a failure in either of them stops the
-run: the modules that follow it — the volume triple and the service modules —
-are not printed in that run.</p>
+<p>When its block is selected, each of these modules is printed only when the
+corresponding query returns data; the memory module is always printed when its
+block is selected. The processor and the memory queries have no error fallback,
+so a failure in either of them stops the run: the blocks that follow it, such as
+the volume triple and the service modules, are not printed in that run.</p>
 <h3 id="mailbox-checks">Mailbox checks<a class="headerlink" href="#mailbox-checks" title="Permanent link">¶</a></h3>
 <table>
 <thead>
@@ -4747,10 +4754,11 @@ in any state other than running — stopped, starting, stopping — reports <cod
 <ul>
 <li>The addon keeps no state. Each run executes the checks again, so a manual run
   reproduces exactly what the agent does.</li>
-<li>A run makes the Exchange server perform live probes: a replication health
-  test, a MAPI logon test, a mailbox database copy query and ten health report
-  requests. Give the module an interval that suits that cost, and avoid running
-  it every minute on a busy server.</li>
+<li>A run that includes the mailbox and client access blocks makes the Exchange
+  server perform live probes: a replication health test, a MAPI logon test, a
+  mailbox database copy query and ten health report requests. Give the module an
+  interval that suits that cost, avoid running it every minute on a busy server,
+  and leave out the blocks you do not need.</li>
 <li>The modules are created by the agent from the script output, so a check that
   starts reporting a new module does not require a console change.</li>
 <li>To change what a run covers, edit the switches of the <code>module_plugin</code> line and
@@ -4759,10 +4767,6 @@ in any state other than running — stopped, starting, stopping — reports <cod
 <h3 id="known-limitations">Known limitations<a class="headerlink" href="#known-limitations" title="Permanent link">¶</a></h3>
 <p>These are the behaviors of this version, not setup errors:</p>
 <ul>
-<li><strong><code>-cas</code> on its own produces no client access health module.</strong> The identity
-  the health report needs comes from the mailbox checks. Run <code>-all</code> instead.</li>
-<li><strong><code>-services</code> also enables <code>-all</code>.</strong> There is no way to obtain only the
-  service modules.</li>
 <li><strong><code>Outlook - &lt;host&gt;</code> and <code>Outlook client connectivity - &lt;host&gt;</code> are the same
   probe twice.</strong> Both read the <code>Outlook</code> health set; the second module has no
   description.</li>
@@ -4780,12 +4784,10 @@ in any state other than running — stopped, starting, stopping — reports <cod
   are not loaded in the session, the console file path is wrong or the account
   cannot use them, or the cmdlets run and return nothing because the account is
   authenticated against a different organization or the server has no role that
-  answers that check. The load and storage modules still appear, because they do
-  not depend on Exchange cmdlets. Run the script by hand in an Exchange
-  Management Shell to see the error the session produced, and then check the
-  account.</li>
-<li><strong><code>-cas</code> produces <code>SMTP Connectivity</code> and nothing else.</strong> Expected: see
-  <a href="#known-limitations">Known limitations</a>.</li>
+  answers that check. If the run includes the load or storage blocks, those
+  modules still appear, because they do not depend on Exchange cmdlets. Run the
+  script by hand in an Exchange Management Shell to see the error the session
+  produced, and then check the account.</li>
 <li><strong>A module reports <code>0</code> for every check.</strong> Confirm the language of the server
   before looking for a real failure: the pass values are matched in English
   and Spanish only.</li>
@@ -4797,9 +4799,8 @@ in any state other than running — stopped, starting, stopping — reports <cod
   error goes to the error stream of the session, so run the script by hand to
   read it.</li>
 <li><strong>The agent log shows a timeout.</strong> A complete run with <code>-all</code> performs a dozen
-  live probes. Raise the module timeout. Do not split the health checks into a
-  separate <code>-cas</code> line: a line of its own has no server identity and prints no
-  client access health module.</li>
+  live probes. Raise the module timeout, or split the blocks you need into
+  separate <code>module_plugin</code> lines, each with its own timeout and its own switch.</li>
 </ul>
 <h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">¶</a></h2>
 <h3 id="switches">Switches<a class="headerlink" href="#switches" title="Permanent link">¶</a></h3>
@@ -4816,8 +4817,8 @@ in any state other than running — stopped, starting, stopping — reports <cod
 <tr>
 <td><code>-all</code></td>
 <td>flag</td>
-<td>On when no role switch is given</td>
-<td>Mailbox and client access checks</td>
+<td>On when no switch is given</td>
+<td>Mailbox, client access, queue, processor, memory and volume blocks</td>
 </tr>
 <tr>
 <td><code>-mailbox</code></td>
@@ -4832,14 +4833,38 @@ in any state other than running — stopped, starting, stopping — reports <cod
 <td>Client access checks</td>
 </tr>
 <tr>
+<td><code>-queue</code></td>
+<td>flag</td>
+<td>Off</td>
+<td>Message queue module</td>
+</tr>
+<tr>
+<td><code>-cpu</code></td>
+<td>flag</td>
+<td>Off</td>
+<td>Processor module</td>
+</tr>
+<tr>
+<td><code>-memory</code></td>
+<td>flag</td>
+<td>Off</td>
+<td>Memory module</td>
+</tr>
+<tr>
+<td><code>-storage</code></td>
+<td>flag</td>
+<td>Off</td>
+<td>Volume modules</td>
+</tr>
+<tr>
 <td><code>-services</code></td>
 <td>flag</td>
 <td>Off</td>
-<td>One module per installed Exchange service, added to the selected checks</td>
+<td>One module per installed Exchange service</td>
 </tr>
 </tbody>
 </table>
-<p>The addon declares these four switches and no other parameter. It has no
+<p>The addon declares these eight switches and no other parameter. It has no
 verbosity, timeout, destination or credential parameter, and it prints to
 standard output only.</p>
 <h3 id="generated-modules">Generated modules<a class="headerlink" href="#generated-modules" title="Permanent link">¶</a></h3>
@@ -4990,7 +5015,7 @@ a lower-case <code>s</code>, and <code>MAPI Connectivity</code> carries no serve
 </tr>
 <tr>
 <td>Version</td>
-<td><code>1.0</code> — the version of the Marketplace package <code>pandorafms.exchange.1.0.zip</code></td>
+<td><code>1.1</code> — the version of the Marketplace package <code>pandorafms.exchange.1.1.zip</code></td>
 </tr>
 <tr>
 <td>Category</td>
@@ -5006,7 +5031,7 @@ a lower-case <code>s</code>, and <code>MAPI Connectivity</code> carries no serve
 </tr>
 <tr>
 <td>Marketplace last update</td>
-<td>2026-02-05</td>
+<td>2026-11-12</td>
 </tr>
 <tr>
 <td>Availability</td>
