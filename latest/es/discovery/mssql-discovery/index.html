@@ -1398,6 +1398,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#objetivos-offline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos offline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#registros-de-depuracion" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4085,6 +4096,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#objetivos-offline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos offline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#registros-de-depuracion" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4265,7 +4287,7 @@
 
 
 <h1 id="microsoft-sql-server-discovery">Microsoft SQL Server Discovery<a class="headerlink" href="#microsoft-sql-server-discovery" title="Permanent link">¶</a></h1>
-<p><em>Última actualización del artículo: 2026-09-21.</em></p>
+<p><em>Última actualización del artículo: 2026-10-27.</em></p>
 <h2 id="que-monitoriza">Qué monitoriza<a class="headerlink" href="#que-monitoriza" title="Permanent link">¶</a></h2>
 <p>El plugin de Discovery de Microsoft SQL Server se conecta a instancias y bases de datos de Microsoft SQL Server y convierte su estado y su rendimiento en agentes y módulos de Pandora FMS. Lee una lista de instancias objetivo, se conecta con un login de SQL Server y recoge métricas de nivel de instancia y de nivel de base de datos mediante vistas del sistema y contadores de rendimiento.</p>
 <p>Una tarea de Discovery crea un agente por instancia objetivo por defecto, y un agente por base de datos cuando <strong>Create agent per database</strong> está habilitado. Cada agente lleva las métricas de instancia de su objetivo y las métricas de las bases de datos que monitoriza. Se pueden definir consultas personalizadas para añadir un módulo por consulta y objetivo.</p>
@@ -4281,7 +4303,7 @@
 </thead>
 <tbody>
 <tr>
-<td>Versión del plugin <code>1.16</code> (<code>pandorafms.mssql</code>)</td>
+<td>Versión del plugin <code>1.17</code> (<code>pandorafms.mssql</code>)</td>
 <td>Objetivo documentado</td>
 <td>La versión que describe esta página, identificada en la definición del paquete. Consulte <a href="#identidad-del-plugin">Identidad del plugin</a>.</td>
 </tr>
@@ -4378,7 +4400,7 @@
 <p><strong>Los módulos de base de datos.</strong> Cada base de datos monitorizada lleva sus métricas de estado, disponibilidad, transacciones, registro, copia de seguridad, grupos de archivos y espacio de tablas según los conmutadores habilitados, y los módulos de consultas personalizadas.</p>
 </li>
 </ol>
-<p>Los objetivos a los que no se puede llegar se cuentan en <strong>Targets down</strong> y no generan agentes.</p>
+<p>Los objetivos a los que no se puede llegar se cuentan en <strong>Targets down</strong>, no producen módulos e informan de su error de conexión en el resumen de la tarea. Un objetivo que falla durante el preescaneo de bases de datos se marca como offline y no se vuelve a consultar.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../assets/images/discovery/mssql-discovery/task-summary.png" data-desc-position="bottom"><img alt="Resumen de ejecución de una tarea de Discovery de Microsoft SQL Server." src="../../../assets/images/discovery/mssql-discovery/task-summary.png"></a></p>
 <h2 id="interpretar-los-resultados">Interpretar los resultados<a class="headerlink" href="#interpretar-los-resultados" title="Permanent link">¶</a></h2>
 <h3 id="agentes-e-identidad">Agentes e identidad<a class="headerlink" href="#agentes-e-identidad" title="Permanent link">¶</a></h3>
@@ -4417,6 +4439,9 @@
 <p>El archivo de configuración y las listas de objetivos contienen la contraseña de SQL Server en texto plano. Restrinja su acceso a la cuenta que ejecuta el plugin y manténgalos fuera de directorios compartidos, registros y control de versiones. Seguir el flujo de Discovery para las ejecuciones de tarea significa que la consola construye estos archivos por usted.</p>
 <h3 id="tiempos-de-espera-y-recuperacion-de-conexion">Tiempos de espera y recuperación de conexión<a class="headerlink" href="#tiempos-de-espera-y-recuperacion-de-conexion" title="Permanent link">¶</a></h3>
 <p>Todos los objetivos están sujetos a <strong>Connection timeout</strong> y <strong>Query timeout</strong>, <code>5</code> segundos por defecto. Cuando una consulta falla porque la sesión se ha caído o ha superado el tiempo de espera, el plugin cierra esa sesión, se reconecta y continúa con las comprobaciones restantes, de modo que una consulta lenta o interrumpida no detiene el resto de la tarea. Un tiempo de espera no positivo o no numérico vuelve a <code>5</code>.</p>
+<h3 id="objetivos-offline">Objetivos offline<a class="headerlink" href="#objetivos-offline" title="Permanent link">¶</a></h3>
+<p>Cuando <strong>Scan databases</strong> está habilitado, el plugin se conecta a cada objetivo antes de recoger módulos. Si ese preescaneo no alcanza un objetivo, este se marca como offline: se omite la recogida de módulos, se cuenta en <strong>Targets down</strong> y el error de conexión se informa en la información de la tarea y en las trazas de depuración, por ejemplo <code>[ERROR] [&lt;objetivo&gt;] Target was marked offline during database scan</code>. La tarea termina igualmente y el resto de objetivos se procesa con normalidad.</p>
+<p>Una consulta que falla durante la recogida de módulos devuelve el valor de reserva del módulo, como <code>0</code> en una métrica numérica, en lugar de abortar el objetivo, de modo que una consulta no disponible no oculta el resto de resultados.</p>
 <h3 id="registros-de-depuracion">Registros de depuración<a class="headerlink" href="#registros-de-depuracion" title="Permanent link">¶</a></h3>
 <p>Con <strong>Enable debug</strong> habilitado, el plugin escribe trazas JSON en <strong>Debug log directory</strong> (por defecto <code>/tmp</code>), un archivo por agente y módulo. Cada registro lleva marca de tiempo y el ID de ejecución del plugin, y cubre el ciclo de vida del plugin, cada conexión y consulta (el texto de la consulta se trunca), el valor y la descripción devueltos por cada módulo generado, y el JSON final de Discovery. Los archivos de traza rotan al alcanzar 2 MB, conservando tres copias de seguridad. La depuración es una ayuda de diagnóstico; déjela desactivada en ejecuciones normales.</p>
 <h2 id="solucion-de-problemas">Solución de problemas<a class="headerlink" href="#solucion-de-problemas" title="Permanent link">¶</a></h2>
@@ -4429,8 +4454,8 @@
 </thead>
 <tbody>
 <tr>
-<td>No se crea ningún agente y el objetivo se informa como <strong>Targets down</strong></td>
-<td>Confirme que la instancia es alcanzable desde el servidor de Pandora FMS por su puerto (por defecto <code>1433</code>), que el servicio de SQL Server está en marcha y que <strong>User</strong> y <strong>Password</strong> son correctos.</td>
+<td>El objetivo se informa como <strong>Targets down</strong> con un error de conexión, como <code>Target was marked offline during database scan</code>, y no produce módulos</td>
+<td>Confirme que la instancia es alcanzable desde el servidor de Pandora FMS por su puerto (por defecto <code>1433</code>), que el servicio de SQL Server está en marcha y que <strong>User</strong> y <strong>Password</strong> son correctos. Un objetivo inalcanzable se omite sin abortar la tarea.</td>
 </tr>
 <tr>
 <td>Faltan módulos de instancia y la información de ejecución registra avisos de recuperación</td>
@@ -5246,7 +5271,7 @@ check_end
 </tr>
 <tr>
 <td>Versión del plugin</td>
-<td><code>1.16</code></td>
+<td><code>1.17</code></td>
 </tr>
 <tr>
 <td>Tipo</td>

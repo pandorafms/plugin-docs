@@ -1398,6 +1398,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#offline-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#debug-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4085,6 +4096,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#offline-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#debug-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4265,7 +4287,7 @@
 
 
 <h1 id="microsoft-sql-server-discovery">Microsoft SQL Server Discovery<a class="headerlink" href="#microsoft-sql-server-discovery" title="Permanent link">¶</a></h1>
-<p><em>Article last updated: 2026-09-21.</em></p>
+<p><em>Article last updated: 2026-10-27.</em></p>
 <h2 id="what-it-monitors">What it monitors<a class="headerlink" href="#what-it-monitors" title="Permanent link">¶</a></h2>
 <p>The Microsoft SQL Server Discovery plugin connects to Microsoft SQL Server instances and databases and turns their state and performance into Pandora FMS agents and modules. It reads a list of target instances, connects with a SQL Server login, and collects instance-wide metrics and per-database metrics through system views and performance counters.</p>
 <p>A Discovery task creates one agent per target instance by default, and one agent per database when <strong>Create agent per database</strong> is enabled. Each agent carries the instance metrics of its target and the metrics of the databases it monitors. Custom queries can be defined to add one module per query and target.</p>
@@ -4281,7 +4303,7 @@
 </thead>
 <tbody>
 <tr>
-<td>Plugin version <code>1.16</code> (<code>pandorafms.mssql</code>)</td>
+<td>Plugin version <code>1.17</code> (<code>pandorafms.mssql</code>)</td>
 <td>Documented target</td>
 <td>The version this page describes, as identified by the package definition. See <a href="#plugin-identity">Plugin identity</a>.</td>
 </tr>
@@ -4378,7 +4400,7 @@
 <p><strong>The database modules.</strong> Each monitored database carries its state, availability, transaction, log, backup, filegroup and table-space metrics according to the enabled toggles, and the custom query modules.</p>
 </li>
 </ol>
-<p>Targets that cannot be reached are counted in <strong>Targets down</strong> and do not produce agents.</p>
+<p>Targets that cannot be reached are counted in <strong>Targets down</strong>, produce no modules, and report their connection error in the task summary. A target that fails during the database pre-scan is marked offline and is not queried again.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../assets/images/discovery/mssql-discovery/task-summary.png" data-desc-position="bottom"><img alt="Microsoft SQL Server Discovery task execution summary." src="../../assets/images/discovery/mssql-discovery/task-summary.png"></a></p>
 <h2 id="understand-the-results">Understand the results<a class="headerlink" href="#understand-the-results" title="Permanent link">¶</a></h2>
 <h3 id="agents-and-identity">Agents and identity<a class="headerlink" href="#agents-and-identity" title="Permanent link">¶</a></h3>
@@ -4417,6 +4439,9 @@
 <p>The configuration file and the target lists hold the SQL Server password in plain text. Restrict them to the account that runs the plugin and keep them out of shared directories, logs and version control. Following the Discovery workflow for task runs means the console builds these files for you.</p>
 <h3 id="timeouts-and-connection-recovery">Timeouts and connection recovery<a class="headerlink" href="#timeouts-and-connection-recovery" title="Permanent link">¶</a></h3>
 <p>Every target is subject to <strong>Connection timeout</strong> and <strong>Query timeout</strong>, both <code>5</code> seconds by default. When a query fails because the session was dropped or timed out, the plugin closes that session, reconnects and continues with the remaining checks, so one slow or interrupted query does not stop the rest of the task. A non-positive or non-numeric timeout falls back to <code>5</code>.</p>
+<h3 id="offline-targets">Offline targets<a class="headerlink" href="#offline-targets" title="Permanent link">¶</a></h3>
+<p>When <strong>Scan databases</strong> is enabled, the plugin connects to each target before collecting modules. If that pre-scan cannot reach a target, the target is marked offline: module collection is skipped for it, it is counted in <strong>Targets down</strong>, and the connection error is reported in the task information and the debug traces, for example <code>[ERROR] [&lt;target&gt;] Target was marked offline during database scan</code>. The task still completes and the remaining targets are processed normally.</p>
+<p>A query that fails during module collection returns the module's fallback value, such as <code>0</code> for a numeric metric, instead of aborting the target, so one unavailable query does not hide the rest of the results.</p>
 <h3 id="debug-logs">Debug logs<a class="headerlink" href="#debug-logs" title="Permanent link">¶</a></h3>
 <p>With <strong>Enable debug</strong> on, the plugin writes JSON traces into <strong>Debug log directory</strong> (default <code>/tmp</code>), one file per agent and module. Each record is timestamped and carries the plugin execution ID, and covers the plugin lifecycle, every connection and query (the query text is truncated), the value and description returned by each generated module, and the final Discovery JSON. Trace files rotate once they reach 2 MB, keeping three backups. Debug logging is a diagnostic aid; leave it off for normal runs.</p>
 <h2 id="troubleshoot">Troubleshoot<a class="headerlink" href="#troubleshoot" title="Permanent link">¶</a></h2>
@@ -4429,8 +4454,8 @@
 </thead>
 <tbody>
 <tr>
-<td>No agent is created and the target is reported <strong>Targets down</strong></td>
-<td>Confirm the instance is reachable from the Pandora FMS server on its port (default <code>1433</code>), that the SQL Server service is running, and that the <strong>User</strong> and <strong>Password</strong> are correct.</td>
+<td>The target is reported <strong>Targets down</strong> with a connection error, such as <code>Target was marked offline during database scan</code>, and produces no modules</td>
+<td>Confirm the instance is reachable from the Pandora FMS server on its port (default <code>1433</code>), that the SQL Server service is running, and that the <strong>User</strong> and <strong>Password</strong> are correct. An unreachable target is skipped without aborting the task.</td>
 </tr>
 <tr>
 <td>Instance modules are missing and the execution information logs retrieval warnings</td>
@@ -5246,7 +5271,7 @@ check_end
 </tr>
 <tr>
 <td>Plugin version</td>
-<td><code>1.16</code></td>
+<td><code>1.17</code></td>
 </tr>
 <tr>
 <td>Type</td>
