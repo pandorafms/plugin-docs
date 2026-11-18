@@ -1,34 +1,39 @@
 # Exchange
 
-*Article last updated: 2026-10-26.*
+*Article last updated: 2026-11-12.*
 
 ## What it does
 
 The Exchange addon monitors the health of a Microsoft Exchange Server from
 Pandora FMS. It runs on the Exchange server itself, under the Pandora FMS
-agent, as an agent plugin: every run executes Exchange management health checks
+agent, as an agent plugin: a run executes the selected Exchange health checks
 and prints one XML `<module>` block per result, and the agent turns those blocks
 into modules of its own agent.
 
-The checks are grouped in two roles and one optional extra:
+The checks are grouped in independent blocks, each enabled by its own switch:
 
-- **Mailbox** — database replication health, MAPI connectivity and the state of
-  the local database copies of the DAG.
-- **Client access** — OWA, ActiveSync, web services (EWS), remote PowerShell,
-  POP, IMAP, ECP, Autodiscover, Outlook client connectivity and SMTP
-  connectivity.
-- **Server load and storage**, reported by every run: the submission queue,
-  processor load, memory usage and one module triple per volume.
+- **Mailbox** (`-mailbox`) — database replication health, MAPI connectivity and
+  the state of the local database copies of the DAG.
+- **Client access** (`-cas`) — OWA, ActiveSync, web services (EWS), remote
+  PowerShell, POP, IMAP, ECP, Autodiscover, Outlook client connectivity and
+  SMTP connectivity.
+- **Load** — the submission queue (`-queue`), processor load (`-cpu`) and
+  memory usage (`-memory`).
+- **Storage** (`-storage`) — one module triple per volume.
 - **Exchange services** (`-services`) — one module per installed Exchange
   service.
+
+A run with no switch enables every block except the services block. `-all`
+enables the same set; the services block is always opt-in with `-services`. The
+switches combine, so a run can collect only the blocks you select.
 
 One run covers one server. The addon takes no parameter that names a remote
 Exchange server: it inspects the server where the agent runs it, so install it
 in the agent of every Exchange server you want to monitor.
 
-The package contains a single entry point. The roles are selected with
+The package contains a single entry point. The blocks are selected with
 command-line switches (see [Choose what to check](#choose-what-to-check)), not
-with one script per role.
+with one script per block.
 
 ## Prepare
 
@@ -57,9 +62,10 @@ about the Windows release that hosts it.
    used by the checks: `Test-ReplicationHealth`, `Test-MAPIConnectivity`,
    `Get-MailboxDatabaseCopyStatus`, `Get-HealthReport` and
    `Test-SmtpConnectivity` for the health checks, plus `Get-Queue` and
-   `Get-Service` for the load and service modules. No official source names a
-   narrower role group for this addon; grant only the permissions those cmdlets
-   require.
+   `Get-Service` for the load and service modules. The processor, memory and
+   volume blocks also read local WMI data. No official source names a narrower
+   role group for this addon; grant only the permissions those cmdlets and WMI
+   queries require.
 4. **Those cmdlets loaded in the PowerShell session** that runs the plugin. See
    [Load the Exchange management cmdlets](#load-the-exchange-management-cmdlets).
 5. **`powershell.exe` in the search path** of the account that runs the agent.
@@ -87,8 +93,8 @@ name the file has inside the downloaded package.
 ### Add the plugin to the agent
 
 The plugin is configured in the agent configuration file (`pandora_agent.conf`)
-as one `module_plugin` line. This line runs every check of the addon on the
-server that hosts the agent:
+as one `module_plugin` line. This line runs every block except the service
+modules on the server that hosts the agent:
 
 ```apache
 module_plugin powershell.exe -PSConsoleFile "<PATH_TO_EXCHANGE_SHELL>\<EXCHANGE_CONSOLE_FILE>" -command "& '<PATH_TO_PLUGIN>\<PLUGIN_SCRIPT>' -all 3> $NULL"
@@ -123,39 +129,35 @@ A run cut short by the timeout produces fewer modules than a complete one.
 
 ### Choose what to check
 
-The switches are independent flags, and a run without any switch behaves like
-`-all`:
+The switches are independent flags and can be combined. A run with no switch
+behaves like `-all`:
 
 | Command line | What the run covers |
 |--------------|---------------------|
-| No switch | Mailbox and client access checks |
-| `-all` | Mailbox and client access checks |
+| No switch | Every block except services |
+| `-all` | Every block except services |
 | `-mailbox` | Mailbox checks |
-| `-cas` | Client access checks — read the warning below before using it alone |
-| `-services` | Exchange service modules, added to the checks selected by the other switches |
-| `-mailbox -services` | Mailbox checks and service modules |
-| `-cas -services` | Client access checks and service modules |
+| `-cas` | Client access checks |
+| `-queue` | Message queue module |
+| `-cpu` | Processor module |
+| `-memory` | Memory module |
+| `-storage` | Volume modules |
+| `-services` | Exchange service modules |
+| `-all -services` | Every block, services included |
+| `-queue -storage` | Message queue and volume modules |
 
-The load and storage modules — submission queue, processor, memory and volumes
-— are printed by every run, whatever the switches are.
+Blocks add their modules to the run: a switch never removes a block selected by
+another one. The services block is not part of `-all` or of the default run;
+enable it explicitly with `-services`.
 
-**Run the client access checks together with the mailbox checks.** The client
-access checks ask for the health report of a server identity that the mailbox
-checks obtain, and a run with `-cas` alone has no such identity: the health
-report requests do not produce a result and the OWA, ActiveSync, web services,
-remote PowerShell, POP, IMAP, ECP, Autodiscover and Outlook modules are not
-printed. Only `SMTP Connectivity`, which does not depend on that identity, and
-the load and storage modules appear. Use `-all`, or `-mailbox -cas`, to obtain
-the complete set. The same thing happens with `-all` when
-`Test-ReplicationHealth` returns no row, because the client access checks reuse
-the identity of that result.
+The client access checks use the local server name when the run does not include
+the mailbox checks, so `-cas` on its own produces the full client access set.
+When the mailbox checks run, the health report requests reuse the server
+identity reported by `Test-ReplicationHealth`.
 
-**`-services` does not narrow the run.** The addon treats a run with no
-`-all`, `-mailbox` and `-cas` switch as `-all`, and it does not look at
-`-services` in that decision, so `-services` on its own runs every check plus
-the service modules. There is no way to obtain the service modules alone: use
-`-services` together with the role switches you need, accepting that the load
-and storage modules are printed by every run.
+The load and storage blocks are optional like any other block: `-all` and the
+default run include them, and `-queue`, `-cpu`, `-memory` and `-storage` select
+them one by one.
 
 ### Load the Exchange management cmdlets
 
@@ -215,12 +217,14 @@ are illustrative and `EXCHANGE01` stands for the name of the server:
 </module>
 ```
 
-<!-- SCREENSHOT NEEDED: PowerShell window with a manual run of the Exchange plugin showing several module blocks, on a lab server with no real hostnames or credentials. -->
+Once the `module_plugin` line is in place and the agent has run it, the agent
+appears in the console in Resources > Manage agents:
 
-Once the `module_plugin` line is in place and the agent has run it, the modules
-appear in the console under the agent of the Exchange server:
+![Exchange agent in the list of agents](../assets/images/plugins/exchange/agents.png)
 
-<!-- SCREENSHOT NEEDED: Pandora FMS agent module list for the Exchange server agent, showing the Exchange load, mailbox and client access modules. -->
+The modules appear under the agent of the Exchange server:
+
+![Exchange modules in the agent main view](../assets/images/plugins/exchange/modules.png)
 
 Check in this order:
 
@@ -239,16 +243,20 @@ Check in this order:
 Which checks a run performs depends on the switches, and which modules appear
 depends also on whether each check produced a result:
 
-| Module group | `-all` | `-mailbox` | `-cas` | `-services` |
-|--------------|--------|------------|--------|-------------|
-| Load and storage (queue, processor, memory, volumes) | Yes | Yes | Yes | Yes |
-| Mailbox (replication, MAPI, DAG) | Yes | Yes | No | No |
-| Client access, health report checks | Yes | No | Only with a server identity | No |
-| `SMTP Connectivity` | Yes | No | Yes | No |
-| Exchange services | No | No | No | Yes |
+| Module group | Switch |
+|--------------|--------|
+| Mailbox (replication, MAPI, DAG) | `-mailbox` |
+| Client access, health report checks | `-cas` |
+| `SMTP Connectivity` | `-cas` |
+| Message queue | `-queue` |
+| Processor | `-cpu` |
+| Memory | `-memory` |
+| Volumes | `-storage` |
+| Exchange services | `-services` |
 
-`-services` only adds the service modules to the selected checks: it removes
-none and changes no other value.
+The default run and `-all` enable every group in the table except Exchange
+services. A switch adds only its group and changes no other value; combine the
+switches you need.
 
 ### How a check reports its result
 
@@ -289,11 +297,11 @@ backslash: a volume `C:\` produces `Capacity(GB) - EXCHANGE01-C:`. One triple is
 printed for every volume the server reports, including volumes that have no
 capacity, such as an optical drive.
 
-The queue, processor and volume modules are printed only when the corresponding
-query returns data; the memory module is always printed. The processor and the
-memory queries have no error fallback, so a failure in either of them stops the
-run: the modules that follow it — the volume triple and the service modules —
-are not printed in that run.
+When its block is selected, each of these modules is printed only when the
+corresponding query returns data; the memory module is always printed when its
+block is selected. The processor and the memory queries have no error fallback,
+so a failure in either of them stops the run: the blocks that follow it, such as
+the volume triple and the service modules, are not printed in that run.
 
 ### Mailbox checks
 
@@ -353,10 +361,11 @@ in any state other than running — stopped, starting, stopping — reports `0`.
 
 - The addon keeps no state. Each run executes the checks again, so a manual run
   reproduces exactly what the agent does.
-- A run makes the Exchange server perform live probes: a replication health
-  test, a MAPI logon test, a mailbox database copy query and ten health report
-  requests. Give the module an interval that suits that cost, and avoid running
-  it every minute on a busy server.
+- A run that includes the mailbox and client access blocks makes the Exchange
+  server perform live probes: a replication health test, a MAPI logon test, a
+  mailbox database copy query and ten health report requests. Give the module an
+  interval that suits that cost, avoid running it every minute on a busy server,
+  and leave out the blocks you do not need.
 - The modules are created by the agent from the script output, so a check that
   starts reporting a new module does not require a console change.
 - To change what a run covers, edit the switches of the `module_plugin` line and
@@ -366,10 +375,6 @@ in any state other than running — stopped, starting, stopping — reports `0`.
 
 These are the behaviors of this version, not setup errors:
 
-- **`-cas` on its own produces no client access health module.** The identity
-  the health report needs comes from the mailbox checks. Run `-all` instead.
-- **`-services` also enables `-all`.** There is no way to obtain only the
-  service modules.
 - **`Outlook - <host>` and `Outlook client connectivity - <host>` are the same
   probe twice.** Both read the `Outlook` health set; the second module has no
   description.
@@ -387,12 +392,10 @@ These are the behaviors of this version, not setup errors:
   are not loaded in the session, the console file path is wrong or the account
   cannot use them, or the cmdlets run and return nothing because the account is
   authenticated against a different organization or the server has no role that
-  answers that check. The load and storage modules still appear, because they do
-  not depend on Exchange cmdlets. Run the script by hand in an Exchange
-  Management Shell to see the error the session produced, and then check the
-  account.
-- **`-cas` produces `SMTP Connectivity` and nothing else.** Expected: see
-  [Known limitations](#known-limitations).
+  answers that check. If the run includes the load or storage blocks, those
+  modules still appear, because they do not depend on Exchange cmdlets. Run the
+  script by hand in an Exchange Management Shell to see the error the session
+  produced, and then check the account.
 - **A module reports `0` for every check.** Confirm the language of the server
   before looking for a real failure: the pass values are matched in English
   and Spanish only.
@@ -404,9 +407,8 @@ These are the behaviors of this version, not setup errors:
   error goes to the error stream of the session, so run the script by hand to
   read it.
 - **The agent log shows a timeout.** A complete run with `-all` performs a dozen
-  live probes. Raise the module timeout. Do not split the health checks into a
-  separate `-cas` line: a line of its own has no server identity and prints no
-  client access health module.
+  live probes. Raise the module timeout, or split the blocks you need into
+  separate `module_plugin` lines, each with its own timeout and its own switch.
 
 ## Reference
 
@@ -414,12 +416,16 @@ These are the behaviors of this version, not setup errors:
 
 | Switch | Type | Default | Effect |
 |--------|------|---------|--------|
-| `-all` | flag | On when no role switch is given | Mailbox and client access checks |
+| `-all` | flag | On when no switch is given | Mailbox, client access, queue, processor, memory and volume blocks |
 | `-mailbox` | flag | Off | Mailbox checks |
 | `-cas` | flag | Off | Client access checks |
-| `-services` | flag | Off | One module per installed Exchange service, added to the selected checks |
+| `-queue` | flag | Off | Message queue module |
+| `-cpu` | flag | Off | Processor module |
+| `-memory` | flag | Off | Memory module |
+| `-storage` | flag | Off | Volume modules |
+| `-services` | flag | Off | One module per installed Exchange service |
 
-The addon declares these four switches and no other parameter. It has no
+The addon declares these eight switches and no other parameter. It has no
 verbosity, timeout, destination or credential parameter, and it prints to
 standard output only.
 
@@ -468,11 +474,11 @@ a lower-case `s`, and `MAPI Connectivity` carries no server suffix.
 |----------|-------|
 | Marketplace identifier | `pandorafms.exchange` |
 | Name | Exchange |
-| Version | `1.0` — the version of the Marketplace package `pandorafms.exchange.1.0.zip` |
+| Version | `1.1` — the version of the Marketplace package `pandorafms.exchange.1.1.zip` |
 | Category | Miscelaneus |
 | Tags | applications |
 | License | Free |
-| Marketplace last update | 2026-02-05 |
+| Marketplace last update | 2026-11-12 |
 | Availability | Free download |
 | Marketplace entry | [pandorafms.exchange](https://marketplace.pandorafms.com/entries/pandorafms.exchange) |
 | Execution model | Pandora FMS agent plugin (`module_plugin`) on the Exchange server |
