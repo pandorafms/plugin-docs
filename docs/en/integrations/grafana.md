@@ -1,6 +1,6 @@
 # Grafana
 
-*Article last updated: 2026-10-26.*
+*Article last updated: 2026-11-19.*
 
 ## What it does
 
@@ -14,7 +14,9 @@ The data comes from the **Grafana API extension of the Pandora FMS console**,
 located under `pandora_console/extensions/grafana`. The addon stores the base
 URL of that extension plus a Pandora FMS user and password, asks the extension
 which groups, agents and modules that user can see, and then requests the values
-of one module for the time range of each panel.
+of one module for the time range of each panel. Optionally, it also plots the
+warning and critical thresholds configured for the module as additional constant
+series.
 
 Two execution paths use the configured data source:
 
@@ -33,8 +35,8 @@ Two execution paths use the configured data source:
 |-------|-------|----------|
 | Pandora FMS NG 784 and later | `Supported` | The Marketplace states that its integrations are compatible with Pandora FMS NG 784 and later versions |
 | Grafana `10.0.3` or later | `Required` | The plugin declares `grafanaDependency` `>=10.0.3` |
-| A Pandora FMS node console with the Grafana API extension available | `Required` | The addon appends `/search` and `/query` to the configured extension URL, and the extension answers `403` on a metaconsole node |
-| A Pandora FMS user with the read-agents privilege (`AR`) | `Required` | Both extension endpoints check that privilege before returning any group |
+| A Pandora FMS node console with the Grafana API extension available | `Required` | The addon appends `/search`, `/query` and `/thresholds` to the configured extension URL, and the extension answers `403` on a metaconsole node |
+| A Pandora FMS user with the read-agents privilege (`AR`) | `Required` | All three extension endpoints check that privilege before returning data |
 | Grafana versions above the declared minimum | `Not validated` | No Grafana version matrix is recorded for this addon |
 | Operating system of the Grafana host | `Not validated` | The addon runs inside Grafana; no operating system is recorded |
 
@@ -78,7 +80,7 @@ installation requirements, not compatibility statements about other versions.
 
 ### Install the data source
 
-1. Download `pandorafms.grafana.1.0.zip` from the
+1. Download `pandorafms.grafana.1.1.zip` from the
    [Marketplace entry](https://marketplace.pandorafms.com/entries/pandorafms.grafana).
    The download is limited to licensed users.
 2. Extract the archive inside the Grafana plugins directory, so that the plugin
@@ -86,7 +88,7 @@ installation requirements, not compatibility statements about other versions.
 
 ```bash
 cd /var/lib/grafana/plugins
-sudo unzip /path/to/pandorafms.grafana.1.0.zip
+sudo unzip /path/to/pandorafms.grafana.1.1.zip
 ```
 
 3. Restart Grafana so that it loads the plugin.
@@ -120,7 +122,7 @@ and must match exactly. Without it, Grafana does not load the plugin and
 
 | Field | Required | Default | Description |
 |-------|----------|---------|-------------|
-| **Pandora extension** | Yes | — | Base URL of the Pandora FMS Grafana API extension, with the scheme and without a trailing slash or endpoint suffix: `https://<PANDORA_FMS_URL>/pandora_console/extensions/grafana`. The addon appends `/search` and `/query`. |
+| **Pandora extension** | Yes | — | Base URL of the Pandora FMS Grafana API extension, with the scheme and without a trailing slash or endpoint suffix: `https://<PANDORA_FMS_URL>/pandora_console/extensions/grafana`. The addon appends `/search`, `/query` and `/thresholds`. |
 | **Pandora user** | Yes | — | Pandora FMS user with the `AR` privilege. Every Grafana user queries with this identity. |
 | **Password** | Yes | — | Password of that user. It is stored in the data source JSON settings, not in Grafana's encrypted secure fields, because the browser sends it with every request. |
 
@@ -151,6 +153,7 @@ Notes:
 |-------|---------|-------------|
 | **Label** | Empty | Not used. The addon does not send it, and the series keeps the module name. |
 | **Tip** | Unchecked | Full-scale switch. Checked, Pandora FMS returns the stored samples. Unchecked, it returns compacted values (averages) and the series name ends in ` (avg)`. |
+| **Thresholds** | Unchecked | Adds the warning and critical thresholds configured in the module as constant series. Unchecked, the query returns only the module values, as before. |
 | **Group** | Empty | Narrows the agent list. `All` (value `0`) lists every agent. Only groups where the data source user holds `AR` appear. |
 | **Agent** | Empty | Narrows the module list to the enabled agents of the selected group; with `All`, to every enabled agent. |
 | **Module** | Empty | Module to plot: enabled, non-string modules of the selected agent. The module identifier is what the request carries. |
@@ -161,14 +164,37 @@ Notes:
   **Module**. The panel keeps querying the old module until you choose a new one,
   so re-select the module after narrowing the lists.
 - Every change in the editor reloads the three lists in full, and a change of
-  **Tip**, **Group**, **Agent** or **Module** also runs the query. On
-  installations with many groups, agents or modules this makes the editor
-  slower.
+  **Tip**, **Thresholds**, **Group**, **Agent** or **Module** also runs the
+  query. On installations with many groups, agents or modules this makes the
+  editor slower.
 - The data source returns numeric values without unit metadata. Set the unit of
   the panel to match the module.
 - To compare modules, add one query per module to the same panel.
 
-<!-- SCREENSHOT NEEDED: Grafana panel query editor with the Pandorafms Grafana data source and the Label, Tip, Group, Agent and Module fields filled with lab values. -->
+#### Show module thresholds
+
+Check **Thresholds** to receive the warning and critical limits configured in the
+module. The data source requests them from the extension's `/thresholds` endpoint
+and adds one constant series per configured limit:
+
+| Series | Value | Default color |
+|--------|-------|---------------|
+| `<refId> warning min` | `min_warning` | Yellow |
+| `<refId> warning max` | `max_warning` | Yellow |
+| `<refId> critical min` | `min_critical` | Red |
+| `<refId> critical max` | `max_critical` | Red |
+
+A limit set to `0` or left empty is not drawn: in Pandora FMS those values mean
+that the limit is not configured. A module with only minimum limits therefore
+adds only the two minimum series. The threshold series carry a constant value
+across the panel range and appear in the legend like any other series, so they
+can be styled, hidden or overridden with the panel field options.
+
+The `/thresholds` endpoint is part of the Grafana API extension of the console.
+If the console extension does not provide it, the module values keep working and
+no threshold series are added.
+
+<!-- SCREENSHOT NEEDED: Grafana panel query editor with the Pandorafms Grafana data source and the Label, Tip, Thresholds, Group, Agent and Module fields filled with lab values. -->
 
 ### Alert rules
 
@@ -238,6 +264,12 @@ If the extension check works and the panel still shows no data, read
 - **Unknown periods are gaps.** When Pandora FMS has no value, or marks the
   module data as unknown, the point is null and the panel draws a gap instead of
   a zero.
+- **Thresholds are extra constant series.** With **Thresholds** checked, each
+  configured warning or critical limit becomes a separate series named after the
+  query (`A warning min`, `A critical min`, and so on) with a constant value
+  across the range. The addon does not apply native Grafana threshold bands; use
+  the panel field options and series visibility to style or hide the lines. A
+  module without configured limits adds no extra series.
 - **Only numeric modules.** The module picker excludes string modules, so they
   cannot be plotted with this data source. Disabled agents and disabled modules
   are also excluded from the pickers.
@@ -288,9 +320,10 @@ If the extension check works and the panel still shows no data, read
 | The panel shows **No data** | No stored values in the time range, a string module, or a module left over from a previous agent. Re-select the module and widen the range |
 | The browser console reports a CORS error | **Grafana Access-Control-Allow-Origin** does not match the Grafana origin, or the extension URL is `http` while Grafana is `https` |
 | The extension answers `403` | The URL points at a metaconsole node; use the node console |
-| The extension answers `404` | Wrong path (it must end in `/pandora_console/extensions/grafana`), a missing extension directory, or a web server that does not apply the rewrite rules that resolve `/search` and `/query` |
+| The extension answers `404` | Wrong path (it must end in `/pandora_console/extensions/grafana`), a missing extension directory, or a web server that does not apply the rewrite rules that resolve `/search`, `/query` and `/thresholds` |
 | **Pandorafms Grafana** does not appear in the data source list | The plugin folder is not under the plugins directory, `allow_loading_unsigned_plugins` lacks the identifier, or Grafana was not restarted |
 | The series name ends in ` (avg)` | **Tip** is unchecked; check it to receive the original samples |
+| Threshold series do not appear | **Thresholds** is unchecked, the module has no warning or critical limits configured, all its limits are `0`, or the console extension does not provide the `/thresholds` endpoint |
 | An alert rule returns no data | See [Limitations](#limitations): the server-side evaluation path does not use the connection details stored in the form |
 
 ### Limitations
@@ -313,6 +346,10 @@ If the extension check works and the panel still shows no data, read
   permissions.** All Grafana users who can use the data source see the same data.
 - **String modules cannot be plotted**, and they are not offered in the module
   picker.
+- **Thresholds are series, not threshold bands.** With **Thresholds** checked
+  the addon adds one constant series per configured non-zero limit. It does not
+  shade the areas between limits or apply native Grafana threshold styling; use
+  panel field overrides and series visibility to adjust the lines.
 - **The pickers load complete lists.** The addon sends no text filter: the
   group, agent and module lists are downloaded in full each time the editor
   changes, and Grafana filters them in the browser.
@@ -323,7 +360,7 @@ If the extension check works and the panel still shows no data, read
 
 | Setting | Required | Default | Description |
 |---------|----------|---------|-------------|
-| **Pandora extension** | Yes | — | Base URL of the extension, with scheme: `https://<PANDORA_FMS_URL>/pandora_console/extensions/grafana`. No trailing slash and no `/search` or `/query` suffix |
+| **Pandora extension** | Yes | — | Base URL of the extension, with scheme: `https://<PANDORA_FMS_URL>/pandora_console/extensions/grafana`. No trailing slash and no `/search`, `/query` or `/thresholds` suffix |
 | **Pandora user** | Yes | — | Pandora FMS user queried by every request |
 | **Password** | Yes | — | Password of that user, stored in the data source JSON settings |
 
@@ -333,23 +370,28 @@ If the extension check works and the panel still shows no data, read
 |-------|---------|-------------|
 | **Label** | Empty | Not used |
 | **Tip** | Unchecked | Checked: original samples. Unchecked: compacted averages with the ` (avg)` series suffix |
+| **Thresholds** | Unchecked | Checked: adds the module warning and critical limits as constant series. Unchecked: module values only |
 | **Group** | Empty | Group filter for the agent list; `All` is value `0` |
 | **Agent** | Empty | Agent filter for the module list |
 | **Module** | Empty | Module identifier sent to the extension |
 
 ### Extension endpoints
 
-The addon uses two endpoints relative to the configured base URL. Both accept
+The addon uses three endpoints relative to the configured base URL. All accept
 HTTP basic authentication and return JSON.
 
 | Endpoint | Purpose | Request body | Response |
 |----------|---------|--------------|----------|
 | `<extension>/search` | Group, agent and module lists | `{"type":"group"}`, `{"type":"agent","extra":"<group-id>"}` or `{"type":"module","extra":"<agent-id>"}` | Array of `{"value": <id>, "text": "<name>"}`; groups include `{"value":0,"text":"All"}` |
 | `<extension>/query` | Module values for a time range | `{"targets":[{"target":{"agent":"<agent-id>","module":"<module-id>","tip":<boolean>}}],"range":{"from":"<date>","to":"<date>"}}` | Array of objects with the series name in `target` and pairs of `[<value>, <timestamp in milliseconds>]` in `datapoints` |
+| `<extension>/thresholds` | Warning and critical limits of a module | `{"module":"<module-id>"}` | Object with `min_warning`, `max_warning`, `min_critical` and `max_critical`; limits that are not configured are `null` |
 
 In `/query` only `module` and `tip` are read: the series name is the module name
 reported by Pandora FMS, and the agent value is ignored. Dates are accepted in
 any format that Pandora FMS can parse, for example ISO 8601.
+
+In `/thresholds` only `module` is read. The endpoint requires a Pandora FMS user
+with the `AR` privilege, like the other two endpoints.
 
 ### Addon identity
 
@@ -357,7 +399,7 @@ any format that Pandora FMS can parse, for example ISO 8601.
 |----------|-------|
 | Marketplace identifier | `pandorafms.grafana` |
 | Name | Grafana |
-| Version | `1.0` — the version of the Marketplace package `pandorafms.grafana.1.0.zip` |
+| Version | `1.1` — the version of the Marketplace package `pandorafms.grafana.1.1.zip` |
 | Data source plugin identifier | `pandorafms-pandorafmsgrafana-datasource`, the value required by `allow_loading_unsigned_plugins` |
 | Category | Miscelaneus |
 | License | One — the download is limited to licensed users |
