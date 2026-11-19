@@ -157,6 +157,57 @@ Behaviour to know:
 - Only single-byte code pages are supported. Multi-byte encodings such as Shift_JIS and UTF-16 are rejected at startup. The accepted names are: `cp437`, `cp850`, `cp852`, `cp855`, `cp858`, `cp860`, `cp862`, `cp863`, `cp865`, `cp866`, `cp1250` to `cp1258`, `iso-8859-1` to `iso-8859-10`, `iso-8859-13` to `iso-8859-16`, `koi8-r`, `koi8-u`, `macintosh` and `macintosh-cyrillic`. Common spellings such as `windows-1251` and `latin1` are accepted as aliases.
 - Use `--verbose` to see which charsets were applied; see [Diagnostics and exit status](#diagnostics-and-exit-status).
 
+#### Choose the charset for your language
+
+The default `auto` mode already handles UTF-8 and Windows-1251 (Cyrillic). For any other code page, put it first in the chain with `charset_fallback`. Each row below was run with the plugin and produced the text shown:
+
+| The log is written in | Setting | Result |
+| --- | --- | --- |
+| UTF-8 | nothing | The lines are sent unchanged. |
+| Russian on Windows (Windows-1251) | nothing | `Транзакция прошла успешно` |
+| Spanish and other Western European languages (Windows-1252, Latin-1) | `charset_fallback = cp1252` | `Conexión rechazada: señor año` |
+| Russian on Unix (KOI8-R) | `charset_fallback = koi8-r` | `Ошибка соединения` |
+| Central European, such as Polish (Windows-1250) | `charset_fallback = cp1250` | `Łódź: błąd połączenia` |
+| Greek (Windows-1253) | `charset_fallback = cp1253` | `Σφάλμα σύνδεσης` |
+
+Without the setting, a log in another code page is still sent, but it is read as Windows-1251. The same Spanish line, run with `--verbose`:
+
+```
+$ pandora_logparser --dir /var/log/myapp --name-regex '.+\.log' --source-type app_errors --idx-dir /var/tmp/pandora-logparser --verbose
+charset auto in /var/log/myapp/app.log: 0 utf-8, 1 converted from cp1251
+Conexiуn rechazada: seсor aсo
+
+$ pandora_logparser --dir /var/log/myapp --name-regex '.+\.log' --source-type app_errors --idx-dir /var/tmp/pandora-logparser --charset-fallback cp1252 --verbose
+charset auto in /var/log/myapp/app.log: 0 utf-8, 1 converted from cp1252
+Conexión rechazada: señor año
+```
+
+The second line of each result is the decoded `data` value. When the summary names a charset that is not the language of your log, add the right one with `--charset-fallback`.
+
+Prefer `auto` with `charset_fallback` to a fixed `--charset cp1252`. A fixed charset converts every line without looking at it, so a line that is already UTF-8 in the same file would be damaged.
+
+On Linux, add the option to the module:
+
+```
+module_begin
+module_plugin /etc/pandora/plugins/pandora_logparser --dir /var/log/myapp --name-regex '.+\.log' --source-type app_errors --idx-dir /var/tmp/pandora-logparser --charset-fallback cp1252
+module_end
+```
+
+On Windows, keep the options in a configuration file and use a persistent index directory, so the index survives the cleaning of the temporary directory:
+
+```
+module_plugin "%ProgramFiles%\pandora_agent\util\pandora_logparser.exe" --config "C:\ProgramData\PandoraFMS\logparser.conf"
+```
+
+```
+dir = C:\logs\myapp
+name_regex = .+\.log
+source_type = app_errors
+idx_dir = C:\ProgramData\PandoraFMS\logparser-idx
+charset_fallback = cp1252
+```
+
 ### Windows: non-ASCII values and shell metacharacters
 
 The plugin has no encoding problem of its own. On Windows, Go reads the command line through the wide-character API and converts it to UTF-8, and the plugin reads configuration files as UTF-8 and log files as described in [Log file encoding](#log-file-encoding). The corruption happens before the plugin starts.
