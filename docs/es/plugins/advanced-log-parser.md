@@ -1,12 +1,14 @@
 # Advanced Log Parser
 
-*Última actualización del artículo: 2026-09-16.*
+*Última actualización del artículo: 2026-11-19.*
 
 ## Qué hace
 
 Advanced Log Parser monitoriza ficheros de log desde Pandora FMS. En cada ejecución recorre un directorio, selecciona ficheros por nombre y líneas por contenido mediante expresiones regulares, e imprime las líneas coincidentes como entradas `log_module` de Pandora FMS en la salida estándar.
 
 El plugin lee cada fichero de log de forma incremental. Mantiene un índice por fichero de log y por tipo de origen, de modo que cada ejecución captura solo las líneas escritas desde la ejecución anterior en lugar de todo el fichero. Las líneas capturadas se codifican en Base64, lo que mantiene válido el XML generado sea cual sea el contenido del log.
+
+El plugin emite siempre UTF-8. Un fichero de log escrito en una página de códigos de un solo byte heredada, como Windows-1251, se convierte línea a línea antes de aplicar la coincidencia y la codificación; consulte [Codificación del fichero de log](#codificacion-del-fichero-de-log).
 
 El plugin se ejecuta como plugin de agente de Pandora FMS (`module_plugin`) y también puede ejecutarse manualmente. No crea ningún agente propio: los módulos de log que emite pertenecen al agente que lo ejecuta.
 
@@ -110,7 +112,7 @@ idx_dir = /var/tmp/pandora-logparser
 
 Formato del fichero:
 
-- Una línea `clave = valor`. Las claves válidas son `dir`, `name_regex`, `content_regex`, `content_regex_base64`, `source_type`, `idx_dir` y `max_line_bytes`.
+- Una línea `clave = valor`. Las claves válidas son `dir`, `name_regex`, `content_regex`, `content_regex_base64`, `source_type`, `idx_dir`, `max_line_bytes`, `charset` y `charset_fallback`.
 - Los espacios alrededor de `=` se ignoran y el valor se recorta. Un patrón que deba empezar o terminar con un espacio usa la secuencia de escape `\x20`.
 - `#` inicia un comentario solo al principio de la línea, por lo que un valor puede contener `#`. Las líneas en blanco se ignoran.
 - Se aceptan un BOM UTF-8 y finales de línea CR/LF.
@@ -125,9 +127,39 @@ Precedencia:
 - Dos fuentes del filtro de contenido en la misma capa son un error: dos opciones de línea de comandos, o bien `content_regex` y `content_regex_base64` en el fichero.
 - Sin ninguna fuente se aplica el valor por defecto `.*`. Al menos una fuente de opciones debe proporcionar `dir`.
 
+### Codificación del fichero de log
+
+El plugin envía cada línea de log a Pandora FMS como UTF-8. La opción `--charset` (o la clave `charset` del fichero de configuración) le indica cómo leer el fichero de log:
+
+| Valor | Comportamiento |
+| --- | --- |
+| `auto` (por defecto) | Decide línea a línea. Una línea que ya es UTF-8 válido se envía sin cambios. Cualquier otra línea se convierte con el primer charset de la cadena de respaldo que define todos los bytes de la línea. |
+| `utf-8` | Sin conversión: cada línea se envía exactamente como está en el fichero. |
+| Un nombre de página de códigos, como `cp1251` | Cada línea se convierte desde esa página de códigos, sin inspeccionar el contenido. Un valor incorrecto produce texto legible pero erróneo. |
+
+La cadena de respaldo de `auto` es `cp1251,cp1252`. Se cambia con `--charset-fallback` (o la clave `charset_fallback`), que admite una lista separada por comas que se prueba en orden. Solo es válida junto con `--charset auto`.
+
+```
+module_plugin /etc/pandora/plugins/pandora_logparser --dir /var/log/myapp --name-regex '.+\.log' --source-type app_errors --idx-dir /var/tmp/pandora-logparser --charset-fallback cp1252
+```
+
+```
+charset = auto
+charset_fallback = cp1252,cp1251
+```
+
+Comportamiento que conviene conocer:
+
+- La decisión se toma para cada línea y no se guarda nada en el índice, de modo que los mismos bytes producen siempre el mismo texto. Un fichero puede mezclar líneas UTF-8 y líneas en una página de códigos heredada.
+- El orden por defecto asume datos cirílicos. Una página de códigos de un solo byte no se distingue de otra solo por sus bytes, y Windows-1251 acepta casi todos los bytes, por lo que un texto en Latin-1 o Windows-1252 como `café` se lee como Windows-1251 (`cafй`) salvo que la cadena empiece por `cp1252`. Configure `charset_fallback = cp1252` para logs en lenguas de Europa occidental.
+- Un byte que no está definido en la página de códigos elegida (o en el último charset de la cadena, en `auto`) se sustituye por el carácter `U+FFFD`. La línea se envía igualmente y se escribe un aviso en la salida de error estándar.
+- La conversión se aplica antes del filtro de contenido, de modo que un `--content-regex` en UTF-8 también coincide con texto leído de un fichero de un solo byte. `--max-line-bytes` se mide sobre los bytes del fichero.
+- Solo se admiten páginas de códigos de un solo byte. Las codificaciones multibyte como Shift_JIS y UTF-16 se rechazan al arrancar. Los nombres aceptados son: `cp437`, `cp850`, `cp852`, `cp855`, `cp858`, `cp860`, `cp862`, `cp863`, `cp865`, `cp866`, de `cp1250` a `cp1258`, de `iso-8859-1` a `iso-8859-10`, de `iso-8859-13` a `iso-8859-16`, `koi8-r`, `koi8-u`, `macintosh` y `macintosh-cyrillic`. Se aceptan como alias grafías habituales como `windows-1251` y `latin1`.
+- Use `--verbose` para ver qué charsets se han aplicado; consulte [Diagnóstico y código de salida](#diagnostico-y-codigo-de-salida).
+
 ### Windows: valores no ASCII y metacaracteres del shell
 
-El plugin no tiene ningún problema de codificación propio. En Windows, Go lee la línea de comandos a través de la API de caracteres anchos y la convierte a UTF-8, y el plugin lee los ficheros de log y los ficheros de configuración como UTF-8. La corrupción ocurre antes de que el plugin arranque.
+El plugin no tiene ningún problema de codificación propio. En Windows, Go lee la línea de comandos a través de la API de caracteres anchos y la convierte a UTF-8, y el plugin lee los ficheros de configuración como UTF-8 y los ficheros de log como se describe en [Codificación del fichero de log](#codificacion-del-fichero-de-log). La corrupción ocurre antes de que el plugin arranque.
 
 El agente de Windows ejecuta cada `module_plugin` como `cmd.exe /c "<comando>"` y convierte la línea de comandos de UTF-8 a la página de códigos ANSI del sistema. El texto no ASCII no sobrevive a esa conversión, de modo que el plugin nunca recibe el texto que usted escribió.
 
@@ -260,6 +292,23 @@ ERROR: disco lleno
 
 Una tercera ejecución sin líneas nuevas no imprime nada y termina con estado `0`. Los ficheros sin líneas nuevas coincidentes no producen ninguna entrada, y una ejecución en la que nada coincide no escribe absolutamente nada en la salida estándar.
 
+Para comprobar un fichero de log que no está en UTF-8, añada una línea escrita en Windows-1251 (la palabra `Транзакция` como los bytes `D2 F0 E0 ED E7 E0 EA F6 E8 FF`) y ejecute de nuevo el plugin con `--verbose`:
+
+```bash
+printf '\xd2\xf0\xe0\xed\xe7\xe0\xea\xf6\xe8\xff\n' >> /var/log/myapp/app.log
+pandora_logparser --dir /var/log/myapp --name-regex '.+\.log' --source-type app_errors --idx-dir /var/tmp/pandora-logparser --verbose
+```
+
+La salida de error estándar informa de la decisión y el valor de `data` decodifica a texto UTF-8:
+
+```
+charset auto in /var/log/myapp/app.log: 0 utf-8, 1 converted from cp1251
+```
+
+```
+Транзакция
+```
+
 ## Entender los resultados
 
 ### Lectura incremental
@@ -288,7 +337,7 @@ En cada ejecución el plugin elimina los índices cuyo fichero de log ya no exis
 - La coincidencia se aplica a cada línea física del log.
 - La coincidencia distingue mayúsculas de minúsculas. Un patrón que deba ignorarlas necesita un `(?i)` explícito, como en `(?i)error`.
 - Una entrada de varias líneas, como una traza de pila, se captura como fragmentos de línea separados y no puede coincidir como un todo.
-- El texto se trata como UTF-8. UTF-16 y las páginas de códigos de la plataforma no se decodifican, por lo que un patrón UTF-8 no coincide con un fichero de log escrito en otra codificación.
+- Las líneas se convierten a UTF-8 antes de la coincidencia, según `--charset`, de modo que un patrón UTF-8 también coincide con un fichero de log escrito en una página de códigos de un solo byte. Consulte [Codificación del fichero de log](#codificacion-del-fichero-de-log). UTF-16 y otras codificaciones multibyte no se decodifican.
 - Un BOM UTF-8 al principio de un fichero de log se elimina antes de la coincidencia, de modo que los anclajes `^` siguen aplicándose a la primera línea.
 
 ### Salida
@@ -340,9 +389,11 @@ pandora_logparser --config /etc/pandora/logparser.conf
 
 ### Diagnóstico y código de salida
 
-El plugin no tiene ninguna opción de verbose o depuración. La salida estándar contiene únicamente el XML generado y todos los diagnósticos van a la salida de error estándar, de modo que redirigir ambos flujos por separado mantiene los datos limpios.
+La salida estándar contiene únicamente el XML generado y todos los diagnósticos van a la salida de error estándar, de modo que redirigir ambos flujos por separado mantiene los datos limpios.
 
-Se emiten avisos cuando un índice no se puede resolver o crear, cuando un índice no se puede cargar, cuando falla la limpieza de índices huérfanos y cuando se omite una línea por superar `--max-line-bytes`. Se emiten errores cuando no se puede leer un directorio o un fichero de log, cuando no se puede construir un módulo de log y cuando no se puede guardar un índice.
+`-v` o `--verbose` añade, en modo `--charset auto`, una línea por fichero recorrido y ejecución que indica cómo se decodificaron sus líneas nuevas, por ejemplo `charset auto in /var/log/myapp/app.log: 2 utf-8, 1 converted from cp1251`. También informa de las líneas que necesitaron caracteres de sustitución. No se imprime nada para un fichero sin líneas nuevas, y la opción no tiene efecto en los otros modos de charset.
+
+Se emiten avisos cuando un índice no se puede resolver o crear, cuando un índice no se puede cargar, cuando falla la limpieza de índices huérfanos, cuando se omite una línea por superar `--max-line-bytes` y cuando una línea contiene bytes no definidos en la página de códigos elegida y se envía con caracteres de sustitución `U+FFFD`. Se emiten errores cuando no se puede leer un directorio o un fichero de log, cuando no se puede construir un módulo de log y cuando no se puede guardar un índice.
 
 El código de salida es `0` en una ejecución correcta o con `--help`, y `1` si la entrada no es válida o se produce un error de procesamiento.
 
@@ -351,7 +402,7 @@ El código de salida es `0` en una ejecución correcta o con `--help`, y `1` si 
 - Una línea más larga que `--max-line-bytes` se omite con un aviso y el fichero sigue procesándose. El valor por defecto es `1048576` bytes.
 - Un fichero que no termina en salto de línea mantiene su última línea parcial sin leer hasta que llega el terminador. Una línea que nunca se termina nunca se emite.
 - El plugin valida como máximo los 64 KiB inmediatamente anteriores a la posición guardada. Una reescritura en el sitio que deje sin cambios la identidad del fichero, el tamaño y esos bytes no se detecta.
-- Solo se decodifica UTF-8.
+- Solo se decodifican UTF-8 y las páginas de códigos de un solo byte. UTF-16 y otras codificaciones multibyte no se admiten.
 - El plugin no es recursivo e ignora los subdirectorios.
 
 ### Resolución de problemas
@@ -360,7 +411,9 @@ El código de salida es `0` en una ejecución correcta o con `--help`, y `1` si 
 | --- | --- | --- |
 | La primera ejecución no genera salida | Comportamiento esperado: el índice registra cada fichero en su final. | Añada una línea coincidente y ejecute el plugin de nuevo. |
 | Un módulo nunca genera datos | Otro módulo usa el mismo `--source-type` sobre el mismo fichero, o se cambió el tipo de origen y el índice volvió a empezar al final del fichero. | Asigne a cada módulo su propio `--source-type`; consulte [Índices y el tipo de origen](#indices-y-el-tipo-de-origen). |
-| Un patrón que funcionaba en otro sitio no coincide | La coincidencia distingue mayúsculas de minúsculas, o el fichero de log no está en UTF-8. | Añada `(?i)` si debe ignorar las mayúsculas; confirme la codificación del fichero. |
+| Un patrón que funcionaba en otro sitio no coincide | La coincidencia distingue mayúsculas de minúsculas, o el fichero de log está en una codificación que el plugin no decodifica, como UTF-16. | Añada `(?i)` si debe ignorar las mayúsculas; confirme la codificación del fichero. |
+| El texto con tildes llega con letras equivocadas, por ejemplo `cafй` en lugar de `café` | El log está en Windows-1252 o Latin-1 y la cadena por defecto lo leyó como Windows-1251. | Ejecute con `--verbose` para ver el charset aplicado y configure `--charset-fallback cp1252`. |
+| Un aviso indica bytes no definidos y la línea contiene `�` | La línea tiene bytes que la página de códigos elegida no define. | Compruebe el charset del fichero; ajuste `--charset` o `--charset-fallback` a la página de códigos correcta. |
 | Un patrón no ASCII no coincide en Windows | El agente convirtió la línea de comandos a la página de códigos ANSI antes de que el plugin arrancara. | Coloque el valor en el fichero de configuración o use `--content-regex-base64`; consulte [Windows: valores no ASCII y metacaracteres del shell](#windows-valores-no-ascii-y-metacaracteres-del-shell). |
 | Un módulo cuyo patrón tiene una alternancia no se ejecuta nunca en Windows | `cmd.exe` parte el comando en la barra vertical sin proteger. | Mueva el patrón al fichero de configuración o páselo en Base64. |
 | Falta una línea en la salida | La línea supera `--max-line-bytes`, o seguía sin terminador cuando se ejecutó el plugin. | Revise el aviso de la salida de error; aumente `--max-line-bytes` si es necesario. |
@@ -381,6 +434,9 @@ El código de salida es `0` en una ejecución correcta o con `--help`, y `1` si 
 | `--source-type <nombre>` | No | `syslog` | Valor del campo `source` de los módulos de log generados y parte de la identidad del índice. Un valor vacío recae en `syslog`. |
 | `--idx-dir <ruta>` | No | Directorio temporal del sistema operativo | Directorio donde se almacenan los ficheros de índice. Se crea si no existe. |
 | `--max-line-bytes <n>` | No | `1048576` | Tamaño máximo aceptado de una línea de log, en bytes. Debe ser un entero positivo. |
+| `--charset <nombre>` | No | `auto` | Charset del fichero de log: `auto`, `utf-8` o una página de códigos de un solo byte. Consulte [Codificación del fichero de log](#codificacion-del-fichero-de-log). |
+| `--charset-fallback <lista>` | No | `cp1251,cp1252` | Charsets separados por comas que `--charset auto` prueba, en orden, en las líneas que no son UTF-8. Solo es válida con `--charset auto`. |
+| `-v`, `--verbose` | No | — | En modo `--charset auto`, informa en la salida de error estándar de cómo se decodificaron las líneas de cada fichero. |
 | `-h`, `--help` | No | — | Muestra la ayuda y termina con estado `0`. |
 
 ### Claves del fichero de configuración
@@ -394,6 +450,8 @@ El código de salida es `0` en una ejecución correcta o con `--help`, y `1` si 
 | `source_type` | `syslog` | Equivale a `--source-type`. |
 | `idx_dir` | Directorio temporal del sistema operativo | Equivale a `--idx-dir`. |
 | `max_line_bytes` | `1048576` | Equivale a `--max-line-bytes`. Debe ser un entero válido. |
+| `charset` | `auto` | Equivale a `--charset`. |
+| `charset_fallback` | `cp1251,cp1252` | Equivale a `--charset-fallback`. |
 
 `content_regex` y `content_regex_base64` no pueden aparecer juntas en el mismo fichero.
 
