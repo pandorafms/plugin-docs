@@ -1,6 +1,6 @@
 # IBM Z Series Mainframe
 
-*Article last updated: 2026-10-26.*
+*Article last updated: 2026-11-20.*
 
 ## What it does
 
@@ -31,7 +31,7 @@ The addon is distributed through the Pandora FMS Marketplace as
 
 | Scope | State | Evidence |
 | --- | --- | --- |
-| Addon `pandorafms.mainframe`, version `2.0` | Documented target | The Marketplace version this page describes. See [Addon identity](#addon-identity) |
+| Addon `pandorafms.mainframe`, version `2.1` | Documented target | The Marketplace version this page describes. See [Addon identity](#addon-identity) |
 | Pandora FMS NG 784 and later | `Supported` | The Marketplace states that all its integrations are compatible with Pandora FMS NG 784 and later versions. This is a published statement for the catalogue, not a test record for this addon |
 | A Pandora FMS console with the Enterprise extensions directory | `Required` | The console extension installs under `enterprise/extensions` and registers its menu option through the Enterprise extension interface |
 | A Pandora FMS license key | `Required` | The service logs an invalid-license error and stops when `pandora_license` does not hold a valid key |
@@ -73,7 +73,10 @@ sudo ./mf_server_installer --install
 The installer:
 
 - copies the `mf_server` executable and the Tentacle client to `/usr/bin`;
-- copies `mf_server.conf` and `mf_server.env` to `/etc/pandora`;
+- copies `mf_server.env` to `/etc/pandora`;
+- installs the default `mf_server.conf` only when
+  `/etc/pandora/mf_server.conf` does not exist, so an existing service
+  configuration is preserved;
 - creates the agent configuration directory `/etc/pandora/conf`;
 - writes `/etc/systemd/system/mf_server.service`, reloads the systemd
   configuration and enables the unit.
@@ -407,10 +410,11 @@ tail -f /var/log/mf_server.log
 The log file is truncated on every start, so a restart erases the previous run.
 Copy it before restarting if you need the history.
 
-The uninstaller removes the unit, the executables, `/etc/pandora/mf_server.conf`,
-`/etc/pandora/mf_server.env` and the whole directory `/etc/pandora/conf`. On a
-host that also runs other Pandora FMS components, back that directory up before
-running `mf_server_installer --uninstall`.
+The uninstaller removes the unit, the `mf_server` executable,
+`/etc/pandora/mf_server.conf` and `/etc/pandora/mf_server.env`. It does not
+remove the agent configuration directory `/etc/pandora/conf`, so the
+per-mainframe files and any other Pandora FMS configuration kept there are
+preserved.
 
 ### Run in the foreground
 
@@ -470,9 +474,6 @@ the RMF Data Portal Browser in the console replaces both.
   rows until you change **Monitor status** to **All**.
 - **`--destdir` does not relocate the systemd unit**, which is always written to
   `/etc/systemd/system`.
-- **The systemd unit declares `PIDFile=/var/run/mf_server.pid`**, but the service
-  never creates that file. When `systemctl status` does not show the process,
-  look for it with `ps`. The uninstaller removes the path anyway.
 
 ### Troubleshooting
 
@@ -616,8 +617,8 @@ Portal. The service sends basic authentication on each of them.
 
 | Option | Effect |
 | --- | --- |
-| `--install` | Installs the service, the Tentacle client, the configuration files, the agent directory and the systemd unit, and enables the unit |
-| `--uninstall` | Stops and disables the unit, then removes it with the executables, `/etc/pandora/mf_server.conf`, `/etc/pandora/mf_server.env`, `/var/run/mf_server.pid` and the whole `/etc/pandora/conf` directory |
+| `--install` | Installs the service, the Tentacle client, the default configuration files, the agent directory and the systemd unit, and enables the unit; an existing `/etc/pandora/mf_server.conf` is preserved |
+| `--uninstall` | Stops and disables the unit, then removes it with the `mf_server` executable, `/etc/pandora/mf_server.conf`, `/etc/pandora/mf_server.env` and `/var/run/mf_server.pid`; the `/etc/pandora/conf` directory is preserved |
 | `--destdir <dir>` | Installs everything under `<dir>` except the systemd unit, which is always written to `/etc/systemd/system` |
 | `--force-perl` | Reinstalls the bundled runtime even when a newer one is already present |
 | no option, or an unknown one | Prints the usage summary and exits |
@@ -649,12 +650,12 @@ Browser fields:
 | --- | --- |
 | Marketplace identifier | `pandorafms.mainframe` |
 | Name | IBM Z Series Mainframe |
-| Version | `2.0` |
+| Version | `2.1` |
 | Category | Miscelaneus |
 | License | One |
 | Availability | Download limited to licensed users |
-| Marketplace last update | 2026-07-08 |
-| Package | `pandorafms.mainframe.2.0.zip` |
+| Marketplace last update | 2026-11-20 |
+| Package | `pandorafms.mainframe.2.1.zip` |
 | Service version reported in the agent documents | `7.0 (Build 191107)` |
 
 The service version in the last row is its own build identifier, reported in the
