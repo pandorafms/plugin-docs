@@ -144,6 +144,10 @@ Use `-All` instead of `-Config` to enable every section with the built-in defaul
 module_plugin powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%PANDORA_HOME%\util\Pandora_Plugin_IIS.ps1" -All
 ```
 
+`-All` enables the five sections. The `urls` and `logs` sections only generate modules when
+`-UrlList` and `-LogPath` are configured respectively; without them, those sections run but
+produce no modules.
+
 The addon limits its own execution time with `-MaxSeconds` (55 seconds by default) and
 processes logs and events in bounded batches. Set the agent interval above that budget so
 that one run finishes before the next one starts.
@@ -252,10 +256,14 @@ exhausted, the remaining sections are skipped and the modules already collected 
 printed.
 
 The state file stores the last processed position of each log file, the sites seen in those
-files, the last event record identifier per event log and the last run timestamp. It is safe
-to delete: the next run starts from the current end of the logs and events. If `StateFile`
-is not set, the addon uses `%PANDORA_HOME%\util\Pandora_Plugin_IIS.state.json` when that
-folder exists, and the system temporary folder otherwise.
+files, the last event record identifier per event log and the last run timestamp. Deleting it
+is not a no-op: on the next run, the `logs` section reads each log file from the beginning,
+bounded by `-MaxBytesPerLog` and `-MaxLinesPerLog`, and the `events` section reads the events
+still available in the log from the default recent window (the last five minutes) instead of
+using the previous run timestamp. Delete the file only when you deliberately want to
+reprocess that data. If `StateFile` is not set, the addon uses
+`%PANDORA_HOME%\util\Pandora_Plugin_IIS.state.json` when that folder exists, and the system
+temporary folder otherwise.
 
 ### Manual execution and debug mode
 
@@ -297,6 +305,14 @@ warning. Run the addon with `-Debug` to see which candidates were tried, and che
 counter with `Get-Counter` on the host. The built-in `status` and `performance` metrics
 already cover the most common IIS values, so the custom counter file is optional.
 
+### No URL modules appear
+
+- **The `urls` section is disabled.** Add `urls` to `Sections`, or use `-All`.
+- **`UrlList` is not set or the file does not exist.** The `urls` section produces no modules
+  until a readable URL list is configured.
+- **Every URL check failed.** The status modules report `0` and the HTTP code `0`; inspect the
+  warning written to the error stream and the request timeout.
+
 ### No log modules appear
 
 - **The `logs` section is disabled.** Add `logs` to `Sections`, or use `-All`.
@@ -323,8 +339,8 @@ already cover the most common IIS values, so the custom counter file is optional
 | --- | --- | --- | --- |
 | `-Config` | No | Empty | Path to a JSON configuration file. Command-line parameters take precedence over the file. |
 | `-Sections` | No | `status,performance` | Comma-separated sections: `status`, `performance`, `urls`, `events`, `logs`. |
-| `-UrlList` | No | Empty | File with URLs, one per line or `name|url`. Used by `urls`. |
-| `-LogPath` | No | Empty | IIS log file or directory. Used by `logs`. |
+| `-UrlList` | No | Empty | File with URLs, one per line or `name|url`. The `urls` section produces no modules without it. |
+| `-LogPath` | No | Empty | IIS log file or directory. The `logs` section produces no modules without it. |
 | `-LogFormat` | No | `auto` | Log format: `auto`, `W3C`, `IIS` or `NCSA`. |
 | `-EventLogs` | No | `System` | Comma-separated event logs to read. |
 | `-EventProviders` | No | `W3SVC,WAS,APPHOSTSVC,IISReset,WMSVC,Microsoft-Windows-IIS-W3SVC,Microsoft-Windows-IIS-APPHOSTSVC,Microsoft-Windows-HttpService` | Comma-separated event providers to filter. |
@@ -336,7 +352,7 @@ already cover the most common IIS values, so the custom counter file is optional
 | `-RequestTimeout` | No | `10` | URL request timeout in seconds. |
 | `-MaxLinesPerLog` | No | `5000` | Maximum log lines processed per file and run. |
 | `-MaxBytesPerLog` | No | `8388608` | Maximum log bytes processed per file and run. |
-| `-All` | No | Off | Enables all sections. |
+| `-All` | No | Off | Enables all sections. `urls` and `logs` still require `-UrlList` and `-LogPath` to produce modules. |
 | `-Debug` | No | Off | Writes debug information to the error stream. |
 | `-Help` | No | Off | Prints the help text and exits. |
 

@@ -148,6 +148,10 @@ predeterminados:
 module_plugin powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%PANDORA_HOME%\util\Pandora_Plugin_IIS.ps1" -All
 ```
 
+`-All` habilita las cinco secciones. Las secciones `urls` y `logs` solo generan módulos si
+se configuran `-UrlList` y `-LogPath`, respectivamente; sin ellos, las secciones se ejecutan
+pero no producen módulos.
+
 El addon limita su propio tiempo de ejecución con `-MaxSeconds` (55 segundos de forma
 predeterminada) y procesa los logs y los eventos en lotes acotados. Configure el intervalo
 del agente por encima de ese presupuesto para que una ejecución termine antes de que
@@ -260,8 +264,12 @@ restantes y los módulos ya recogidos se imprimen igualmente.
 
 El fichero de estado guarda la última posición procesada de cada fichero de log, los sitios
 vistos en esos ficheros, el último identificador de evento por registro de eventos y la
-marca de tiempo de la última ejecución. Se puede borrar sin riesgo: la siguiente ejecución
-parte del final actual de los logs y de los eventos. Si no se establece `StateFile`, el
+marca de tiempo de la última ejecución. Borrarlo no es una operación neutra: en la siguiente
+ejecución, la sección `logs` lee cada fichero de log desde el principio, limitada por
+`-MaxBytesPerLog` y `-MaxLinesPerLog`, y la sección `events` consulta los eventos todavía
+disponibles en el registro desde la ventana reciente predeterminada (los últimos cinco
+minutos) en lugar de usar la marca de tiempo de la ejecución anterior. Borre el fichero solo
+cuando quiera reprocesar esos datos de forma deliberada. Si no se establece `StateFile`, el
 addon utiliza `%PANDORA_HOME%\util\Pandora_Plugin_IIS.state.json` cuando esa carpeta existe,
 y la carpeta temporal del sistema en caso contrario.
 
@@ -307,6 +315,14 @@ con `-Debug` para ver qué candidatos se han probado y compruebe el contador con
 valores de IIS más habituales, por lo que el fichero de contadores personalizados es
 opcional.
 
+### No aparecen módulos de URL
+
+- **La sección `urls` está deshabilitada.** Añada `urls` a `Sections` o utilice `-All`.
+- **`UrlList` no está configurado o el fichero no existe.** La sección `urls` no genera
+  módulos hasta que se configure una lista de URL legible.
+- **Todas las comprobaciones de URL fallan.** Los módulos de estado reportan `0` y el código
+  HTTP `0`; revise el aviso del flujo de error y el tiempo de espera de la petición.
+
 ### No aparecen módulos de logs
 
 - **La sección `logs` está deshabilitada.** Añada `logs` a `Sections` o utilice `-All`.
@@ -334,8 +350,8 @@ opcional.
 | --- | --- | --- | --- |
 | `-Config` | No | Vacío | Ruta a un fichero de configuración JSON. Los parámetros de línea de comandos tienen prioridad sobre el fichero. |
 | `-Sections` | No | `status,performance` | Secciones separadas por comas: `status`, `performance`, `urls`, `events`, `logs`. |
-| `-UrlList` | No | Vacío | Fichero con URL, una por línea o `nombre|url`. Lo utiliza `urls`. |
-| `-LogPath` | No | Vacío | Fichero o directorio de logs de IIS. Lo utiliza `logs`. |
+| `-UrlList` | No | Vacío | Fichero con URL, una por línea o `nombre|url`. La sección `urls` no genera módulos sin él. |
+| `-LogPath` | No | Vacío | Fichero o directorio de logs de IIS. La sección `logs` no genera módulos sin él. |
 | `-LogFormat` | No | `auto` | Formato del log: `auto`, `W3C`, `IIS` o `NCSA`. |
 | `-EventLogs` | No | `System` | Registros de eventos que se leen, separados por comas. |
 | `-EventProviders` | No | `W3SVC,WAS,APPHOSTSVC,IISReset,WMSVC,Microsoft-Windows-IIS-W3SVC,Microsoft-Windows-IIS-APPHOSTSVC,Microsoft-Windows-HttpService` | Proveedores de eventos por los que filtrar, separados por comas. |
@@ -347,7 +363,7 @@ opcional.
 | `-RequestTimeout` | No | `10` | Tiempo de espera de las peticiones URL en segundos. |
 | `-MaxLinesPerLog` | No | `5000` | Número máximo de líneas de log procesadas por fichero y ejecución. |
 | `-MaxBytesPerLog` | No | `8388608` | Número máximo de bytes de log procesados por fichero y ejecución. |
-| `-All` | No | Desactivado | Habilita todas las secciones. |
+| `-All` | No | Desactivado | Habilita todas las secciones. `urls` y `logs` siguen necesitando `-UrlList` y `-LogPath` para generar módulos. |
 | `-Debug` | No | Desactivado | Escribe información de depuración en el flujo de error. |
 | `-Help` | No | Desactivado | Imprime el texto de ayuda y termina. |
 
