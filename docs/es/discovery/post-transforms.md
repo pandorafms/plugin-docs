@@ -37,19 +37,28 @@ asistente. NGINX es el primer plugin que lo implementa.
    grupo por nombre en la ingesta: un grupo que no existe en la gestión de
    grupos de módulo no se aplica. Verificado contra un stack real.
 2. **Los tags deben existir antes de la ejecución.** `set_tags` transporta
-   una lista de nombres de tag separados por comas; los tags del módulo se
-   relacionan en la creación del módulo solo cuando cada tag existe ya en
-   la gestión de tags. Verificado: una ejecución con tags inexistentes no
-   creó relaciones de tag; tras crear los tags y reejecutar, ambos tags se
-   relacionaron. **Los tags se relacionan solo por el camino de ingesta XML
-   (tentacle)**: observado contra un stack real, la ingesta nativa (JSON)
-   de Discovery transporta el campo tags en el payload pero no crea las
-   relaciones tag-módulo, mientras que los umbrales y el grupo de módulo sí
-   se aplican. Usa el modo de transferencia tentacle cuando las relaciones
-   de tags importen.
-3. **Plantillas de alerta:** `set_alert_template` referencia una plantilla
-   por nombre; la resolución del nombre de la plantilla en el servidor no
-   está aún validada.
+   una lista de nombres de tag separados por comas; los tags se relacionan
+   en la creación del módulo solo cuando cada tag existe ya en la gestión
+   de tags. Verificado: una ejecución con tags inexistentes no creó
+   relaciones de tag; tras crear los tags y reejecutar, ambos tags se
+   relacionaron.
+3. **Los tags y las plantillas de alerta se aplican solo al crear el
+   módulo.** La ingesta — común a los caminos nativo JSON y tentacle XML,
+   ambos atendidos por la misma función del servidor — relaciona tags y
+   plantillas de alerta únicamente en la rama de creación del módulo. Si
+   el módulo ya existe de una ejecución anterior, las ejecuciones
+   posteriores actualizan umbrales, grupo de módulo y el resto de campos
+   de configuración, pero nunca añaden relaciones de tags ni plantillas
+   de alerta de forma retroactiva. Verificado en el código del servidor
+   (`DataServer::process_module_data`: el bloque de tags y plantillas
+   está solo en la rama de creación) y contra un stack real. Para
+   obtener tags o plantillas de alerta en módulos creados antes de que
+   existiera la regla, borra los módulos — o los agentes, dejando que la
+   tarea los recree — y vuelve a ejecutar la tarea.
+4. **Plantillas de alerta:** `set_alert_template` referencia una plantilla
+   por nombre; el servidor resuelve el nombre en la misma rama de solo
+   creación (verificado en código en `DataServer::process_module_data`;
+   aún no ejercido end-to-end).
 
 ## Configurar la tarea de Discovery
 

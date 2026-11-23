@@ -35,17 +35,26 @@ NGINX is the first plugin that implements it.
    name at ingestion: a group that does not exist in module group management
    is not applied. Verified against a live stack.
 2. **Tags must exist before the run.** `set_tags` carries a
-   comma-separated list of tag names; module tags are related on module
-   creation only when each tag already exists in tag management. Verified:
-   a run with non-existent tags created no tag relations; after creating
-   the tags and re-running, both tags were related. **Tags are related by
-   the XML (tentacle) ingestion path only**: observed against a live
-   stack, the native (JSON) Discovery ingestion travels the tag field in
-   the payload but does not create tag-module relations, while
-   thresholds and module group do apply. Use the tentacle transfer mode
-   when tag relations matter.
-3. **Alert templates:** `set_alert_template` references a template by name;
-   server-side resolution of the template name is not yet validated.
+   comma-separated list of tag names; tags are related on module creation
+   only when each tag already exists in tag management. Verified: a run
+   with non-existent tags created no tag relations; after creating the
+   tags and re-running, both tags were related.
+3. **Tags and alert templates are applied only when the module is
+   created.** The ingestion — common to the native JSON and tentacle XML
+   paths, both handled by the same server function — relates tags and
+   alert templates in the module-creation branch only. If the module
+   already exists from an earlier run, later runs update thresholds,
+   module group and the other configuration fields, but never add tag
+   relations or alert templates retroactively. Verified in the server
+   source (`DataServer::process_module_data`: the tags/alert-template
+   block sits in the creation branch only) and against a live stack. To
+   get tags or alert templates onto modules created before the rule
+   existed, delete the modules — or the agents, letting the task
+   recreate them — and run the task again.
+4. **Alert templates:** `set_alert_template` references a template by name;
+   the server resolves the name in the same creation-only branch
+   (code-verified in `DataServer::process_module_data`; not yet exercised
+   end-to-end).
 
 ## Configure the Discovery task
 
