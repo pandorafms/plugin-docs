@@ -1,6 +1,6 @@
 # Grafana
 
-*Última actualización del artículo: 2026-10-26.*
+*Última actualización del artículo: 2026-11-19.*
 
 ## Qué hace
 
@@ -15,7 +15,9 @@ Los datos proceden de la **extensión API de Grafana de la consola de Pandora
 FMS**, situada en `pandora_console/extensions/grafana`. El addon guarda la URL
 base de esa extensión y un usuario y una contraseña de Pandora FMS, pide a la
 extensión los grupos, agentes y módulos que ese usuario puede ver, y después
-solicita los valores de un módulo para el rango de tiempo de cada panel.
+solicita los valores de un módulo para el rango de tiempo de cada panel. De forma
+opcional, también representa los umbrales de aviso y crítico configurados en el
+módulo como series constantes adicionales.
 
 Dos rutas de ejecución usan el origen de datos configurado:
 
@@ -34,8 +36,8 @@ Dos rutas de ejecución usan el origen de datos configurado:
 |--------|--------|-----------|
 | Pandora FMS NG 784 y posteriores | `Soportado` | El Marketplace indica que sus integraciones son compatibles con Pandora FMS NG 784 y versiones posteriores |
 | Grafana `10.0.3` o posterior | `Requerido` | El plugin declara `grafanaDependency` `>=10.0.3` |
-| Una consola nodo de Pandora FMS con la extensión API de Grafana disponible | `Requerido` | El addon añade `/search` y `/query` a la URL configurada de la extensión, y la extensión responde `403` en una metaconsola |
-| Un usuario de Pandora FMS con el privilegio de lectura de agentes (`AR`) | `Requerido` | Ambos puntos de la extensión comprueban ese privilegio antes de devolver ningún grupo |
+| Una consola nodo de Pandora FMS con la extensión API de Grafana disponible | `Requerido` | El addon añade `/search`, `/query` y `/thresholds` a la URL configurada de la extensión, y la extensión responde `403` en una metaconsola |
+| Un usuario de Pandora FMS con el privilegio de lectura de agentes (`AR`) | `Requerido` | Los tres puntos de entrada comprueban ese privilegio antes de devolver datos |
 | Versiones de Grafana posteriores al mínimo declarado | `Sin validar` | No hay una matriz de versiones de Grafana registrada para este addon |
 | Sistema operativo del host de Grafana | `Sin validar` | El addon se ejecuta dentro de Grafana; no hay un sistema operativo registrado |
 
@@ -82,7 +84,7 @@ versiones.
 
 ### Instalar el origen de datos
 
-1. Descargue `pandorafms.grafana.1.0.zip` desde la
+1. Descargue `pandorafms.grafana.1.1.zip` desde la
    [entrada del Marketplace](https://marketplace.pandorafms.com/entries/pandorafms.grafana).
    La descarga está limitada a usuarios con licencia.
 2. Extraiga el archivo dentro del directorio de plugins de Grafana, de forma que
@@ -90,7 +92,7 @@ versiones.
 
 ```bash
 cd /var/lib/grafana/plugins
-sudo unzip /path/to/pandorafms.grafana.1.0.zip
+sudo unzip /path/to/pandorafms.grafana.1.1.zip
 ```
 
 3. Reinicie Grafana para que cargue el plugin.
@@ -125,7 +127,7 @@ y **Pandorafms Grafana** no aparece en la lista de orígenes de datos.
 
 | Campo | Obligatorio | Por defecto | Descripción |
 |-------|-------------|-------------|-------------|
-| **Pandora extension** | Sí | — | URL base de la extensión API de Grafana de Pandora FMS, con el esquema y sin barra final ni sufijo de punto de entrada: `https://<PANDORA_FMS_URL>/pandora_console/extensions/grafana`. El addon añade `/search` y `/query`. |
+| **Pandora extension** | Sí | — | URL base de la extensión API de Grafana de Pandora FMS, con el esquema y sin barra final ni sufijo de punto de entrada: `https://<PANDORA_FMS_URL>/pandora_console/extensions/grafana`. El addon añade `/search`, `/query` y `/thresholds`. |
 | **Pandora user** | Sí | — | Usuario de Pandora FMS con el privilegio `AR`. Todos los usuarios de Grafana consultan con esta identidad. |
 | **Password** | Sí | — | Contraseña de ese usuario. Se guarda en los ajustes JSON del origen de datos, no en los campos seguros cifrados de Grafana, porque el navegador la envía en cada petición. |
 
@@ -157,6 +159,7 @@ Notas:
 |-------|-------------|-------------|
 | **Label** | Vacío | No se usa. El addon no lo envía, y la serie conserva el nombre del módulo. |
 | **Tip** | Desmarcado | Conmutador de escala completa. Marcado, Pandora FMS devuelve las muestras almacenadas. Desmarcado, devuelve valores compactados (medias) y el nombre de la serie termina en ` (avg)`. |
+| **Thresholds** | Desmarcado | Añade los umbrales de aviso y crítico configurados en el módulo como series constantes. Desmarcado, la consulta devuelve solo los valores del módulo, como antes. |
 | **Group** | Vacío | Restringe la lista de agentes. `All` (valor `0`) enumera todos los agentes. Solo aparecen los grupos en los que el usuario del origen de datos tiene `AR`. |
 | **Agent** | Vacío | Restringe la lista de módulos a los agentes habilitados del grupo seleccionado; con `All`, a todos los agentes habilitados. |
 | **Module** | Vacío | Módulo que se representa: módulos habilitados y no de cadena del agente seleccionado. La petición lleva el identificador del módulo. |
@@ -168,14 +171,38 @@ Notas:
   que se elige uno nuevo, así que vuelva a seleccionar el módulo después de
   restringir las listas.
 - Cada cambio en el editor recarga las tres listas completas, y un cambio de
-  **Tip**, **Group**, **Agent** o **Module** ejecuta además la consulta. En
-  instalaciones con muchos grupos, agentes o módulos esto hace más lento el
-  editor.
+  **Tip**, **Thresholds**, **Group**, **Agent** o **Module** ejecuta además la
+  consulta. En instalaciones con muchos grupos, agentes o módulos esto hace más
+  lento el editor.
 - El origen de datos devuelve valores numéricos sin metadatos de unidad. Fije la
   unidad del panel según el módulo.
 - Para comparar módulos, añada una consulta por módulo al mismo panel.
 
-<!-- SCREENSHOT NEEDED: Editor de consulta de un panel de Grafana con el origen de datos Pandorafms Grafana y los campos Label, Tip, Group, Agent y Module con valores de laboratorio. -->
+#### Mostrar los umbrales del módulo
+
+Marque **Thresholds** para recibir los límites de aviso y crítico configurados en
+el módulo. El origen de datos los solicita al punto de entrada `/thresholds` de
+la extensión y añade una serie constante por cada límite configurado:
+
+| Serie | Valor | Color predeterminado |
+|-------|-------|----------------------|
+| `<refId> warning min` | `min_warning` | Amarillo |
+| `<refId> warning max` | `max_warning` | Amarillo |
+| `<refId> critical min` | `min_critical` | Rojo |
+| `<refId> critical max` | `max_critical` | Rojo |
+
+Un límite con valor `0` o vacío no se dibuja: en Pandora FMS esos valores
+significan que el límite no está configurado. Por eso un módulo que solo tiene
+límites mínimos añade únicamente las dos series mínimas. Las series de umbral
+tienen un valor constante en todo el rango del panel y aparecen en la leyenda
+como cualquier otra serie, así que se pueden estilizar, ocultar o sobrescribir
+con las opciones de campo del panel.
+
+El punto de entrada `/thresholds` forma parte de la extensión API de Grafana de
+la consola. Si la extensión de la consola no lo proporciona, los valores del
+módulo siguen funcionando y no se añaden series de umbral.
+
+<!-- SCREENSHOT NEEDED: Editor de consulta de un panel de Grafana con el origen de datos Pandorafms Grafana y los campos Label, Tip, Thresholds, Group, Agent y Module con valores de laboratorio. -->
 
 ### Reglas de alerta
 
@@ -246,6 +273,13 @@ Si la comprobación de la extensión funciona y el panel sigue sin datos, lea
 - **Los periodos desconocidos son huecos.** Cuando Pandora FMS no tiene valor, o
   marca los datos del módulo como desconocidos, el punto es nulo y el panel
   dibuja un hueco en lugar de un cero.
+- **Los umbrales son series constantes adicionales.** Con **Thresholds** marcado,
+  cada límite de aviso o crítico configurado se convierte en una serie aparte con
+  el nombre de la consulta (`A warning min`, `A critical min`, etc.) y un valor
+  constante en todo el rango. El addon no aplica las bandas de umbral nativas de
+  Grafana; use las opciones de campo y la visibilidad de series del panel para
+  estilizar u ocultar las líneas. Un módulo sin límites configurados no añade
+  series adicionales.
 - **Solo módulos numéricos.** El selector de módulos excluye los módulos de
   cadena, así que no se pueden representar con este origen de datos. Los agentes
   y módulos deshabilitados también quedan fuera de los selectores.
@@ -299,9 +333,10 @@ Si la comprobación de la extensión funciona y el panel sigue sin datos, lea
 | El panel muestra **No data** | No hay valores almacenados en el rango de tiempo, el módulo es de cadena, o quedó seleccionado un módulo de un agente anterior. Vuelva a seleccionar el módulo y amplíe el rango |
 | La consola del navegador muestra un error CORS | **Grafana Access-Control-Allow-Origin** no coincide con el origen de Grafana, o la URL de la extensión es `http` mientras Grafana es `https` |
 | La extensión responde `403` | La URL apunta a un nodo de metaconsola; use la consola nodo |
-| La extensión responde `404` | Ruta incorrecta (debe terminar en `/pandora_console/extensions/grafana`), directorio de la extensión ausente, o un servidor web que no aplica las reglas de reescritura que resuelven `/search` y `/query` |
+| La extensión responde `404` | Ruta incorrecta (debe terminar en `/pandora_console/extensions/grafana`), directorio de la extensión ausente, o un servidor web que no aplica las reglas de reescritura que resuelven `/search`, `/query` y `/thresholds` |
 | **Pandorafms Grafana** no aparece en la lista de orígenes de datos | La carpeta del plugin no está en el directorio de plugins, `allow_loading_unsigned_plugins` no incluye el identificador, o Grafana no se reinició |
 | El nombre de la serie termina en ` (avg)` | **Tip** está desmarcado; márquelo para recibir las muestras originales |
+| Las series de umbral no aparecen | **Thresholds** está desmarcado, el módulo no tiene límites de aviso ni crítico configurados, todos sus límites son `0`, o la extensión de la consola no proporciona el punto de entrada `/thresholds` |
 | Una regla de alerta no devuelve datos | Véase [Limitaciones](#limitaciones): la ruta de evaluación del lado del servidor no usa los datos de conexión guardados en el formulario |
 
 ### Limitaciones
@@ -326,6 +361,11 @@ Si la comprobación de la extensión funciona y el panel sigue sin datos, lea
   ven los mismos datos.
 - **Los módulos de cadena no se pueden representar** y no se ofrecen en el
   selector de módulos.
+- **Los umbrales son series, no bandas de umbral.** Con **Thresholds** marcado el
+  addon añade una serie constante por cada límite configurado distinto de cero.
+  No sombrea las áreas entre límites ni aplica el estilo nativo de umbrales de
+  Grafana; use las sobrescrituras de campo y la visibilidad de series del panel
+  para ajustar las líneas.
 - **Los selectores cargan listas completas.** El addon no envía ningún filtro
   de texto: las listas de grupos, agentes y módulos se descargan enteras cada
   vez que cambia el editor, y Grafana las filtra en el navegador.
@@ -336,7 +376,7 @@ Si la comprobación de la extensión funciona y el panel sigue sin datos, lea
 
 | Ajuste | Obligatorio | Por defecto | Descripción |
 |--------|-------------|-------------|-------------|
-| **Pandora extension** | Sí | — | URL base de la extensión, con esquema: `https://<PANDORA_FMS_URL>/pandora_console/extensions/grafana`. Sin barra final y sin sufijo `/search` ni `/query` |
+| **Pandora extension** | Sí | — | URL base de la extensión, con esquema: `https://<PANDORA_FMS_URL>/pandora_console/extensions/grafana`. Sin barra final y sin sufijo `/search`, `/query` ni `/thresholds` |
 | **Pandora user** | Sí | — | Usuario de Pandora FMS con el que consulta cada petición |
 | **Password** | Sí | — | Contraseña de ese usuario, guardada en los ajustes JSON del origen de datos |
 
@@ -346,24 +386,29 @@ Si la comprobación de la extensión funciona y el panel sigue sin datos, lea
 |-------|-------------|-------------|
 | **Label** | Vacío | No se usa |
 | **Tip** | Desmarcado | Marcado: muestras originales. Desmarcado: medias compactadas con el sufijo ` (avg)` en la serie |
+| **Thresholds** | Desmarcado | Marcado: añade los límites de aviso y crítico del módulo como series constantes. Desmarcado: solo los valores del módulo |
 | **Group** | Vacío | Filtro de grupo para la lista de agentes; `All` es el valor `0` |
 | **Agent** | Vacío | Filtro de agente para la lista de módulos |
 | **Module** | Vacío | Identificador de módulo que se envía a la extensión |
 
 ### Puntos de entrada de la extensión
 
-El addon usa dos puntos de entrada relativos a la URL base configurada. Ambos
+El addon usa tres puntos de entrada relativos a la URL base configurada. Todos
 aceptan autenticación básica HTTP y devuelven JSON.
 
 | Punto de entrada | Propósito | Cuerpo de la petición | Respuesta |
 |------------------|-----------|-----------------------|-----------|
 | `<extension>/search` | Listas de grupos, agentes y módulos | `{"type":"group"}`, `{"type":"agent","extra":"<group-id>"}` o `{"type":"module","extra":"<agent-id>"}` | Array de `{"value": <id>, "text": "<name>"}`; los grupos incluyen `{"value":0,"text":"All"}` |
 | `<extension>/query` | Valores de un módulo para un rango de tiempo | `{"targets":[{"target":{"agent":"<agent-id>","module":"<module-id>","tip":<boolean>}}],"range":{"from":"<date>","to":"<date>"}}` | Array de objetos con el nombre de la serie en `target` y pares de `[<value>, <timestamp en milisegundos>]` en `datapoints` |
+| `<extension>/thresholds` | Límites de aviso y crítico de un módulo | `{"module":"<module-id>"}` | Objeto con `min_warning`, `max_warning`, `min_critical` y `max_critical`; los límites no configurados son `null` |
 
 En `/query` solo se leen `module` y `tip`: el nombre de la serie es el nombre del
 módulo que informa Pandora FMS, y el valor del agente se ignora. Las fechas se
 aceptan en cualquier formato que Pandora FMS pueda interpretar, por ejemplo
 ISO 8601.
+
+En `/thresholds` solo se lee `module`. El punto de entrada exige un usuario de
+Pandora FMS con el privilegio `AR`, igual que los otros dos.
 
 ### Identidad del addon
 
@@ -371,7 +416,7 @@ ISO 8601.
 |-----------|-------|
 | Identificador del Marketplace | `pandorafms.grafana` |
 | Nombre | Grafana |
-| Versión | `1.0` — la versión del paquete del Marketplace `pandorafms.grafana.1.0.zip` |
+| Versión | `1.1` — la versión del paquete del Marketplace `pandorafms.grafana.1.1.zip` |
 | Identificador del plugin de origen de datos | `pandorafms-pandorafmsgrafana-datasource`, el valor que exige `allow_loading_unsigned_plugins` |
 | Categoría | Miscelaneus |
 | Licencia | One — la descarga está limitada a usuarios con licencia |
