@@ -38,7 +38,12 @@ NGINX is the first plugin that implements it.
    comma-separated list of tag names; module tags are related on module
    creation only when each tag already exists in tag management. Verified:
    a run with non-existent tags created no tag relations; after creating
-   the tags and re-running, both tags were related.
+   the tags and re-running, both tags were related. **Tags are related by
+   the XML (tentacle) ingestion path only**: observed against a live
+   stack, the native (JSON) Discovery ingestion travels the tag field in
+   the payload but does not create tag-module relations, while
+   thresholds and module group do apply. Use the tentacle transfer mode
+   when tag relations matter.
 3. **Alert templates:** `set_alert_template` references a template by name;
    server-side resolution of the template name is not yet validated.
 

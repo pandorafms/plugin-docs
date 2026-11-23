@@ -41,7 +41,12 @@ asistente. NGINX es el primer plugin que lo implementa.
    relacionan en la creación del módulo solo cuando cada tag existe ya en
    la gestión de tags. Verificado: una ejecución con tags inexistentes no
    creó relaciones de tag; tras crear los tags y reejecutar, ambos tags se
-   relacionaron.
+   relacionaron. **Los tags se relacionan solo por el camino de ingesta XML
+   (tentacle)**: observado contra un stack real, la ingesta nativa (JSON)
+   de Discovery transporta el campo tags en el payload pero no crea las
+   relaciones tag-módulo, mientras que los umbrales y el grupo de módulo sí
+   se aplican. Usa el modo de transferencia tentacle cuando las relaciones
+   de tags importen.
 3. **Plantillas de alerta:** `set_alert_template` referencia una plantilla
    por nombre; la resolución del nombre de la plantilla en el servidor no
    está aún validada.
