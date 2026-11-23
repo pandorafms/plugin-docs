@@ -18,7 +18,7 @@ Una extensión de consola complementaria, **Dashboard Citrix NetScaler**, presen
 
 | Ámbito | Estado | Evidencia |
 | --- | --- | --- |
-| Versión del plugin `1.0` (`pandorafms.citrix_netscaler`) | Objetivo documentado | La versión que describe esta página, identificada por la definición del paquete. Véase [Identidad del plugin](#identidad-del-plugin). |
+| Versión del plugin `1.0` (`pandorafms.citrix.netscaler`) | Objetivo documentado | La versión que describe esta página, identificada por la definición del paquete. Véase [Identidad del plugin](#identidad-del-plugin). |
 | Un appliance Citrix NetScaler ADC con la API de estadísticas NITRO accesible por HTTP o HTTPS | `Requerido` | El addon lee los objetos de estadísticas de cada appliance configurado a través de la API REST NITRO. Es un requisito previo, no una declaración de compatibilidad. |
 | Una credencial con acceso de lectura a la API de estadísticas NITRO | `Requerido` | El addon se autentica contra la API NITRO y solo lee estadísticas. Es un requisito previo, no una declaración de compatibilidad. |
 | Un modelo o versión de firmware concreta de Citrix NetScaler | `No validado` | Ningún registro de pruebas publicado establece una matriz de compatibilidad de modelo o firmware para esta versión. |
@@ -170,7 +170,7 @@ Con **Enable debug** activado, el addon escribe `pandora_citrix_netscaler_debug.
 
 | Campo | Valor |
 | --- | --- |
-| Nombre corto | `pandorafms.citrix_netscaler` |
+| Nombre corto | `pandorafms.citrix.netscaler` |
 | Nombre mostrado | Citrix NetScaler |
 | Versión | `1.0` |
 | Sección | Applications |
