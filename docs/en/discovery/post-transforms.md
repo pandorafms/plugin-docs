@@ -94,10 +94,12 @@ Semantics:
 
 ## Understand the results
 
-The wizard delivers the textarea as its own rules file to the plugin. The
-plugin loads and validates every rule once, before collecting anything.
-Invalid rules are skipped and reported — never fatal: the monitoring run
-continues with the valid rules.
+The wizard delivers the textarea as its own rules file to the plugin. A
+missing, empty or comments-only file is the not-configured case: the
+feature stays off, silently, with a clean run. The plugin loads and
+validates every rule once, before collecting anything. Invalid rules are
+skipped and reported — never fatal: the monitoring run continues with the
+valid rules.
 
 Valid rules are applied over the **complete** collected structure, once it
 is finished and before it is serialized: over the whole monitoring payload
@@ -117,7 +119,6 @@ the run) is available to every rule.
 | Numeric thresholds on a text module | Numeric thresholds belong to numeric module types | Set `str_warning`/`str_critical` for string modules |
 | Tags are not related to the module | The tags did not exist at run time | Create the tags in tag management and re-run; verified behavior |
 | Module group not applied | The group does not exist | Create the group in module group management |
-| `post transforms file ... does not exist` | The rules file path is wrong (manual runs) | Check the `--post_transforms_conf` path |
 
 ## Reference
 
@@ -216,6 +217,6 @@ Every error names its block (and line when known) and ends with
 - `missing transform_end` — rule not closed.
 - `content outside a transform block` — stray text between rules.
 
-A rules file that does not exist is reported the same way
-(`post transforms file ... does not exist`); in all cases the monitoring
-run continues and finishes with a non-zero error level.
+A missing, empty or comments-only rules file is the **not-configured
+case**: silently ignored, exit 0, monitoring as usual. Errors — and a
+non-zero error level — come only from malformed rule content.

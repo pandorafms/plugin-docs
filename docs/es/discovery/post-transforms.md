@@ -103,7 +103,9 @@ Semántica:
 ## Entender los resultados
 
 El asistente entrega el textarea como su propio fichero de reglas al
-plugin. El plugin carga y valida todas las reglas una sola vez, antes de
+plugin. Un fichero inexistente, vacío o solo con comentarios es el caso no
+configurado: la funcionalidad queda apagada en silencio, con una ejecución
+limpia. El plugin carga y valida todas las reglas una sola vez, antes de
 recolectar nada. Las reglas inválidas se saltan y se reportan — nunca son
 fatales: la ejecución continúa con las reglas válidas.
 
@@ -125,7 +127,6 @@ módulos de la ejecución está disponible para cada regla.
 | Umbrales numéricos en un módulo de cadena | Los umbrales numéricos pertenecen a tipos de módulo numéricos | Usa `str_warning`/`str_critical` para módulos de cadena |
 | Los tags no se relacionan con el módulo | Los tags no existían en el momento de la ejecución | Crea los tags en la gestión de tags y reejecuta; comportamiento verificado |
 | El grupo de módulo no se aplica | El grupo no existe | Crea el grupo en la gestión de grupos de módulo |
-| `post transforms file ... does not exist` | La ruta al fichero de reglas es errónea (ejecuciones manuales) | Revisa la ruta de `--post_transforms_conf` |
 
 ## Referencia
 
@@ -227,7 +228,7 @@ Cada error indica su bloque (y su línea cuando se conoce) y termina con
 - `missing transform_end` — regla sin cerrar.
 - `content outside a transform block` — texto suelto entre reglas.
 
-Un fichero de reglas inexistente se reporta igual
-(`post transforms file ... does not exist`); en todos los casos la
-monitorización continúa y la ejecución termina con nivel de error distinto
-de cero.
+Un fichero de reglas inexistente, vacío o solo con comentarios es el **caso
+no configurado**: se ignora en silencio, exit 0, monitorización normal. Los
+errores — y el nivel de error distinto de cero — vienen solo de contenido
+de reglas malformado.
