@@ -62,12 +62,16 @@ asistente. NGINX es el primer plugin que lo implementa.
 
 ## Configurar la tarea de Discovery
 
-Cada plugin compatible expone un textarea **Post transforms** en el paso
-avanzado del asistente. Escribe una regla por bloque; los bloques se
-aplican en orden.
+Cada plugin compatible expone un interruptor **Show post-transform rules**
+en el paso avanzado del asistente. El interruptor es puramente visual: las
+reglas guardadas en la tarea se aplican en cada ejecución
+independientemente de él; para desactivarlas, vacía las reglas (o
+mantenlas comentadas). Al marcarlo se revela el textarea de reglas, que
+llega prellenado con una guía de definición comentada: quita el `#`
+inicial de las líneas de ejemplo para aplicarlas, y escribe una regla por
+bloque; los bloques se aplican en orden.
 
-`SCREENSHOT NEEDED`: campo Post transforms en el asistente de la tarea de
-Discovery.
+![Reglas de post-transform reveladas en el asistente de la tarea de Discovery](../assets/images/discovery/post-transforms/wizard-revealed.png)
 
 Ejemplo — avisar cuando las conexiones activas pasan de cien, sin límite
 superior:

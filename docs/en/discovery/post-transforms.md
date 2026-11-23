@@ -58,10 +58,15 @@ NGINX is the first plugin that implements it.
 
 ## Configure the Discovery task
 
-Every supporting plugin exposes a **Post transforms** textarea in the
-wizard's advanced step. Write one rule per block; blocks apply in order.
+Every supporting plugin exposes a **Show post-transform rules** switch in
+the wizard's advanced step. The switch is purely visual — rules saved in
+the task apply on every run regardless of it; clear the rules (or keep
+them commented) to disable them. Checking it reveals the rules textarea,
+which comes pre-filled with a commented definition guide: remove the
+leading `#` of the example lines to apply them, and write one rule per
+block; blocks apply in order.
 
-`SCREENSHOT NEEDED`: Post transforms field in the Discovery task wizard.
+![Post-transform rules revealed in the Discovery task wizard](../assets/images/discovery/post-transforms/wizard-revealed.png)
 
 Example — warn when active connections pass one hundred, unbounded above:
 
