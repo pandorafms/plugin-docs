@@ -72,7 +72,7 @@ match_module         .*Active_connections.*
 set_min_warning      100
 set_max_critical     0
 set_module_group     Application
-set_tags             infra:nginx,team:web
+set_tags             critical
 transform_end
 ```
 
