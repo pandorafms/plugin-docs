@@ -24,7 +24,7 @@ NGINX is the first plugin that implements it.
 
 | Scope | State | Evidence |
 |-------|-------|----------|
-| `pandora-plugintools-basic` `1.2.0` (Python engine) | `Tested` | Block parser, typed whitelist, both output paths and the report-and-continue error behavior, exercised end-to-end against a Pandora FMS stack. PyPI release pending; verification ran against the 1.2.0 development checkout |
+| `pandoraPlugintools-basic` `1.2.0` (Python engine) | `Tested` | Released on PyPI (2026-11-23). Block parser, typed whitelist, both output paths and the report-and-continue error behavior, exercised end-to-end against a Pandora FMS stack; the NGINX package compiled from the requirement against the released artifact passes the same checks |
 | `pandoraplugintools-go` (Go engine) | `Tested` | Cross-checked against the Python engine through the shared parity harness (15/15 scenarios, including a partially invalid rules file) |
 | Plugin exposing the Post transforms field | `Required` | NGINX `1.1` (pending release) is the first implementation |
 | RE2-compatible patterns | `Required` | The Go engine uses RE2: rules must avoid backreferences and lookaround to behave identically in both engines |
