@@ -1,6 +1,6 @@
 # Autodiscover
 
-*Article last updated: 2026-10-05.*
+*Article last updated: 2026-11-19.*
 
 ## What it does
 
@@ -23,6 +23,11 @@ about the health of the whole endpoint.
 - **Result.** One `generic_proc` status module per service that exists in the service manager and
   matches the active list: `1` while the service is running and `0` while it is stopped or inactive.
   A name of the list that does not exist on the endpoint produces no module at all.
+- **Units that are not installed.** systemd can list a unit that has no unit file behind it when
+  another unit references its name; the plugin calls these ghost units. `--default` ignores them, so
+  the built-in list never reports a service the endpoint does not have. `--list` reports them as `0`
+  unless `--skip-not-found` is set, because a name you asked for and that is gone is the alert you
+  want. See [Units that are not installed](#units-that-are-not-installed).
 - **Optional usage.** With `--usage`, the plugin also adds a CPU usage module and a memory usage
   module for each running service whose process can be resolved and whose usage is greater than
   zero.
@@ -37,8 +42,9 @@ about the health of the whole endpoint.
 
 | Scope | State | Evidence |
 |-------|-------|----------|
-| Plugin version `2.1` | Documented target | The version this page describes |
+| Plugin version `2.2` | Documented target | The version this page describes |
 | Linux with systemd | `Tested` | Exercised on Fedora 44 (systemd 259) and Rocky Linux 10.2 (systemd 257): built-in list, custom lists, exclusions, verbose diagnostics and `oneshot` filtering |
+| Linux with systemd, units that are not installed | `Tested` | Exercised on CachyOS (systemd 262): ghost units dropped by `--default` and by `--list --skip-not-found`, while a loaded but inactive unit still reported `0` |
 | Linux without systemd (SysV) | `Not validated` | No SysV-only host has been recorded |
 | Windows (Service Control Manager, amd64) | `Tested` | Exercised on Windows 11: built-in list, substring and exact matching, exclusions, `.service` suffix, three-character rule and `--usage` |
 | Windows service names shorter than three characters | `Required` | The plugin discards list entries under three characters on Windows, see [Matching rules](#matching-rules) |
@@ -117,6 +123,9 @@ module_plugin autodiscover --list "apache.*,php[0-9.]*-fpm" --exact-match
   matches exactly.
 - **`--skip-oneshot`** (Linux with systemd only) ignores units whose type is `oneshot`. Such units
   run once and stay inactive by design, so their status module would be permanently `0`.
+- **`--skip-not-found`** (Linux with systemd only) ignores ghost units: units that systemd lists
+  although they have no unit file, because another unit references their name. `--default` applies
+  this filter always; use the flag to get the same result with `--list`.
 - **`-v`, `--verbose`** reports the diagnostics described in
   [Diagnostics](#diagnostics) on standard error. It never changes the exit code, so it is safe to
   leave enabled while tuning a list.
@@ -127,8 +136,10 @@ module_plugin autodiscover --list "apache.*,php[0-9.]*-fpm" --exact-match
   wins** and the later actions do not run. The value of `--list` and `--exclude` is checked even when
   the action does not win, so `--default --list` fails instead of running `--default`. Add
   `--exclude`, never a second action, to narrow a selection.
-- `--usage`, `--exact-match`, `--skip-oneshot`, `-v` and `--exclude` are not actions, so they can
-  appear in any position and combine freely.
+- `--usage`, `--exact-match`, `--skip-oneshot`, `--skip-not-found`, `-v` and `--exclude` are not
+  actions, so they can appear in any position and combine freely.
+- `--default` turns on exact matching and the ghost-unit filter on its own; neither can be disabled.
+  With `--list`, `--exact-match` and `--skip-not-found` are the opt-in equivalents.
 - A `--list` or `--exclude` without a value, or with a value that starts with `-`, is rejected: the
   plugin prints the error and the help screen.
 - An unknown parameter is reported and followed by the help screen. The exit code stays `0` for
@@ -175,13 +186,31 @@ Every service of the active list that exists in the service manager produces one
 - **A `0` is not necessarily a problem.** The status is `1` only while the service is running. A
   stopped service and an inactive unit produce `0`, and the module stays in Pandora FMS until it is
   deleted. A service that is not installed produces no module, so a name of the list with no module
-  of its own is simply absent from the endpoint.
+  of its own is simply absent from the endpoint; the exception is the ghost unit, see
+  [Units that are not installed](#units-that-are-not-installed).
 - **The usage modules are conditional.** They are emitted only for a running service whose process
   can be resolved and whose CPU or memory usage is greater than zero, so a first run may produce the
   status module alone.
 - **How the status is read.** On systemd the unit is running when its `active` state is `active`; the
   plugin lists every unit, including inactive ones. With SysV the `service <name> status` output is
   read for `is running` / `is stopped`. On Windows the Service Control Manager report is used.
+
+### Units that are not installed
+
+On systemd, the unit listing also contains names that have no unit file behind them: systemd
+materializes them when another unit references the name. For example, `chronyd.service` carries
+`Conflicts=ntpd.service`, so on a host where only chrony is installed `ntpd.service` is listed as
+`not-found inactive dead`. Such a unit can never become active, so a status module built on it would
+be a permanent `0` that looks like a stopped service on a freshly installed machine.
+
+- **`--default` ignores them**, so the built-in list never reports a service the endpoint does not
+  have.
+- **`--list` keeps them**, because a name you explicitly asked for and that is gone is exactly the
+  alert you want. Add `--skip-not-found` to get the same filter there.
+- **A loaded but inactive unit is always reported.** An installed service that is merely stopped
+  keeps its load state `loaded`, so a real service that goes down still turns red.
+- **An entry that only matched a ghost is not reported as matched.** With `-v`, a `--list` entry that
+  selected nothing but a ghost is listed as matching no service.
 
 ## Operate and troubleshoot
 
@@ -204,6 +233,8 @@ autodiscover: warning: entry "nope" matched no service
   have.
 - On Windows, list entries under three characters are reported as discarded.
 - A `--skip-oneshot` run whose unit types could not be read reports that the filter was ignored.
+- With `--skip-not-found`, or with `--default`, a `--list` entry that only matched a ghost unit is
+  reported as matching no service.
 
 ### Execution limits
 
@@ -226,7 +257,11 @@ autodiscover: warning: entry "nope" matched no service
   and confirm it with `-v`.
 - **A status module is permanently `0`.** The service is stopped or inactive, or the unit is of type
   `oneshot`. Use `--skip-oneshot` to drop the last case. A service that is not installed produces no
-  module at all, so a missing module is not a status of `0`.
+  module at all, so a missing module is not a status of `0`, while a ghost unit keeps reporting `0`
+  with `--list`.
+- **A service the endpoint does not have appears in red with `--list`.** systemd lists a ghost unit
+  for a name another unit references, and `--list` reports it as `0` on purpose. Add
+  `--skip-not-found`, or state the requirement precisely with `--exact-match` and `--exclude`.
 - **Services you did not ask for appear.** A `--list` entry is a substring or a regular expression
   unless `--exact-match` is used, so `httpd` also selects `httpd-init` on a Linux systemd host, and
   `Spool` also selects `Spooler` on Windows. Add `--exact-match`, or narrow the pattern.
@@ -244,11 +279,12 @@ autodiscover: warning: entry "nope" matched no service
 
 | Name | Value | Required | Default | Description |
 |------|-------|----------|---------|-------------|
-| `--default` | — | One action is required | — | Monitors the built-in list of the platform, matched exactly |
+| `--default` | — | One action is required | — | Monitors the built-in list of the platform, matched exactly and ignoring units that are not installed |
 | `--list` | `<name1,name2,...>` | One action is required | — | Monitors the given list, matched as substrings or regular expressions unless `--exact-match` is set |
 | `--exclude` | `<name1,name2,...>` | No | — | Removes matching services from the active list, using the same matching mode as the active list. Repeatable; the values accumulate |
 | `--exact-match` | — | No | Disabled | Matches every `--list` entry against the whole service name, case-insensitive |
 | `--skip-oneshot` | — | No | Disabled | Linux with systemd only: ignores units whose type is `oneshot` |
+| `--skip-not-found` | — | No | Disabled | Linux with systemd only: ignores units that are not installed (load state `not-found`). `--default` always applies it |
 | `--usage` | — | No | Disabled | Adds a CPU usage and a memory usage module for every running service |
 | `-v`, `--verbose` | — | No | Disabled | Reports diagnostics on standard error; never changes the exit code |
 | `--help` | — | No | — | Prints the help screen, including the built-in list of the platform |
@@ -276,7 +312,7 @@ recognized action, the plugin prints the help screen and monitors nothing.
 
 `--default` matches each entry against the whole service name, case-insensitive. The entries are
 patterns, so versioned or instance-suffixed names are covered. Entries that do not exist on the
-endpoint are ignored.
+endpoint are ignored, including the ghost units systemd lists for a name another unit references.
 
 **Linux**
 

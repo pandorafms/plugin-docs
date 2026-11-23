@@ -1,6 +1,6 @@
 # Autodiscover
 
-*Última actualización del artículo: 2026-10-05.*
+*Última actualización del artículo: 2026-11-19.*
 
 ## Qué hace
 
@@ -25,6 +25,12 @@ por lo que una ejecución no es un informe sobre el estado de todo el endpoint.
   servicios y coincide con la lista activa: `1` mientras el servicio está en ejecución y `0`
   mientras está detenido o inactivo. Un nombre de la lista que no existe en el endpoint no genera
   ningún módulo.
+- **Unidades que no están instaladas.** systemd puede listar una unidad que no tiene fichero de
+  unidad detrás cuando otra unidad referencia su nombre; el plugin las llama unidades fantasma.
+  `--default` las ignora, de modo que la lista integrada nunca informa de un servicio que el endpoint
+  no tiene. `--list` las informa como `0` salvo que se use `--skip-not-found`, porque un nombre que
+  se ha pedido y que ya no está es justo la alerta que se busca. Consulte
+  [Unidades que no están instaladas](#unidades-que-no-estan-instaladas).
 - **Uso de recursos opcional.** Con `--usage` el plugin añade además un módulo de uso de CPU y otro
   de uso de memoria por cada servicio en ejecución cuyo proceso se puede resolver y cuyo uso es
   mayor que cero.
@@ -40,8 +46,9 @@ por lo que una ejecución no es un informe sobre el estado de todo el endpoint.
 
 | Ámbito | Estado | Evidencia |
 |--------|--------|-----------|
-| Versión del plugin `2.1` | Objetivo documentado | La versión que describe esta página |
+| Versión del plugin `2.2` | Objetivo documentado | La versión que describe esta página |
 | Linux con systemd | `Probado` | Probado en Fedora 44 (systemd 259) y Rocky Linux 10.2 (systemd 257): lista integrada, listas propias, exclusiones, diagnósticos detallados y filtrado de `oneshot` |
+| Linux con systemd, unidades que no están instaladas | `Probado` | Probado en CachyOS (systemd 262): unidades fantasma descartadas con `--default` y con `--list --skip-not-found`, mientras una unidad cargada pero inactiva seguía informando `0` |
 | Linux sin systemd (SysV) | `Sin validar` | No se ha registrado ningún equipo solo con SysV |
 | Windows (Administrador de servicios, amd64) | `Probado` | Probado en Windows 11: lista integrada, correspondencia por subcadena y exacta, exclusiones, sufijo `.service`, regla de tres caracteres y `--usage` |
 | Nombres de servicio de Windows de menos de tres caracteres | `Requerido` | El plugin descarta en Windows las entradas de la lista de menos de tres caracteres, consulte [Reglas de correspondencia](#reglas-de-correspondencia) |
@@ -123,6 +130,9 @@ module_plugin autodiscover --list "apache.*,php[0-9.]*-fpm" --exact-match
 - **`--skip-oneshot`** (solo Linux con systemd) ignora las unidades cuyo tipo es `oneshot`. Estas
   unidades se ejecutan una vez y permanecen inactivas por diseño, por lo que su módulo de estado
   estaría siempre a `0`.
+- **`--skip-not-found`** (solo Linux con systemd) ignora las unidades fantasma: unidades que systemd
+  lista aunque no tengan fichero de unidad, porque otra unidad referencia su nombre. `--default`
+  aplica siempre este filtro; use el parámetro para obtener el mismo resultado con `--list`.
 - **`-v`, `--verbose`** escribe en la salida de error los diagnósticos descritos en
   [Diagnósticos](#diagnosticos). Nunca cambia el código de salida, por lo que es seguro dejarlo
   activado mientras se ajusta una lista.
@@ -133,8 +143,11 @@ module_plugin autodiscover --list "apache.*,php[0-9.]*-fpm" --exact-match
   órdenes** y las acciones posteriores no se ejecutan. El valor de `--list` y de `--exclude` se
   valida aunque su acción no gane, por lo que `--default --list` falla en lugar de ejecutar
   `--default`. Para acotar una selección añada `--exclude`, nunca una segunda acción.
-- `--usage`, `--exact-match`, `--skip-oneshot`, `-v` y `--exclude` no son acciones, por lo que
-  pueden aparecer en cualquier posición y combinarse libremente.
+- `--usage`, `--exact-match`, `--skip-oneshot`, `--skip-not-found`, `-v` y `--exclude` no son
+  acciones, por lo que pueden aparecer en cualquier posición y combinarse libremente.
+- `--default` activa por su cuenta la correspondencia exacta y el filtro de unidades fantasma;
+  ninguno de los dos se puede desactivar. Con `--list`, `--exact-match` y `--skip-not-found` son sus
+  equivalentes opcionales.
 - Un `--list` o un `--exclude` sin valor, o con un valor que empieza por `-`, se rechaza: el plugin
   escribe el error y la pantalla de ayuda.
 - Un parámetro desconocido se informa y va seguido de la pantalla de ayuda. El código de salida se
@@ -183,7 +196,8 @@ Cada servicio de la lista activa que existe en el gestor de servicios genera un 
 - **Un `0` no es necesariamente un problema.** El estado es `1` solo mientras el servicio está en
   ejecución. Un servicio detenido y una unidad inactiva generan `0`, y el módulo permanece en
   Pandora FMS hasta que se elimine. Un servicio que no está instalado no genera ningún módulo, por
-  lo que un nombre de la lista sin módulo propio simplemente no existe en el endpoint.
+  lo que un nombre de la lista sin módulo propio simplemente no existe en el endpoint; la excepción
+  es la unidad fantasma, consulte [Unidades que no están instaladas](#unidades-que-no-estan-instaladas).
 - **Los módulos de uso son condicionales.** Solo se generan para un servicio en ejecución cuyo
   proceso se puede resolver y cuyo uso de CPU o de memoria es mayor que cero, por lo que una primera
   ejecución puede generar únicamente el módulo de estado.
@@ -191,6 +205,26 @@ Cada servicio de la lista activa que existe en el gestor de servicios genera un 
   `active`; el plugin lista todas las unidades, incluidas las inactivas. Con SysV se lee la salida de
   `service <nombre> status` buscando `is running` / `is stopped`. En Windows se usa el informe del
   Administrador de servicios.
+
+### Unidades que no están instaladas
+
+En systemd, el listado de unidades contiene además nombres que no tienen fichero de unidad detrás:
+systemd los materializa cuando otra unidad referencia el nombre. Por ejemplo, `chronyd.service`
+incluye `Conflicts=ntpd.service`, de modo que en un equipo donde solo está instalado chrony aparece
+`ntpd.service` como `not-found inactive dead`. Esa unidad nunca puede pasar a activa, por lo que un
+módulo de estado construido sobre ella estaría siempre a `0` y parecería un servicio detenido en un
+equipo recién instalado.
+
+- **`--default` las ignora**, de modo que la lista integrada nunca informa de un servicio que el
+  endpoint no tiene.
+- **`--list` las conserva**, porque un nombre que se ha pedido de forma explícita y que ya no está es
+  justo la alerta que se busca. Añada `--skip-not-found` para obtener el mismo filtro en ese caso.
+- **Una unidad cargada pero inactiva siempre se informa.** Un servicio instalado que simplemente
+  está detenido conserva el estado de carga `loaded`, por lo que un servicio real que se cae sigue
+  apareciendo en rojo.
+- **Una entrada que solo ha coincidido con una unidad fantasma no se informa como encontrada.** Con
+  `-v`, una entrada de `--list` que solo ha seleccionado una unidad fantasma aparece como que no ha
+  coincidido con ningún servicio.
 
 ## Uso diario y solución de problemas
 
@@ -214,6 +248,8 @@ autodiscover: warning: entry "nope" matched no service
 - En Windows se informa de las entradas de la lista de menos de tres caracteres que se descartan.
 - Una ejecución con `--skip-oneshot` que no haya podido leer los tipos de las unidades informa de
   que el filtro se ha ignorado.
+- Con `--skip-not-found`, o con `--default`, una entrada de `--list` que solo haya coincidido con una
+  unidad fantasma se informa como que no ha coincidido con ningún servicio.
 
 ### Límites de ejecución
 
@@ -237,7 +273,11 @@ autodiscover: warning: entry "nope" matched no service
   coincida con él, y confírmelo con `-v`.
 - **Un módulo de estado está siempre a `0`.** El servicio está detenido o inactivo, o la unidad es
   de tipo `oneshot`. Use `--skip-oneshot` para descartar el último caso. Un servicio que no está
-  instalado no genera ningún módulo, por lo que la ausencia de módulo no es un estado `0`.
+  instalado no genera ningún módulo, por lo que la ausencia de módulo no es un estado `0`, mientras
+  que una unidad fantasma sigue informando `0` con `--list`.
+- **Un servicio que el endpoint no tiene aparece en rojo con `--list`.** systemd lista una unidad
+  fantasma por cada nombre que otra unidad referencia, y `--list` la informa como `0` a propósito.
+  Añada `--skip-not-found` o precise el requisito con `--exact-match` y `--exclude`.
 - **Aparecen servicios que no se han pedido.** Una entrada de `--list` es una subcadena o una
   expresión regular salvo que se use `--exact-match`, por lo que `httpd` selecciona también
   `httpd-init` en un host Linux con systemd, y `Spool` selecciona también `Spooler` en Windows. Añada
@@ -256,11 +296,12 @@ autodiscover: warning: entry "nope" matched no service
 
 | Nombre | Valor | Obligatorio | Valor por defecto | Descripción |
 |--------|-------|-------------|-------------------|-------------|
-| `--default` | — | Se requiere una acción | — | Monitoriza la lista integrada de la plataforma, comparando el nombre completo |
+| `--default` | — | Se requiere una acción | — | Monitoriza la lista integrada de la plataforma, comparando el nombre completo e ignorando las unidades que no están instaladas |
 | `--list` | `<nombre1,nombre2,...>` | Se requiere una acción | — | Monitoriza la lista indicada, como subcadenas o expresiones regulares salvo que se use `--exact-match` |
 | `--exclude` | `<nombre1,nombre2,...>` | No | — | Elimina de la lista activa los servicios que coinciden, con el mismo modo de correspondencia que la lista activa. Se puede repetir; los valores se acumulan |
 | `--exact-match` | — | No | Desactivado | Compara cada entrada de `--list` con el nombre completo del servicio, sin distinguir mayúsculas y minúsculas |
 | `--skip-oneshot` | — | No | Desactivado | Solo Linux con systemd: ignora las unidades cuyo tipo es `oneshot` |
+| `--skip-not-found` | — | No | Desactivado | Solo Linux con systemd: ignora las unidades que no están instaladas (estado de carga `not-found`). `--default` lo aplica siempre |
 | `--usage` | — | No | Desactivado | Añade un módulo de uso de CPU y otro de uso de memoria por cada servicio en ejecución |
 | `-v`, `--verbose` | — | No | Desactivado | Escribe diagnósticos en la salida de error; nunca cambia el código de salida |
 | `--help` | — | No | — | Escribe la pantalla de ayuda, incluida la lista integrada de la plataforma |
@@ -289,7 +330,8 @@ ninguna acción reconocida, el plugin escribe la pantalla de ayuda y no monitori
 
 `--default` compara cada entrada con el nombre completo del servicio, sin distinguir mayúsculas y
 minúsculas. Las entradas son patrones, por lo que cubren nombres con versión o con instancia. Las
-entradas que no existen en el endpoint se ignoran.
+entradas que no existen en el endpoint se ignoran, incluidas las unidades fantasma que systemd lista
+para un nombre que otra unidad referencia.
 
 **Linux**
 
