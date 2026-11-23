@@ -28,7 +28,7 @@ asistente. NGINX es el primer plugin que lo implementa.
 |--------|--------|-----------|
 | `pandoraPlugintools-basic` `1.2.0` (motor Python) | `Probado` | Publicado en PyPI (2026-11-23). Parser de bloques, whitelist tipada, ambos caminos de salida y el comportamiento de error con continuación, ejercidos end-to-end contra un stack de Pandora FMS; el paquete de NGINX compilado desde el requirement contra el artefacto publicado supera las mismas comprobaciones |
 | `pandoraplugintools-go` (motor Go) | `Probado` | Contrastado contra el motor Python mediante el harness de paridad compartido (15/15 escenarios, incluido un fichero de reglas parcialmente inválido) |
-| Plugin que expone el campo Post transforms | `Requerido` | NGINX `1.1` (pendiente de liberación) es la primera implementación |
+| Plugin que expone el campo Post transforms | `Requerido` | NGINX `1.2` (pendiente de liberación) es la primera implementación |
 | Patrones compatibles con RE2 | `Requerido` | El motor Go usa RE2: las reglas deben evitar backreferences y lookaround para comportarse igual en ambos motores |
 
 ### Requisitos previos en la consola
