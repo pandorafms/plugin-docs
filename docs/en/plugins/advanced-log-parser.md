@@ -1,12 +1,14 @@
 # Advanced Log Parser
 
-*Article last updated: 2026-09-16.*
+*Article last updated: 2026-11-19.*
 
 ## What it does
 
 Advanced Log Parser monitors log files from Pandora FMS. On each run it scans a directory, selects files by name and lines by content with regular expressions, and prints the matching lines as Pandora FMS `log_module` entries on standard output.
 
 The plugin reads each log file incrementally. It keeps an index per log file and per source type, so a run captures only the lines written since the previous run instead of the whole file. Captured lines are encoded in Base64, which keeps the generated XML valid whatever the contents of the log.
+
+The plugin always emits UTF-8. A log file written in a legacy single-byte code page, such as Windows-1251, is converted line by line before the lines are matched and encoded; see [Log file encoding](#log-file-encoding).
 
 The plugin runs as a Pandora FMS agent plugin (`module_plugin`), and it can also be run by hand. It creates no agent of its own: the log modules it emits belong to the agent that executes it.
 
@@ -110,7 +112,7 @@ idx_dir = /var/tmp/pandora-logparser
 
 File format:
 
-- One `key = value` per line. The valid keys are `dir`, `name_regex`, `content_regex`, `content_regex_base64`, `source_type`, `idx_dir` and `max_line_bytes`.
+- One `key = value` per line. The valid keys are `dir`, `name_regex`, `content_regex`, `content_regex_base64`, `source_type`, `idx_dir`, `max_line_bytes`, `charset` and `charset_fallback`.
 - Whitespace around `=` is ignored and the value is trimmed. A pattern that must begin or end with a space uses the escape `\x20`.
 - `#` starts a comment only at the beginning of a line, so a value may contain `#`. Blank lines are ignored.
 - A UTF-8 BOM and CR/LF line endings are accepted.
@@ -125,9 +127,90 @@ Precedence:
 - Two content filter sources inside the same layer are an error: two command-line options, or both `content_regex` and `content_regex_base64` in the file.
 - With no source at all, the default `.*` applies. At least one option source must provide `dir`.
 
+### Log file encoding
+
+The plugin sends every log line to Pandora FMS as UTF-8. The `--charset` option (or the `charset` key of the configuration file) tells it how to read the log file:
+
+| Value | Behaviour |
+| --- | --- |
+| `auto` (default) | Decides line by line. A line that is already valid UTF-8 is sent unchanged. Any other line is converted with the first charset of the fallback chain that defines every byte of the line. |
+| `utf-8` | No conversion: every line is sent exactly as it is in the file. |
+| A code page name, such as `cp1251` | Every line is converted from that code page, without inspecting the content. A wrong value produces readable but incorrect text. |
+
+The fallback chain of `auto` is `cp1251,cp1252`. Change it with `--charset-fallback` (or the `charset_fallback` key), which takes a comma-separated list tried in order. It is only valid together with `--charset auto`.
+
+```
+module_plugin /etc/pandora/plugins/pandora_logparser --dir /var/log/myapp --name-regex '.+\.log' --source-type app_errors --idx-dir /var/tmp/pandora-logparser --charset-fallback cp1252
+```
+
+```
+charset = auto
+charset_fallback = cp1252,cp1251
+```
+
+Behaviour to know:
+
+- The decision is taken for every line and nothing is stored in the index, so the same bytes always produce the same text. A file can mix UTF-8 lines and lines in a legacy code page.
+- The default order assumes Cyrillic data. A single-byte code page cannot be told apart from another by its bytes alone, and Windows-1251 accepts almost every byte, so text in Latin-1 or Windows-1252 such as `café` is read as Windows-1251 (`cafй`) unless the chain starts with `cp1252`. Set `charset_fallback = cp1252` for logs in Western European languages.
+- A byte that is not defined in the chosen code page (or in the last charset of the chain, in `auto`) is replaced with the character `U+FFFD`. The line is still sent and a warning is written to standard error.
+- Conversion happens before the content filter, so a UTF-8 `--content-regex` also matches text read from a single-byte file. `--max-line-bytes` is measured on the bytes of the file.
+- Only single-byte code pages are supported. Multi-byte encodings such as Shift_JIS and UTF-16 are rejected at startup. The accepted names are: `cp437`, `cp850`, `cp852`, `cp855`, `cp858`, `cp860`, `cp862`, `cp863`, `cp865`, `cp866`, `cp1250` to `cp1258`, `iso-8859-1` to `iso-8859-10`, `iso-8859-13` to `iso-8859-16`, `koi8-r`, `koi8-u`, `macintosh` and `macintosh-cyrillic`. Common spellings such as `windows-1251` and `latin1` are accepted as aliases.
+- Use `--verbose` to see which charsets were applied; see [Diagnostics and exit status](#diagnostics-and-exit-status).
+
+#### Choose the charset for your language
+
+The default `auto` mode already handles UTF-8 and Windows-1251 (Cyrillic). For any other code page, put it first in the chain with `charset_fallback`. Each row below was run with the plugin and produced the text shown:
+
+| The log is written in | Setting | Result |
+| --- | --- | --- |
+| UTF-8 | nothing | The lines are sent unchanged. |
+| Russian on Windows (Windows-1251) | nothing | `Транзакция прошла успешно` |
+| Spanish and other Western European languages (Windows-1252, Latin-1) | `charset_fallback = cp1252` | `Conexión rechazada: señor año` |
+| Russian on Unix (KOI8-R) | `charset_fallback = koi8-r` | `Ошибка соединения` |
+| Central European, such as Polish (Windows-1250) | `charset_fallback = cp1250` | `Łódź: błąd połączenia` |
+| Greek (Windows-1253) | `charset_fallback = cp1253` | `Σφάλμα σύνδεσης` |
+
+Without the setting, a log in another code page is still sent, but it is read as Windows-1251. The same Spanish line, run with `--verbose`:
+
+```
+$ pandora_logparser --dir /var/log/myapp --name-regex '.+\.log' --source-type app_errors --idx-dir /var/tmp/pandora-logparser --verbose
+charset auto in /var/log/myapp/app.log: 0 utf-8, 1 converted from cp1251
+Conexiуn rechazada: seсor aсo
+
+$ pandora_logparser --dir /var/log/myapp --name-regex '.+\.log' --source-type app_errors --idx-dir /var/tmp/pandora-logparser --charset-fallback cp1252 --verbose
+charset auto in /var/log/myapp/app.log: 0 utf-8, 1 converted from cp1252
+Conexión rechazada: señor año
+```
+
+The second line of each result is the decoded `data` value. When the summary names a charset that is not the language of your log, add the right one with `--charset-fallback`.
+
+Prefer `auto` with `charset_fallback` to a fixed `--charset cp1252`. A fixed charset converts every line without looking at it, so a line that is already UTF-8 in the same file would be damaged.
+
+On Linux, add the option to the module:
+
+```
+module_begin
+module_plugin /etc/pandora/plugins/pandora_logparser --dir /var/log/myapp --name-regex '.+\.log' --source-type app_errors --idx-dir /var/tmp/pandora-logparser --charset-fallback cp1252
+module_end
+```
+
+On Windows, keep the options in a configuration file and use a persistent index directory, so the index survives the cleaning of the temporary directory:
+
+```
+module_plugin "%ProgramFiles%\pandora_agent\util\pandora_logparser.exe" --config "C:\ProgramData\PandoraFMS\logparser.conf"
+```
+
+```
+dir = C:\logs\myapp
+name_regex = .+\.log
+source_type = app_errors
+idx_dir = C:\ProgramData\PandoraFMS\logparser-idx
+charset_fallback = cp1252
+```
+
 ### Windows: non-ASCII values and shell metacharacters
 
-The plugin has no encoding problem of its own. On Windows, Go reads the command line through the wide-character API and converts it to UTF-8, and the plugin reads log files and configuration files as UTF-8. The corruption happens before the plugin starts.
+The plugin has no encoding problem of its own. On Windows, Go reads the command line through the wide-character API and converts it to UTF-8, and the plugin reads configuration files as UTF-8 and log files as described in [Log file encoding](#log-file-encoding). The corruption happens before the plugin starts.
 
 The Windows agent runs every `module_plugin` as `cmd.exe /c "<command>"` and converts the command line from UTF-8 to the ANSI code page of the system. Non-ASCII text does not survive that conversion, so the plugin never receives the text you wrote.
 
@@ -260,6 +343,23 @@ ERROR: disk full
 
 A third run with no new lines prints nothing and exits with status `0`. Files with no new matching lines produce no entry, and a run in which nothing matches writes nothing to standard output at all.
 
+To check a log file that is not in UTF-8, append a line written in Windows-1251 (the word `Транзакция` as the bytes `D2 F0 E0 ED E7 E0 EA F6 E8 FF`) and run the plugin again with `--verbose`:
+
+```bash
+printf '\xd2\xf0\xe0\xed\xe7\xe0\xea\xf6\xe8\xff\n' >> /var/log/myapp/app.log
+pandora_logparser --dir /var/log/myapp --name-regex '.+\.log' --source-type app_errors --idx-dir /var/tmp/pandora-logparser --verbose
+```
+
+Standard error reports the decision, and the `data` value decodes to UTF-8 text:
+
+```
+charset auto in /var/log/myapp/app.log: 0 utf-8, 1 converted from cp1251
+```
+
+```
+Транзакция
+```
+
 ## Understand the results
 
 ### Incremental reading
@@ -288,7 +388,7 @@ On every run the plugin removes indexes whose log file no longer exists, which p
 - Matching is applied to each physical line of the log.
 - Matching is case-sensitive. A pattern that should ignore case needs an explicit `(?i)`, as in `(?i)error`.
 - A multi-line entry such as a stack trace is captured as separate line fragments and cannot be matched as a whole.
-- The text is treated as UTF-8. UTF-16 and platform code pages are not decoded, so a UTF-8 pattern does not match a log file written in another encoding.
+- Lines are converted to UTF-8 before matching, as set by `--charset`, so a UTF-8 pattern also matches a log file written in a single-byte code page. See [Log file encoding](#log-file-encoding). UTF-16 and other multi-byte encodings are not decoded.
 - A leading UTF-8 BOM in a log file is removed before matching, so `^` anchors still apply to the first line.
 
 ### Output
@@ -340,9 +440,11 @@ pandora_logparser --config /etc/pandora/logparser.conf
 
 ### Diagnostics and exit status
 
-The plugin has no verbose or debug option. Standard output carries only the generated XML, and every diagnostic goes to standard error, so redirecting the two streams separately keeps the data clean.
+Standard output carries only the generated XML, and every diagnostic goes to standard error, so redirecting the two streams separately keeps the data clean.
 
-Warnings are issued when an index cannot be resolved or created, when an index cannot be loaded, when orphan cleanup fails, and when a line is skipped for exceeding `--max-line-bytes`. Errors are issued when a directory or a log file cannot be read, when a log module cannot be built, and when an index cannot be saved.
+`-v` or `--verbose` adds, in `--charset auto` mode, one line per scanned file and run that lists how its new lines were decoded, for example `charset auto in /var/log/myapp/app.log: 2 utf-8, 1 converted from cp1251`. It also reports lines that needed replacement characters. Nothing is printed for a file with no new lines, and the option has no effect in the other charset modes.
+
+Warnings are issued when an index cannot be resolved or created, when an index cannot be loaded, when orphan cleanup fails, when a line is skipped for exceeding `--max-line-bytes`, and when a line contains bytes that are not defined in the chosen code page and is sent with `U+FFFD` replacement characters. Errors are issued when a directory or a log file cannot be read, when a log module cannot be built, and when an index cannot be saved.
 
 The exit status is `0` for a successful run or for `--help`, and `1` for invalid input or for a processing error.
 
@@ -351,7 +453,7 @@ The exit status is `0` for a successful run or for `--help`, and `1` for invalid
 - A line longer than `--max-line-bytes` is skipped with a warning and the file keeps working. The default is `1048576` bytes.
 - A file that does not end with a newline keeps its trailing partial line unread until the terminator arrives. A line that is never terminated is never emitted.
 - The plugin validates at most the 64 KiB immediately before the saved offset. An in-place rewrite that leaves the file identity, the size and those bytes unchanged is not detected.
-- Only UTF-8 is decoded.
+- Only UTF-8 and single-byte code pages are decoded. UTF-16 and other multi-byte encodings are not supported.
 - The plugin is not recursive and ignores subdirectories.
 
 ### Troubleshooting
@@ -360,7 +462,9 @@ The exit status is `0` for a successful run or for `--help`, and `1` for invalid
 | --- | --- | --- |
 | No output on the first run | Expected behaviour: the index records each file at its end. | Append a matching line and run the plugin again. |
 | A module never produces data | Another module uses the same `--source-type` over the same file, or the source type was changed and the index restarted at end-of-file. | Give each module its own `--source-type`; see [Indexes and the source type](#indexes-and-the-source-type). |
-| A pattern that worked elsewhere matches nothing | Matching is case-sensitive, or the log file is not UTF-8. | Add `(?i)` if case must be ignored; confirm the file encoding. |
+| A pattern that worked elsewhere matches nothing | Matching is case-sensitive, or the log file is in an encoding the plugin does not decode, such as UTF-16. | Add `(?i)` if case must be ignored; confirm the file encoding. |
+| Accented text arrives with the wrong letters, for example `cafй` instead of `café` | The log is in Windows-1252 or Latin-1 and the default chain read it as Windows-1251. | Run with `--verbose` to see the charset applied, then set `--charset-fallback cp1252`. |
+| A warning says that bytes are undefined and the line contains `�` | The line has bytes that the chosen code page does not define. | Check the charset of the file; set `--charset` or `--charset-fallback` to the right code page. |
 | A non-ASCII pattern matches nothing on Windows | The agent converted the command line to the ANSI code page before the plugin started. | Put the value in the configuration file, or use `--content-regex-base64`; see [Windows: non-ASCII values and shell metacharacters](#windows-non-ascii-values-and-shell-metacharacters). |
 | A module whose pattern has an alternation never runs on Windows | `cmd.exe` splits the command at the bare pipe. | Move the pattern to the configuration file or pass it in Base64. |
 | A line is missing from the output | The line exceeds `--max-line-bytes`, or it was still unterminated when the plugin ran. | Check the warning on standard error; raise `--max-line-bytes` if needed. |
@@ -381,6 +485,9 @@ The exit status is `0` for a successful run or for `--help`, and `1` for invalid
 | `--source-type <name>` | No | `syslog` | Value of the `source` field of the generated log modules and part of the index identity. An empty value falls back to `syslog`. |
 | `--idx-dir <dir>` | No | Temporary directory of the operating system | Directory where the index files are stored. It is created if it does not exist. |
 | `--max-line-bytes <n>` | No | `1048576` | Maximum accepted log line size in bytes. Must be a positive integer. |
+| `--charset <name>` | No | `auto` | Charset of the log file: `auto`, `utf-8` or a single-byte code page. See [Log file encoding](#log-file-encoding). |
+| `--charset-fallback <list>` | No | `cp1251,cp1252` | Comma-separated charsets that `--charset auto` tries, in order, on lines that are not UTF-8. Only valid with `--charset auto`. |
+| `-v`, `--verbose` | No | — | In `--charset auto` mode, report on standard error how the lines of each file were decoded. |
 | `-h`, `--help` | No | — | Print the help and exit with status `0`. |
 
 ### Configuration file keys
@@ -394,6 +501,8 @@ The exit status is `0` for a successful run or for `--help`, and `1` for invalid
 | `source_type` | `syslog` | Equivalent to `--source-type`. |
 | `idx_dir` | Temporary directory of the operating system | Equivalent to `--idx-dir`. |
 | `max_line_bytes` | `1048576` | Equivalent to `--max-line-bytes`. It must be a valid integer. |
+| `charset` | `auto` | Equivalent to `--charset`. |
+| `charset_fallback` | `cp1251,cp1252` | Equivalent to `--charset-fallback`. |
 
 `content_regex` and `content_regex_base64` cannot both be present in the same file.
 
