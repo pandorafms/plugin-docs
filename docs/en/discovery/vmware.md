@@ -281,6 +281,13 @@ Module generation is configured per entity type inside the `Datacenter` (`DC`), 
 - `enabled` or `disabled` to turn a module on or off.
 - One or more `option=value` pairs separated by `;`, which set module options and enable the module.
 
+When a module line sets `name`, `desc`, `limits_warn` or `limits_crit`, the generated module uses those values. This example renames the datastore free space module, changes its description and applies warning and critical ranges:
+
+```
+DS
+freeSpace name=Free Space ; desc=Percentage of datastore free space; limits_warn=5 10; limits_crit=0 4
+```
+
 | Option | Description |
 | --- | --- |
 | `name` | Module name. Use `%s` to insert the module index |

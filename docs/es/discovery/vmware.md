@@ -281,6 +281,13 @@ La generación de módulos se configura por tipo de entidad dentro de los bloque
 - `enabled` o `disabled` para activar o desactivar un módulo.
 - Uno o varios pares `opcion=valor` separados por `;`, que establecen opciones del módulo y lo habilitan.
 
+Cuando una línea de módulo define `name`, `desc`, `limits_warn` o `limits_crit`, el módulo generado usa esos valores. Este ejemplo renombra el módulo de espacio libre de datastore, cambia su descripción y aplica rangos de aviso y crítico:
+
+```
+DS
+freeSpace name=Free Space ; desc=Percentage of datastore free space; limits_warn=5 10; limits_crit=0 4
+```
+
 | Opción | Descripción |
 | --- | --- |
 | `name` | Nombre del módulo. Usa `%s` para insertar el índice del módulo |
