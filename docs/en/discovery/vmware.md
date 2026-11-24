@@ -1,6 +1,6 @@
 # VMware Discovery
 
-*Article last updated: 2026-11-16.*
+*Article last updated: 2026-11-23.*
 
 ## What it monitors
 
@@ -337,24 +337,19 @@ In the module names, `<id>` is the datastore managed object ID by default, or th
 
 #### ESXi hosts
 
-These modules are always generated for a connected, powered-on ESXi host:
-
-| Module name | Type | Unit |
-| --- | --- | --- |
-| `Overall CPU Usage` | generic_data | MHz |
-| `Host Alive` | generic_proc | — |
-| `Connection State` | generic_data_string | — |
-| `Uptime` | generic_data | — |
-| `Overall Memory Usage` | generic_data | KB |
-| `Boot Time` | generic_data_string | — |
-| `SSL Thumbprint` | generic_data_string | — |
-| `Power State` | generic_data_string | — |
-| `Memory Size` | generic_data | B |
-
-These modules are configurable with a module key:
+All ESXi modules are configurable with a module key:
 
 | Module key | Module name | Type | Unit | Default |
 | --- | --- | --- | --- | --- |
+| `overallCpuUsage` | `Overall CPU Usage` | generic_data | MHz | on |
+| `hostAlive` | `Host Alive` | generic_proc | — | on |
+| `connectionState` | `Connection State` | generic_data_string | — | on |
+| `uptime` | `Uptime` | generic_data | — | on |
+| `overallMemoryUsage` | `Overall Memory Usage` | generic_data | KB | on |
+| `bootTime` | `Boot Time` | generic_data_string | — | on |
+| `sslThumbprint` | `SSL Thumbprint` | generic_data_string | — | on |
+| `powerState` | `Power State` | generic_data_string | — | on |
+| `memorySize` | `Memory Size` | generic_data | B | on |
 | `cpuUsagePercent` | `CPU Usage` | generic_data | % | on |
 | `memoryUsagePercent` | `Memory Usage` | generic_data | % | on |
 | `netReceived` | `Data received` | generic_data | KBps | on |
