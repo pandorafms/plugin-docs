@@ -1,6 +1,6 @@
 # VMware Discovery
 
-*Article last updated: 2026-11-16.*
+*Article last updated: 2026-11-23.*
 
 ## What it monitors
 
@@ -25,7 +25,7 @@ The plugin runs as a Discovery task: the console creates the task, the Discovery
 
 | Scope | State | Evidence |
 | --- | --- | --- |
-| Plugin version `1.21` (`pandorafms.vmware`) | Documented target | The version this page describes, as identified by the package definition. |
+| Plugin version `1.24` (`pandorafms.vmware`) | Documented target | The version this page describes, as identified by the package definition. |
 | VMware vCenter Server with at least one datacenter | `Required` | The plugin resolves every managed object through a datacenter container and connects to a vCenter endpoint. |
 | A vCenter account with read access to the target datacenter | `Required` | The plugin authenticates and reads resource and performance data. It never changes vCenter configuration. |
 | A specific vCenter or ESXi version | `Not validated` | No published test record establishes compatibility with a concrete VMware release. |
@@ -337,24 +337,19 @@ In the module names, `<id>` is the datastore managed object ID by default, or th
 
 #### ESXi hosts
 
-These modules are always generated for a connected, powered-on ESXi host:
-
-| Module name | Type | Unit |
-| --- | --- | --- |
-| `Overall CPU Usage` | generic_data | MHz |
-| `Host Alive` | generic_proc | — |
-| `Connection State` | generic_data_string | — |
-| `Uptime` | generic_data | — |
-| `Overall Memory Usage` | generic_data | KB |
-| `Boot Time` | generic_data_string | — |
-| `SSL Thumbprint` | generic_data_string | — |
-| `Power State` | generic_data_string | — |
-| `Memory Size` | generic_data | B |
-
-These modules are configurable with a module key:
+All ESXi modules are configurable with a module key:
 
 | Module key | Module name | Type | Unit | Default |
 | --- | --- | --- | --- | --- |
+| `overallCpuUsage` | `Overall CPU Usage` | generic_data | MHz | on |
+| `hostAlive` | `Host Alive` | generic_proc | — | on |
+| `connectionState` | `Connection State` | generic_data_string | — | on |
+| `uptime` | `Uptime` | generic_data | — | on |
+| `overallMemoryUsage` | `Overall Memory Usage` | generic_data | KB | on |
+| `bootTime` | `Boot Time` | generic_data_string | — | on |
+| `sslThumbprint` | `SSL Thumbprint` | generic_data_string | — | on |
+| `powerState` | `Power State` | generic_data_string | — | on |
+| `memorySize` | `Memory Size` | generic_data | B | on |
 | `cpuUsagePercent` | `CPU Usage` | generic_data | % | on |
 | `memoryUsagePercent` | `Memory Usage` | generic_data | % | on |
 | `netReceived` | `Data received` | generic_data | KBps | on |
