@@ -24,7 +24,7 @@ El addon también proporciona una vista de consola opcional, **Monitoring → IB
 
 | Alcance | Estado | Evidencia |
 |---------|--------|-----------|
-| Addon `pandorafms.informix`, versión `1.0` | Objetivo documentado | La versión que describe esta página |
+| Addon `pandorafms.informix`, versión `1.1` | Objetivo documentado | La versión que describe esta página |
 | Acceso de red desde el servidor de Discovery a cada listener de Informix (TCP, puerto por defecto `9088`) | `Requerido` | El addon se conecta por TCP/IP |
 | Un usuario de Informix con los permisos de [Usuario de base de datos](#usuario-de-base-de-datos) | `Requerido` | Prerrequisito, no una declaración de compatibilidad |
 | Informix 12.10 y 14.10 | `Objetivo documentado` | Las vistas de `sysmaster` que usa el addon están documentadas para ambas ramas; no se ha registrado una matriz de instancias reales para esta versión |
@@ -98,13 +98,47 @@ El estado de la conexión se informa siempre, aunque una familia esté desactiva
 
 ### 4. Salida y filtros
 
-![Paso de salida y filtros con los prefijos de alias y módulo, las listas de permitidos y denegados y la configuración de Tentacle.](../assets/images/discovery/informix/task-output.png)
+![Paso de salida y filtros con los prefijos de alias y módulo, las listas de permitidos y denegados, la configuración de Tentacle y el campo de reglas de post-transform.](../assets/images/discovery/informix/task-output.png)
 
 - **Agent alias prefix**: texto que se añade delante del alias de cada agente generado.
 - **Module name prefix**: texto que se añade delante de cada nombre de módulo.
 - **Allow list** y **Deny list**: expresiones regulares aplicadas al nombre final del módulo. La lista de permitidos se aplica primero; si está vacía, se permiten todos los módulos. La lista de denegados se aplica después.
 - **Transfer mode**: `native` (por defecto) usa el flujo JSON de Discovery; `tentacle` genera ficheros XML y los transfiere a un servidor Tentacle.
 - **Tentacle address** y **Tentacle port**: solo se usan cuando el modo de transferencia es `tentacle`.
+- **Show post-transform rules** y **Post transforms**: reglas opcionales definidas por el operador que sobrescriben umbrales y metadatos de los módulos. Consulte [Umbrales custom y metadatos de módulo](#umbrales-custom-y-metadatos-de-modulo).
+
+### Umbrales custom y metadatos de módulo
+
+El addon mantiene unos umbrales por defecto en el plugin, pero el operador de
+la tarea puede sobrescribirlos sin cambiar código mediante **Post transforms**.
+Las reglas son bloques ordenados `transform_begin`/`transform_end` que se
+aplican a los módulos recogidos antes de la salida, por lo que funcionan tanto
+en modo `native` como `tentacle`.
+
+```text
+transform_begin
+transform_name       umbrales de dbspace
+match_extra_data     ^informix:dbspace:
+set_min_warning      85
+set_max_warning      95
+set_min_critical     95
+set_max_critical     0
+transform_end
+```
+
+- `match_module` busca en el nombre del módulo y `match_extra_data` en el
+  marcador semántico `extra_data`. Si aparecen ambos, se aplican en AND.
+- `set_*` acepta los campos permitidos: umbrales, `str_warning`,
+  `str_critical`, `tags`, `module_group`, `alert_template`, ajustes de FF y
+  configuración relacionada.
+- Las reglas se aplican en orden; la última que coincide gana por campo. Los
+  umbrales que ya emite el plugin son el valor inicial.
+- `name`, `type`, `data`, `value`, `extra_data`, `timestamp` y `status` están
+  protegidos y no se pueden cambiar.
+- Los rangos de umbral son semiabiertos `[min, max)`. `max_warning=0` y
+  `max_critical=0` significan sin límite superior, no el valor cero literal.
+- Las reglas inválidas se descartan y se informan con su bloque y línea en la
+  información de la tarea; las reglas válidas se siguen aplicando.
 
 ### Formato de objetivo
 
@@ -242,6 +276,7 @@ La vista identifica agentes y módulos a través de `extra_data`; no depende de 
 |---------|----------------|--------------|
 | `Connection status` vale `0` en todos los objetivos | Red, host o puerto incorrectos, o la instancia no escucha | Pruebe el puerto TCP desde el servidor de Discovery y revise el formato del objetivo |
 | `IfxPy is not installed` en la información de la tarea | Falta la dependencia Python en el servidor de Discovery | Ejecute el `setup.sh` del addon y compruebe el entorno virtual que usa la tarea |
+| `post-transforms: transform block N...` en la información de la tarea | Una regla tiene una clave desconocida, una regex inválida o un valor mal tipado | Corrija o elimine la regla; las reglas válidas se siguen aplicando |
 | La conexión falla después de instalar el driver | El runtime del Client SDK no está disponible para el proceso del plugin | Instale el IBM Informix Client SDK y exporte `INFORMIXDIR` |
 | Error de permisos al leer una familia | El usuario no tiene `SELECT` sobre la vista SMI | Conceda `SELECT` sobre la vista o desactive esa familia |
 | `Maximum execution time reached` | El presupuesto de la tarea es pequeño para el número de instancias o la latencia | Aumente **Max execution time** o divida la tarea |
@@ -278,6 +313,7 @@ La vista identifica agentes y módulos a través de `extra_data`; no depende de 
 | `transfer_mode` | `--transfer_mode` | `native` | `native` o `tentacle` |
 | `tentacle_ip` | `--tentacle_ip` | `127.0.0.1` | Dirección de Tentacle |
 | `tentacle_port` | `--tentacle_port` | `41121` | Puerto de Tentacle |
+| `post_transforms` (campo de tarea) | `--post_transforms_conf` | — | Reglas de post-transform ordenadas (umbrales, tags, grupos de módulos, plantillas de alerta) |
 | `agents_group` | `--agents_group` | — | Nombre de grupo usado en modo Tentacle |
 | `agents_group_id` | `--agents_group_id` | — | Identificador de grupo usado en modo nativo |
 | `interval` | `--interval` | `300` | Intervalo del agente en segundos |

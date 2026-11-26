@@ -24,7 +24,7 @@ The addon also provides an optional console view, **Monitoring → IBM Informix*
 
 | Scope | State | Evidence |
 |-------|-------|----------|
-| Addon `pandorafms.informix`, version `1.0` | Documented target | The version this page describes |
+| Addon `pandorafms.informix`, version `1.1` | Documented target | The version this page describes |
 | Network access from the Discovery server to each Informix listener (TCP, default port `9088`) | `Required` | The addon connects over TCP/IP |
 | An Informix user with the grants listed in [Database user](#database-user) | `Required` | Prerequisite, not a compatibility statement |
 | Informix 12.10 and 14.10 | `Documented target` | The `sysmaster` views used by the addon are documented for both branches; no live instance matrix is recorded for this version |
@@ -98,13 +98,46 @@ The connection status is always reported, even when a family is disabled, so a d
 
 ### 4. Output and filters
 
-![Output and filters step with the alias and module prefixes, allow and deny lists, and the Tentacle settings.](../assets/images/discovery/informix/task-output.png)
+![Output and filters step with the alias and module prefixes, allow and deny lists, Tentacle settings and the post-transform rules field.](../assets/images/discovery/informix/task-output.png)
 
 - **Agent alias prefix**: text added before the alias of every generated agent.
 - **Module name prefix**: text added before every module name.
 - **Allow list** and **Deny list**: regular expressions applied to the final module name. The allow list is applied first; when it is empty every module is allowed. The deny list is applied afterwards.
 - **Transfer mode**: `native` (default) uses the Discovery JSON flow; `tentacle` writes XML data files and transfers them to a Tentacle server.
 - **Tentacle address** and **Tentacle port**: only used when the transfer mode is `tentacle`.
+- **Show post-transform rules** and **Post transforms**: optional operator-defined rules that override module thresholds and metadata. See [Custom thresholds and module metadata](#custom-thresholds-and-module-metadata).
+
+### Custom thresholds and module metadata
+
+The addon keeps default thresholds in the plugin, but the task operator can
+override them without changing code through **Post transforms**. Rules are
+ordered `transform_begin`/`transform_end` blocks, applied to the collected
+modules before output, so they work in both `native` and `tentacle` modes.
+
+```text
+transform_begin
+transform_name       dbspace thresholds
+match_extra_data     ^informix:dbspace:
+set_min_warning      85
+set_max_warning      95
+set_min_critical     95
+set_max_critical     0
+transform_end
+```
+
+- `match_module` matches the module name and `match_extra_data` matches the
+  semantic `extra_data` marker. If both are present, they are AND-ed.
+- `set_*` accepts the whitelisted module fields: thresholds, `str_warning`,
+  `str_critical`, `tags`, `module_group`, `alert_template`, FF settings and
+  related configuration.
+- Rules apply in order; the last matching rule wins per field. The thresholds
+  the plugin already emits are the initial values.
+- `name`, `type`, `data`, `value`, `extra_data`, `timestamp` and `status` are
+  protected and cannot be changed.
+- Threshold ranges are half-open `[min, max)`. `max_warning=0` and
+  `max_critical=0` mean no upper limit, not the literal value zero.
+- Invalid rules are skipped and reported with their block and line in the task
+  information; valid rules still apply.
 
 ### Target format
 
@@ -242,6 +275,7 @@ The view identifies agents and modules through `extra_data`; it does not rely on
 |---------|--------------|-------|
 | `Connection status` is `0` for every target | Network, wrong host or port, or the instance is not listening | Test the TCP port from the Discovery server and verify the target format |
 | `IfxPy is not installed` in the task information | The Python dependency is missing on the Discovery server | Run the addon's `setup.sh` and check the virtual environment used by the task |
+| `post-transforms: transform block N...` in the task information | A rule has an unknown key, an invalid regex or a mistyped value | Fix or remove the rule; the valid rules still apply |
 | Connection fails after the driver is installed | The Client SDK runtime is not available to the plugin process | Install the IBM Informix Client SDK and export `INFORMIXDIR` |
 | Permission error reading a family | The user lacks `SELECT` on the SMI view | Grant `SELECT` on the view or disable that family |
 | `Maximum execution time reached` | The task budget is too small for the number of instances or the latency | Increase **Max execution time** or split the task |
@@ -278,6 +312,7 @@ The view identifies agents and modules through `extra_data`; it does not rely on
 | `transfer_mode` | `--transfer_mode` | `native` | `native` or `tentacle` |
 | `tentacle_ip` | `--tentacle_ip` | `127.0.0.1` | Tentacle address |
 | `tentacle_port` | `--tentacle_port` | `41121` | Tentacle port |
+| `post_transforms` (task field) | `--post_transforms_conf` | — | Ordered post-transform block rules (thresholds, tags, module groups, alert templates) |
 | `agents_group` | `--agents_group` | — | Group name used in Tentacle mode |
 | `agents_group_id` | `--agents_group_id` | — | Group identifier used in native mode |
 | `interval` | `--interval` | `300` | Agent interval in seconds |
