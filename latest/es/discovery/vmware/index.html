@@ -1958,6 +1958,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#sesiones-de-vcenter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sesiones de vCenter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#monitorizacion-de-eventos" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4260,6 +4271,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#sesiones-de-vcenter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sesiones de vCenter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#monitorizacion-de-eventos" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4529,7 +4551,7 @@
 
 
 <h1 id="discovery-de-vmware">Discovery de VMware<a class="headerlink" href="#discovery-de-vmware" title="Permanent link">¶</a></h1>
-<p><em>Última actualización del artículo: 2026-11-16.</em></p>
+<p><em>Última actualización del artículo: 2026-11-17.</em></p>
 <h2 id="que-monitoriza">Qué monitoriza<a class="headerlink" href="#que-monitoriza" title="Permanent link">¶</a></h2>
 <p>El plugin de Discovery de VMware se conecta a un servidor VMware vCenter a través de la API de vSphere y descubre los recursos de un datacenter. Genera un agente de Pandora FMS por cada recurso descubierto y lo completa con módulos de disponibilidad, capacidad, configuración y rendimiento leídos de vCenter.</p>
 <p>El plugin genera agentes para:</p>
@@ -4727,6 +4749,9 @@
 <h3 id="ejecucion-manual">Ejecución manual<a class="headerlink" href="#ejecucion-manual" title="Permanent link">¶</a></h3>
 <p>El plugin también se puede ejecutar fuera del asistente de Discovery con un archivo de configuración. Es útil para probar la conectividad, para una ejecución puntual o para una planificación propia. Escribe un archivo de configuración que use al menos el bloque <code>Configuration</code> con <code>server</code>, <code>datacenter</code>, <code>user</code> y <code>pass</code>, y ejecuta el punto de entrada del plugin pasando el archivo como argumento. Todos los bloques y parámetros se documentan en <a href="#archivo-de-configuracion">Archivo de configuración</a>.</p>
 <p>La ejecución manual muestra un único módulo, <code>VMware Plugin &lt;datacenter&gt;</code>, de tipo <code>async_proc</code>: su valor es <code>1</code> cuando la ejecución terminó sin errores y <code>0</code> en caso contrario, y su descripción contiene el resumen de ejecución y los posibles errores. Cuando el plugin se ejecuta como tarea de Discovery, esa misma información pasa a ser la información de ejecución de la tarea.</p>
+<h3 id="sesiones-de-vcenter">Sesiones de vCenter<a class="headerlink" href="#sesiones-de-vcenter" title="Permanent link">¶</a></h3>
+<p>Cada ejecución se autentica contra vCenter y reutiliza una única sesión para todos sus workers de monitorización cuando el servidor lo permite. Si la sesión no se puede reutilizar, cada worker abre su propia sesión. El plugin cierra todas las sesiones que abre al terminar la ejecución, incluidas las que terminan con error, y no reutiliza sesiones entre ejecuciones.</p>
+<p>Mientras una tarea está en ejecución, vCenter puede mostrar la sesión del plugin. Al terminar, <code>sessionManager.sessionList</code> no debe mostrar sesiones del usuario del plugin. Una sesión que sobreviva a una ejecución terminada suele proceder de una ejecución interrumpida, por ejemplo un servidor de Discovery detenido o terminado, y vCenter la cierra cuando expira el tiempo de inactividad de la sesión.</p>
 <h3 id="monitorizacion-de-eventos">Monitorización de eventos<a class="headerlink" href="#monitorizacion-de-eventos" title="Permanent link">¶</a></h3>
 <p>Con <strong>Event mode</strong> activado, el plugin lee los eventos de vCenter ocurridos desde la ejecución anterior y los crea en la consola de eventos de Pandora FMS. La ventana temporal comienza en la marca de tiempo guardada por la ejecución anterior y termina en el momento actual, por lo que la primera ejecución solo lee los eventos posteriores al intervalo configurado.</p>
 <ul>
@@ -4776,6 +4801,10 @@
 <tr>
 <td>Falla el envío por Tentacle</td>
 <td>Confirma que el servidor de Discovery puede alcanzar <strong>Tentacle IP</strong> en <strong>Tentacle port</strong> y habilita <strong>Retry send</strong>.</td>
+</tr>
+<tr>
+<td>Quedan sesiones del usuario del plugin en vCenter</td>
+<td>El plugin cierra sus sesiones al terminar la ejecución. Comprueba que la ejecución no se interrumpió, por ejemplo por un servidor de Discovery detenido o terminado, y revisa el log del servidor de Discovery. vCenter elimina las sesiones abandonadas cuando expira el tiempo de inactividad de la sesión.</td>
 </tr>
 <tr>
 <td>La ejecución tarda demasiado</td>

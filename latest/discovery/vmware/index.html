@@ -1958,6 +1958,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#vcenter-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter sessions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#events-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4260,6 +4271,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#vcenter-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter sessions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#events-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4529,7 +4551,7 @@
 
 
 <h1 id="vmware-discovery">VMware Discovery<a class="headerlink" href="#vmware-discovery" title="Permanent link">¶</a></h1>
-<p><em>Article last updated: 2026-11-16.</em></p>
+<p><em>Article last updated: 2026-11-17.</em></p>
 <h2 id="what-it-monitors">What it monitors<a class="headerlink" href="#what-it-monitors" title="Permanent link">¶</a></h2>
 <p>The VMware Discovery plugin connects to a VMware vCenter Server through the vSphere API and discovers the resources of one datacenter. It generates one Pandora FMS agent per discovered resource and fills it with availability, capacity, configuration and performance modules read from vCenter.</p>
 <p>The plugin generates agents for:</p>
@@ -4727,6 +4749,9 @@
 <h3 id="manual-execution">Manual execution<a class="headerlink" href="#manual-execution" title="Permanent link">¶</a></h3>
 <p>The plugin can also be run outside the Discovery wizard with a configuration file. This is useful for testing connectivity, for a one-off run, or for a custom schedule. Write a configuration file that uses at least the <code>Configuration</code> block with <code>server</code>, <code>datacenter</code>, <code>user</code> and <code>pass</code>, then run the plugin entry point with the file as argument. All blocks and parameters are documented in <a href="#configuration-file">Configuration file</a>.</p>
 <p>The manual run prints a single module, <code>VMware Plugin &lt;datacenter&gt;</code>, of type <code>async_proc</code>: its value is <code>1</code> when the execution finished with no error and <code>0</code> otherwise, and its description contains the execution summary and any errors. When the plugin runs as a Discovery task, the same information becomes the task execution information.</p>
+<h3 id="vcenter-sessions">vCenter sessions<a class="headerlink" href="#vcenter-sessions" title="Permanent link">¶</a></h3>
+<p>Each run authenticates against vCenter and reuses a single session for all its monitoring workers when the server supports it. If the session cannot be reused, each worker opens its own session. The plugin closes every session it opens when the run finishes, including runs that end with an error, and it does not reuse sessions between runs.</p>
+<p>While a task is running, vCenter can show the plugin session. After the run finishes, <code>sessionManager.sessionList</code> should not list sessions for the plugin user. A session that survives a finished run usually comes from an interrupted execution, for example a killed Discovery server, and vCenter closes it when the session idle timeout expires.</p>
 <h3 id="events-monitoring">Events monitoring<a class="headerlink" href="#events-monitoring" title="Permanent link">¶</a></h3>
 <p>With <strong>Event mode</strong> enabled, the plugin reads the vCenter events that occurred since the previous run and creates them in the Pandora FMS event console. The time window starts at the timestamp stored by the previous run and ends at the current time, so the first run reads only events newer than the configured interval.</p>
 <ul>
@@ -4776,6 +4801,10 @@
 <tr>
 <td>Tentacle transfer fails</td>
 <td>Confirm the Discovery server can reach <strong>Tentacle IP</strong> on <strong>Tentacle port</strong>, and enable <strong>Retry send</strong>.</td>
+</tr>
+<tr>
+<td>Sessions from the plugin user remain in vCenter</td>
+<td>The plugin closes its sessions when the run finishes. Check that the run was not interrupted, such as a stopped or killed Discovery server, and review the Discovery server log. vCenter removes abandoned sessions when the session idle timeout expires.</td>
 </tr>
 <tr>
 <td>The execution takes too long</td>
