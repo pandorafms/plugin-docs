@@ -1,6 +1,6 @@
 # Discovery de VMware
 
-*Última actualización del artículo: 2026-11-16.*
+*Última actualización del artículo: 2026-11-17.*
 
 ## Qué monitoriza
 
@@ -150,6 +150,12 @@ El plugin también se puede ejecutar fuera del asistente de Discovery con un arc
 
 La ejecución manual muestra un único módulo, `VMware Plugin <datacenter>`, de tipo `async_proc`: su valor es `1` cuando la ejecución terminó sin errores y `0` en caso contrario, y su descripción contiene el resumen de ejecución y los posibles errores. Cuando el plugin se ejecuta como tarea de Discovery, esa misma información pasa a ser la información de ejecución de la tarea.
 
+### Sesiones de vCenter
+
+Cada ejecución se autentica contra vCenter y reutiliza una única sesión para todos sus workers de monitorización cuando el servidor lo permite. Si la sesión no se puede reutilizar, cada worker abre su propia sesión. El plugin cierra todas las sesiones que abre al terminar la ejecución, incluidas las que terminan con error, y no reutiliza sesiones entre ejecuciones.
+
+Mientras una tarea está en ejecución, vCenter puede mostrar la sesión del plugin. Al terminar, `sessionManager.sessionList` no debe mostrar sesiones del usuario del plugin. Una sesión que sobreviva a una ejecución terminada suele proceder de una ejecución interrumpida, por ejemplo un servidor de Discovery detenido o terminado, y vCenter la cierra cuando expira el tiempo de inactividad de la sesión.
+
 ### Monitorización de eventos
 
 Con **Event mode** activado, el plugin lee los eventos de vCenter ocurridos desde la ejecución anterior y los crea en la consola de eventos de Pandora FMS. La ventana temporal comienza en la marca de tiempo guardada por la ejecución anterior y termina en el momento actual, por lo que la primera ejecución solo lee los eventos posteriores al intervalo configurado.
@@ -173,6 +179,7 @@ La contraseña indicada en la tarea se cifra con un algoritmo simétrico antes d
 | Event mode informa de que el agente del datacenter no existe | Habilita **Scan datacenters** para que se genere el agente del datacenter y confirma que la API de consola sea accesible con credenciales válidas. |
 | Event mode informa de que la correlación de eventos solo está disponible en vCenter | No se pueden leer eventos desde una conexión que no exponga el gestor de eventos de vCenter. |
 | Falla el envío por Tentacle | Confirma que el servidor de Discovery puede alcanzar **Tentacle IP** en **Tentacle port** y habilita **Retry send**. |
+| Quedan sesiones del usuario del plugin en vCenter | El plugin cierra sus sesiones al terminar la ejecución. Comprueba que la ejecución no se interrumpió, por ejemplo por un servidor de Discovery detenido o terminado, y revisa el log del servidor de Discovery. vCenter elimina las sesiones abandonadas cuando expira el tiempo de inactividad de la sesión. |
 | La ejecución tarda demasiado | Aumenta **Max threads** para monitorizar más entidades de forma concurrente, teniendo en cuenta el mayor uso de CPU. |
 
 ## Referencia
