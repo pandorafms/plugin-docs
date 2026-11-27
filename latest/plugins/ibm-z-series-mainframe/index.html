@@ -4393,7 +4393,7 @@
 
 
 <h1 id="ibm-z-series-mainframe">IBM Z Series Mainframe<a class="headerlink" href="#ibm-z-series-mainframe" title="Permanent link">¶</a></h1>
-<p><em>Article last updated: 2026-10-26.</em></p>
+<p><em>Article last updated: 2026-11-20.</em></p>
 <h2 id="what-it-does">What it does<a class="headerlink" href="#what-it-does" title="Permanent link">¶</a></h2>
 <p>Pandora FMS Mainframe monitors IBM Z mainframes running z/OS through the RMF
 Monitor III Data Portal. The addon has two parts that are installed and
@@ -4426,7 +4426,7 @@ collects for every mainframe you define in its configuration directory.</p>
 </thead>
 <tbody>
 <tr>
-<td>Addon <code>pandorafms.mainframe</code>, version <code>2.0</code></td>
+<td>Addon <code>pandorafms.mainframe</code>, version <code>2.1</code></td>
 <td>Documented target</td>
 <td>The Marketplace version this page describes. See <a href="#addon-identity">Addon identity</a></td>
 </tr>
@@ -4508,7 +4508,10 @@ sudo<span class="w"> </span>./mf_server_installer<span class="w"> </span>--insta
 <p>The installer:</p>
 <ul>
 <li>copies the <code>mf_server</code> executable and the Tentacle client to <code>/usr/bin</code>;</li>
-<li>copies <code>mf_server.conf</code> and <code>mf_server.env</code> to <code>/etc/pandora</code>;</li>
+<li>copies <code>mf_server.env</code> to <code>/etc/pandora</code>;</li>
+<li>installs the default <code>mf_server.conf</code> only when
+  <code>/etc/pandora/mf_server.conf</code> does not exist, so an existing service
+  configuration is preserved;</li>
 <li>creates the agent configuration directory <code>/etc/pandora/conf</code>;</li>
 <li>writes <code>/etc/systemd/system/mf_server.service</code>, reloads the systemd
   configuration and enables the unit.</li>
@@ -4806,10 +4809,11 @@ tail<span class="w"> </span>-f<span class="w"> </span>/var/log/mf_server.log
 </code></pre></div>
 <p>The log file is truncated on every start, so a restart erases the previous run.
 Copy it before restarting if you need the history.</p>
-<p>The uninstaller removes the unit, the executables, <code>/etc/pandora/mf_server.conf</code>,
-<code>/etc/pandora/mf_server.env</code> and the whole directory <code>/etc/pandora/conf</code>. On a
-host that also runs other Pandora FMS components, back that directory up before
-running <code>mf_server_installer --uninstall</code>.</p>
+<p>The uninstaller removes the unit, the <code>mf_server</code> executable,
+<code>/etc/pandora/mf_server.conf</code> and <code>/etc/pandora/mf_server.env</code>. It does not
+remove the agent configuration directory <code>/etc/pandora/conf</code>, so the
+per-mainframe files and any other Pandora FMS configuration kept there are
+preserved.</p>
 <h3 id="run-in-the-foreground">Run in the foreground<a class="headerlink" href="#run-in-the-foreground" title="Permanent link">¶</a></h3>
 <p>Set <code>daemon 0</code> in the service configuration and run it as <code>root</code>:</p>
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>/usr/bin/mf_server<span class="w"> </span>/etc/pandora/mf_server.conf
@@ -4862,9 +4866,6 @@ the RMF Data Portal Browser in the console replaces both.</p>
   rows until you change <strong>Monitor status</strong> to <strong>All</strong>.</li>
 <li><strong><code>--destdir</code> does not relocate the systemd unit</strong>, which is always written to
   <code>/etc/systemd/system</code>.</li>
-<li><strong>The systemd unit declares <code>PIDFile=/var/run/mf_server.pid</code></strong>, but the service
-  never creates that file. When <code>systemctl status</code> does not show the process,
-  look for it with <code>ps</code>. The uninstaller removes the path anyway.</li>
 </ul>
 <h3 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">¶</a></h3>
 <table>
@@ -5399,11 +5400,11 @@ Portal. The service sends basic authentication on each of them.</p>
 <tbody>
 <tr>
 <td><code>--install</code></td>
-<td>Installs the service, the Tentacle client, the configuration files, the agent directory and the systemd unit, and enables the unit</td>
+<td>Installs the service, the Tentacle client, the default configuration files, the agent directory and the systemd unit, and enables the unit; an existing <code>/etc/pandora/mf_server.conf</code> is preserved</td>
 </tr>
 <tr>
 <td><code>--uninstall</code></td>
-<td>Stops and disables the unit, then removes it with the executables, <code>/etc/pandora/mf_server.conf</code>, <code>/etc/pandora/mf_server.env</code>, <code>/var/run/mf_server.pid</code> and the whole <code>/etc/pandora/conf</code> directory</td>
+<td>Stops and disables the unit, then removes it with the <code>mf_server</code> executable, <code>/etc/pandora/mf_server.conf</code>, <code>/etc/pandora/mf_server.env</code> and <code>/var/run/mf_server.pid</code>; the <code>/etc/pandora/conf</code> directory is preserved</td>
 </tr>
 <tr>
 <td><code>--destdir &lt;dir&gt;</code></td>
@@ -5504,7 +5505,7 @@ Portal. The service sends basic authentication on each of them.</p>
 </tr>
 <tr>
 <td>Version</td>
-<td><code>2.0</code></td>
+<td><code>2.1</code></td>
 </tr>
 <tr>
 <td>Category</td>
@@ -5520,11 +5521,11 @@ Portal. The service sends basic authentication on each of them.</p>
 </tr>
 <tr>
 <td>Marketplace last update</td>
-<td>2026-07-08</td>
+<td>2026-11-20</td>
 </tr>
 <tr>
 <td>Package</td>
-<td><code>pandorafms.mainframe.2.0.zip</code></td>
+<td><code>pandorafms.mainframe.2.1.zip</code></td>
 </tr>
 <tr>
 <td>Service version reported in the agent documents</td>
